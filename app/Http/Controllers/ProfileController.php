@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\SettingCountry;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,9 +19,22 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+
+        $settingCountries = SettingCountry::all();
+
+        // Map the data to match the structure of the countries array
+        $formattedCountries = $settingCountries->map(function ($country) {
+            return [
+                'value' => $country->name_en,
+                'label' => $country->name_en,
+                'phone_code' => $country->phone_code,
+            ];
+        });
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'countries' => $formattedCountries,
         ]);
     }
 

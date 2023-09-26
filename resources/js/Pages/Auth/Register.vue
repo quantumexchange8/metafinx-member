@@ -106,6 +106,8 @@ const form = useForm({
     terms: false,
 })
 
+console.log(form.country)
+
 const submit = () => {
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
