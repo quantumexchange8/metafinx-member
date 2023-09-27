@@ -29,6 +29,8 @@ defineProps({
                 },
             ]"
         >
+            <!-- Navbar -->
+            <Navbar />
 
             <!-- Page Heading -->
             <header v-if="$slots.header">
@@ -38,11 +40,15 @@ defineProps({
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 px-4 sm:px-6">
+            <main class="flex-1 px-4 sm:px-6" :class="{ 'md:mr-96': $slots.asideRight }">
                 <slot />
             </main>
 
             <PageFooter />
         </div>
+
+        <aside v-if="$slots.asideRight" class="hidden md:block">
+            <slot name="asideRight" />
+        </aside>
     </div>
 </template>
