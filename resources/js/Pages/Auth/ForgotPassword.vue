@@ -1,6 +1,6 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3'
-import { MailIcon, PaperAirplaneIcon } from '@heroicons/vue/outline'
+import { Link, useForm } from '@inertiajs/vue3'
+import { MailIcon, PaperAirplaneIcon, KeyIcon, ArrowNarrowLeftIcon } from '@heroicons/vue/outline'
 import InputIconWrapper from '@/Components/InputIconWrapper.vue'
 import Button from '@/Components/Button.vue'
 import GuestLayout from '@/Layouts/Guest.vue'
@@ -23,9 +23,21 @@ const submit = () => {
 
 <template>
     <GuestLayout title="Forgot Password">
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
+        <div class="flex flex-col items-center mb-8">
+            <div>
+                <div class="flex items-center justify-center w-10 h-10 border rounded-lg dark:border-gray-400">
+                    <KeyIcon aria-hidden="true" class="h-6 w-6 text-white"/>
+                </div>
+            </div>
+            <div class="my-3 text-[28px] font-semibold text-gray-600 dark:text-white">
+                Forgot password?
+            </div>
+            <div class="text-[16px] text-gray-400 font-normal">
+                No worries, we'll send you reset instructions.
+            </div>
         </div>
+
+        
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
@@ -41,15 +53,25 @@ const submit = () => {
                         <template #icon>
                             <MailIcon aria-hidden="true" class="w-5 h-5" />
                         </template>
-                        <Input withIcon id="email" type="email" class="block w-full" placeholder="Email" v-model="form.email" required autofocus autocomplete="username" />
+                        <Input withIcon id="email" type="email" class="block w-full" placeholder="you@example.com" v-model="form.email" required autofocus autocomplete="username" />
                     </InputIconWrapper>
                 </div>
 
                 <div>
                     <Button class="justify-center gap-2 w-full" :disabled="form.processing" v-slot="{ iconSizeClasses }">
-                        <PaperAirplaneIcon aria-hidden="true" :class="iconSizeClasses" />
-                        <span>Email Password Reset Link</span>
+                        <span>Reset Password</span>
                     </Button>
+
+                    
+                </div>
+                <div class="flex justify-center">
+                    <div class="flex">
+                        <Link :href="route('login')" class="text-base flex items-center text-gray-400 hover:underline">
+                            <ArrowNarrowLeftIcon class="text-gray-400 w-5 mr-2" />
+                            Back to log in
+                        </Link>
+                    </div>
+                    
                 </div>
             </div>
         </form>

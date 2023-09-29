@@ -1,6 +1,7 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3'
-import { MailIcon, KeyIcon, LoginIcon } from '@heroicons/vue/outline'
+import { MailIcon, KeyIcon, LoginIcon, EyeOffIcon, EyeIcon } from '@heroicons/vue/outline'
+import { ref } from 'vue'
 import InputIconWrapper from '@/Components/InputIconWrapper.vue'
 import Button from '@/Components/Button.vue'
 import Checkbox from '@/Components/Checkbox.vue'
@@ -21,6 +22,12 @@ const form = useForm({
     password: '',
     remember: false
 })
+
+const showPassword = ref(false);
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
 
 const submit = () => {
     form.post(route('login'), {
@@ -74,13 +81,28 @@ const submit = () => {
                         <Input
                             withIcon
                             id="password"
-                            type="password"
+                            :type="showPassword ? 'text' : 'password'"
                             :class="form.errors.password ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             class="block w-full"
                             placeholder="Enter password"
                             v-model="form.password"
                             autocomplete="current-password"
                         />
+                        <div
+                            class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                            @click="togglePasswordVisibility"
+                        >
+                            <template v-if="showPassword">
+                                <EyeIcon aria-hidden="true" class="w-5 h-5" />
+                            </template>
+                            <template v-else>
+                                <EyeOffIcon aria-hidden="true" class="w-5 h-5" />
+                            </template>
+                        </div>
+                        <!-- <div class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer">
+                            <EyeOffIcon aria-hidden="true" class="w-5 h-5" />
+                        </div> -->
+                        
                     </InputIconWrapper>
                     <InputError :message="form.errors.password" class="mt-2" />
                 </div>

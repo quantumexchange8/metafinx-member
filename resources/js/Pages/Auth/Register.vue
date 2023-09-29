@@ -1,6 +1,6 @@
 <script setup>
 import {Head, Link, useForm} from '@inertiajs/vue3'
-import { MailIcon, KeyIcon, ShieldCheckIcon, PhoneIcon, HomeIcon } from '@heroicons/vue/outline'
+import { MailIcon, KeyIcon, ShieldCheckIcon, PhoneIcon, HomeIcon, EyeOffIcon, EyeIcon } from '@heroicons/vue/outline'
 import InputIconWrapper from '@/Components/InputIconWrapper.vue'
 import Input from '@/Components/Input.vue'
 import Label from '@/Components/Label.vue'
@@ -106,7 +106,16 @@ const form = useForm({
     terms: false,
 })
 
-console.log(form.country)
+const showPassword = ref(false);
+const showPassword2 = ref(false);
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
+
+const togglePasswordVisibilityConfirm = () => {
+    showPassword2.value = !showPassword2.value;
+}
 
 const submit = () => {
     form.post(route('register'), {
@@ -192,7 +201,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                     :caption="computedCaption"
                     size="3xl"
                 />
-                <form class="w-1/2">
+                <form class="w-full">
 
                     <!-- Step 1 -->
                     <div v-if="formStep === 1" class="grid gap-6">
@@ -281,9 +290,27 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     <KeyIcon aria-hidden="true" class="w-5 h-5" />
                                 </template>
                                 <Input
-                                    withIcon id="password" type="password" class="block w-full" placeholder="Minimum 8 characters" v-model="form.password" required autocomplete="new-password"
+                                    withIcon 
+                                    id="password" 
+                                    :type="showPassword ? 'text' : 'password'"
+                                    class="block w-full" 
+                                    placeholder="Minimum 8 characters" 
+                                    v-model="form.password" 
+                                    required 
+                                    autocomplete="new-password"
                                     :class="form.errors.password ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                                 />
+                                <div
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                                    @click="togglePasswordVisibility"
+                                >
+                                    <template v-if="showPassword">
+                                        <EyeIcon aria-hidden="true" class="w-5 h-5" />
+                                    </template>
+                                    <template v-else>
+                                        <EyeOffIcon aria-hidden="true" class="w-5 h-5" />
+                                    </template>
+                                </div>
                             </InputIconWrapper>
                             <InputError :message="form.errors.password" class="mt-2" />
                         </div>
@@ -295,9 +322,27 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     <KeyIcon aria-hidden="true" class="w-5 h-5" />
                                 </template>
                                 <Input
-                                    withIcon id="password_confirmation" type="password" class="block w-full" placeholder="Confirm Password" v-model="form.password_confirmation" required autocomplete="new-password"
+                                    withIcon 
+                                    id="password_confirmation" 
+                                    :type="showPassword2 ? 'text' : 'password'" 
+                                    class="block w-full" 
+                                    placeholder="Confirm Password" 
+                                    v-model="form.password_confirmation" 
+                                    required 
+                                    autocomplete="new-password"
                                     :class="form.errors.password_confirmation ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                                 />
+                                <div
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                                    @click="togglePasswordVisibilityConfirm"
+                                >
+                                    <template v-if="showPassword2">
+                                        <EyeIcon aria-hidden="true" class="w-5 h-5" />
+                                    </template>
+                                    <template v-else>
+                                        <EyeOffIcon aria-hidden="true" class="w-5 h-5" />
+                                    </template>
+                                </div>
                             </InputIconWrapper>
                         </div>
                     </div>

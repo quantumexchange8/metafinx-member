@@ -38,6 +38,7 @@ onMounted(() => {
         style="
             transition-property: width, transform;
             transition-duration: 150ms;
+            z-index: 100;
         "
         :class="[
             'fixed inset-y-0 z-20 py-4 flex flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-r dark:border-gray-700',

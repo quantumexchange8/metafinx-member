@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3'
 import Sidebar from '@/Components/Sidebar/Sidebar.vue'
 import Navbar from '@/Components/Navbar.vue'
+import Bottombar from '@/Components/Bottombar.vue'
 import PageFooter from '@/Components/PageFooter.vue'
 import { sidebarState } from '@/Composables'
 
@@ -29,26 +30,29 @@ defineProps({
                 },
             ]"
         >
-            <!-- Navbar -->
+            <!-- Navbar / Topbar -->
             <Navbar />
+            
+            
+            <main class="flex-1 px-4 sm:px-6 pt-20 md:pt-0" :class="{ 'md:mr-96': $slots.asideRight }">
+                <!-- Page Heading -->
+                <header v-if="$slots.header">
+                    <div class="p-4 sm:p-6">
+                        <slot name="header" />
+                    </div>
+                </header>
 
-            <!-- Page Heading -->
-            <header v-if="$slots.header">
-                <div class="p-4 sm:p-6">
-                    <slot name="header" />
-                </div>
-            </header>
-
-            <!-- Page Content -->
-            <main class="flex-1 px-4 sm:px-6" :class="{ 'md:mr-96': $slots.asideRight }">
+                <!-- Page Content -->
                 <slot />
             </main>
 
-            <PageFooter />
+            <!-- <PageFooter class="hidden md:block"/> -->
         </div>
 
         <aside v-if="$slots.asideRight" class="hidden md:block">
             <slot name="asideRight" />
         </aside>
+
+        <Bottombar/>
     </div>
 </template>
