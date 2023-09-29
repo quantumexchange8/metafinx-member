@@ -27,6 +27,19 @@ import DropdownLink from "@/Components/DropdownLink.vue";
             </template>
         </SidebarLink>
 
+        <SidebarLink
+            title="Earn"
+            :href="route('earn')"
+            :active="route().current('Earn')"
+        >
+            <template #icon>
+                <DashboardIcon
+                    class="flex-shrink-0 w-6 h-6"
+                    aria-hidden="true"
+                />
+            </template>
+        </SidebarLink>
+
         <SidebarCollapsible
             title="Components"
             :active="route().current('components.*')"
