@@ -14,11 +14,10 @@ defineProps({
     <div
         class="flex flex-col items-center justify-center min-h-screen gap-4 py-6 bg-white dark:bg-gray-800"
     >
-        <div class="fixed left-5 top-5 flex-shrink-0 inline-flex items-center gap-3">
+        <div class="fixed left-0 top-0 flex-shrink-0 inline-flex items-center gap-3">
             <Link href="/">
-                <ApplicationLogo class="w-8 h-8" />
+                <ApplicationLogo class="w-48" />
             </Link>
-            <span class="text-white font-semibold">METABASE FinX</span>
         </div>
 
         <main class="flex items-center flex-1 w-full sm:max-w-lg">

@@ -67,7 +67,7 @@ const variantClasses = (variant) => ({
     'bg-success-600 hover:bg-success-700 text-white': variant == 'success',
     'bg-error-600 text-white hover:bg-error-700': variant == 'danger',
     'bg-warning-400 text-white hover:bg-warning-500': variant == 'warning',
-    'text-gray-400 hover:text-white': variant == 'info',
+    'bg-gray-600 border border-gray-500 text-white': variant == 'info',
     'bg-gray-400 hover:bg-gray-500 text-white dark:bg-gray-500 dark:hover:bg-gray-600':
         variant == 'gray',
     'text-gray-400 bg-transparent dark:hover:text-white':

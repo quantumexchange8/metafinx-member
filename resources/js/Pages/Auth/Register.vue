@@ -174,11 +174,11 @@ const handleBackRevert = (uniqueId, load, error) => {
             <div
                 class="flex-col justify-between w-full h-auto hidden lg:flex lg:w-5/12 bg-gray-900"
             >
-                <div class="mt-5 ml-5">
-                    <Link href="/">
-                        <ApplicationLogo class="w-8 h-8" />
-                    </Link>
+                <Link href="/">
+                    <ApplicationLogo class="w-48" />
+                </Link>
 
+                <div class="mt-5 ml-5">
                     <div class="mt-12">
                         <RegisterStepper
                             :formStep="formStep"
@@ -201,7 +201,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                     :caption="computedCaption"
                     size="3xl"
                 />
-                <form class="w-full">
+                <form class="w-1/2">
 
                     <!-- Step 1 -->
                     <div v-if="formStep === 1" class="grid gap-6">
@@ -290,13 +290,13 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     <KeyIcon aria-hidden="true" class="w-5 h-5" />
                                 </template>
                                 <Input
-                                    withIcon 
-                                    id="password" 
+                                    withIcon
+                                    id="password"
                                     :type="showPassword ? 'text' : 'password'"
-                                    class="block w-full" 
-                                    placeholder="Minimum 8 characters" 
-                                    v-model="form.password" 
-                                    required 
+                                    class="block w-full"
+                                    placeholder="Minimum 8 characters"
+                                    v-model="form.password"
+                                    required
                                     autocomplete="new-password"
                                     :class="form.errors.password ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                                 />
@@ -322,13 +322,13 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     <KeyIcon aria-hidden="true" class="w-5 h-5" />
                                 </template>
                                 <Input
-                                    withIcon 
-                                    id="password_confirmation" 
-                                    :type="showPassword2 ? 'text' : 'password'" 
-                                    class="block w-full" 
-                                    placeholder="Confirm Password" 
-                                    v-model="form.password_confirmation" 
-                                    required 
+                                    withIcon
+                                    id="password_confirmation"
+                                    :type="showPassword2 ? 'text' : 'password'"
+                                    class="block w-full"
+                                    placeholder="Confirm Password"
+                                    v-model="form.password_confirmation"
+                                    required
                                     autocomplete="new-password"
                                     :class="form.errors.password_confirmation ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                                 />

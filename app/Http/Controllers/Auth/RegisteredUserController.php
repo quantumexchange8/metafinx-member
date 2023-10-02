@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\SettingCountry;
 use App\Models\User;
+use App\Models\Wallet;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -25,7 +26,6 @@ class RegisteredUserController extends Controller
     {
         $settingCountries = SettingCountry::all();
 
-        // Map the data to match the structure of the countries array
         $formattedCountries = $settingCountries->map(function ($country) {
             return [
                 'value' => $country->name_en,
@@ -116,6 +116,11 @@ class RegisteredUserController extends Controller
             'verification_type' => $request->verification_type,
             'referral_code' => $request->referral_code,
             'password' => Hash::make($request->password),
+        ]);
+
+        Wallet::create([
+            'user_id' => $user->id,
+            'name' => 'Internal Wallet'
         ]);
 
         $this->processImage($request);

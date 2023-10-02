@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DepositController;
+use App\Http\Controllers\WalletController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -35,6 +37,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::prefix('wallet')->group(function () {
+        Route::get('/details', [WalletController::class, 'details'])->name('wallet.details');
+        Route::get('/getTransaction', [WalletController::class, 'getTransaction'])->name('wallet.getTransaction');
+        Route::post('/deposit', [DepositController::class, 'deposit'])->name('wallet.deposit');
+    });
 });
 
 Route::get('/components/buttons', function () {

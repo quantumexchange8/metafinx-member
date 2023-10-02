@@ -1,7 +1,7 @@
 <script setup>
 import PerfectScrollbar from '@/Components/PerfectScrollbar.vue'
 import SidebarLink from '@/Components/Sidebar/SidebarLink.vue'
-import { DashboardIcon, LogoutIcon } from '@/Components/Icons/outline'
+import {DashboardIcon, WalletIcon, LogoutIcon} from '@/Components/Icons/outline'
 import SidebarCollapsible from '@/Components/Sidebar/SidebarCollapsible.vue'
 import SidebarCollapsibleItem from '@/Components/Sidebar/SidebarCollapsibleItem.vue'
 import { TemplateIcon } from '@heroicons/vue/outline'
@@ -40,23 +40,18 @@ import DropdownLink from "@/Components/DropdownLink.vue";
             </template>
         </SidebarLink>
 
-        <SidebarCollapsible
-            title="Components"
-            :active="route().current('components.*')"
+        <SidebarLink
+            title="Wallet"
+            :href="route('wallet.details')"
+            :active="route().current('wallet.*')"
         >
             <template #icon>
-                <TemplateIcon
+                <WalletIcon
                     class="flex-shrink-0 w-6 h-6"
                     aria-hidden="true"
                 />
             </template>
-
-            <SidebarCollapsibleItem
-                :href="route('components.buttons')"
-                title="Buttons"
-                :active="route().current('components.buttons')"
-            />
-        </SidebarCollapsible>
+        </SidebarLink>
 
         <SidebarLink
             title="Log Out"

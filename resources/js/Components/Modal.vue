@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, onUnmounted, watch } from 'vue'
+import {XIcon} from '@heroicons/vue/outline'
 
 const props = defineProps({
     show: {
@@ -14,6 +15,7 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    title: String
 })
 
 const emit = defineEmits(['close'])
@@ -96,10 +98,26 @@ const maxWidthClass = computed(() => {
                 >
                     <div
                         v-show="show"
-                        class="mb-6 bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:mx-auto"
+                        class="mb-6 bg-white dark:bg-gray-800 rounded-[20px] overflow-hidden shadow-xl transform transition-all sm:w-full sm:mx-auto"
                         :class="maxWidthClass"
                     >
-                        <slot v-if="show" />
+                        <div
+                            v-if="show"
+                            class="p-5 w-full dark:text-white"
+                        >
+                            <h2 class="flex justify-between pb-3 text-xl font-semibold dark:text-white border-b dark:border-gray-700">
+                                {{ props.title }}
+                                <button type="button" class="dark:hover:text-gray-300" @click="close">
+                                    <XIcon
+                                        aria-hidden="true"
+                                        class="w-6 h-6"
+                                    />
+                                </button>
+                            </h2>
+                        </div>
+                        <div class="px-5 pb-5">
+                            <slot v-if="show" />
+                        </div>
                     </div>
                 </transition>
             </div>
