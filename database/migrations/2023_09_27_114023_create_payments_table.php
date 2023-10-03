@@ -15,8 +15,9 @@ return new class extends Migration {
             $table->string('txn_hash')->nullable();
             $table->string('type', 50);
             $table->decimal('amount', 13, 2);
-            $table->decimal('price', 13, 2);
+            $table->decimal('price', 13, 2)->nullable();
             $table->decimal('payment_charges')->nullable();
+            $table->string('to_wallet_address')->nullable();
             $table->string('status', 50);
             $table->softDeletes();
             $table->timestamps();

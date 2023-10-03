@@ -1,12 +1,17 @@
 <script setup>
 import VueApexCharts from "vue3-apexcharts";
+import {ref, watchEffect} from "vue";
 
 const props = defineProps({
     wallets: Object
 })
 
-const chartSeries = Object.values(props.wallets).map(wallet => wallet.balance);
+const chartSeries = ref(null)
 const labels = Object.values(props.wallets).map(wallet => wallet.name);
+
+watchEffect(() => {
+    chartSeries.value = Object.values(props.wallets).map(wallet => wallet.balance);
+})
 
 const chartOptions = {
     chart: {
@@ -35,7 +40,7 @@ const chartOptions = {
                     fontSize: '16px',
                     fontFamily: 'Inter',
                     color: '#ffffff',
-                    label: '$ ' + chartSeries,
+                    label: '$ ' + chartSeries.value,
                 }
             },
         }

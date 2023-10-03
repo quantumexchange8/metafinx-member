@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DepositRequest extends FormRequest
+class WithdrawalRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'wallet_id' => ['required'],
             'amount' => ['required', 'numeric', 'min:20'],
-            'txn_hash' => ['required'],
+            'wallet_id' => ['required'],
+            'wallet_address' => ['required'],
             'terms' => ['accepted']
         ];
     }
@@ -24,9 +24,9 @@ class DepositRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'wallet_id' => 'Wallet',
             'amount' => 'Amount',
-            'txn_hash' => 'TXN Hash',
+            'wallet_id' => 'Wallet',
+            'wallet_address' => 'Wallet Address',
             'terms' => 'Terms and Conditions'
         ];
     }

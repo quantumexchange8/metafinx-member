@@ -102,7 +102,6 @@ const maxWidthClass = computed(() => {
                         :class="maxWidthClass"
                     >
                         <div
-                            v-if="show"
                             class="p-5 w-full dark:text-white"
                         >
                             <h2 class="flex justify-between pb-3 text-xl font-semibold dark:text-white border-b dark:border-gray-700">

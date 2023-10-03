@@ -3,13 +3,12 @@ import Input from "@/Components/Input.vue";
 import VueTailwindDatepicker from "vue-tailwind-datepicker";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
 import {SearchIcon, RefreshIcon} from "@heroicons/vue/outline";
-import {ref, watch} from "vue";
-import {CloudDownloadIcon, InternalWalletIcon} from "@/Components/Icons/outline.jsx";
-import { TailwindPagination } from 'laravel-vue-pagination';
-import Loading from "@/Components/Loading.vue";
-import debounce from "lodash/debounce.js";
+import {ref} from "vue";
+import {CloudDownloadIcon} from "@/Components/Icons/outline.jsx";
 import Button from "@/Components/Button.vue";
-import DepositTableBody from "@/Pages/Wallet/Transaction/DepositTableBody.vue";
+import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "@headlessui/vue";
+import DepositTable from "@/Pages/Wallet/Transaction/DepositTable.vue";
+import WithdrawalTable from "@/Pages/Wallet/Transaction/WithdrawalTable.vue";
 
 const formatter = ref({
     date: 'YYYY-MM-DD',
@@ -17,52 +16,13 @@ const formatter = ref({
 });
 const search = ref('');
 const date = ref('');
-const deposits = ref({data: []});
 const isLoading = ref(false);
-const currentPage = ref(1);
-
-watch(
-    [search, date],
-    debounce(function ([searchValue, dateValue]) {
-        getResults(1, searchValue, dateValue);
-    }, 300)
-);
-
-const getResults = async (page = 1, search = '', date = '') => {
-    isLoading.value = true;
-    try {
-        let url = `/wallet/getTransaction?page=${page}`;
-
-        if (search) {
-            url += `&search=${search}`;
-        }
-
-        if (date) {
-            url += `&date=${date}`;
-        }
-
-        const response = await axios.get(url);
-        deposits.value = response.data.deposits;
-    } catch (error) {
-        console.error(error);
-    } finally {
-        isLoading.value = false;
-    }
-}
-
-getResults()
-
-const handlePageChange = (newPage) => {
-    if (newPage >= 1) {
-        currentPage.value = newPage;
-
-        getResults(currentPage.value, search.value, date.value);
-    }
-};
+const refresh = ref(false);
+const type = ref('Deposit');
 
 const exportDeposit = () => {
 
-    let url = `/wallet/getTransaction?export=yes`;
+    let url = `/wallet/getTransaction/${type.value}?export=yes`;
 
     if (date) {
         url += `&date=${date.value}`;
@@ -77,16 +37,12 @@ const exportDeposit = () => {
 
 function refreshTable() {
     isLoading.value = !isLoading.value;
-    getResults();
+    refresh.value = true;
 }
 
-const paginationClass = [
-    'bg-transparent border-0 dark:text-gray-400'
-];
-
-const paginationActiveClass = [
-    'border dark:border-gray-600 dark:bg-gray-600 rounded-full text-[#FF9E23] dark:text-white'
-];
+const updateTransactionType = (transaction_type) => {
+    type.value = transaction_type
+};
 </script>
 
 <template>
@@ -133,48 +89,67 @@ const paginationActiveClass = [
         <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-red-500 dark:bg-success-500 rounded-full mr-2 flex-shrink-0"></span>Success</span>
     </div>
 
-    <div class="relative overflow-x-auto sm:rounded-lg">
-        <div v-if="isLoading" class="w-full flex justify-center my-8">
-            <Loading />
-        </div>
-        <table v-else class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
-            <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
-            <tr>
-                <th scope="col" class="pl-5 py-3">
-                    Asset
-                </th>
-                <th scope="col" class="py-3">
-                    Transaction ID
-                </th>
-                <th scope="col" class="py-3">
-                    Date
-                </th>
-                <th scope="col" class="py-3">
-                    Amount
-                </th>
-                <th scope="col" class="py-3">
-                    Price
-                </th>
-                <th scope="col" class="py-3 text-center">
-                    Status
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-                <DepositTableBody
-                    :deposits="deposits"
-                />
-            </tbody>
-        </table>
-        <div class="flex justify-center mt-4" v-if="!isLoading">
-            <TailwindPagination
-                :item-classes=paginationClass
-                :active-classes=paginationActiveClass
-                :data="deposits"
-                :limit=2
-                @pagination-change-page="handlePageChange"
-            />
-        </div>
+    <div class="w-full pt-5">
+        <TabGroup>
+            <TabList class="max-w-xs flex py-1">
+                <Tab
+                    as="template"
+                    v-slot="{ selected }"
+                >
+                    <button
+                        @click="updateTransactionType('Deposit')"
+                        :class="[
+                              'w-full py-2.5 text-sm font-semibold dark:text-gray-400',
+                              'ring-white ring-offset-0 focus:outline-none focus:ring-0',
+                              selected
+                                ? 'dark:text-white border-b-2'
+                                : 'border-b border-gray-400',
+                           ]"
+                    >
+                        Deposit
+                    </button>
+                </Tab>
+                <Tab
+                    as="template"
+                    v-slot="{ selected }"
+                >
+                    <button
+                        @click="updateTransactionType('Withdrawal')"
+                        :class="[
+                              'w-full py-2.5 text-sm font-semibold dark:text-gray-400',
+                              'ring-white ring-offset-0 focus:outline-none focus:ring-0',
+                              selected
+                                ? 'dark:text-white border-b-2'
+                                : 'border-b border-gray-400',
+                           ]"
+                    >
+                        Withdrawal
+                    </button>
+                </Tab>
+            </TabList>
+            <TabPanels>
+                <TabPanel>
+                    <DepositTable
+                        :refresh="refresh"
+                        :isLoading="isLoading"
+                        :search="search"
+                        :date="date"
+                        @update:loading="isLoading = $event"
+                        @update:refresh="refresh = $event"
+                    />
+                </TabPanel>
+                <TabPanel>
+                    <WithdrawalTable
+                        :refresh="refresh"
+                        :isLoading="isLoading"
+                        :search="search"
+                        :date="date"
+                        @update:loading="isLoading = $event"
+                        @update:refresh="refresh = $event"
+                    />
+                </TabPanel>
+            </TabPanels>
+        </TabGroup>
     </div>
 
 </template>

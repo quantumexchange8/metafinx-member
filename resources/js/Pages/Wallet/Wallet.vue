@@ -5,9 +5,14 @@ import {Wallet, WithdrawalIcon} from "@/Components/Icons/outline.jsx";
 import BalanceChart from "@/Pages/Wallet/Partials/BalanceChart.vue";
 import Deposit from "@/Pages/Wallet/Partials/Deposit.vue";
 import Transaction from "@/Pages/Wallet/Transaction/Transaction.vue";
+import Alert from "@/Components/Alert.vue";
+import {ref} from "vue";
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import Withdrawal from "@/Pages/Wallet/Partials/Withdrawal.vue";
 
 const props = defineProps({
     wallets: Object,
+    totalBalance: String,
     wallet_sel: Object,
 })
 
@@ -32,19 +37,15 @@ const props = defineProps({
                     Total Balance
                 </p>
                 <p class="text-[28px] font-semibold dark:text-white">
-                    $ 0.00
+                    $ {{ props.totalBalance }}
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-6">
                     <Deposit
                         :wallet_sel="wallet_sel"
                     />
-                    <Button
-                        class="justify-center gap-2"
-                        variant="gray"
-                    >
-                        <WithdrawalIcon aria-hidden="true" class="w-5 h-5" />
-                        <span>Withdrawal</span>
-                    </Button>
+                    <Withdrawal
+                        :wallet_sel="wallet_sel"
+                    />
                 </div>
             </div>
             <div>

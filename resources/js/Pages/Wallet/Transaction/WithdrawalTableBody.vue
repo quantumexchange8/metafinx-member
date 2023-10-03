@@ -5,7 +5,7 @@ import Modal from "@/Components/Modal.vue";
 import {transactionFormat} from "@/Composables/index.js";
 
 const props = defineProps({
-    deposits: Object
+    withdrawals: Object
 })
 
 const transactionModal = ref(false);
@@ -24,33 +24,33 @@ const closeModal = () => {
 
 <template>
     <tr
-        v-for="deposit in deposits.data"
+        v-for="withdrawal in withdrawals.data"
         class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 hover:cursor-pointer dark:hover:bg-gray-600"
-        @click="openTransactionModal(deposit)"
+        @click="openTransactionModal(withdrawal)"
     >
         <td class="pl-5 py-3 inline-flex items-center gap-2">
             <div class="bg-gradient-to-t from-pink-300 to-pink-600 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
                 <InternalWalletIcon class="mt-0.5 ml-0.5"/>
             </div>
-            {{ deposit.wallet.name }}
+            {{ withdrawal.wallet.name }}
         </td>
         <td class="py-3">
-            {{ deposit.transaction_id }}
+            {{ withdrawal.transaction_id }}
         </td>
         <td class="py-3">
-            {{ formatDate(deposit.created_at) }}
+            {{ formatDate(withdrawal.created_at) }}
         </td>
         <td class="py-3">
-            {{ deposit.amount }}
+            {{ withdrawal.to_wallet_address }}
         </td>
         <td class="py-3">
-            {{ deposit.price }}
+            {{ withdrawal.amount }}
         </td>
         <td class="py-3 text-center">
-            <span v-if="deposit.status === 'Success'" class="flex w-2 h-2 bg-green-500 dark:bg-success-500 mx-auto rounded-full"></span>
-            <span v-else-if="deposit.status === 'Pending'" class="flex w-2 h-2 bg-red-500 dark:bg-warning-500 mx-auto rounded-full"></span>
-            <span v-else-if="deposit.status === 'Processing'" class="flex w-2 h-2 bg-red-500 dark:bg-[#007AFF] mx-auto rounded-full"></span>
-            <span v-else-if="deposit.status === 'Rejected'" class="flex w-2 h-2 bg-red-500 dark:bg-error-500 mx-auto rounded-full"></span>
+            <span v-if="withdrawal.status === 'Success'" class="flex w-2 h-2 bg-green-500 dark:bg-success-500 mx-auto rounded-full"></span>
+            <span v-else-if="withdrawal.status === 'Pending'" class="flex w-2 h-2 bg-red-500 dark:bg-warning-500 mx-auto rounded-full"></span>
+            <span v-else-if="withdrawal.status === 'Processing'" class="flex w-2 h-2 bg-red-500 dark:bg-[#007AFF] mx-auto rounded-full"></span>
+            <span v-else-if="withdrawal.status === 'Rejected'" class="flex w-2 h-2 bg-red-500 dark:bg-error-500 mx-auto rounded-full"></span>
         </td>
     </tr>
 

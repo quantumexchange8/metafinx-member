@@ -91,7 +91,7 @@ function copyTestingCode () {
                         Scan QR code to deposit
                     </p>
                     <div class="flex justify-center">
-                        <qrcode-vue :class="['border-4 border-white']" value="TGqosdkka9VcHB7jT6atakNyoABV2VSQkZ" :size="200"></qrcode-vue>
+                        <qrcode-vue :class="['border-4 border-white']" value="TXzZ1zgHscuLeTqYTHZBuU5516SP3DbS8R" :size="200"></qrcode-vue>
                     </div>
                     <div class="inline-flex items-center gap-2 text-center dark:text-white">
                         TXzZ1zgHscuLeTqYTHZBuU5516SP3DbS8R
@@ -111,7 +111,6 @@ function copyTestingCode () {
                             :options="props.wallet_sel"
                             :error="form.errors.wallet_id"
                         />
-                        <InputError :message="form.errors.wallet_id" class="mt-2" />
                     </div>
                 </div>
 

@@ -3,12 +3,37 @@ import { Head } from '@inertiajs/vue3'
 import Sidebar from '@/Components/Sidebar/Sidebar.vue'
 import Navbar from '@/Components/Navbar.vue'
 import Bottombar from '@/Components/Bottombar.vue'
-import PageFooter from '@/Components/PageFooter.vue'
 import { sidebarState } from '@/Composables'
+import Alert from "@/Components/Alert.vue";
+import {onUnmounted, ref} from "vue";
+import {Inertia} from "@inertiajs/inertia";
+import {usePage} from "@inertiajs/vue3";
 
+const page = usePage();
 defineProps({
     title: String
 })
+
+const showAlert = ref(false);
+const intent = ref(null);
+const alertTitle = ref('');
+const alertMessage = ref(null);
+
+let removeFinishEventListener = Inertia.on("finish", () => {
+    if (page.props.success) {
+        showAlert.value = true
+        intent.value = 'success'
+        alertTitle.value = page.props.title
+        alertMessage.value = page.props.success
+    } else if (page.props.warning) {
+        showAlert.value = true
+        intent.value = 'warning'
+        alertTitle.value = page.props.title
+        alertMessage.value = page.props.warning
+    }
+});
+
+onUnmounted(() => removeFinishEventListener());
 </script>
 
 <template>
@@ -36,12 +61,20 @@ defineProps({
             <main class="flex-1 px-4 sm:px-6 pt-20 md:pt-0" :class="{ 'md:mr-96': $slots.asideRight }">
                 <!-- Page Heading -->
                 <header v-if="$slots.header">
-                    <div class="p-4 sm:p-6">
+                    <div class="p-4 sm:py-6 px-0">
                         <slot name="header" />
                     </div>
                 </header>
 
                 <!-- Page Content -->
+                <Alert
+                    :show="showAlert"
+                    :on-dismiss="() => showAlert = false"
+                    :title="alertTitle"
+                    :intent="intent"
+                >
+                    {{ alertMessage }}
+                </Alert>
                 <slot />
             </main>
 

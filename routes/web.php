@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\DepositController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WalletController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
@@ -40,8 +40,9 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('wallet')->group(function () {
         Route::get('/details', [WalletController::class, 'details'])->name('wallet.details');
-        Route::get('/getTransaction', [WalletController::class, 'getTransaction'])->name('wallet.getTransaction');
-        Route::post('/deposit', [DepositController::class, 'deposit'])->name('wallet.deposit');
+        Route::get('/getTransaction/{type}', [WalletController::class, 'getTransaction'])->name('wallet.getTransaction');
+        Route::post('/deposit', [PaymentController::class, 'deposit'])->name('wallet.deposit');
+        Route::post('/withdrawal', [PaymentController::class, 'withdrawal'])->name('wallet.withdrawal');
     });
 });
 
