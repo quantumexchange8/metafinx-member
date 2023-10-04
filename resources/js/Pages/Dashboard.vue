@@ -42,7 +42,7 @@ import {Link} from "@inertiajs/vue3";
                 </div>
             </Link>
 
-            <Link :href="route('wallet.details')">
+            <Link :href="route('earn.invest_subscription')">
                 <div class="flex justify-between rounded-xl bg-gradient-to-b from-pink-300 to-pink-500 hover:shadow-lg dark:shadow-pink-600">
                     <div class="p-5 flex flex-col justify-between">
                         <div>

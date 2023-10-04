@@ -1,7 +1,7 @@
 <script setup>
 import PerfectScrollbar from '@/Components/PerfectScrollbar.vue'
 import SidebarLink from '@/Components/Sidebar/SidebarLink.vue'
-import {DashboardIcon, WalletIcon, LogoutIcon} from '@/Components/Icons/outline'
+import {DashboardIcon, EarnIcon, WalletIcon, LogoutIcon} from '@/Components/Icons/outline'
 import SidebarCollapsible from '@/Components/Sidebar/SidebarCollapsible.vue'
 import SidebarCollapsibleItem from '@/Components/Sidebar/SidebarCollapsibleItem.vue'
 import { TemplateIcon } from '@heroicons/vue/outline'
@@ -29,11 +29,11 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 
         <SidebarLink
             title="Earn"
-            :href="route('earn')"
-            :active="route().current('Earn')"
+            :href="route('earn.invest_subscription')"
+            :active="route().current('earn.*')"
         >
             <template #icon>
-                <DashboardIcon
+                <EarnIcon
                     class="flex-shrink-0 w-6 h-6"
                     aria-hidden="true"
                 />

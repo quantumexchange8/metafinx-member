@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EarnController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WalletController;
 use Inertia\Inertia;
@@ -29,10 +30,6 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('/Earn', function () {
-    return Inertia::render('Earn/Earn');
-})->middleware(['auth'])->name('earn');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -43,6 +40,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/getTransaction/{type}', [WalletController::class, 'getTransaction'])->name('wallet.getTransaction');
         Route::post('/deposit', [PaymentController::class, 'deposit'])->name('wallet.deposit');
         Route::post('/withdrawal', [PaymentController::class, 'withdrawal'])->name('wallet.withdrawal');
+    });
+
+    Route::prefix('earn')->group(function () {
+        Route::get('/invest_subscription', [EarnController::class, 'invest_subscription'])->name('earn.invest_subscription');
     });
 });
 
