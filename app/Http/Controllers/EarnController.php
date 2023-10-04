@@ -17,6 +17,10 @@ class EarnController extends Controller
 
         $investment_plans->load('descriptions');
 
+        $code = 'VE-MB28-TXJ1R_2023-10-30';
+        $serial_number = base64_encode($code);
+        dd($serial_number);
+
         return Inertia::render('Earn/Earn', [
             'investmentPlans' => $investment_plans
         ]);
