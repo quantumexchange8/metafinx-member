@@ -12,8 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-         $schedule->command('check:deposit-status')->everyMinute();
-         $schedule->command('reject:deposit')->everyMinute();
+         $schedule->command('check:deposit-status')->everyFiveMinutes();
+         $schedule->command('reject:deposit')->everyFiveMinutes();
     }
 
     /**
