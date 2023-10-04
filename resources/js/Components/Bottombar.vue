@@ -3,7 +3,7 @@ import { onMounted, onUnmounted } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import { useFullscreen } from '@vueuse/core'
 import SidebarLink from '@/Components/Sidebar/SidebarLink.vue'
-import { DashboardIcon, LogoutIcon, DashboardIconInactive, InactiveReportIcon, InactiveAffiliateIcon, InactiveWalletIcon, InactiveEarnIcon } from '@/Components/Icons/outline'
+import { DashboardIcon, LogoutIcon, DashboardIconInactive, InactiveReportIcon, InactiveAffiliateIcon, WalletIcon, InactiveWalletIcon, InactiveEarnIcon } from '@/Components/Icons/outline'
 
 </script>
 
@@ -48,13 +48,20 @@ import { DashboardIcon, LogoutIcon, DashboardIconInactive, InactiveReportIcon, I
             </Link>
         </div>
         <div>
-            <Link :href="route('profile.edit')">
+            <Link :href="route('wallet.details')">
                 <div class="flex flex-col items-center w-16">
-                    <InactiveWalletIcon
+                    <WalletIcon
+                        v-if="route().current('wallet.details')"
                         class="flex-shrink-0 w-6 h-6 mb-1"
                         aria-hidden="true"
                     />
-                    <p :class="route().current('profile.edit') ? 'text-pink-500' : 'text-white' " class="text-xs">
+
+                    <InactiveWalletIcon
+                        v-else
+                        class="flex-shrink-0 w-6 h-6 mb-1"
+                        aria-hidden="true"
+                    />
+                    <p :class="route().current('wallet.details') ? 'text-pink-500' : 'text-white' " class="text-xs">
                         Wallet
                     </p>
                 </div>

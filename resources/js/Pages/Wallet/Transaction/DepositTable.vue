@@ -84,7 +84,7 @@ const paginationActiveClass = [
         <div v-if="depositLoading" class="w-full flex justify-center my-8">
             <Loading />
         </div>
-        <table v-else class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
+        <table v-else class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
             <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
             <tr>
                 <th scope="col" class="pl-5 py-3">

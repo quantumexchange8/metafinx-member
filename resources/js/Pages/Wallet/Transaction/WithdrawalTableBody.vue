@@ -70,7 +70,7 @@ const closeModal = () => {
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">To</span>
-                <span class="text-black dark:text-white py-2">WALLET ADDRESS</span>
+                <span class="text-black dark:text-white py-2">{{ selectedDeposit.to_wallet_address }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Amount (unit)</span>
