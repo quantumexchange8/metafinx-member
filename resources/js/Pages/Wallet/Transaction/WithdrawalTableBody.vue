@@ -23,6 +23,11 @@ const closeModal = () => {
 </script>
 
 <template>
+    <tr v-if="withdrawals.data.length === 0">
+        <th colspan="6" class="py-4 text-lg text-center">
+            No History
+        </th>
+    </tr>
     <tr
         v-for="withdrawal in withdrawals.data"
         class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 hover:cursor-pointer dark:hover:bg-gray-600"

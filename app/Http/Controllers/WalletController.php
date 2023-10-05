@@ -35,7 +35,9 @@ class WalletController extends Controller
 
     public function getTransaction(Request $request, $type)
     {
-        $query = Payment::query()->with(['user', 'wallet'])->where('type', $type);
+        $user = \Auth::user();
+
+        $query = Payment::query()->with(['user', 'wallet'])->where('user_id', $user->id)->where('type', $type);
 
         if ($request->filled('search')) {
             $search = '%' . $request->input('search') . '%';

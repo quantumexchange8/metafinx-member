@@ -23,6 +23,11 @@ const closeModal = () => {
 </script>
 
 <template>
+    <tr v-if="deposits.data.length === 0">
+        <th colspan="5" class="py-4 text-lg text-center">
+            No History
+        </th>
+    </tr>
     <tr
         v-for="deposit in deposits.data"
         class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 hover:cursor-pointer dark:hover:bg-gray-600"
