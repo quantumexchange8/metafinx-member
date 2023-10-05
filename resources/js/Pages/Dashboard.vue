@@ -8,7 +8,7 @@ import {transactionFormat} from "@/Composables/index.js";
 const props = defineProps({
     totalWalletBalance: String,
     walletLastUpdate: Object,
-    investmentEarningsLastUpdate: Object,
+    investmentEarningsLastUpdate: String,
 })
 const { formatDateTime } = transactionFormat();
 </script>
@@ -62,7 +62,7 @@ const { formatDateTime } = transactionFormat();
                             </p>
                         </div>
                         <p class="text-[12px] text-white">
-                            Latest updated on {{ formatDateTime(props.investmentEarningsLastUpdate.updated_at) }}
+                            Latest updated on {{ formatDateTime(props.investmentEarningsLastUpdate) }}
                         </p>
                     </div>
                     <div class="pr-1.5">
