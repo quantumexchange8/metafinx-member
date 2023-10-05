@@ -99,9 +99,6 @@ const paginationActiveClass = [
                 <th scope="col" class="py-3">
                     Amount
                 </th>
-                <th scope="col" class="py-3">
-                    Price
-                </th>
                 <th scope="col" class="py-3 text-center">
                     Status
                 </th>

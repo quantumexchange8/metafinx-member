@@ -1,11 +1,13 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import Button from '@/Components/Button.vue'
-import { PurseIcon } from '@/Components/Icons/outline'
+import { PurseIcon, checkIcon } from '@/Components/Icons/outline'
 import Wallet from "@/Pages/Wallet/Wallet.vue";
+import Subscribe from "@/Pages/Earn/Partials/Subscribe.vue";
 
 const props = defineProps({
-    investmentPlans: Object
+    investmentPlans: Object,
+    wallet_sel: Array,
 })
 </script>
 
@@ -25,8 +27,12 @@ const props = defineProps({
 
                 <div>
                     <Button
+                        external
                         type="button"
                         variant="warning"
+                        class="items-center gap-2 max-w-xs"
+                        v-slot="{ iconSizeClasses }"
+                        :href="route('earn.investment')"
                     >
                         <div class="inline-flex items-center">
                             <PurseIcon
@@ -43,8 +49,27 @@ const props = defineProps({
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div v-for="plan in props.investmentPlans" class="p-5 bg-white rounded-xl shadow-md dark:bg-gray-700">
-                <div class="flex flex-col items-center justify-center">
+                <div class="flex flex-col items-center justify-center gap-2 border-b dark:border-gray-600 pb-5">
                     <img class="w-10 h-10 rounded bg-white" src="/assets/icon.png" alt="Medium avatar">
+                    <div class="font-semibold">
+                        {{ plan.name }}
+                    </div>
+                    <div class="font-semibold text-[32px]">
+                        {{ plan.roi_per_annum }} p.a.
+                    </div>
+                </div>
+                <div class="pt-5">
+                    <div v-for="item in plan.descriptions" class="mb-3">
+                        <div class="inline-flex items-center gap-2 text-xs">
+                            <checkIcon />
+                            {{ item.description }}
+                        </div>
+                    </div>
+                    <Subscribe
+                        :plan="plan"
+                        :wallet_sel="wallet_sel"
+                    />
+
                 </div>
             </div>
         </div>
@@ -55,8 +80,41 @@ const props = defineProps({
                 <h3 class="text-xl font-semibold leading-tight">
                     Investment Performance
                 </h3>
-
-
+                <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+                    <div class="font-medium text-xs dark:text-gray-400">
+                        Incoming Monthly Return
+                    </div>
+                    <div class="font-semibold text-2xl dark:text-white">
+                        $ 0.00
+                    </div>
+                </div>
+                <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+                    <div class="font-medium text-xs dark:text-gray-400">
+                        Incoming Dividend
+                    </div>
+                    <div class="font-semibold text-2xl dark:text-white">
+                        $ 0.00
+                    </div>
+                </div>
+                <h3 class="text-xl font-semibold leading-tight pt-4">
+                    Affiliate Performance
+                </h3>
+                <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+                    <div class="font-medium text-xs dark:text-gray-400">
+                        Incoming Affiliate Earnings
+                    </div>
+                    <div class="font-semibold text-2xl dark:text-white">
+                        $ 0.00
+                    </div>
+                </div>
+                <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+                    <div class="font-medium text-xs dark:text-gray-400">
+                        Incoming Dividend Earnings
+                    </div>
+                    <div class="font-semibold text-2xl dark:text-white">
+                        $ 0.00
+                    </div>
+                </div>
             </div>
         </template>
     </AuthenticatedLayout>

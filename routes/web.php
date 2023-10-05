@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EarnController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WalletController;
@@ -26,11 +27,9 @@ Route::get('/', function () {
 Route::post('upload/tmp_img', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'upload']);
 Route::post('upload/image-revert', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'image_revert']);
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -44,6 +43,8 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('earn')->group(function () {
         Route::get('/invest_subscription', [EarnController::class, 'invest_subscription'])->name('earn.invest_subscription');
+        Route::post('/subscribe', [EarnController::class, 'subscribe'])->name('earn.subscribe');
+        Route::get('/my_investment', [EarnController::class, 'investment'])->name('earn.investment');
     });
 });
 

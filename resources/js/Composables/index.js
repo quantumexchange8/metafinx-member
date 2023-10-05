@@ -56,7 +56,7 @@ export const handleScroll = () => {
 
 export function transactionFormat() {
 
-    function formatDate(date) {
+    function formatDateTime(date) {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const formattedDate = new Date(date);
 
@@ -94,7 +94,20 @@ export function transactionFormat() {
         return formattedType.charAt(0).toUpperCase() + formattedType.slice(1);
     };
 
+    function formatDate(date) {
+        const formattedDate = new Date(date).toLocaleDateString('en-CA', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'Asia/Kuala_Lumpur'
+        });
+
+        const [year, month, day] = formattedDate.split('-');
+        return `${day}/${month}/${year}`;
+    }
+
     return {
+        formatDateTime,
         formatDate,
         getStatusClass,
         formatAmount,

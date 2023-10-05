@@ -14,11 +14,11 @@ import { MailIcon } from '@heroicons/vue/outline'
                 <span className="sr-only">Love</span>
             </span>
                 <a
-                    href="mailto:metafinx.admin@gmail.com"
+                    href="mailto:support@metafinx.com"
                     target="_blank"
                     class="hover:underline"
                 >
-                    metafinx.admin@gmail.com
+                    support@metafinx.com
                 </a>
         </div>
     </footer>

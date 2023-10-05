@@ -3,6 +3,14 @@ import AuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import Button from '@/Components/Button.vue'
 import { GithubIcon } from '@/Components/Icons/brands'
 import {Link} from "@inertiajs/vue3";
+import {transactionFormat} from "@/Composables/index.js";
+
+const props = defineProps({
+    totalWalletBalance: String,
+    walletLastUpdate: Object,
+    investmentEarningsLastUpdate: Object,
+})
+const { formatDateTime } = transactionFormat();
 </script>
 
 <template>
@@ -28,15 +36,15 @@ import {Link} from "@inertiajs/vue3";
                                 Wallet Balance
                             </p>
                             <p class="text-white text-[28px] font-semibold">
-                                $ {{ $page.props.auth.user.cash_wallet }}
+                                $ {{ props.totalWalletBalance }}
                             </p>
                         </div>
                         <p class="text-xs text-white font-normal">
-                            Latest updated on
+                            Latest updated on {{ formatDateTime(props.walletLastUpdate.updated_at) }}
                         </p>
                     </div>
                     <div class="pr-1.5">
-                        <img src="assets/icon.svg">
+                        <img src="/assets/wallet.png" alt="wallet">
                     </div>
 
                 </div>
@@ -51,15 +59,14 @@ import {Link} from "@inertiajs/vue3";
                             </p>
                             <p class="text-white text-[28px] font-semibold">
                                 $ 0.00
-                                <!-- {{ $page.props.auth.user.cash_wallet }} -->
                             </p>
                         </div>
                         <p class="text-[12px] text-white">
-                            Latest updated on
+                            Latest updated on {{ formatDateTime(props.investmentEarningsLastUpdate.updated_at) }}
                         </p>
                     </div>
                     <div class="pr-1.5">
-                        <img src="assets/icon2.svg" >
+                        <img src="/assets/money_bag.png" width="140" height="140" alt="moneybag">
                     </div>
                 </div>
             </Link>

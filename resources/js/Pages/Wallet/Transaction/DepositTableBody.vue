@@ -10,7 +10,7 @@ const props = defineProps({
 
 const transactionModal = ref(false);
 const selectedDeposit = ref();
-const { formatDate } = transactionFormat();
+const { formatDateTime } = transactionFormat();
 
 const openTransactionModal = (deposit) => {
     selectedDeposit.value = deposit;
@@ -38,13 +38,10 @@ const closeModal = () => {
             {{ deposit.transaction_id }}
         </td>
         <td class="py-3">
-            {{ formatDate(deposit.created_at) }}
+            {{ formatDateTime(deposit.created_at) }}
         </td>
         <td class="py-3">
             {{ deposit.amount }}
-        </td>
-        <td class="py-3">
-            {{ deposit.price }}
         </td>
         <td class="py-3 text-center">
             <span v-if="deposit.status === 'Success'" class="flex w-2 h-2 bg-green-500 dark:bg-success-500 mx-auto rounded-full"></span>
@@ -66,7 +63,7 @@ const closeModal = () => {
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Date & Time</span>
-                <span class="text-black dark:text-white py-2">{{ formatDate(selectedDeposit.created_at) }}</span>
+                <span class="text-black dark:text-white py-2">{{ formatDateTime(selectedDeposit.created_at) }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">To</span>
@@ -75,10 +72,6 @@ const closeModal = () => {
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Amount (unit)</span>
                 <span class="text-black dark:text-white py-2">{{ selectedDeposit.amount }}</span>
-            </div>
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Price</span>
-                <span class="text-black dark:text-white py-2">$ {{ selectedDeposit.price }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Transaction Status</span>

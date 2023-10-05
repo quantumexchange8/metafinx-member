@@ -10,7 +10,7 @@ const props = defineProps({
 
 const transactionModal = ref(false);
 const selectedDeposit = ref();
-const { formatDate } = transactionFormat();
+const { formatDateTime } = transactionFormat();
 
 const openTransactionModal = (deposit) => {
     selectedDeposit.value = deposit;
@@ -38,7 +38,7 @@ const closeModal = () => {
             {{ withdrawal.transaction_id }}
         </td>
         <td class="py-3">
-            {{ formatDate(withdrawal.created_at) }}
+            {{ formatDateTime(withdrawal.created_at) }}
         </td>
         <td class="py-3">
             {{ withdrawal.to_wallet_address }}
@@ -66,7 +66,7 @@ const closeModal = () => {
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Date & Time</span>
-                <span class="text-black dark:text-white py-2">{{ formatDate(selectedDeposit.created_at) }}</span>
+                <span class="text-black dark:text-white py-2">{{ formatDateTime(selectedDeposit.created_at) }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">To</span>
