@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('investment_plan_id');
             $table->unsignedBigInteger('wallet_id');
             $table->decimal('amount', 11, 2);
+            $table->decimal('total_earning', 11, 2);
             $table->string('status')->default('CoolingPeriod');
             $table->date('next_roi_date')->nullable();
             $table->date('expired_date')->nullable();
