@@ -29,6 +29,9 @@ class User extends Authenticatable implements HasMedia
         'address_1',
         'address_2',
         'verification_type',
+        'referral_code',
+        'upline_id',
+        'hierarchyList',
     ];
 
     /**
@@ -54,5 +57,21 @@ class User extends Authenticatable implements HasMedia
     public function wallets(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Wallet::class, 'user_id', 'id' );
+    }
+
+    public function setReferralId()
+    {
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz';
+        $idLength = strlen((string)$this->id);
+
+        $temp_code = substr(str_shuffle($characters), 0, 8 - $idLength);
+        $alphabetId = '';
+
+        foreach (str_split((string)$this->id) as $digit) {
+            $alphabetId .= $characters[$digit];
+        }
+
+        $this->referral_code = $temp_code . $alphabetId;
+        $this->save();
     }
 }
