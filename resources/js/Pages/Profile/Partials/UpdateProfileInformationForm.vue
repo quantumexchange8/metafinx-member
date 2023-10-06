@@ -9,6 +9,31 @@ import { UserIcon, UsersIcon } from "@/Components/Icons/outline.jsx";
 import { MailIcon, PhoneIcon, KeyIcon, HomeIcon } from '@heroicons/vue/outline'
 import BaseListbox from "@/Components/BaseListbox.vue";
 import {computed, ref, watch} from "vue";
+import vueFilePond from "vue-filepond";
+import "filepond/dist/filepond.min.css";
+
+// Import FilePond plugins
+// Please note that you need to install these plugins separately
+
+// Import image preview plugin styles
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
+
+// Import the plugin code
+import FilePondPluginFilePoster from 'filepond-plugin-file-poster';
+
+// Import the plugin styles
+import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
+
+// Import image preview and file type validation plugins
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+
+
+const FilePond = vueFilePond(
+    FilePondPluginFilePoster,
+    FilePondPluginImagePreview,
+    FilePondPluginFileValidateType,
+)
 
 const props = defineProps({
     mustVerifyEmail: Boolean,
@@ -25,6 +50,8 @@ const form = useForm({
     phone: user.phone,
     address_1: user.address_1,
     address_2: user.address_2,
+    proof_front: '',
+    proof_back: '',
 })
 
 const selectedCountry = ref(form.country);
@@ -46,6 +73,29 @@ const submit = () => {
 watch(selectedCountry, () => {
     onchangeDropdown();
 });
+
+const myFiles = ref([]);
+const handleFrontLoad = (response) => {
+    return form.proof_front = response
+}
+
+const handleBackLoad = (response) => {
+    return form.proof_back = response
+}
+
+const handleFrontRevert = (uniqueId, load, error) => {
+    axios.post('/upload/image-revert', {
+        image: form.proof_front,
+    });
+    load();
+}
+
+const handleBackRevert = (uniqueId, load, error) => {
+    axios.post('/upload/image-revert', {
+        image: form.proof_back,
+    });
+    load();
+}
 
 </script>
 
@@ -202,31 +252,84 @@ watch(selectedCountry, () => {
             <div class="space-y-5">
 
                 <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="id-img" value="Proof of Indentity (FRONT)" />
-
-                    <Input
-                        id="id-img"
-                        type="text"
-                        class="mt-1 block w-full"
+                    <Label class="text-[14px] dark:text-white mb-2" for="proof_front" value="Proof of Indentity (FRONT)" />
+                    <file-pond
+                        name="proof_front"
+                        ref="pond"
+                        v-bind:allow-multiple="false"
+                        accepted-file-types="image/png, image/jpeg, image/jpg"
+                        v-bind:server="{
+                        url: '',
+                        timeout: 7000,
+                        process: {
+                            url: '/upload/tmp_img',
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $page.props.csrf_token
+                            },
+                            withCredentials: false,
+                            onload: handleFrontLoad,
+                            onerror: () => {}
+                        },
+                        revert: handleFrontRevert
+                    }"
+                        v-bind:files="myFiles"
                     />
+                    <InputError :message="form.errors.proof_front" class="mt-2" />
                 </div>
                 <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="id-img2" value="Proof of Indentity (BACK)" />
+                    <Label class="text-[14px] dark:text-white mb-2" for="proof_back" value="Proof of Indentity (BACK)" />
 
-                    <Input
-                        id="id-img2"
-                        type="text"
-                        class="mt-1 block w-full"
-                    />
+                    <file-pond
+                            name="proof_back"
+                            ref="pond"
+                            v-bind:allow-multiple="false"
+                            accepted-file-types="image/png, image/jpeg, image/jpg"
+                            v-bind:server="{
+                            url: '',
+                            timeout: 7000,
+                            process: {
+                                url: '/upload/tmp_img',
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $page.props.csrf_token
+                                },
+                                withCredentials: false,
+                                onload: handleBackLoad,
+                                onerror: () => {}
+                            },
+                            revert: handleBackRevert
+                        }"
+                            v-bind:files="myFiles"
+                        />
+                        <InputError :message="form.errors.proof_back" class="mt-2" />
                 </div>
                 <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="id-img3" value="Profile Photo" />
+                    <Label class="text-[14px] dark:text-white mb-2" for="id_img3" value="Profile Photo" />
                     
-                    <Input
-                        id="id-img3"
-                        type="text"
-                        class="mt-1 block w-full"
-                    />
+                    <file-pond
+                                name="id_img3"
+                                ref="pond"
+                                v-bind:allow-multiple="false"
+                                accepted-file-types="image/png, image/jpeg, image/jpg"
+                                v-bind:server="{
+                                url: '',
+                                timeout: 7000,
+                                process: {
+                                    url: '/upload/tmp_img',
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': $page.props.csrf_token
+                                    },
+                                    withCredentials: false,
+                                    onload: handleBackLoad,
+                                    onerror: () => {}
+                                },
+                                revert: handleBackRevert
+                            }"
+                                v-bind:files="myFiles"
+                            />
+                            <InputError :message="form.errors.id_img3" class="mt-2" />
                 </div>
             </div>
             
@@ -235,3 +338,33 @@ watch(selectedCountry, () => {
         </form>
     </section>
 </template>
+
+<style>
+.filepond--panel-root {
+    background-color: #4D5761;
+}
+
+.filepond--drop-label {
+    color: #9DA4AE;
+}
+
+.filepond--label-action {
+    color: white;
+    text-decoration-color: white;
+}
+
+[data-filepond-item-state*='error'] .filepond--item-panel,
+[data-filepond-item-state*='invalid'] .filepond--item-panel {
+    background-color: #F04438;
+}
+
+[data-filepond-item-state='processing-complete'] .filepond--item-panel {
+    background-color: #039855;
+}
+
+@media (max-width: 30em) {
+    .filepond--item {
+        width: calc(50% - 0.5em);
+    }
+}
+</style>

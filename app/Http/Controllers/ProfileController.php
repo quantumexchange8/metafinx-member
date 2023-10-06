@@ -74,4 +74,37 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function upload(Request $request)
+    {
+        
+        if ($request->hasFile('proof_front')) {
+            return $request->file('proof_front')->store('uploads/user/kyc', 'public');
+        }
+
+        if ($request->hasFile('proof_back')) {
+            return $request->file('proof_back')->store('uploads/user/kyc', 'public');
+        }
+
+        return '';
+    }
+
+    public function image_revert(Request $request)
+    {
+        
+        if ($image = $request->get('image')) {
+            
+            $path = storage_path('/app/public/' . $image);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+
+        if ($image = $request->get('image_back')) {
+            $path = storage_path('/app/public/' . $image);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+    }
 }
