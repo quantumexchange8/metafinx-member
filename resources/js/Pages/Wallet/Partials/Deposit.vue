@@ -15,7 +15,7 @@ import BaseListbox from "@/Components/BaseListbox.vue";
 
 const props = defineProps({
     wallet_sel: Array,
-    random_address: Array
+    random_address: Object
 })
 const depositModal = ref(false);
 const tooltipContent = ref('Copy');

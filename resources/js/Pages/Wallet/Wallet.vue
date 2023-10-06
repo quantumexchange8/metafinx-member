@@ -57,7 +57,24 @@ const props = defineProps({
             </div>
         </div>
 
-        <div class="p-5 mt-8 bg-white overflow-hidden md:overflow-visible rounded-xl shadow-md dark:bg-gray-700">
+        <h3 class="md:hidden text-xl font-semibold leading-tight my-5">
+            Your Assets
+        </h3>
+        <div class="flex flex-nowrap md:hidden gap-3 overflow-x-auto md:overflow-visible">
+            <div v-for="wallet in props.wallets" class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] shadow-md bg-gradient-to-bl from-pink-400 to-pink-600 w-full">
+                <div class="space-y-2">
+                    <div class="text-base font-semibold dark:text-white">
+                        {{ wallet.name }}
+                    </div>
+                    <div class="text-xl font-semibold dark:text-white">
+                        $ {{ wallet.balance }}
+                    </div>
+                </div>
+                <Wallet class="w-24 h-24"/>
+            </div>
+        </div>
+
+        <div class="p-5 my-5 bg-white overflow-hidden md:overflow-visible rounded-xl shadow-md dark:bg-gray-700">
             <Transaction />
         </div>
 

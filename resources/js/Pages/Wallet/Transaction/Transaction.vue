@@ -56,14 +56,16 @@ const updateTransactionType = (transaction_type) => {
         />
     </div>
 
-    <div class="mt-5 flex flex-col md:flex md:flex-row gap-3 justify-between ">
-        <div class="grid grid-cols-2 md:grid-cols-3 w-full md:w-2/3 gap-3">
+    <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="w-full">
             <InputIconWrapper class="md:col-span-2">
                 <template #icon>
                     <SearchIcon aria-hidden="true" class="w-5 h-5" />
                 </template>
                 <Input withIcon id="search" type="text" class="block w-full" placeholder="Search" v-model="search" />
             </InputIconWrapper>
+        </div>
+        <div class="md:w-2/3">
             <vue-tailwind-datepicker
                 placeholder="Select dates"
                 :formatter="formatter"
@@ -72,10 +74,10 @@ const updateTransactionType = (transaction_type) => {
                 input-classes="py-2.5 border-gray-400 w-full rounded-lg text-sm placeholder:text-base dark:placeholder:text-gray-400 focus:border-gray-400 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:border-gray-600 dark:bg-gray-600 dark:text-white"
             />
         </div>
-        <div>
+        <div class="flex justify-end">
             <Button
                 type="button"
-                class="justify-center gap-2 border border-gray-600 text-white text-sm dark:hover:bg-gray-600"
+                class="justify-center w-full md:w-2/3 gap-2 border border-gray-600 text-white text-sm dark:hover:bg-gray-600"
                 variant="transparent"
                 @click="exportDeposit"
             >
@@ -83,9 +85,9 @@ const updateTransactionType = (transaction_type) => {
                 <span>Export as Excel</span>
             </Button>
         </div>
-        
+
     </div>
-    <div class="flex gap-5 mt-5">
+    <div class="flex gap-4 mt-5">
         <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-green-500 dark:bg-error-500 rounded-full mr-2 flex-shrink-0"></span>Rejected</span>
         <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-red-500 dark:bg-warning-500 rounded-full mr-2 flex-shrink-0"></span>Pending</span>
         <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-red-500 dark:bg-[#007AFF] rounded-full mr-2 flex-shrink-0"></span>Processing</span>

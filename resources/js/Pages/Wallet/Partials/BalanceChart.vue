@@ -88,6 +88,12 @@ const chartOptions = {
                         background: 'transparent',
                         image: undefined,
                     },
+                    dataLabels: {
+                        total: {
+                            show: true,
+                            fontSize: '11px',
+                        }
+                    },
                 }
             },
             legend: {

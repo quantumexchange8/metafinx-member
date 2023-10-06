@@ -26,7 +26,7 @@ defineProps({
 
         <div>
             <div
-                class="bg-white dark:bg-gray-800 shadow sm:rounded-lg mt-6"
+                class="bg-white dark:bg-gray-800 sm:rounded-lg mt-6"
             >
                 <UpdateProfileInformationForm
                     :must-verify-email="mustVerifyEmail"
@@ -36,7 +36,7 @@ defineProps({
             </div>
 
             <div
-                class="bg-white dark:bg-gray-800 shadow sm:rounded-lg my-[60px]"
+                class="bg-white dark:bg-gray-800 sm:rounded-lg my-[60px]"
             >
                 <UpdatePasswordForm />
             </div>

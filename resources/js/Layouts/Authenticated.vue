@@ -2,7 +2,6 @@
 import { Head } from '@inertiajs/vue3'
 import Sidebar from '@/Components/Sidebar/Sidebar.vue'
 import Navbar from '@/Components/Navbar.vue'
-import Bottombar from '@/Components/Bottombar.vue'
 import { sidebarState } from '@/Composables'
 import Alert from "@/Components/Alert.vue";
 import {onUnmounted, ref} from "vue";
@@ -55,13 +54,13 @@ onUnmounted(() => removeFinishEventListener());
                 },
             ]"
         >
-            <!-- Navbar / Topbar -->
+            <!-- Navbar -->
             <Navbar />
 
-            <main class="flex-1 px-4 sm:px-6 pt-20 md:pt-0" :class="{ 'md:mr-80': $slots.asideRight, 'lg:mr-96': $slots.asideRight}">
+            <main class="flex-1 px-4 sm:px-6 md:pt-0" :class="{ 'md:mr-80': $slots.asideRight, 'lg:mr-96': $slots.asideRight}">
                 <!-- Page Heading -->
                 <header v-if="$slots.header">
-                    <div class="p-4 sm:py-6 px-0">
+                    <div class="pb-4 sm:py-6 px-0">
                         <slot name="header" />
                     </div>
                 </header>
@@ -76,6 +75,7 @@ onUnmounted(() => removeFinishEventListener());
                     {{ alertMessage }}
                 </Alert>
                 <slot />
+
             </main>
 
             <!-- <PageFooter class="hidden md:block"/> -->
@@ -84,7 +84,5 @@ onUnmounted(() => removeFinishEventListener());
         <aside v-if="$slots.asideRight" class="hidden md:block">
             <slot name="asideRight" />
         </aside>
-
-        <Bottombar/>
     </div>
 </template>

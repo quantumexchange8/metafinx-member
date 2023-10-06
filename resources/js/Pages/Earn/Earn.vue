@@ -74,6 +74,47 @@ const props = defineProps({
             </div>
         </div>
 
+        <div class="flex flex-col gap-5 my-5 md:hidden">
+            <h3 class="text-xl font-semibold leading-tight">
+                Investment Performance
+            </h3>
+            <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+                <div class="font-medium text-xs dark:text-gray-400">
+                    Incoming Monthly Return
+                </div>
+                <div class="font-semibold text-2xl dark:text-white">
+                    $ 0.00
+                </div>
+            </div>
+            <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+                <div class="font-medium text-xs dark:text-gray-400">
+                    Incoming Dividend
+                </div>
+                <div class="font-semibold text-2xl dark:text-white">
+                    $ 0.00
+                </div>
+            </div>
+            <h3 class="text-xl font-semibold leading-tight pt-4">
+                Affiliate Performance
+            </h3>
+            <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+                <div class="font-medium text-xs dark:text-gray-400">
+                    Incoming Affiliate Earnings
+                </div>
+                <div class="font-semibold text-2xl dark:text-white">
+                    $ 0.00
+                </div>
+            </div>
+            <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+                <div class="font-medium text-xs dark:text-gray-400">
+                    Incoming Dividend Earnings
+                </div>
+                <div class="font-semibold text-2xl dark:text-white">
+                    $ 0.00
+                </div>
+            </div>
+        </div>
+
 
         <template #asideRight>
             <div class="inset-y-0 p-6 flex flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-l dark:border-gray-700 lg:w-96 fixed right-0">
