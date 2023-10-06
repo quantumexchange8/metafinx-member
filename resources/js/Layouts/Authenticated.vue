@@ -58,7 +58,7 @@ onUnmounted(() => removeFinishEventListener());
             <!-- Navbar / Topbar -->
             <Navbar />
 
-            <main class="flex-1 px-4 sm:px-6 pt-20 md:pt-0" :class="{ 'md:mr-96': $slots.asideRight }">
+            <main class="flex-1 px-4 sm:px-6 pt-20 md:pt-0" :class="{ 'md:mr-80': $slots.asideRight, 'lg:mr-96': $slots.asideRight}">
                 <!-- Page Heading -->
                 <header v-if="$slots.header">
                     <div class="p-4 sm:py-6 px-0">

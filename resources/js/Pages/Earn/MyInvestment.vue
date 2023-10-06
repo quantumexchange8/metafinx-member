@@ -40,30 +40,15 @@ function calculateWidthPercentage(created_at, period) {
 <template>
     <AuthenticatedLayout title="My Investment">
         <template #header>
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                    <li>
-                        <div class="flex items-center">
-                            <Link :href="route('earn.invest_subscription')" class="text-2xl font-semibold leading-tight dark:text-gray-400 dark:hover:text-white">Earn</Link>
-                        </div>
-                    </li>
-                    <li aria-current="page">
-                        <div class="flex items-center">
-                            <svg class="w-3 h-3 text-gray-400 dark:text-white mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                            </svg>
-                            <span class="text-2xl font-semibold leading-tight md:ml-2">My Investment</span>
-                        </div>
-                    </li>
-                </ol>
-            </nav>
-        </template>
-
-        <div class="border-b pb-3 dark:border-gray-700 mt-2 mb-8">
-            <div class="font-semibold">
-                Current Investment
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <h2 class="text-2xl font-semibold leading-tight">
+                    My Investment
+                </h2>
             </div>
-        </div>
+            <p class="text-base font-normal dark:text-gray-400">
+                Track your investment growth here.
+            </p>
+        </template>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div v-for="investment in props.investments" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]">
@@ -126,6 +111,14 @@ function calculateWidthPercentage(created_at, period) {
                     </div>
                     <div class="dark:text-white text-xs">
                         <span class="uppercase">{{ investment.subscription_id }}</span>
+                    </div>
+                </div>
+                <div class="flex justify-between mb-1">
+                    <div class="dark:text-gray-400 text-xs">
+                        Total Earning
+                    </div>
+                    <div class="dark:text-white text-xs">
+                        <span class="uppercase">{{ investment.total_earning }}</span>
                     </div>
                 </div>
                 <div class="mt-4 text-xs">

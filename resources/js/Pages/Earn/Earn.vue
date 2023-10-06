@@ -76,7 +76,7 @@ const props = defineProps({
 
 
         <template #asideRight>
-            <div class="inset-y-0 p-6 flex flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-l dark:border-gray-700 w-96 fixed right-0">
+            <div class="inset-y-0 p-6 flex flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-l dark:border-gray-700 lg:w-96 fixed right-0">
                 <h3 class="text-xl font-semibold leading-tight">
                     Investment Performance
                 </h3>
