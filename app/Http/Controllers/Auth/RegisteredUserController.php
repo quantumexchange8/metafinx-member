@@ -106,22 +106,63 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'country' => $request->country,
-            'phone' => $request->phone,
-            'address_1' => $request->address_1,
-            'address_2' => $request->address_2,
-            'verification_type' => $request->verification_type,
-            'referral_code' => $request->referral_code,
-            'password' => Hash::make($request->password),
-        ]);
+
+        if($request->has('referral_code'))
+        {
+            $referral_code = $request->input('referral_code');
+
+            $check_referral_code = User::where('referral_code', $referral_code)->first();
+
+            if($check_referral_code)
+            {
+                $upline_id = $check_referral_code->id;
+
+                // if($check_referral_code->hierarchyList != null)
+                // {
+                //     $upline_hierarchy = $check_referral_code->hierarchyList;
+                // }
+
+                if(empty($check_referral_code['hierarchyList'])){
+                    $hierarchyList = "-" . $upline_id . "-";
+                } else {
+                    $hierarchyList = $check_referral_code['hierarchyList'] . $upline_id . "-";
+                }
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'country' => $request->country,
+                    'phone' => $request->phone,
+                    'address_1' => $request->address_1,
+                    'address_2' => $request->address_2,
+                    'verification_type' => $request->verification_type,
+                    'upline_id' => $upline_id,
+                    'hierarchyList' => $hierarchyList,
+                    'password' => Hash::make($request->password),
+                ]);
+            } 
+
+        } else {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'country' => $request->country,
+                'phone' => $request->phone,
+                'address_1' => $request->address_1,
+                'address_2' => $request->address_2,
+                'verification_type' => $request->verification_type,
+                // 'referral_code' => $request->referral_code,
+                'password' => Hash::make($request->password),
+            ]);
+        }
+
+        
 
         Wallet::create([
             'user_id' => $user->id,
             'name' => 'Internal Wallet'
         ]);
+
+        $user->setReferralId();
 
         $this->processImage($request);
 
