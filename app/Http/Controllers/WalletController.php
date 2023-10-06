@@ -6,6 +6,7 @@ use App\Exports\DepositExport;
 use App\Exports\WithdrawalExport;
 use App\Models\Payment;
 use App\Models\Wallet;
+use App\Models\SettingWalletAddress;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -26,10 +27,14 @@ class WalletController extends Controller
                 'label' => $wallet->name,
             ];
         });
+
+        $wallet_address = SettingWalletAddress::inRandomOrder()->first();
+
         return Inertia::render('Wallet/Wallet', [
             'wallets' => $wallets->get(),
             'totalBalance' => $totalBalance->sum('balance'),
             'wallet_sel' => $wallet_sel,
+            'random_address' => $wallet_address,
         ]);
     }
 

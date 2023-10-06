@@ -14,7 +14,8 @@ import Tooltip from "@/Components/Tooltip.vue";
 import BaseListbox from "@/Components/BaseListbox.vue";
 
 const props = defineProps({
-    wallet_sel: Array
+    wallet_sel: Array,
+    random_address: Array
 })
 const depositModal = ref(false);
 const tooltipContent = ref('Copy');
@@ -91,11 +92,11 @@ function copyTestingCode () {
                         Scan QR code to deposit
                     </p>
                     <div class="flex justify-center">
-                        <qrcode-vue :class="['border-4 border-white']" value="TXzZ1zgHscuLeTqYTHZBuU5516SP3DbS8R" :size="200"></qrcode-vue>
+                        <qrcode-vue :class="['border-4 border-white']" :value="props.random_address.wallet_address" :size="200"></qrcode-vue>
                     </div>
                     <div class="inline-flex items-center gap-2 text-center dark:text-white">
-                        TXzZ1zgHscuLeTqYTHZBuU5516SP3DbS8R
-                        <input type="hidden" id="cryptoWalletAddress" value="TXzZ1zgHscuLeTqYTHZBuU5516SP3DbS8R">
+                        {{ props.random_address.wallet_address }}
+                        <input type="hidden" id="cryptoWalletAddress" :value="props.random_address.wallet_address">
                         <Tooltip :content="tooltipContent" placement="top">
                             <DuplicateIcon aria-hidden="true" :class="['w-6 dark:text-white']" @click.stop.prevent="copyTestingCode" style="cursor: pointer" />
                         </Tooltip>

@@ -14,6 +14,7 @@ const props = defineProps({
     wallets: Object,
     totalBalance: String,
     wallet_sel: Object,
+    random_address: Object,
 })
 
 </script>
@@ -42,6 +43,7 @@ const props = defineProps({
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-6">
                     <Deposit
                         :wallet_sel="wallet_sel"
+                        :random_address="random_address"
                     />
                     <Withdrawal
                         :wallet_sel="wallet_sel"
