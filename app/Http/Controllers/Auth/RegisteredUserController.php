@@ -138,6 +138,7 @@ class RegisteredUserController extends Controller
                     'verification_type' => $request->verification_type,
                     'upline_id' => $upline_id,
                     'hierarchyList' => $hierarchyList,
+                    'setting_rank_id' => 1,
                     'password' => Hash::make($request->password),
                 ]);
             }
@@ -150,6 +151,7 @@ class RegisteredUserController extends Controller
                 'address_1' => $request->address_1,
                 'address_2' => $request->address_2,
                 'verification_type' => $request->verification_type,
+                'setting_rank_id' => 1,
                 'password' => Hash::make($request->password),
             ]);
         }
