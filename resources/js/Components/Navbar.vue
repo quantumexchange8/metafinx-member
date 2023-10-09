@@ -201,7 +201,7 @@ onUnmounted(() => {
                         aria-hidden="true"
                     />
                     <p :class="route().current('affiliate.referral_view') ? 'text-pink-500' : 'text-white' " class="text-xs">
-                        Wallet
+                        Affiliate
                     </p>
                 </div>
 
