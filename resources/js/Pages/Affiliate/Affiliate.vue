@@ -66,7 +66,7 @@ function copyReferralCodeLink() {
 
         <ReferralTree />
 
-        <div class="flex flex-col space-y-6 py-8">
+        <div class="flex flex-col space-y-6 py-8 md:hidden">
             <h3 class="text-xl font-semibold leading-tight">
                 Referral Program
             </h3>
