@@ -66,9 +66,10 @@ import { Link } from "@inertiajs/vue3";
                     alt="ProfilePic"
                 >
                 <div class="flex justify-center my-2">
-                    <span class="bg-gray-100 text-gray-800 text-xs px-3 py-0.5 font-thin rounded-full dark:bg-warning-700 dark:text-white" v-if="$page.props.auth.user.setting_rank_id === 1">Starter</span>
-                    <span class="bg-gray-100 text-gray-800 text-xs px-3 py-0.5 font-thin rounded-full dark:bg-gray-600 dark:text-white" v-if="$page.props.auth.user.setting_rank_id === 2">Silver</span>
-                    <span class="bg-gray-100 text-gray-800 text-xs px-3 py-0.5 font-thin rounded-full dark:bg-warning-400 dark:text-white" v-if="$page.props.auth.user.setting_rank_id === 3">Gold</span>
+                    <span class="bg-gray-100 text-gray-800 text-xs px-3 py-0.5 font-thin rounded-full dark:bg-gray-900 dark:text-white" v-if="$page.props.auth.user.setting_rank_id === 1">Member</span>
+                    <span class="bg-gray-100 text-gray-800 text-xs px-3 py-0.5 font-thin rounded-full dark:bg-warning-700 dark:text-white" v-if="$page.props.auth.user.setting_rank_id === 2">Starter</span>
+                    <span class="bg-gray-100 text-gray-800 text-xs px-3 py-0.5 font-thin rounded-full dark:bg-gray-600 dark:text-white" v-if="$page.props.auth.user.setting_rank_id === 3">Silver</span>
+                    <span class="bg-gray-100 text-gray-800 text-xs px-3 py-0.5 font-thin rounded-full dark:bg-warning-400 dark:text-white" v-if="$page.props.auth.user.setting_rank_id === 4">Gold</span>
                 </div>
                 <div class="flex flex-col text-center">
                     <span>{{ $page.props.auth.user.name }}</span>

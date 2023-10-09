@@ -115,9 +115,9 @@ export default {
                             <div class="flex-col ml-3">
                                 <div class="flex gap-2 text-sm font-semibold">
                                     {{ node.name }}
-                                    <StaterIcon class="h-5" v-if="node.rank === 1" />
-                                    <SilverIcon class="h-5" v-if="node.rank === 2" />
-                                    <GoldIcon class="h-5" v-if="node.rank === 3" />
+                                    <StaterIcon class="h-5" v-if="node.rank === 2" />
+                                    <SilverIcon class="h-5" v-if="node.rank === 3" />
+                                    <GoldIcon class="h-5" v-if="node.rank === 4" />
                                     <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">Level {{ node.level }}</span>
                                 </div>
                                 <div class="text-xs font-normal dark:text-gray-400">
