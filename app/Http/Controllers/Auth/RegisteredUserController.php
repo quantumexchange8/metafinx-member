@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Models\SettingCountry;
 use App\Models\User;
 use App\Models\Wallet;
@@ -22,7 +23,7 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): Response
+    public function create($referral = null): Response
     {
         $settingCountries = SettingCountry::all();
 
@@ -35,7 +36,8 @@ class RegisteredUserController extends Controller
         });
 
         return Inertia::render('Auth/Register', [
-            'countries' => $formattedCountries
+            'countries' => $formattedCountries,
+            'referral' => $referral,
         ]);
     }
 
@@ -104,9 +106,8 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegisterRequest $request): RedirectResponse
     {
-
         if($request->has('referral_code'))
         {
             $referral_code = $request->input('referral_code');
@@ -139,8 +140,7 @@ class RegisteredUserController extends Controller
                     'hierarchyList' => $hierarchyList,
                     'password' => Hash::make($request->password),
                 ]);
-            } 
-
+            }
         } else {
             $user = User::create([
                 'name' => $request->name,
@@ -150,12 +150,10 @@ class RegisteredUserController extends Controller
                 'address_1' => $request->address_1,
                 'address_2' => $request->address_2,
                 'verification_type' => $request->verification_type,
-                // 'referral_code' => $request->referral_code,
                 'password' => Hash::make($request->password),
             ]);
         }
 
-        
 
         Wallet::create([
             'user_id' => $user->id,
@@ -164,13 +162,11 @@ class RegisteredUserController extends Controller
 
         $user->setReferralId();
 
-        $this->processImage($request);
+        $this->processImage($request, $user);
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('login')->with('title', 'Account signed up!')->with('success', 'Your account has been signed up successfully.');
     }
 
     public function upload(Request $request)
@@ -203,12 +199,19 @@ class RegisteredUserController extends Controller
         }
     }
 
-    protected function processImage(Request $request): void
+    protected function processImage(Request $request, $user): void
     {
         if ($image = $request->get('proof_front')) {
             $path = storage_path('/app/public/' . $image);
             if (file_exists($path)) {
-                unlink($path);
+                $user->addMedia($path)->toMediaCollection('kyc_approval');
+            }
+        }
+
+        if ($image_back = $request->get('proof_back')) {
+            $path = storage_path('/app/public/' . $image_back);
+            if (file_exists($path)) {
+                $user->addMedia($path)->toMediaCollection('kyc_approval');
             }
         }
     }

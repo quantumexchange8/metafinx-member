@@ -103,7 +103,7 @@ const handleBackRevert = (uniqueId, load, error) => {
     <section>
         <form
             @submit.prevent="form.patch(route('profile.update'))"
-            
+
         >
         <header class="flex justify-between items-center">
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -127,7 +127,7 @@ const handleBackRevert = (uniqueId, load, error) => {
             </div>
         </header>
         <hr class="mt-3">
-        
+
         <section class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-10">
             <!-- personal details -->
             <div class="space-y-5">
@@ -190,7 +190,7 @@ const handleBackRevert = (uniqueId, load, error) => {
 
                     <InputError class="mt-2" :message="form.errors.email" />
                 </div>
-                
+
                 <div class="space-y-3">
                     <div>
                         <Label class="text-[14px] dark:text-white mb-2" for="address_1" value="Address" />
@@ -204,7 +204,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                 :class="form.errors.address_1 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             />
                         </InputIconWrapper>
-                        
+
 
                         <InputError class="mt-2" :message="form.errors.address_1" />
                     </div>
@@ -222,7 +222,7 @@ const handleBackRevert = (uniqueId, load, error) => {
 
                         <InputError class="mt-2" :message="form.errors.address_2" />
                     </div>
-                    
+
                 </div>
 
                 <div
@@ -249,90 +249,90 @@ const handleBackRevert = (uniqueId, load, error) => {
                 </div>
             </div>
             <!-- personal kyc -->
-            <div class="space-y-5">
+<!--            <div class="space-y-5">-->
 
-                <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="proof_front" value="Proof of Indentity (FRONT)" />
-                    <file-pond
-                        name="proof_front"
-                        ref="pond"
-                        v-bind:allow-multiple="false"
-                        accepted-file-types="image/png, image/jpeg, image/jpg"
-                        v-bind:server="{
-                        url: '',
-                        timeout: 7000,
-                        process: {
-                            url: '/upload/tmp_img',
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': $page.props.csrf_token
-                            },
-                            withCredentials: false,
-                            onload: handleFrontLoad,
-                            onerror: () => {}
-                        },
-                        revert: handleFrontRevert
-                    }"
-                        v-bind:files="myFiles"
-                    />
-                    <InputError :message="form.errors.proof_front" class="mt-2" />
-                </div>
-                <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="proof_back" value="Proof of Indentity (BACK)" />
+<!--                <div>-->
+<!--                    <Label class="text-[14px] dark:text-white mb-2" for="proof_front" value="Proof of Indentity (FRONT)" />-->
+<!--                    <file-pond-->
+<!--                        name="proof_front"-->
+<!--                        ref="pond"-->
+<!--                        v-bind:allow-multiple="false"-->
+<!--                        accepted-file-types="image/png, image/jpeg, image/jpg"-->
+<!--                        v-bind:server="{-->
+<!--                        url: '',-->
+<!--                        timeout: 7000,-->
+<!--                        process: {-->
+<!--                            url: '/upload/tmp_img',-->
+<!--                            method: 'POST',-->
+<!--                            headers: {-->
+<!--                                'X-CSRF-TOKEN': $page.props.csrf_token-->
+<!--                            },-->
+<!--                            withCredentials: false,-->
+<!--                            onload: handleFrontLoad,-->
+<!--                            onerror: () => {}-->
+<!--                        },-->
+<!--                        revert: handleFrontRevert-->
+<!--                    }"-->
+<!--                        v-bind:files="myFiles"-->
+<!--                    />-->
+<!--                    <InputError :message="form.errors.proof_front" class="mt-2" />-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <Label class="text-[14px] dark:text-white mb-2" for="proof_back" value="Proof of Indentity (BACK)" />-->
 
-                    <file-pond
-                            name="proof_back"
-                            ref="pond"
-                            v-bind:allow-multiple="false"
-                            accepted-file-types="image/png, image/jpeg, image/jpg"
-                            v-bind:server="{
-                            url: '',
-                            timeout: 7000,
-                            process: {
-                                url: '/upload/tmp_img',
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': $page.props.csrf_token
-                                },
-                                withCredentials: false,
-                                onload: handleBackLoad,
-                                onerror: () => {}
-                            },
-                            revert: handleBackRevert
-                        }"
-                            v-bind:files="myFiles"
-                        />
-                        <InputError :message="form.errors.proof_back" class="mt-2" />
-                </div>
-                <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="id_img3" value="Profile Photo" />
-                    
-                    <file-pond
-                                name="id_img3"
-                                ref="pond"
-                                v-bind:allow-multiple="false"
-                                accepted-file-types="image/png, image/jpeg, image/jpg"
-                                v-bind:server="{
-                                url: '',
-                                timeout: 7000,
-                                process: {
-                                    url: '/upload/tmp_img',
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': $page.props.csrf_token
-                                    },
-                                    withCredentials: false,
-                                    onload: handleBackLoad,
-                                    onerror: () => {}
-                                },
-                                revert: handleBackRevert
-                            }"
-                                v-bind:files="myFiles"
-                            />
-                            <InputError :message="form.errors.id_img3" class="mt-2" />
-                </div>
-            </div>
-            
+<!--                    <file-pond-->
+<!--                            name="proof_back"-->
+<!--                            ref="pond"-->
+<!--                            v-bind:allow-multiple="false"-->
+<!--                            accepted-file-types="image/png, image/jpeg, image/jpg"-->
+<!--                            v-bind:server="{-->
+<!--                            url: '',-->
+<!--                            timeout: 7000,-->
+<!--                            process: {-->
+<!--                                url: '/upload/tmp_img',-->
+<!--                                method: 'POST',-->
+<!--                                headers: {-->
+<!--                                    'X-CSRF-TOKEN': $page.props.csrf_token-->
+<!--                                },-->
+<!--                                withCredentials: false,-->
+<!--                                onload: handleBackLoad,-->
+<!--                                onerror: () => {}-->
+<!--                            },-->
+<!--                            revert: handleBackRevert-->
+<!--                        }"-->
+<!--                            v-bind:files="myFiles"-->
+<!--                        />-->
+<!--                        <InputError :message="form.errors.proof_back" class="mt-2" />-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <Label class="text-[14px] dark:text-white mb-2" for="id_img3" value="Profile Photo" />-->
+<!--                    -->
+<!--                    <file-pond-->
+<!--                                name="id_img3"-->
+<!--                                ref="pond"-->
+<!--                                v-bind:allow-multiple="false"-->
+<!--                                accepted-file-types="image/png, image/jpeg, image/jpg"-->
+<!--                                v-bind:server="{-->
+<!--                                url: '',-->
+<!--                                timeout: 7000,-->
+<!--                                process: {-->
+<!--                                    url: '/upload/tmp_img',-->
+<!--                                    method: 'POST',-->
+<!--                                    headers: {-->
+<!--                                        'X-CSRF-TOKEN': $page.props.csrf_token-->
+<!--                                    },-->
+<!--                                    withCredentials: false,-->
+<!--                                    onload: handleBackLoad,-->
+<!--                                    onerror: () => {}-->
+<!--                                },-->
+<!--                                revert: handleBackRevert-->
+<!--                            }"-->
+<!--                                v-bind:files="myFiles"-->
+<!--                            />-->
+<!--                            <InputError :message="form.errors.id_img3" class="mt-2" />-->
+<!--                </div>-->
+<!--            </div>-->
+
         </section>
 
         </form>

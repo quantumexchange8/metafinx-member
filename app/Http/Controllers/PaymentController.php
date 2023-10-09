@@ -23,6 +23,7 @@ class PaymentController extends Controller
             'txn_hash' => $request->txn_hash,
             'type' => 'Deposit',
             'amount' => $request->amount,
+            'to_wallet_address' => $request->wallet_address,
             'price' => $request->amount,
             'status' => 'Pending'
         ]);

@@ -7,6 +7,7 @@ import Alert from "@/Components/Alert.vue";
 import {onUnmounted, ref} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {usePage} from "@inertiajs/vue3";
+import ToastList from "@/Components/ToastList.vue";
 
 const page = usePage();
 defineProps({
@@ -74,6 +75,7 @@ onUnmounted(() => removeFinishEventListener());
                 >
                     {{ alertMessage }}
                 </Alert>
+                <ToastList />
                 <slot />
 
             </main>

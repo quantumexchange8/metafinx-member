@@ -32,6 +32,11 @@ class User extends Authenticatable implements HasMedia
         'referral_code',
         'upline_id',
         'hierarchyList',
+        'status',
+        'setting_rank_id',
+        'total_affiliate',
+        'self_deposit',
+        'valid_affiliate_deposit',
     ];
 
     /**
@@ -59,7 +64,7 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Wallet::class, 'user_id', 'id' );
     }
 
-    public function setReferralId()
+    public function setReferralId(): void
     {
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz';
         $idLength = strlen((string)$this->id);
@@ -73,5 +78,22 @@ class User extends Authenticatable implements HasMedia
 
         $this->referral_code = $temp_code . $alphabetId;
         $this->save();
+    }
+
+    public function getChildrenIds(): array
+    {
+        return User::query()->where('hierarchyList', 'like', '%-' . $this->id . '-%')
+            ->where('status', 1)
+            ->pluck('id')->toArray();
+    }
+
+    public function upline(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'upline_id', 'id');
+    }
+
+    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(User::class, 'upline_id', 'id');
     }
 }

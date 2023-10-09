@@ -1,7 +1,7 @@
 <script setup>
 import PerfectScrollbar from '@/Components/PerfectScrollbar.vue'
 import SidebarLink from '@/Components/Sidebar/SidebarLink.vue'
-import {DashboardIcon, EarnIcon, WalletIcon, LogoutIcon} from '@/Components/Icons/outline'
+import {DashboardIcon, EarnIcon, WalletIcon, LogoutIcon, AffiliateIcon} from '@/Components/Icons/outline'
 import SidebarCollapsible from '@/Components/Sidebar/SidebarCollapsible.vue'
 import SidebarCollapsibleItem from '@/Components/Sidebar/SidebarCollapsibleItem.vue'
 import { TemplateIcon } from '@heroicons/vue/outline'
@@ -47,6 +47,19 @@ import DropdownLink from "@/Components/DropdownLink.vue";
         >
             <template #icon>
                 <WalletIcon
+                    class="flex-shrink-0 w-6 h-6"
+                    aria-hidden="true"
+                />
+            </template>
+        </SidebarLink>
+
+        <SidebarLink
+            title="Affiliate"
+            :href="route('affiliate.referral_view')"
+            :active="route().current('affiliate.referral_view')"
+        >
+            <template #icon>
+                <AffiliateIcon
                     class="flex-shrink-0 w-6 h-6"
                     aria-hidden="true"
                 />

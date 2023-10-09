@@ -40,7 +40,11 @@ const FilePond = vueFilePond(
 )
 
 const props = defineProps({
-    countries: Array
+    countries: Array,
+    referral: {
+        type: String,
+        default: null
+    },
 })
 
 const formStep = ref(1);
@@ -102,7 +106,7 @@ const form = useForm({
     verification_type: 'nric',
     proof_front: '',
     proof_back: '',
-    referral_code: '',
+    referral_code: props.referral,
     terms: false,
 })
 
@@ -201,7 +205,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                     :caption="computedCaption"
                     size="3xl"
                 />
-                <form class="w-1/2">
+                <form class="w-full md:w-1/2">
 
                     <!-- Step 1 -->
                     <div v-if="formStep === 1" class="grid gap-6">
@@ -426,8 +430,16 @@ const handleBackRevert = (uniqueId, load, error) => {
                     <div v-if="formStep === 4" class="grid gap-6">
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="referral_code" value="Referral Code (optional)" />
-                            <Input id="referral_code" type="text" placeholder="Enter referral code" class="block w-full" v-model="form.referral_code" autocomplete="referral_code" />
+                            <Label class="dark:text-white" for="referral_code" value="Referral Code" />
+                            <Input
+                                id="referral_code"
+                                type="text"
+                                placeholder="Enter referral code"
+                                class="block w-full"
+                                :class="form.errors.referral_code ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                v-model="form.referral_code"
+                                autocomplete="referral_code" />
+                            <InputError :message="form.errors.referral_code" class="mt-2" />
                         </div>
 
                     </div>

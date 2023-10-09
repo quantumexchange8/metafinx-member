@@ -68,12 +68,12 @@ function show() {
         <div
             ref="floatingRef"
             :class="[
-                'absolute top-0 left-0 z-50 bg-gray-200 text-black dark:text-white dark:bg-gray-700 text-sm px-3 py-1.5 rounded-md cursor-default',
+                'absolute top-0 left-0 z-50 bg-gray-200 text-black dark:text-white dark:bg-gray-600 text-sm px-3 py-1.5 rounded-md cursor-default',
                 isHidden && 'hidden'
             ]"
         >
             {{ props.content }}
-            <div class="absolute bg-gray-200 text-black dark:dark:bg-gray-700 h-[8px] w-[8px] rotate-45" ref="arrowRef"></div>
+            <div class="absolute bg-gray-200 text-black dark:dark:bg-gray-600 h-[8px] w-[8px] rotate-45" ref="arrowRef"></div>
         </div>
     </div>
 </template>

@@ -31,6 +31,7 @@ const closeModal = () => {
 const form = useForm({
     wallet_id: '',
     amount: '',
+    to_wallet_address: props.random_address,
     txn_hash: '',
     terms: false
 })

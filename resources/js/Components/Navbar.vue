@@ -3,12 +3,8 @@ import { onMounted, onUnmounted } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import { useFullscreen } from '@vueuse/core'
 import {
-    SunIcon,
-    MoonIcon,
-    SearchIcon,
     MenuIcon,
     XIcon,
-    ArrowsExpandIcon,
     BellIcon,
     ChevronDownIcon,
 } from '@heroicons/vue/outline'
@@ -28,7 +24,8 @@ import {
     DashboardIconInactive,
     EarnIcon,
     InactiveEarnIcon, InactiveWalletIcon,
-    WalletIcon
+    WalletIcon,
+    AffiliateIcon, InactiveAffiliateIcon
 } from '@/Components/Icons/outline'
 
 const { isFullscreen, toggle: toggleFullScreen } = useFullscreen()
@@ -75,55 +72,55 @@ onUnmounted(() => {
                 />
             </Button>
         </div>
-        <div class="flex items-center gap-2">
-            <div class="flex flex-row">
-                <div>
-                    <Dropdown align="right">
-                        <template #trigger>
-                            <Button
-                                iconOnly
-                                variant="transparent"
-                                type="button"
-                                class="border-0 bg-transparent md:inline-flex p-0"
-                                srText="Toggle dark mode"
-                            >
-                                <span class="dark:text-white">EN</span>
-                                <ChevronDownIcon
-                                    aria-hidden="true"
-                                    class="w-4 h-4 ml-2 dark:text-white"
-                                />
-                            </Button>
-                        </template>
-                        <template #content>
-                            <DropdownLink>
-                                <div class="inline-flex items-center gap-2">
-                                    English
-                                </div>
-                            </DropdownLink>
-                            <DropdownLink>
-                                <div class="inline-flex items-center gap-2">
-                                    中文 (繁)
-                                </div>
-                            </DropdownLink>
-                        </template>
-                    </Dropdown>
-                </div>
-                <div>
-                    <Button
-                        iconOnly
-                        variant="secondary"
-                        type="button"
-                        class="border-0 bg-transparent md:inline-flex p-0"
-                        srText="Toggle dark mode"
-                    >
-                        <BellIcon
-                            aria-hidden="true"
-                            class="w-6 h-6 dark:text-white"
-                        />
-                    </Button>
-                </div>
-            </div>
-        </div>
+<!--        <div class="flex items-center gap-2">-->
+<!--            <div class="flex flex-row">-->
+<!--                <div>-->
+<!--                    <Dropdown align="right">-->
+<!--                        <template #trigger>-->
+<!--                            <Button-->
+<!--                                iconOnly-->
+<!--                                variant="transparent"-->
+<!--                                type="button"-->
+<!--                                class="border-0 bg-transparent md:inline-flex p-0"-->
+<!--                                srText="Toggle dark mode"-->
+<!--                            >-->
+<!--                                <span class="dark:text-white">EN</span>-->
+<!--                                <ChevronDownIcon-->
+<!--                                    aria-hidden="true"-->
+<!--                                    class="w-4 h-4 ml-2 dark:text-white"-->
+<!--                                />-->
+<!--                            </Button>-->
+<!--                        </template>-->
+<!--                        <template #content>-->
+<!--                            <DropdownLink>-->
+<!--                                <div class="inline-flex items-center gap-2">-->
+<!--                                    English-->
+<!--                                </div>-->
+<!--                            </DropdownLink>-->
+<!--                            <DropdownLink>-->
+<!--                                <div class="inline-flex items-center gap-2">-->
+<!--                                    中文 (繁)-->
+<!--                                </div>-->
+<!--                            </DropdownLink>-->
+<!--                        </template>-->
+<!--                    </Dropdown>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <Button-->
+<!--                        iconOnly-->
+<!--                        variant="secondary"-->
+<!--                        type="button"-->
+<!--                        class="border-0 bg-transparent md:inline-flex p-0"-->
+<!--                        srText="Toggle dark mode"-->
+<!--                    >-->
+<!--                        <BellIcon-->
+<!--                            aria-hidden="true"-->
+<!--                            class="w-6 h-6 dark:text-white"-->
+<!--                        />-->
+<!--                    </Button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </nav>
 
     <!-- Mobile bottom bar -->
@@ -138,17 +135,10 @@ onUnmounted(() => {
     >
         <div>
             <Link :href="route('dashboard')">
-                <div class="flex flex-col items-center w-16">
-                    <DashboardIcon
-                        v-if="route().current('dashboard')"
-                        class="flex-shrink-0 w-6 h-6 mb-1"
-                        aria-hidden="true"
-                    />
-                    <DashboardIconInactive
-                        v-else
-                        class="flex-shrink-0 w-6 h-6 mb-1"
-                        aria-hidden="true"
-                    />
+                <div class="fixed bottom-4 dark:bg-gray-900 border-2 border-gray-800 rounded-full w-16 h-16 -translate-y-6">
+                    <img src="/assets/icon.png" class="w-10 h-10 mx-auto mt-2" alt="logo" />
+                </div>
+                <div class="flex justify-center items-center mt-7 w-16">
                     <p :class="route().current('dashboard') ? 'text-pink-500' : 'text-white' " class="text-xs">
                         Dashboard
                     </p>
@@ -190,6 +180,27 @@ onUnmounted(() => {
                         aria-hidden="true"
                     />
                     <p :class="route().current('wallet.details') ? 'text-pink-500' : 'text-white' " class="text-xs">
+                        Wallet
+                    </p>
+                </div>
+
+            </Link>
+        </div>
+        <div>
+            <Link :href="route('affiliate.referral_view')">
+                <div class="flex flex-col items-center w-16">
+                    <AffiliateIcon
+                        v-if="route().current('affiliate.referral_view')"
+                        class="flex-shrink-0 w-6 h-6 mb-1"
+                        aria-hidden="true"
+                    />
+
+                    <InactiveAffiliateIcon
+                        v-else
+                        class="flex-shrink-0 w-6 h-6 mb-1"
+                        aria-hidden="true"
+                    />
+                    <p :class="route().current('affiliate.referral_view') ? 'text-pink-500' : 'text-white' " class="text-xs">
                         Wallet
                     </p>
                 </div>

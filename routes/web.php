@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EarnController;
 use App\Http\Controllers\PaymentController;
@@ -24,9 +25,6 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::post('upload/tmp_img', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'upload']);
-Route::post('upload/image-revert', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'image_revert']);
-
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -47,6 +45,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/invest_subscription', [EarnController::class, 'invest_subscription'])->name('earn.invest_subscription');
         Route::post('/subscribe', [EarnController::class, 'subscribe'])->name('earn.subscribe');
         Route::get('/my_investment', [EarnController::class, 'investment'])->name('earn.investment');
+    });
+
+    Route::prefix('affiliate')->group(function () {
+        Route::get('/referral_view', [AffiliateController::class, 'referral_view'])->name('affiliate.referral_view');
+        Route::get('/getTreeData', [AffiliateController::class, 'getTreeData'])->name('affiliate.getTreeData');
     });
 });
 

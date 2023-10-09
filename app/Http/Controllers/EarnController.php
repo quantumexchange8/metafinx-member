@@ -67,8 +67,9 @@ class EarnController extends Controller
             'to_wallet_address' => $request->wallet_address,
         ]);
 
-        $next_roi_date = $investmentSubscription->created_at->addMonths(4);
-        $expired_date = $investmentSubscription->created_at->addMonths($investment_plan->investment_period);
+        $cooling_period_date = $investmentSubscription->created_at->addDays(60)->startOfDay();
+        $next_roi_date = $cooling_period_date->copy()->addMonth()->startOfMonth();
+        $expired_date = $cooling_period_date->copy()->addMonths($investment_plan->investment_period)->endOfMonth();
 
         $investmentSubscription->update([
             'next_roi_date' => $next_roi_date,
