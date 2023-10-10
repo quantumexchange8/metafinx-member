@@ -47,7 +47,7 @@ class RegisteredUserController extends Controller
             'name' => 'required|regex:/^[a-zA-Z0-9\p{Han}. ]+$/u|max:255',
             'country' => 'required',
             'email' => 'required|string|email|max:255|unique:' . User::class,
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8',
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|unique:' . User::class,
             'address_1' => 'required',
         ];
 

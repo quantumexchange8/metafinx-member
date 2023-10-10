@@ -46,25 +46,8 @@ const updatePassword = () => {
                         secure.
                     </p>
                 </div>
-
-                <div class="flex items-center gap-4">
-                    <Button :disabled="form.processing">Save</Button>
-
-                    <Transition
-                        enter-from-class="opacity-0"
-                        leave-to-class="opacity-0"
-                        class="transition ease-in-out"
-                    >
-                        <p
-                            v-if="form.recentlySuccessful"
-                            class="text-sm text-gray-600 dark:text-gray-400"
-                        >
-                            Saved.
-                        </p>
-                    </Transition>
-                </div>
             </header>
-            <hr class="mt-3">
+            <hr class="h-px mt-3 bg-gray-200 border-0 dark:bg-gray-700">
 
             <section class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div class="space-y-5">
@@ -120,6 +103,10 @@ const updatePassword = () => {
                 </div>
 
             </section>
+            <div class="flex justify-end">
+                <Button :disabled="form.processing">Save Changes</Button>
+
+            </div>
 
         </form>
 

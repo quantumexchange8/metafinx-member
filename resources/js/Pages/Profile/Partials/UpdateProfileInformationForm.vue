@@ -164,188 +164,142 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
             @submit.prevent="form.patch(route('profile.update'))"
 
         >
-        <header class="flex justify-between items-center">
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                Personal Information
-            </h2>
-            <div class="flex items-center gap-4">
-                <Button :disabled="form.processing">Save</Button>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    Personal Information
+                </h2>
+            </header>
+            <hr class="h-px mt-3 bg-gray-200 border-0 dark:bg-gray-700">
 
-                <Transition
-                    enter-from-class="opacity-0"
-                    leave-to-class="opacity-0"
-                    class="transition ease-in-out"
-                >
-                    <p
-                        v-if="form.recentlySuccessful"
-                        class="text-sm text-gray-600 dark:text-gray-400"
-                    >
-                        Saved.
-                    </p>
-                </Transition>
-            </div>
-        </header>
-        <hr class="mt-3">
-
-        <section class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-10">
-            <!-- personal details -->
-            <div class="space-y-5">
-                <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="name" value="Name" />
-
-                    <Input
-                        id="name"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="form.name"
-                        required
-                        autofocus
-                        autocomplete="name"
-                        disabled
-                    />
-
-                    <InputError class="mt-2" :message="form.errors.name" />
-                </div>
-
-                <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="country" value="Country" />
-
-                    <BaseListbox
-                        v-model="selectedCountry"
-                        :options="props.countries"
-                        :error="form.errors.country"
-                        disabled
-                    />
-
-                    <InputError class="mt-2" :message="form.errors.country" />
-                </div>
-
-                <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="phone" value="Phone Number" />
-
-                    <InputIconWrapper>
-                        <template #icon>
-                            <PhoneIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
-                        </template>
-                        <Input
-                            withIcon id="phone" type="text" placeholder="+6011-0000 0000" class="block w-full" v-model="form.phone" required disabled autocomplete="phone"
-                            :class="form.errors.phone ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
-                        />
-                    </InputIconWrapper>
-
-                    <InputError class="mt-2" :message="form.errors.phone" />
-                </div>
-
-                <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="email" value="Email" />
-
-                    <InputIconWrapper>
-                        <template #icon>
-                            <MailIcon aria-hidden="true" class="w-5 h-5" />
-                        </template>
-                        <Input
-                            withIcon id="email" type="email" class="block w-full" disabled placeholder="Email" v-model="form.email" required autocomplete="username"
-                            :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
-                        />
-                    </InputIconWrapper>
-
-                    <InputError class="mt-2" :message="form.errors.email" />
-                </div>
-
-                <div class="space-y-3">
+            <section class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- personal details -->
+                <div class="space-y-5">
                     <div>
-                        <Label class="text-[14px] dark:text-white mb-2" for="address_1" value="Address" />
+                        <Label class="text-[14px] dark:text-white mb-2" for="name" value="Name" />
 
-                        <InputIconWrapper>
-                            <template #icon>
-                                <HomeIcon aria-hidden="true" class="w-5 h-5" />
-                            </template>
-                            <Input
-                                withIcon id="address_1" type="text" class="block w-full" disabled placeholder="Line 1" v-model="form.address_1" required autocomplete="address_1"
-                                :class="form.errors.address_1 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
-                            />
-                        </InputIconWrapper>
+                        <Input
+                            id="name"
+                            type="text"
+                            class="mt-1 block w-full"
+                            v-model="form.name"
+                            required
+                            autofocus
+                            autocomplete="name"
+                            disabled
+                        />
 
-
-                        <InputError class="mt-2" :message="form.errors.address_1" />
+                        <InputError class="mt-2" :message="form.errors.name" />
                     </div>
 
                     <div>
+                        <Label class="text-[14px] dark:text-white mb-2" for="country" value="Country" />
+
+                        <BaseListbox
+                            v-model="selectedCountry"
+                            :options="props.countries"
+                            :error="form.errors.country"
+                            disabled
+                        />
+
+                        <InputError class="mt-2" :message="form.errors.country" />
+                    </div>
+
+                    <div>
+                        <Label class="text-[14px] dark:text-white mb-2" for="phone" value="Phone Number" />
+
                         <InputIconWrapper>
                             <template #icon>
-                                <HomeIcon aria-hidden="true" class="w-5 h-5" />
+                                <PhoneIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                             </template>
                             <Input
-                                withIcon id="address2" type="text" class="block w-full" disabled placeholder="Line 2 (Optional)" v-model="form.address_2" autocomplete="address_2"
-                                :class="form.errors.address_2 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                withIcon id="phone" type="text" placeholder="+6011-0000 0000" class="block w-full" v-model="form.phone" required disabled autocomplete="phone"
+                                :class="form.errors.phone ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             />
                         </InputIconWrapper>
 
-                        <InputError class="mt-2" :message="form.errors.address_2" />
+                        <InputError class="mt-2" :message="form.errors.phone" />
                     </div>
 
-                </div>
+                    <div>
+                        <Label class="text-[14px] dark:text-white mb-2" for="email" value="Email" />
 
-                <div
-                    v-if="props.mustVerifyEmail && user.email_verified_at === null"
-                >
-                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        Your email address is unverified.
-                        <Link
-                            :href="route('verification.send')"
-                            method="post"
-                            as="button"
-                            class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                        >
-                            Click here to re-send the verification email.
-                        </Link>
-                    </p>
+                        <InputIconWrapper>
+                            <template #icon>
+                                <MailIcon aria-hidden="true" class="w-5 h-5" />
+                            </template>
+                            <Input
+                                withIcon id="email" type="email" class="block w-full" disabled placeholder="Email" v-model="form.email" required autocomplete="username"
+                                :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                            />
+                        </InputIconWrapper>
+
+                        <InputError class="mt-2" :message="form.errors.email" />
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <Label class="text-[14px] dark:text-white mb-2" for="address_1" value="Address" />
+
+                            <InputIconWrapper>
+                                <template #icon>
+                                    <HomeIcon aria-hidden="true" class="w-5 h-5" />
+                                </template>
+                                <Input
+                                    withIcon id="address_1" type="text" class="block w-full" disabled placeholder="Line 1" v-model="form.address_1" required autocomplete="address_1"
+                                    :class="form.errors.address_1 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                />
+                            </InputIconWrapper>
+
+
+                            <InputError class="mt-2" :message="form.errors.address_1" />
+                        </div>
+
+                        <div>
+                            <InputIconWrapper>
+                                <template #icon>
+                                    <HomeIcon aria-hidden="true" class="w-5 h-5" />
+                                </template>
+                                <Input
+                                    withIcon id="address2" type="text" class="block w-full" disabled placeholder="Line 2 (Optional)" v-model="form.address_2" autocomplete="address_2"
+                                    :class="form.errors.address_2 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                />
+                            </InputIconWrapper>
+
+                            <InputError class="mt-2" :message="form.errors.address_2" />
+                        </div>
+
+                    </div>
 
                     <div
-                        v-show="props.status === 'verification-link-sent'"
-                        class="mt-2 font-medium text-sm text-green-600 dark:text-green-400"
+                        v-if="props.mustVerifyEmail && user.email_verified_at === null"
                     >
-                        A new verification link has been sent to your email address.
+                        <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
+                            Your email address is unverified.
+                            <Link
+                                :href="route('verification.send')"
+                                method="post"
+                                as="button"
+                                class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                            >
+                                Click here to re-send the verification email.
+                            </Link>
+                        </p>
+
+                        <div
+                            v-show="props.status === 'verification-link-sent'"
+                            class="mt-2 font-medium text-sm text-green-600 dark:text-green-400"
+                        >
+                            A new verification link has been sent to your email address.
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- personal kyc -->
-            <div class="space-y-5">
+                <!-- personal kyc -->
+                <div class="space-y-5">
 
-                <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="proof_front" value="Proof of Indentity (FRONT)" />
-                    <file-pond
-                        name="proof_front"
-                        ref="pond"
-                        :imagePreviewMaxHeight="150"
-                        :filePosterMaxHeight="150"
-                        v-bind:allow-multiple="false"
-                        accepted-file-types="image/png, image/jpeg, image/jpg"
-                        v-bind:server="{
-                        url: '',
-                        timeout: 7000,
-                        process: {
-                            url: '/profile/upload/tmp_img',
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': $page.props.csrf_token
-                            },
-                            withCredentials: false,
-                            onload: handleFrontLoad,
-                            onerror: () => {}
-                        },
-                        revert: handleFrontRevert
-                    }"
-                        v-bind:files="proofFront"
-                        v-on:init="handleFrontInit"
-                    />
-                    <InputError :message="form.errors.proof_front" class="mt-2" />
-                </div>
-                <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="proof_back" value="Proof of Indentity (BACK)" />
-
-                    <file-pond
-                            name="proof_back"
+                    <div>
+                        <Label class="text-[14px] dark:text-white mb-2" for="proof_front" value="Proof of Indentity (FRONT)" />
+                        <file-pond
+                            name="proof_front"
                             ref="pond"
                             :imagePreviewMaxHeight="150"
                             :filePosterMaxHeight="150"
@@ -361,21 +315,21 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                                     'X-CSRF-TOKEN': $page.props.csrf_token
                                 },
                                 withCredentials: false,
-                                onload: handleBackLoad,
+                                onload: handleFrontLoad,
                                 onerror: () => {}
                             },
-                            revert: handleBackRevert
+                            revert: handleFrontRevert
                         }"
-                            v-bind:files="proofBack"
-                            v-on:init="handleBackInit"
+                            v-bind:files="proofFront"
+                            v-on:init="handleFrontInit"
                         />
-                        <InputError :message="form.errors.proof_back" class="mt-2" />
-                </div>
-                <div>
-                    <Label class="text-[14px] dark:text-white mb-2" for="profile_photo" value="Profile Photo" />
+                        <InputError :message="form.errors.proof_front" class="mt-2" />
+                    </div>
+                    <div>
+                        <Label class="text-[14px] dark:text-white mb-2" for="proof_back" value="Proof of Indentity (BACK)" />
 
-                    <file-pond
-                                name="profile_photo"
+                        <file-pond
+                                name="proof_back"
                                 ref="pond"
                                 :imagePreviewMaxHeight="150"
                                 :filePosterMaxHeight="150"
@@ -391,19 +345,55 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                                         'X-CSRF-TOKEN': $page.props.csrf_token
                                     },
                                     withCredentials: false,
-                                    onload: handleProfilePhotoLoad,
+                                    onload: handleBackLoad,
                                     onerror: () => {}
                                 },
-                                revert: handleProfilePhotoRevert
+                                revert: handleBackRevert
                             }"
-                                v-bind:files="profilePic"
-                                v-on:init="handleAvatarInit"
+                                v-bind:files="proofBack"
+                                v-on:init="handleBackInit"
                             />
-                            <InputError :message="form.errors.profile_photo" class="mt-2" />
-                </div>
-            </div>
+                            <InputError :message="form.errors.proof_back" class="mt-2" />
+                    </div>
+                    <div>
+                        <Label class="text-[14px] dark:text-white mb-2" for="profile_photo" value="Profile Photo" />
 
-        </section>
+                        <file-pond
+                                    name="profile_photo"
+                                    ref="pond"
+                                    :imagePreviewMaxHeight="150"
+                                    :filePosterMaxHeight="150"
+                                    v-bind:allow-multiple="false"
+                                    accepted-file-types="image/png, image/jpeg, image/jpg"
+                                    v-bind:server="{
+                                    url: '',
+                                    timeout: 7000,
+                                    process: {
+                                        url: '/profile/upload/tmp_img',
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $page.props.csrf_token
+                                        },
+                                        withCredentials: false,
+                                        onload: handleProfilePhotoLoad,
+                                        onerror: () => {}
+                                    },
+                                    revert: handleProfilePhotoRevert
+                                }"
+                                    v-bind:files="profilePic"
+                                    v-on:init="handleAvatarInit"
+                                />
+                                <InputError :message="form.errors.profile_photo" class="mt-2" />
+                    </div>
+                </div>
+
+            </section>
+
+            <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+            <div class="flex justify-end">
+                <Button :disabled="form.processing">Save Changes</Button>
+
+            </div>
 
         </form>
     </section>
