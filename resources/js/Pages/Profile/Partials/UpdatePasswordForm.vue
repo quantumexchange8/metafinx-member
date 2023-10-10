@@ -36,7 +36,7 @@ const updatePassword = () => {
 <template>
     <section>
         <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
-            <header class="flex justify-between items-center">
+            <header class="flex justify-between items-center gap-2">
                 <div>
                     <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                         Update Password
@@ -46,7 +46,7 @@ const updatePassword = () => {
                         secure.
                     </p>
                 </div>
-                
+
                 <div class="flex items-center gap-4">
                     <Button :disabled="form.processing">Save</Button>
 
@@ -118,12 +118,12 @@ const updatePassword = () => {
                         />
                     </div>
                 </div>
-                
+
             </section>
 
         </form>
-        
-            
+
+
 
             <!-- <div class="flex items-center gap-4">
                 <Button :disabled="form.processing">Save</Button>

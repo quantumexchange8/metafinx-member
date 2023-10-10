@@ -95,7 +95,7 @@ function copyTestingCode () {
                     <div class="flex justify-center">
                         <qrcode-vue :class="['border-4 border-white']" :value="props.random_address.wallet_address" :size="200"></qrcode-vue>
                     </div>
-                    <div class="inline-flex items-center gap-2 text-center dark:text-white">
+                    <div class="inline-flex justify-center w-full items-center gap-2 text-center dark:text-white break-all">
                         {{ props.random_address.wallet_address }}
                         <input type="hidden" id="cryptoWalletAddress" :value="props.random_address.wallet_address">
                         <Tooltip :content="tooltipContent" placement="top">
