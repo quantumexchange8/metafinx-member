@@ -49,6 +49,7 @@ class AffiliateController extends Controller
         $level = 0;
         $rootNode = [
             'name' => $user->name,
+            'profile_photo' => $user->getFirstMediaUrl('profile_photo'),
             'email' => $user->email,
             'level' => $level,
             'total_affiliate' => count($user->getChildrenIds()),
@@ -72,6 +73,7 @@ class AffiliateController extends Controller
 
         $mappedUser = [
             'name' => $user->name,
+            'profile_photo' => $user->getFirstMediaUrl('profile_photo'),
             'email' => $user->email,
             'level' => $level + 1,
             'total_affiliate' => count($user->getChildrenIds()),

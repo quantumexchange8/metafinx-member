@@ -38,7 +38,10 @@ const FilePond = vueFilePond(
 const props = defineProps({
     mustVerifyEmail: Boolean,
     status: String,
-    countries: Array
+    countries: Array,
+    frontIdentityImg: String,
+    backIdentityImg: String,
+    profileImg: String,
 })
 
 const user = usePage().props.auth.user
@@ -50,8 +53,9 @@ const form = useForm({
     phone: user.phone,
     address_1: user.address_1,
     address_2: user.address_2,
-    proof_front: '',
-    proof_back: '',
+    proof_front: props.frontIdentityImg,
+    proof_back: props.backIdentityImg,
+    profile_photo: props.profileImg,
 })
 
 const selectedCountry = ref(form.country);
@@ -74,7 +78,9 @@ watch(selectedCountry, () => {
     onchangeDropdown();
 });
 
-const myFiles = ref([]);
+const proofFront = ref([]);
+const proofBack = ref([]);
+const profilePic = ref([]);
 const handleFrontLoad = (response) => {
     return form.proof_front = response
 }
@@ -83,16 +89,69 @@ const handleBackLoad = (response) => {
     return form.proof_back = response
 }
 
+const handleProfilePhotoLoad = (response) => {
+    return form.profile_photo = response
+}
+
+const handleFrontInit = () => {
+    if (form.proof_front) {
+        proofFront.value = [{
+            source: form.proof_front,
+            options: {
+                type: 'local',
+                metadata: {
+                    poster: form.proof_front
+                }
+            }
+        }]
+    }
+}
+
+const handleBackInit = () => {
+    if (form.proof_back) {
+        proofBack.value = [{
+            source: form.proof_back,
+            options: {
+                type: 'local',
+                metadata: {
+                    poster: form.proof_back
+                }
+            }
+        }]
+    }
+}
+
+const handleAvatarInit = () => {
+    if (form.profile_photo) {
+        profilePic.value = [{
+            source: form.profile_photo,
+            options: {
+                type: 'local',
+                metadata: {
+                    poster: form.profile_photo
+                }
+            }
+        }]
+    }
+}
+
 const handleFrontRevert = (uniqueId, load, error) => {
-    axios.post('/upload/image-revert', {
-        image: form.proof_front,
+    axios.post('/profile/upload/image-revert', {
+        proof_front: form.proof_front,
     });
     load();
 }
 
 const handleBackRevert = (uniqueId, load, error) => {
-    axios.post('/upload/image-revert', {
-        image: form.proof_back,
+    axios.post('/profile/upload/image-revert', {
+        proof_back: form.proof_back,
+    });
+    load();
+}
+
+const handleProfilePhotoRevert = (uniqueId, load, error) => {
+    axios.post('/profile/upload/image-revert', {
+        profile_photo: form.profile_photo,
     });
     load();
 }
@@ -251,89 +310,98 @@ const handleBackRevert = (uniqueId, load, error) => {
                 </div>
             </div>
             <!-- personal kyc -->
-<!--            <div class="space-y-5">-->
+            <div class="space-y-5">
 
-<!--                <div>-->
-<!--                    <Label class="text-[14px] dark:text-white mb-2" for="proof_front" value="Proof of Indentity (FRONT)" />-->
-<!--                    <file-pond-->
-<!--                        name="proof_front"-->
-<!--                        ref="pond"-->
-<!--                        v-bind:allow-multiple="false"-->
-<!--                        accepted-file-types="image/png, image/jpeg, image/jpg"-->
-<!--                        v-bind:server="{-->
-<!--                        url: '',-->
-<!--                        timeout: 7000,-->
-<!--                        process: {-->
-<!--                            url: '/upload/tmp_img',-->
-<!--                            method: 'POST',-->
-<!--                            headers: {-->
-<!--                                'X-CSRF-TOKEN': $page.props.csrf_token-->
-<!--                            },-->
-<!--                            withCredentials: false,-->
-<!--                            onload: handleFrontLoad,-->
-<!--                            onerror: () => {}-->
-<!--                        },-->
-<!--                        revert: handleFrontRevert-->
-<!--                    }"-->
-<!--                        v-bind:files="myFiles"-->
-<!--                    />-->
-<!--                    <InputError :message="form.errors.proof_front" class="mt-2" />-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <Label class="text-[14px] dark:text-white mb-2" for="proof_back" value="Proof of Indentity (BACK)" />-->
+                <div>
+                    <Label class="text-[14px] dark:text-white mb-2" for="proof_front" value="Proof of Indentity (FRONT)" />
+                    <file-pond
+                        name="proof_front"
+                        ref="pond"
+                        :imagePreviewMaxHeight="150"
+                        :filePosterMaxHeight="150"
+                        v-bind:allow-multiple="false"
+                        accepted-file-types="image/png, image/jpeg, image/jpg"
+                        v-bind:server="{
+                        url: '',
+                        timeout: 7000,
+                        process: {
+                            url: '/profile/upload/tmp_img',
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $page.props.csrf_token
+                            },
+                            withCredentials: false,
+                            onload: handleFrontLoad,
+                            onerror: () => {}
+                        },
+                        revert: handleFrontRevert
+                    }"
+                        v-bind:files="proofFront"
+                        v-on:init="handleFrontInit"
+                    />
+                    <InputError :message="form.errors.proof_front" class="mt-2" />
+                </div>
+                <div>
+                    <Label class="text-[14px] dark:text-white mb-2" for="proof_back" value="Proof of Indentity (BACK)" />
 
-<!--                    <file-pond-->
-<!--                            name="proof_back"-->
-<!--                            ref="pond"-->
-<!--                            v-bind:allow-multiple="false"-->
-<!--                            accepted-file-types="image/png, image/jpeg, image/jpg"-->
-<!--                            v-bind:server="{-->
-<!--                            url: '',-->
-<!--                            timeout: 7000,-->
-<!--                            process: {-->
-<!--                                url: '/upload/tmp_img',-->
-<!--                                method: 'POST',-->
-<!--                                headers: {-->
-<!--                                    'X-CSRF-TOKEN': $page.props.csrf_token-->
-<!--                                },-->
-<!--                                withCredentials: false,-->
-<!--                                onload: handleBackLoad,-->
-<!--                                onerror: () => {}-->
-<!--                            },-->
-<!--                            revert: handleBackRevert-->
-<!--                        }"-->
-<!--                            v-bind:files="myFiles"-->
-<!--                        />-->
-<!--                        <InputError :message="form.errors.proof_back" class="mt-2" />-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <Label class="text-[14px] dark:text-white mb-2" for="id_img3" value="Profile Photo" />-->
-<!--                    -->
-<!--                    <file-pond-->
-<!--                                name="id_img3"-->
-<!--                                ref="pond"-->
-<!--                                v-bind:allow-multiple="false"-->
-<!--                                accepted-file-types="image/png, image/jpeg, image/jpg"-->
-<!--                                v-bind:server="{-->
-<!--                                url: '',-->
-<!--                                timeout: 7000,-->
-<!--                                process: {-->
-<!--                                    url: '/upload/tmp_img',-->
-<!--                                    method: 'POST',-->
-<!--                                    headers: {-->
-<!--                                        'X-CSRF-TOKEN': $page.props.csrf_token-->
-<!--                                    },-->
-<!--                                    withCredentials: false,-->
-<!--                                    onload: handleBackLoad,-->
-<!--                                    onerror: () => {}-->
-<!--                                },-->
-<!--                                revert: handleBackRevert-->
-<!--                            }"-->
-<!--                                v-bind:files="myFiles"-->
-<!--                            />-->
-<!--                            <InputError :message="form.errors.id_img3" class="mt-2" />-->
-<!--                </div>-->
-<!--            </div>-->
+                    <file-pond
+                            name="proof_back"
+                            ref="pond"
+                            :imagePreviewMaxHeight="150"
+                            :filePosterMaxHeight="150"
+                            v-bind:allow-multiple="false"
+                            accepted-file-types="image/png, image/jpeg, image/jpg"
+                            v-bind:server="{
+                            url: '',
+                            timeout: 7000,
+                            process: {
+                                url: '/profile/upload/tmp_img',
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $page.props.csrf_token
+                                },
+                                withCredentials: false,
+                                onload: handleBackLoad,
+                                onerror: () => {}
+                            },
+                            revert: handleBackRevert
+                        }"
+                            v-bind:files="proofBack"
+                            v-on:init="handleBackInit"
+                        />
+                        <InputError :message="form.errors.proof_back" class="mt-2" />
+                </div>
+                <div>
+                    <Label class="text-[14px] dark:text-white mb-2" for="profile_photo" value="Profile Photo" />
+
+                    <file-pond
+                                name="profile_photo"
+                                ref="pond"
+                                :imagePreviewMaxHeight="150"
+                                :filePosterMaxHeight="150"
+                                v-bind:allow-multiple="false"
+                                accepted-file-types="image/png, image/jpeg, image/jpg"
+                                v-bind:server="{
+                                url: '',
+                                timeout: 7000,
+                                process: {
+                                    url: '/profile/upload/tmp_img',
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': $page.props.csrf_token
+                                    },
+                                    withCredentials: false,
+                                    onload: handleProfilePhotoLoad,
+                                    onerror: () => {}
+                                },
+                                revert: handleProfilePhotoRevert
+                            }"
+                                v-bind:files="profilePic"
+                                v-on:init="handleAvatarInit"
+                            />
+                            <InputError :message="form.errors.profile_photo" class="mt-2" />
+                </div>
+            </div>
 
         </section>
 
@@ -362,11 +430,5 @@ const handleBackRevert = (uniqueId, load, error) => {
 
 [data-filepond-item-state='processing-complete'] .filepond--item-panel {
     background-color: #039855;
-}
-
-@media (max-width: 30em) {
-    .filepond--item {
-        width: calc(50% - 0.5em);
-    }
 }
 </style>

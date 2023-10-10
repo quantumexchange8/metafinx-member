@@ -66,7 +66,7 @@ import { Link } from "@inertiajs/vue3";
                         :src="$page.props.auth.user.picture ? $page.props.auth.user.picture : 'https://img.freepik.com/free-icon/user_318-159711.jpg'"
                         alt="ProfilePic"
                     >
-                    <PendingIcon aria-hidden="true" class="absolute bottom-0 right-14 flex-shrink-0 w-5 h-5 mr-1" 
+                    <PendingIcon aria-hidden="true" class="absolute bottom-0 right-14 flex-shrink-0 w-5 h-5 mr-1"
                     v-if="$page.props.auth.user.kyc_approval === 'pending' || $page.props.auth.user.kyc_approval === 'rejected'"
                     />
 
@@ -74,29 +74,29 @@ import { Link } from "@inertiajs/vue3";
                     aria-hidden="true"
                     class="absolute bottom-0 right-14 flex-shrink-0 w-5 h-5 mr-1"
                     v-if="$page.props.auth.user.kyc_approval === 'approved'"
-                    /> 
+                    />
                 </div>
 
                 <div class="flex flex-col text-center mt-5">
                     <div class="flex flex-row items-center justify-center mb-1">
-                        <Rank1Icon 
-                        aria-hidden="true" 
-                        class="flex-shrink-0 w-5 h-5 mr-1"
-                        v-if="$page.props.auth.user.setting_rank_id === 1"
-                        />
-                        <Rank2Icon 
-                        aria-hidden="true" 
+                        <Rank1Icon
+                        aria-hidden="true"
                         class="flex-shrink-0 w-5 h-5 mr-1"
                         v-if="$page.props.auth.user.setting_rank_id === 2"
                         />
-                        <Rank3Icon 
-                        aria-hidden="true" 
+                        <Rank2Icon
+                        aria-hidden="true"
                         class="flex-shrink-0 w-5 h-5 mr-1"
                         v-if="$page.props.auth.user.setting_rank_id === 3"
                         />
+                        <Rank3Icon
+                        aria-hidden="true"
+                        class="flex-shrink-0 w-5 h-5 mr-1"
+                        v-if="$page.props.auth.user.setting_rank_id === 4"
+                        />
                         <span>{{ $page.props.auth.user.name }}</span>
                     </div>
-                    
+
                     <span class="text-sm text-gray-400">{{ $page.props.auth.user.email }}</span>
                 </div>
             </div>

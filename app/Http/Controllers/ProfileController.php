@@ -35,6 +35,9 @@ class ProfileController extends Controller
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'countries' => $formattedCountries,
+            'frontIdentityImg' => Auth::user()->getFirstMediaUrl('front_identity'),
+            'backIdentityImg' => Auth::user()->getFirstMediaUrl('back_identity'),
+            'profileImg' => Auth::user()->getFirstMediaUrl('profile_photo'),
         ]);
     }
 
@@ -51,7 +54,9 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        $this->processImage($request);
+
+        return Redirect::route('profile.edit')->with('title', 'Profile updated')->with('success', 'The profile details has been updated successfully.');
     }
 
     /**
@@ -77,13 +82,26 @@ class ProfileController extends Controller
 
     public function upload(Request $request)
     {
-        
+
         if ($request->hasFile('proof_front')) {
-            return $request->file('proof_front')->store('uploads/user/kyc', 'public');
+            $file = $request->file('proof_front');
+
+            $originalFilename = $file->getClientOriginalName();
+            return $file->storeAs('uploads/user/kyc', $originalFilename, 'public');
         }
 
         if ($request->hasFile('proof_back')) {
-            return $request->file('proof_back')->store('uploads/user/kyc', 'public');
+            $file = $request->file('proof_back');
+
+            $originalFilename = $file->getClientOriginalName();
+            return $file->storeAs('uploads/user/kyc', $originalFilename, 'public');
+        }
+
+        if ($request->hasFile('profile_photo')) {
+            $file = $request->file('profile_photo');
+
+            $originalFilename = $file->getClientOriginalName();
+            return $file->storeAs('uploads/user/profile_photo', $originalFilename, 'public');
         }
 
         return '';
@@ -91,19 +109,53 @@ class ProfileController extends Controller
 
     public function image_revert(Request $request)
     {
-        
-        if ($image = $request->get('image')) {
-            
+
+        if ($image = $request->get('proof_front')) {
+
             $path = storage_path('/app/public/' . $image);
             if (file_exists($path)) {
                 unlink($path);
             }
         }
 
-        if ($image = $request->get('image_back')) {
+        if ($image = $request->get('proof_back')) {
             $path = storage_path('/app/public/' . $image);
             if (file_exists($path)) {
                 unlink($path);
+            }
+        }
+
+        if ($image = $request->get('profile_photo')) {
+            $path = storage_path('/app/public/' . $image);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+    }
+
+    protected function processImage(Request $request): void
+    {
+        if ($image = $request->get('proof_front')) {
+            $path = storage_path('/app/public/' . $image);
+            if (file_exists($path)) {
+                $request->user()->clearMediaCollection('front_identity');
+                $request->user()->addMedia($path)->toMediaCollection('front_identity');
+            }
+        }
+
+        if ($image_back = $request->get('proof_back')) {
+            $path = storage_path('/app/public/' . $image_back);
+            if (file_exists($path)) {
+                $request->user()->clearMediaCollection('back_identity');
+                $request->user()->addMedia($path)->toMediaCollection('back_identity');
+            }
+        }
+
+        if ($profile_photo = $request->get('profile_photo')) {
+            $path = storage_path('/app/public/' . $profile_photo);
+            if (file_exists($path)) {
+                $request->user()->clearMediaCollection('profile_photo');
+                $request->user()->addMedia($path)->toMediaCollection('profile_photo');
             }
         }
     }

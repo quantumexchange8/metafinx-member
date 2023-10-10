@@ -31,8 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('upload/tmp_img', [ProfileController::class, 'upload']);
-    Route::post('upload/image-revert', [ProfileController::class, 'image_revert']);
+    Route::post('/profile/upload/tmp_img', [ProfileController::class, 'upload']);
+    Route::post('/profile/upload/image-revert', [ProfileController::class, 'image_revert']);
 
     Route::prefix('wallet')->group(function () {
         Route::get('/details', [WalletController::class, 'details'])->name('wallet.details');

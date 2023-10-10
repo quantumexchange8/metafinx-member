@@ -206,14 +206,14 @@ class RegisteredUserController extends Controller
         if ($image = $request->get('proof_front')) {
             $path = storage_path('/app/public/' . $image);
             if (file_exists($path)) {
-                $user->addMedia($path)->toMediaCollection('kyc_approval');
+                $user->addMedia($path)->toMediaCollection('front_identity');
             }
         }
 
         if ($image_back = $request->get('proof_back')) {
             $path = storage_path('/app/public/' . $image_back);
             if (file_exists($path)) {
-                $user->addMedia($path)->toMediaCollection('kyc_approval');
+                $user->addMedia($path)->toMediaCollection('back_identity');
             }
         }
     }
