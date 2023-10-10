@@ -43,7 +43,7 @@ onUnmounted(() => {
     <nav
         aria-label="secondary"
         :class="[
-            'md:hidden sticky top-0 z-10 px-4 py-8 bg-white flex items-center justify-between transition-transform duration-500 dark:bg-gray-800',
+            'md:hidden sticky top-0 z-10 p-4 md:py-8 md:px-4 bg-white flex items-center justify-between transition-transform duration-500 dark:bg-gray-800',
             {
                 '-translate-y-full': scrolling.down,
                 'translate-y-0': scrolling.up,

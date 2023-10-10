@@ -142,6 +142,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                         required
                         autofocus
                         autocomplete="name"
+                        disabled
                     />
 
                     <InputError class="mt-2" :message="form.errors.name" />
@@ -154,6 +155,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                         v-model="selectedCountry"
                         :options="props.countries"
                         :error="form.errors.country"
+                        disabled
                     />
 
                     <InputError class="mt-2" :message="form.errors.country" />
@@ -167,7 +169,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                             <PhoneIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                         </template>
                         <Input
-                            withIcon id="phone" type="text" placeholder="+6011-0000 0000" class="block w-full" v-model="form.phone" required autocomplete="phone"
+                            withIcon id="phone" type="text" placeholder="+6011-0000 0000" class="block w-full" v-model="form.phone" required disabled autocomplete="phone"
                             :class="form.errors.phone ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         />
                     </InputIconWrapper>
@@ -200,7 +202,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                 <HomeIcon aria-hidden="true" class="w-5 h-5" />
                             </template>
                             <Input
-                                withIcon id="address_1" type="text" class="block w-full" placeholder="Line 1" v-model="form.address_1" required autocomplete="address_1"
+                                withIcon id="address_1" type="text" class="block w-full" disabled placeholder="Line 1" v-model="form.address_1" required autocomplete="address_1"
                                 :class="form.errors.address_1 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             />
                         </InputIconWrapper>
@@ -215,7 +217,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                 <HomeIcon aria-hidden="true" class="w-5 h-5" />
                             </template>
                             <Input
-                                withIcon id="address2" type="text" class="block w-full" placeholder="Line 2 (Optional)" v-model="form.address_2" autocomplete="address_2"
+                                withIcon id="address2" type="text" class="block w-full" disabled placeholder="Line 2 (Optional)" v-model="form.address_2" autocomplete="address_2"
                                 :class="form.errors.address_2 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             />
                         </InputIconWrapper>
