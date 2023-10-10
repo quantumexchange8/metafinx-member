@@ -53,13 +53,13 @@ const submit = () => {
 
     <Modal :show="subscribeModal" title="Subscribe" @close="closeModal">
         <div class="p-5 bg-white rounded-xl shadow-md dark:bg-gray-700">
-            <div class="grid grid-cols-2">
+            <div class="grid grid-cols-2 gap gap-5">
                 <div class="flex flex-col gap-2 items-center justify-center">
                     <img class="w-10 h-10 rounded bg-white" src="/assets/icon.png" alt="Medium avatar">
                     <div class="font-semibold dark:text-white">
                         {{ plan.name }}
                     </div>
-                    <div class="font-semibold dark:text-white text-[32px]">
+                    <div class="font-semibold dark:text-white text-2xl md:text-[32px]">
                         {{ plan.roi_per_annum }} p.a.
                     </div>
                 </div>

@@ -40,23 +40,23 @@ getResults();
 </script>
 
 <template>
-    <div class="flex pt-2 gap-10">
+    <div class="flex pt-2 gap-3 md:gap-10">
         <div class="inline-flex items-center gap-3">
             <StaterIcon class="h-12" />
-            <div class="font-semibold">
-                Starter Tier
+            <div class="font-semibold text-sm">
+                Ranking 1
             </div>
         </div>
         <div class="inline-flex items-center gap-3">
             <SilverIcon class="h-12" />
-            <div class="font-semibold">
-                Silver Tier
+            <div class="font-semibold text-sm">
+                Ranking 2
             </div>
         </div>
         <div class="inline-flex items-center gap-3">
             <GoldIcon class="h-12" />
-            <div class="font-semibold">
-                Gold Tier
+            <div class="font-semibold text-sm">
+                Ranking 3
             </div>
         </div>
     </div>

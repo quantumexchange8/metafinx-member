@@ -60,7 +60,7 @@ function copyReferralCodeLink() {
                 </h2>
             </div>
             <p class="text-base font-normal dark:text-gray-400">
-                You can get rewarded when you invite your friends to join METABASE Exchange.
+                You can get rewarded when you invite your friends to join MetafinX.
             </p>
         </template>
 
