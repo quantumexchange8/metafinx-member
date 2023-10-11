@@ -37,12 +37,6 @@ const submit = () => {
             </div>
         </div>
 
-        
-
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
-
         <ValidationErrors class="mb-4" />
 
         <form @submit.prevent="submit">
@@ -56,13 +50,16 @@ const submit = () => {
                         <Input withIcon id="email" type="email" class="block w-full" placeholder="you@example.com" v-model="form.email" required autofocus autocomplete="username" />
                     </InputIconWrapper>
                 </div>
+                <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+                    {{ status }}
+                </div>
 
                 <div>
                     <Button class="justify-center gap-2 w-full" :disabled="form.processing" v-slot="{ iconSizeClasses }">
                         <span>Reset Password</span>
                     </Button>
 
-                    
+
                 </div>
                 <div class="flex justify-center">
                     <div class="flex">
@@ -71,7 +68,7 @@ const submit = () => {
                             Back to log in
                         </Link>
                     </div>
-                    
+
                 </div>
             </div>
         </form>

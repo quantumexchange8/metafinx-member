@@ -39,10 +39,6 @@ const submit = () => {
 <template>
     <GuestLayout title="Log in">
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
-
         <div class="text-center">
             <Caption
                 title="Log in to your account"
@@ -102,7 +98,7 @@ const submit = () => {
                         <!-- <div class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer">
                             <EyeOffIcon aria-hidden="true" class="w-5 h-5" />
                         </div> -->
-                        
+
                     </InputIconWrapper>
                     <InputError :message="form.errors.password" class="mt-2" />
                 </div>
