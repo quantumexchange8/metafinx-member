@@ -2,7 +2,7 @@
 import ReferralChild from "@/Pages/Affiliate/ReferralChild.vue";
 import {ref, watch} from "vue";
 import debounce from "lodash/debounce.js";
-import {StaterIcon, SilverIcon, GoldIcon} from "@/Components/Icons/outline.jsx"
+import {LVL1Icon, LVL2Icon, LVL3Icon, LVL4Icon} from "@/Components/Icons/outline.jsx"
 import Input from "@/Components/Input.vue";
 import {SearchIcon} from "@heroicons/vue/outline";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
@@ -42,21 +42,21 @@ getResults();
 <template>
     <div class="flex pt-2 gap-3 md:gap-10">
         <div class="inline-flex items-center gap-3">
-            <StaterIcon class="h-12" />
+            <LVL1Icon class="h-12" />
             <div class="font-semibold text-sm">
-                Ranking 1
+                LVL 1
             </div>
         </div>
         <div class="inline-flex items-center gap-3">
-            <SilverIcon class="h-12" />
+            <LVL2Icon class="h-12" />
             <div class="font-semibold text-sm">
-                Ranking 2
+                LVL 2
             </div>
         </div>
         <div class="inline-flex items-center gap-3">
-            <GoldIcon class="h-12" />
+            <LVL3Icon class="h-12" />
             <div class="font-semibold text-sm">
-                Ranking 3
+                LVL 3
             </div>
         </div>
     </div>

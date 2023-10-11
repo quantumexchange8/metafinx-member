@@ -1,9 +1,9 @@
 <script>
 import {PlusCircleIcon, MinusCircleIcon} from "@heroicons/vue/solid";
-import {StaterIcon, SilverIcon, GoldIcon} from "@/Components/Icons/outline.jsx";
+import {LVL1Icon, LVL2Icon, LVL3Icon, LVL4Icon} from "@/Components/Icons/outline.jsx";
 export default {
     name: 'Tree',
-    components: {StaterIcon, SilverIcon, GoldIcon, PlusCircleIcon, MinusCircleIcon},
+    components: { PlusCircleIcon, MinusCircleIcon, LVL1Icon, LVL2Icon, LVL3Icon, LVL4Icon},
     props: {
         node: Object,
         depth: {
@@ -115,9 +115,9 @@ export default {
                             <div class="flex-col ml-3">
                                 <div class="flex gap-2 text-sm font-semibold">
                                     {{ node.name }}
-                                    <StaterIcon class="h-5" v-if="node.rank === 2" />
-                                    <SilverIcon class="h-5" v-if="node.rank === 3" />
-                                    <GoldIcon class="h-5" v-if="node.rank === 4" />
+                                    <LVL1Icon class="h-5" v-if="node.rank === 2" />
+                                    <LVL2Icon class="h-5" v-if="node.rank === 3" />
+                                    <LVL3Icon class="h-5" v-if="node.rank === 4" />
                                     <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">Level {{ node.level }}</span>
                                 </div>
                                 <div class="text-xs font-normal dark:text-gray-400">

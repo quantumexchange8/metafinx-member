@@ -3,7 +3,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import Button from "@/Components/Button.vue";
 import { ChevronDownIcon } from '@heroicons/vue/outline'
-import { BellIcon, Rank1Icon, Rank2Icon, Rank3Icon, PendingIcon, ApproveIcon } from '@/Components/Icons/outline.jsx'
+import { BellIcon, Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon, PendingIcon, ApproveIcon } from '@/Components/Icons/outline.jsx'
 import { Link } from "@inertiajs/vue3";
 
 </script>
@@ -93,6 +93,11 @@ import { Link } from "@inertiajs/vue3";
                         aria-hidden="true"
                         class="flex-shrink-0 w-5 h-5 mr-1"
                         v-if="$page.props.auth.user.setting_rank_id === 4"
+                        />
+                        <Rank4Icon
+                        aria-hidden="true"
+                        class="flex-shrink-0 w-5 h-5 mr-1"
+                        v-if="$page.props.auth.user.setting_rank_id === 5"
                         />
                         <span>{{ $page.props.auth.user.name }}</span>
                     </div>
