@@ -1,9 +1,11 @@
 <script>
 import {PlusCircleIcon, MinusCircleIcon} from "@heroicons/vue/solid";
 import {LVL1Icon, LVL2Icon, LVL3Icon, LVL4Icon} from "@/Components/Icons/outline.jsx";
+import {ref} from "vue";
+import Modal from "@/Components/Modal.vue";
 export default {
     name: 'Tree',
-    components: { PlusCircleIcon, MinusCircleIcon, LVL1Icon, LVL2Icon, LVL3Icon, LVL4Icon},
+    components: { PlusCircleIcon, MinusCircleIcon, LVL1Icon, LVL2Icon, LVL3Icon, LVL4Icon, ref, Modal},
     props: {
         node: Object,
         depth: {
@@ -23,6 +25,13 @@ export default {
             if (!this.hasChildren) {
                 this.$emit('onClick', this.node)
             }
+        },
+        openAffiliateModal(node) {
+            this.selectedAffiliate = node;
+            this.affiliateModal = true;
+        },
+        closeModal() {
+            this.affiliateModal = false;
         }
     },
     computed: {
@@ -50,20 +59,23 @@ export default {
         function formatAmount(amount) {
             return parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
-
+        const affiliateModal = ref(false);
+        const selectedAffiliate = ref();
         return {
-            formatAmount
+            formatAmount,
+            affiliateModal,
+            selectedAffiliate
         };
     },
     emits: ['onClick']
 }
+
 </script>
 
 <template>
     <div>
         <div
             :style="{'margin-left': `${depth * 50}px`}"
-            class="overflow-x-auto"
         >
             <div class="flex items-center mb-6 gap-2">
                 <div class="flex-none">
@@ -88,8 +100,8 @@ export default {
                     </div>
                 </div>
                 <div class="flex">
-                    <div class="flex items-center p-2.5 text-sm text-gray-800 rounded-lg bg-gray-50 dark:bg-gray-700 dark:hover:bg-dark-eval-2 overflow-x-auto">
-
+                    <div class="flex items-center p-2.5 text-sm text-gray-800 rounded-lg bg-gray-50 dark:bg-gray-700 hover:cursor-pointer dark:hover:bg-dark-eval-2 overflow-x-auto"
+                    @click="openAffiliateModal(node)">
                         <div role="status" class="animate-pulse" v-if="isLoading">
                             <div class="flex items-center space-x-3">
                                 <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -157,7 +169,47 @@ export default {
             :depth="depth + 1"
             @onClick="(node) => $emit('onClick', node)"
         />
+        <Modal :show="affiliateModal" title="Affiliate Details" @close="closeModal">
+            <div v-if="selectedAffiliate">
+                <div class="flex items-center p-2.5 mb-3 text-sm text-gray-800 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white">
+                    <img
+                        class="object-cover w-10 h-10 rounded-full"
+                        :src="selectedAffiliate.profile_photo ? selectedAffiliate.profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'"
+                        alt="userPic"
+                    />
+                    <div class="flex-col ml-3">
+                        <div class="flex gap-2 text-sm font-semibold">
+                            {{ selectedAffiliate.name }}
+                            <LVL1Icon class="h-5" v-if="selectedAffiliate.rank === 2" />
+                            <LVL2Icon class="h-5" v-if="selectedAffiliate.rank === 3" />
+                            <LVL3Icon class="h-5" v-if="selectedAffiliate.rank === 4" />
+                            <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">Level {{ selectedAffiliate.level }}</span>
+                        </div>
+                        <div class="text-xs font-normal dark:text-gray-400">
+                            {{ selectedAffiliate.email }}
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 items-center">
+                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Direct Referrals</span>
+                    <span class="text-black dark:text-white py-2">{{ selectedAffiliate.children ? selectedAffiliate.children.length : 0 }}</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 items-center">
+                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Total Affiliates</span>
+                    <span class="text-black dark:text-white py-2">{{ selectedAffiliate.total_affiliate }}</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 items-center">
+                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Self Deposit</span>
+                    <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedAffiliate.self_deposit) }}</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 items-center">
+                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Valid Affiliate Deposit</span>
+                    <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedAffiliate.valid_affiliate_deposit) }}</span>
+                </div>
+            </div>
+        </Modal>
     </div>
+
 </template>
 
 <style scoped>

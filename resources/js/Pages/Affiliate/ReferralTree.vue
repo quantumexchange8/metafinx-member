@@ -78,6 +78,6 @@ getResults();
     <ReferralChild
         :node="root"
         :isLoading="isLoading"
-        class="pt-8"
+        class="pt-8 overflow-x-auto"
     />
 </template>
