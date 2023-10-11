@@ -27,11 +27,12 @@ class CheckDepositStatusCommand extends Command
             if ($response->successful()) {
                 $transactionInfo = $response->json();
 
+                $amount_str = $transactionInfo['trc20TransferInfo'][0]['amount_str'];
                 $crypto_amount = $payment->amount * 1000000;
-
+                $range = 5;
                 // Update the status of the payment based on the transaction info
-                if ($transactionInfo['contractRet'] == 'SUCCESS' && $transactionInfo['confirmed'] && $transactionInfo['trc20TransferInfo'][0]['to_address'] == 'TXzZ1zgHscuLeTqYTHZBuU5516SP3DbS8R') {
-                    if ($transactionInfo['trc20TransferInfo'][0]['amount_str'] == $crypto_amount) {
+                if ($transactionInfo['contractRet'] == 'SUCCESS' && $transactionInfo['confirmed'] && $transactionInfo['trc20TransferInfo'][0]['to_address'] == $payment->to_wallet_address) {
+                    if ($amount_str >= $crypto_amount && $amount_str <= $crypto_amount + $range ) {
                         $payment->update([
                             'status' => 'Success'
                         ]);
