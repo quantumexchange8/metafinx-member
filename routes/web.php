@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EarnController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\ReportController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -51,6 +52,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/referral_view', [AffiliateController::class, 'referral_view'])->name('affiliate.referral_view');
         Route::get('/getTreeData', [AffiliateController::class, 'getTreeData'])->name('affiliate.getTreeData');
     });
+
+    // Route::prefix('report')->group(function () {
+    //     Route::get('/finance_history', [ReportController::class, 'detail'])->name('report.finance_history');
+        
+    // });
 });
 
 Route::get('/components/buttons', function () {
