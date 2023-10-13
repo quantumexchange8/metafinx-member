@@ -4,6 +4,7 @@ import {TailwindPagination} from "laravel-vue-pagination";
 import DepositTableBody from "@/Pages/Wallet/Transaction/DepositTableBody.vue";
 import {ref, watch} from "vue";
 import debounce from "lodash/debounce.js";
+import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/outline";
 
 const props = defineProps({
     search: String,
@@ -71,7 +72,7 @@ watch(() => props.refresh, (newVal) => {
 });
 
 const paginationClass = [
-    'bg-transparent border-0 dark:text-gray-400'
+    'bg-transparent border-0 dark:text-gray-400 dark:enabled:hover:text-white'
 ];
 
 const paginationActiveClass = [
@@ -117,7 +118,14 @@ const paginationActiveClass = [
                 :data="deposits"
                 :limit=2
                 @pagination-change-page="handlePageChange"
-            />
+            >
+                <template #prev-nav>
+                    <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> Previous</span>
+                </template>
+                <template #next-nav>
+                    <span class="flex gap-2">Next <ArrowRightIcon class="w-5 h-5" /></span>
+                </template>
+            </TailwindPagination>
         </div>
     </div>
 
