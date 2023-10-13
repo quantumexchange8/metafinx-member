@@ -67,6 +67,7 @@ const togglePasswordVisibilityConfirm = () => {
                         </template>
                         <Input withIcon id="email" type="email" placeholder="Email" class="block w-full" v-model="form.email" readonly required autofocus autocomplete="username" />
                     </InputIconWrapper>
+                    <InputError :message="form.errors.email" class="mt-2" />
                 </div>
 
                 <div class="space-y-2">
