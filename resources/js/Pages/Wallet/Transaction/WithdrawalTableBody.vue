@@ -49,7 +49,7 @@ const closeModal = () => {
             {{ withdrawal.to_wallet_address }}
         </td>
         <td class="py-3">
-            {{ withdrawal.amount }}
+            $ {{ withdrawal.amount }}
         </td>
         <td class="py-3 text-center">
             <span v-if="withdrawal.status === 'Success'" class="flex w-2 h-2 bg-green-500 dark:bg-success-500 mx-auto rounded-full"></span>
@@ -78,8 +78,8 @@ const closeModal = () => {
                 <span class="text-black dark:text-white py-2">{{ selectedDeposit.to_wallet_address }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Amount (unit)</span>
-                <span class="text-black dark:text-white py-2">{{ selectedDeposit.amount }}</span>
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Amount</span>
+                <span class="text-black dark:text-white py-2">$ {{ selectedDeposit.amount }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Price</span>

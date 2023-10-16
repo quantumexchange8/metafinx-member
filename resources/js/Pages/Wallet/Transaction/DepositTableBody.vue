@@ -46,7 +46,7 @@ const closeModal = () => {
             {{ formatDateTime(deposit.created_at) }}
         </td>
         <td class="py-3">
-            {{ deposit.amount }}
+            $ {{ deposit.amount }}
         </td>
         <td class="py-3 text-center">
             <span v-if="deposit.status === 'Success'" class="flex w-2 h-2 bg-green-500 dark:bg-success-500 mx-auto rounded-full"></span>
@@ -75,8 +75,8 @@ const closeModal = () => {
                 <span class="text-black dark:text-white py-2">WALLET ADDRESS</span>
             </div>
             <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Amount (unit)</span>
-                <span class="text-black dark:text-white py-2">{{ selectedDeposit.amount }}</span>
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Amount</span>
+                <span class="text-black dark:text-white py-2">$ {{ selectedDeposit.amount }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Transaction Status</span>
