@@ -66,7 +66,7 @@ function copyReferralCodeLink() {
 
         <ReferralTree />
 
-        <div class="flex flex-col space-y-6 py-8 md:hidden">
+        <div class="flex flex-col space-y-6 pt-8 pb-12 md:hidden">
             <h3 class="text-xl font-semibold leading-tight">
                 Referral Program
             </h3>
@@ -86,7 +86,7 @@ function copyReferralCodeLink() {
                     $ 0.00
                 </div>
             </div>
-            <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col items-center justify-center gap-8">
+            <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col items-center justify-center gap-8 pb-12">
                 <div class="grid gap-2 font-medium text-base dark:text-gray-400 text-center">
                     You’ve successfully referred
                     <div>
