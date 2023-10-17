@@ -51,7 +51,7 @@ class PaymentController extends Controller
             'type' => 'Withdrawal',
             'amount' => $amount,
             'to_wallet_address' => $request->wallet_address,
-            'status' => 'Pending'
+            'status' => 'Processing'
         ]);
 
         return redirect()->back()->with('title', 'Submitted successfully')->with('success', 'The withdrawal request has been submitted successfully.');
