@@ -29,7 +29,6 @@ class DepositExport implements FromCollection, WithHeadings
                 'transaction_id' => $deposits->transaction_id,
                 'date' => Carbon::parse($deposits->created_at)->format('Y-m-d'),
                 'amount' =>  number_format((float)$deposits->amount, 2, '.', ''),
-                'price' =>  number_format((float)$deposits->price, 2, '.', ''),
                 'status' => $deposits->status,
             );
         }
@@ -44,7 +43,6 @@ class DepositExport implements FromCollection, WithHeadings
             'Transaction ID',
             'Date',
             'Amount',
-            'Price',
             'Status',
         ];
     }

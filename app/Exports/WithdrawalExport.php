@@ -29,7 +29,7 @@ class WithdrawalExport implements FromCollection, WithHeadings
                 'transaction_id' => $withdrawal->transaction_id,
                 'date' => Carbon::parse($withdrawal->created_at)->format('Y-m-d'),
                 'to_wallet_address' =>  $withdrawal->to_wallet_address,
-                'amount' =>  number_format((float)$withdrawal->price, 2, '.', ''),
+                'amount' =>  number_format((float)$withdrawal->amount, 2, '.', ''),
                 'status' => $withdrawal->status,
             );
         }
