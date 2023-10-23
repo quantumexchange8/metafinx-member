@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Translatable\HasTranslations;
 
 class InvestmentPlan extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasTranslations;
+
+    public $translatable = ['name'];
 
     protected $fillable = [
         'name',

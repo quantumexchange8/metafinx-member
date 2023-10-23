@@ -54,7 +54,7 @@ function calculateWidthPercentage(created_at, period) {
             <div v-for="investment in props.investments" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]">
                 <div class="flex justify-between">
                     <div class="text-xs">
-                        {{ investment.investment_plan.name }} &#x2022; $ {{ investment.amount }}
+                        {{ investment.plan_name.name }} &#x2022; $ {{ investment.amount }}
                     </div>
                     <div class="dark:text-gray-400 text-xs">
                         <span class="uppercase">Since {{ formatDate(investment.created_at) }}</span>
@@ -63,7 +63,7 @@ function calculateWidthPercentage(created_at, period) {
                 <div class="relative my-3">
                     <div class="mb-1 flex h-2.5 overflow-hidden rounded-full bg-gray-100 text-xs">
                         <div
-                            :style="{ width: `${calculateWidthPercentage(investment.created_at, investment.investment_plan.investment_period).widthResult}%` }"
+                            :style="{ width: `${calculateWidthPercentage(investment.created_at, investment.investment_period).widthResult}%` }"
                             class="rounded-full bg-gradient-to-r from-warning-400 to-pink-500 transition-all duration-500 ease-out"
                         >
                         </div>
@@ -73,12 +73,12 @@ function calculateWidthPercentage(created_at, period) {
                             1
                         </div>
                         <div class="dark:text-gray-400">
-                            {{ investment.investment_plan.investment_period/4 }}
+                            {{ investment.investment_period/4 }}
                         </div>
                         <div class="dark:text-gray-400">
-                            {{ investment.investment_plan.investment_period/2 }}
+                            {{ investment.investment_period/2 }}
                         </div>
-                        <div class="dark:text-gray-400">{{ investment.investment_plan.investment_period }}</div>
+                        <div class="dark:text-gray-400">{{ investment.investment_period }}</div>
                     </div>
                 </div>
                 <div class="flex justify-between mb-1">
@@ -118,7 +118,7 @@ function calculateWidthPercentage(created_at, period) {
                         Total Earning
                     </div>
                     <div class="dark:text-white text-xs">
-                        <span class="uppercase">{{ investment.total_earning }}</span>
+                        <span class="uppercase">$ {{ investment.total_earning }}</span>
                     </div>
                 </div>
                 <div class="mt-4 text-xs">

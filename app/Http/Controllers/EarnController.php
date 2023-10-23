@@ -29,8 +29,21 @@ class EarnController extends Controller
             ];
         });
 
+        $translatedInvestmentPlans = $investment_plans->map(function ($investmentPlan) {
+            return [
+                'id' => $investmentPlan->id,
+                'name' => $investmentPlan->getTranslation('name', 'en'), // Change 'en' to your desired language code
+                'roi_per_annum' => $investmentPlan->roi_per_annum,
+                'descriptions' => $investmentPlan->descriptions->map(function ($description) {
+                    return [
+                        'description' => $description->getTranslation('description', app()->getLocale()), // Change 'en' to your desired language code
+                    ];
+                }),
+            ];
+        });
+
         return Inertia::render('Earn/Earn', [
-            'investmentPlans' => $investment_plans,
+            'investmentPlans' => $translatedInvestmentPlans,
             'wallet_sel' => $wallet_sel,
         ]);
     }
@@ -84,12 +97,32 @@ class EarnController extends Controller
         $user = \Auth::user();
 
         $investments = InvestmentSubscription::query()
-            ->with('investment_plan:id,name,investment_period')
+            ->with('investment_plan:id,name,roi_per_annum,investment_period')
             ->where('user_id', $user->id)
             ->get();
 
+        $locale = app()->getLocale(); // Get the current locale
+
+        $investmentSubscriptions = $investments->map(function ($investmentSubscription) use ($locale) {
+            return [
+                'id' => $investmentSubscription->id,
+                'plan_name' => [
+                    'name' => $investmentSubscription->investment_plan->getTranslation('name', $locale),
+                ],
+                'roi_per_annum' => $investmentSubscription->investment_plan->roi_per_annum,
+                'investment_period' => $investmentSubscription->investment_plan->investment_period,
+                'subscription_id' => $investmentSubscription->subscription_id,
+                'amount' => $investmentSubscription->amount,
+                'total_earning' => $investmentSubscription->total_earning,
+                'status' => $investmentSubscription->status,
+                'next_roi_date' => $investmentSubscription->next_roi_date,
+                'expired_date' => $investmentSubscription->expired_date,
+                'created_at' => $investmentSubscription->created_at,
+            ];
+        });
+
         return Inertia::render('Earn/MyInvestment', [
-            'investments' => $investments
+            'investments' => $investmentSubscriptions
         ]);
     }
 }
