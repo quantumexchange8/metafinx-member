@@ -5,7 +5,7 @@ import { MailIcon } from '@heroicons/vue/outline'
 <template>
     <footer class="px-6 pb-2 flex items-center w-full justify-between gap-1 text-xs md:text-sm text-gray-600 dark:text-gray-400">
         <div>
-            &copy; METAFinX 2023
+            &copy; METAFINX 2023
         </div>
         <div class="flex items-center justify-center gap-1 text-sm text-gray-600 dark:text-gray-400">
             <span>
