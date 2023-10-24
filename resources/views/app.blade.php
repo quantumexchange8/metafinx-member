@@ -17,8 +17,16 @@
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
+        @laravelPWA
     </head>
     <body class="font-sans antialiased">
         @inertia
     </body>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/serviceworker.js');
+        });
+    }
+    </script>
 </html>
