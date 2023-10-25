@@ -37,6 +37,7 @@ class User extends Authenticatable implements HasMedia
         'total_affiliate',
         'self_deposit',
         'valid_affiliate_deposit',
+        'identity_number',
     ];
 
     /**

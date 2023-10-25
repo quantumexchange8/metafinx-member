@@ -46,6 +46,13 @@ const props = defineProps({
 
 const user = usePage().props.auth.user
 
+const identityNumber = (user.identity_number || '').toString(); // Ensure it's a string, even if it's initially undefined or not a string
+const lastFourDigits = identityNumber.slice(-4); // Get the last 4 digits
+const formattedIdentityNumber = '********' + lastFourDigits;
+
+// Now, formattedIdentityNumber contains '******7899'
+
+
 const form = useForm({
     name: user.name,
     email: user.email,
@@ -53,10 +60,20 @@ const form = useForm({
     phone: user.phone,
     address_1: user.address_1,
     address_2: user.address_2,
+    identity_number: formattedIdentityNumber,
     proof_front: props.frontIdentityImg,
     proof_back: props.backIdentityImg,
     profile_photo: props.profileImg,
 })
+
+// const formattedIdentityNumber = computed(() => {
+  
+//     const hashedPart = '******';
+//     const lastPart = form.identity_number.slice(-4);
+//     return hashedPart + lastPart;
+  
+// });
+
 
 const selectedCountry = ref(form.country);
 
@@ -295,6 +312,11 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                 </div>
                 <!-- personal kyc -->
                 <div class="space-y-5">
+                    <div>
+                        <Label class="text-[14px] dark:text-white mb-2" for="name" value="Identification Number" />
+                        <Input type="text" class="block w-full" disabled v-model="form.identity_number" required autocomplete="username"
+                                :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"/>
+                    </div>
 
                     <div>
                         <Label class="text-[14px] dark:text-white mb-2" for="proof_front" value="Proof of Indentity (FRONT)" />

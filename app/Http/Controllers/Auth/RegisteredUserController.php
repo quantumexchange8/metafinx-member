@@ -79,8 +79,11 @@ class RegisteredUserController extends Controller
             $validator->setAttributeNames($attributes);
             $validator->validate();
         } elseif ($request->form_step == 3) {
+            
             $additionalRules = [
                 'verification_type' => 'required',
+                'identity_number' => 'required_if:verification_type,nric|min:12|max:12|unique:users,identity_number',
+                'passport_number' => 'required_if:verification_type,passport',
                 'proof_front' => 'nullable',
                 'proof_back' => 'nullable',
             ];
@@ -88,6 +91,8 @@ class RegisteredUserController extends Controller
 
             $additionalAttributes = [
                 'verification_type' => 'Verification Type',
+                'identity_number' => 'Identification Number',
+                'passport_number' => 'Passport Number',
                 'proof_front' => 'Proof of Identity (FRONT)',
                 'proof_back' => 'Proof of Identity (BACK)',
             ];
@@ -128,19 +133,39 @@ class RegisteredUserController extends Controller
                 } else {
                     $hierarchyList = $check_referral_code['hierarchyList'] . $upline_id . "-";
                 }
-                $user = User::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'country' => $request->country,
-                    'phone' => $request->phone,
-                    'address_1' => $request->address_1,
-                    'address_2' => $request->address_2,
-                    'verification_type' => $request->verification_type,
-                    'upline_id' => $upline_id,
-                    'hierarchyList' => $hierarchyList,
-                    'setting_rank_id' => 1,
-                    'password' => Hash::make($request->password),
-                ]);
+                if($request->verification_type == 'nric')
+                {
+                    $user = User::create([
+                        'name' => $request->name,
+                        'email' => $request->email,
+                        'country' => $request->country,
+                        'phone' => $request->phone,
+                        'address_1' => $request->address_1,
+                        'address_2' => $request->address_2,
+                        'verification_type' => $request->verification_type,
+                        'upline_id' => $upline_id,
+                        'hierarchyList' => $hierarchyList,
+                        'setting_rank_id' => 1,
+                        'password' => Hash::make($request->password),
+                        'identity_number' => $request->identity_number
+                    ]);
+                } else {
+                    $user = User::create([
+                        'name' => $request->name,
+                        'email' => $request->email,
+                        'country' => $request->country,
+                        'phone' => $request->phone,
+                        'address_1' => $request->address_1,
+                        'address_2' => $request->address_2,
+                        'verification_type' => $request->verification_type,
+                        'upline_id' => $upline_id,
+                        'hierarchyList' => $hierarchyList,
+                        'setting_rank_id' => 1,
+                        'password' => Hash::make($request->password),
+                        'identity_number' => $request->passport_number
+                    ]);
+                }
+                
             }
         } else {
             $user = User::create([
@@ -153,6 +178,7 @@ class RegisteredUserController extends Controller
                 'verification_type' => $request->verification_type,
                 'setting_rank_id' => 1,
                 'password' => Hash::make($request->password),
+                'identity_number' => $request->identity_number
             ]);
         }
 
