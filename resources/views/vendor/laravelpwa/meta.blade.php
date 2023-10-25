@@ -37,6 +37,9 @@
             scope: '.'
         }).then(function (registration) {
             // Registration was successful
+            document.addEventListener('DOMContentLoaded', function () {
+                document.documentElement.classList.add('dark');
+            });
             console.log('Laravel PWA: ServiceWorker registration successful with scope: ', registration.scope);
         }, function (err) {
             // registration failed :(
