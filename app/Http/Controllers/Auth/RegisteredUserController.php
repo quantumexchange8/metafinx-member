@@ -79,11 +79,10 @@ class RegisteredUserController extends Controller
             $validator->setAttributeNames($attributes);
             $validator->validate();
         } elseif ($request->form_step == 3) {
-            
+
             $additionalRules = [
                 'verification_type' => 'required',
-                'identity_number' => 'required_if:verification_type,nric|min:12|max:12|unique:users,identity_number',
-                'passport_number' => 'required_if:verification_type,passport',
+                'identity_number' => 'required|unique:users,identity_number',
                 'proof_front' => 'nullable',
                 'proof_back' => 'nullable',
             ];
@@ -133,39 +132,23 @@ class RegisteredUserController extends Controller
                 } else {
                     $hierarchyList = $check_referral_code['hierarchyList'] . $upline_id . "-";
                 }
-                if($request->verification_type == 'nric')
-                {
-                    $user = User::create([
-                        'name' => $request->name,
-                        'email' => $request->email,
-                        'country' => $request->country,
-                        'phone' => $request->phone,
-                        'address_1' => $request->address_1,
-                        'address_2' => $request->address_2,
-                        'verification_type' => $request->verification_type,
-                        'upline_id' => $upline_id,
-                        'hierarchyList' => $hierarchyList,
-                        'setting_rank_id' => 1,
-                        'password' => Hash::make($request->password),
-                        'identity_number' => $request->identity_number
-                    ]);
-                } else {
-                    $user = User::create([
-                        'name' => $request->name,
-                        'email' => $request->email,
-                        'country' => $request->country,
-                        'phone' => $request->phone,
-                        'address_1' => $request->address_1,
-                        'address_2' => $request->address_2,
-                        'verification_type' => $request->verification_type,
-                        'upline_id' => $upline_id,
-                        'hierarchyList' => $hierarchyList,
-                        'setting_rank_id' => 1,
-                        'password' => Hash::make($request->password),
-                        'identity_number' => $request->passport_number
-                    ]);
-                }
-                
+
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'country' => $request->country,
+                    'phone' => $request->phone,
+                    'address_1' => $request->address_1,
+                    'address_2' => $request->address_2,
+                    'verification_type' => $request->verification_type,
+                    'upline_id' => $upline_id,
+                    'hierarchyList' => $hierarchyList,
+                    'setting_rank_id' => 1,
+                    'password' => Hash::make($request->password),
+                    'identity_number' => $request->identity_number,
+                    'role' => 'user',
+                    'kyc_approval' => 'unverified',
+                ]);
             }
         } else {
             $user = User::create([
@@ -178,10 +161,11 @@ class RegisteredUserController extends Controller
                 'verification_type' => $request->verification_type,
                 'setting_rank_id' => 1,
                 'password' => Hash::make($request->password),
-                'identity_number' => $request->identity_number
+                'identity_number' => $request->identity_number,
+                'role' => 'user',
+                'kyc_approval' => 'unverified',
             ]);
         }
-
 
         Wallet::create([
             'user_id' => $user->id,
@@ -233,6 +217,9 @@ class RegisteredUserController extends Controller
             $path = storage_path('/app/public/' . $image);
             if (file_exists($path)) {
                 $user->addMedia($path)->toMediaCollection('front_identity');
+                $user->update([
+                    'kyc_approval' => 'pending'
+                ]);
             }
         }
 
@@ -240,6 +227,9 @@ class RegisteredUserController extends Controller
             $path = storage_path('/app/public/' . $image_back);
             if (file_exists($path)) {
                 $user->addMedia($path)->toMediaCollection('back_identity');
+                $user->update([
+                    'kyc_approval' => 'pending'
+                ]);
             }
         }
     }

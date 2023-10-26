@@ -67,13 +67,13 @@ import { Link } from "@inertiajs/vue3";
                         alt="ProfilePic"
                     >
                     <PendingIcon aria-hidden="true" class="absolute bottom-0 right-14 flex-shrink-0 w-5 h-5 mr-1"
-                    v-if="$page.props.auth.user.kyc_approval === 'pending' || $page.props.auth.user.kyc_approval === 'rejected'"
+                    v-if="$page.props.auth.user.kyc_approval === 'pending' || $page.props.auth.user.kyc_approval === 'unverified'"
                     />
 
                     <ApproveIcon
                     aria-hidden="true"
                     class="absolute bottom-0 right-14 flex-shrink-0 w-5 h-5 mr-1"
-                    v-if="$page.props.auth.user.kyc_approval === 'approved'"
+                    v-if="$page.props.auth.user.kyc_approval === 'verified'"
                     />
                 </div>
 

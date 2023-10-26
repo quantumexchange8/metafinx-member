@@ -373,27 +373,17 @@ const handleBackRevert = (uniqueId, load, error) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="identification_number" :value="form.verification_type === 'nric' ? 'Identification Number' : 'Passport Number'" />
-                            <Input 
+                            <Label class="dark:text-white" for="identification_number" value="Identification Number" />
+                            <Input
                             id="identification_number"
-                            type="text" 
+                            type="text"
                             class="block w-full"
                             v-model="form.identity_number"
                             placeholder="Enter identification number"
-                            v-show="form.verification_type === 'nric'"
                             :class="form.errors.identity_number ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             />
-                            
-                            <Input 
-                            id="identification_number"
-                            type="text" 
-                            class="block w-full"
-                            v-model="form.passport_number"
-                            placeholder="Enter identification number"
-                            v-show="form.verification_type === 'passport'"
-                            />
-                            <InputError v-show="form.verification_type === 'nric'" :message="form.errors.identity_number" class="mt-2" />
-                            <InputError v-show="form.verification_type === 'passport'" :message="form.errors.passport_number" class="mt-2" />
+
+                            <InputError :message="form.errors.identity_number" class="mt-2" />
                         </div>
 
                         <div class="space-y-2">

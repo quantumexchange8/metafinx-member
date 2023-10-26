@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, InteractsWithMedia;
 
@@ -29,6 +30,8 @@ class User extends Authenticatable implements HasMedia
         'address_1',
         'address_2',
         'verification_type',
+        'kyc_approval',
+        'kyc_approval_description',
         'referral_code',
         'upline_id',
         'hierarchyList',
@@ -38,6 +41,7 @@ class User extends Authenticatable implements HasMedia
         'self_deposit',
         'valid_affiliate_deposit',
         'identity_number',
+        'role',
     ];
 
     /**

@@ -26,7 +26,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
 
     // Route::prefix('report')->group(function () {
     //     Route::get('/finance_history', [ReportController::class, 'detail'])->name('report.finance_history');
-        
+
     // });
 });
 
