@@ -373,7 +373,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="identification_number" value="Identification Number" />
+                            <Label class="dark:text-white" for="identification_number" value="NRIC / Passport Number" />
                             <Input
                             id="identification_number"
                             type="text"

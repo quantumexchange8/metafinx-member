@@ -178,7 +178,7 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        return redirect()->route('login')->with('title', 'Account signed up!')->with('success', 'Your account has been signed up successfully.');
+        return redirect()->route('login')->with('title', 'Account signed up!')->with('success', 'Your account has been signed up successfully. Please check your email for verification.');
     }
 
     public function upload(Request $request)
