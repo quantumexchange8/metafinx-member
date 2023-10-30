@@ -2,7 +2,8 @@
 import Loading from "@/Components/Loading.vue";
 import {TailwindPagination} from "laravel-vue-pagination";
 import DepositTableBody from "@/Pages/Wallet/Transaction/DepositTableBody.vue";
-import {ref, watch} from "vue";
+import {ref, watch, watchEffect} from "vue";
+import { usePage } from '@inertiajs/vue3';
 import debounce from "lodash/debounce.js";
 import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/outline";
 
@@ -68,6 +69,12 @@ watch(() => props.refresh, (newVal) => {
         // Call the getResults function when refresh is true
         getResults();
         emit('update:refresh', false);
+    }
+});
+
+watchEffect(() => {
+    if (usePage().props.title !== null) {
+        getResults();
     }
 });
 
