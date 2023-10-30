@@ -20,6 +20,23 @@ return new class extends Migration {
             $table->text('description');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade');
+            $table->foreign('wallet_id')
+                ->references('id')
+                ->on('wallets')
+                ->onUpdate('cascade');
+            $table->foreign('to_user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade');
+            $table->foreign('to_wallet_id')
+                ->references('id')
+                ->on('wallets')
+                ->onUpdate('cascade');
         });
     }
 
