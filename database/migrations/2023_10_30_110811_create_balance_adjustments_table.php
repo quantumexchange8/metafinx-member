@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->decimal('amount');
             $table->decimal('new_balance');
             $table->text('description');
+            $table->unsignedBigInteger('handle_by');
             $table->softDeletes();
             $table->timestamps();
 
@@ -36,6 +37,10 @@ return new class extends Migration {
             $table->foreign('to_wallet_id')
                 ->references('id')
                 ->on('wallets')
+                ->onUpdate('cascade');
+            $table->foreign('handle_by')
+                ->references('id')
+                ->on('users')
                 ->onUpdate('cascade');
         });
     }
