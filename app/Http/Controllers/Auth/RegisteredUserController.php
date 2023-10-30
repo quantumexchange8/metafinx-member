@@ -184,11 +184,17 @@ class RegisteredUserController extends Controller
     public function upload(Request $request)
     {
         if ($request->hasFile('proof_front')) {
-            return $request->file('proof_front')->store('uploads/kyc', 'public');
+            $file = $request->file('proof_front');
+
+            $originalFilename = $file->getClientOriginalName();
+            return $file->storeAs('uploads/user/kyc', $originalFilename, 'public');
         }
 
         if ($request->hasFile('proof_back')) {
-            return $request->file('proof_back')->store('uploads/kyc', 'public');
+            $file = $request->file('proof_back');
+
+            $originalFilename = $file->getClientOriginalName();
+            return $file->storeAs('uploads/user/kyc', $originalFilename, 'public');
         }
 
         return '';
