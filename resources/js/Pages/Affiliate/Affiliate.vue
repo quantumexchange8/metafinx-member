@@ -14,9 +14,11 @@ const props = defineProps({
 
 const tooltipContent = ref('Copy');
 function copyReferralCode () {
-    let referralCodeCopy = document.querySelector('#referralCode')
-    referralCodeCopy.setAttribute('type', 'text');
-    referralCodeCopy.select();
+    const referralCodeCopy = document.querySelector('#referralCode').value;
+    const tempInput = document.createElement('input');
+    tempInput.value = referralCodeCopy;
+    document.body.appendChild(tempInput);
+    tempInput.select();
 
     try {
         var successful = document.execCommand('copy');
@@ -32,6 +34,8 @@ function copyReferralCode () {
     } catch (err) {
         alert('Oops, unable to copy');
     }
+    document.body.removeChild(tempInput);
+    window.getSelection().removeAllRanges()
 }
 
 function copyReferralCodeLink() {
@@ -94,7 +98,7 @@ function copyReferralCodeLink() {
                     </div>
                 </div>
                 <div class="flex rounded-md shadow-sm">
-                    <input type="text" id="referralCode" class="py-2 px-4 block w-full border-transparent shadow-sm rounded-l-lg text-sm focus:z-10 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:bg-gray-600 dark:text-white text-center" readonly :value="$page.props.auth.user.referral_code">
+                    <input type="text" id="referralCode" :value="$page.props.auth.user.referral_code" class="py-2 px-4 block w-full border-transparent shadow-sm rounded-l-lg text-sm focus:z-10 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:bg-gray-600 dark:text-white text-center">
                     <Tooltip :content="tooltipContent" placement="top">
                         <button
                             type="button"
@@ -155,7 +159,7 @@ function copyReferralCodeLink() {
                         </div>
                     </div>
                     <div class="flex rounded-md shadow-sm">
-                        <input type="text" id="referralCode" class="py-2 px-4 block w-full border-transparent shadow-sm rounded-l-lg text-sm focus:z-10 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:bg-gray-600 dark:text-white text-center" readonly :value="$page.props.auth.user.referral_code">
+                        <input type="text" id="referralCodeSide" readonly :value="$page.props.auth.user.referral_code" class="py-2 px-4 block w-full border-transparent shadow-sm rounded-l-lg text-sm focus:z-10 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:bg-gray-600 dark:text-white text-center">
                         <Tooltip :content="tooltipContent" placement="top">
                             <button
                                 type="button"

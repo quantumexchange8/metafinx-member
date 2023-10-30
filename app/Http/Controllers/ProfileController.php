@@ -135,11 +135,15 @@ class ProfileController extends Controller
 
     protected function processImage(Request $request): void
     {
+        $user = $request->user();
         if ($image = $request->get('proof_front')) {
             $path = storage_path('/app/public/' . $image);
             if (file_exists($path)) {
                 $request->user()->clearMediaCollection('front_identity');
                 $request->user()->addMedia($path)->toMediaCollection('front_identity');
+                $user->update([
+                    'kyc_approval' => 'pending'
+                ]);
             }
         }
 
@@ -148,6 +152,9 @@ class ProfileController extends Controller
             if (file_exists($path)) {
                 $request->user()->clearMediaCollection('back_identity');
                 $request->user()->addMedia($path)->toMediaCollection('back_identity');
+                $user->update([
+                    'kyc_approval' => 'pending'
+                ]);
             }
         }
 
