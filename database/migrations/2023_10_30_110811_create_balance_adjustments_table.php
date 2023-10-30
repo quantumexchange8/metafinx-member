@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('type');
             $table->decimal('old_balance');
             $table->decimal('amount');
-            $table->decimal('new_balance');
+            $table->decimal('new_balance')->nullable();
             $table->text('description');
             $table->unsignedBigInteger('handle_by');
             $table->softDeletes();
