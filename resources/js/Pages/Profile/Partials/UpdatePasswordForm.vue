@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useForm } from '@inertiajs/vue3'
+import { EyeOffIcon, EyeIcon } from '@heroicons/vue/outline'
+import InputIconWrapper from '@/Components/InputIconWrapper.vue'
 import Label from '@/Components/Label.vue'
 import Input from '@/Components/Input.vue'
 import InputError from '@/Components/InputError.vue'
@@ -8,6 +10,22 @@ import Button from '@/Components/Button.vue'
 
 const passwordInput = ref(null)
 const currentPasswordInput = ref(null)
+
+const showPassword = ref(false);
+const showPassword2 = ref(false);
+const showPassword3 = ref(false);
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
+
+const togglePasswordVisibilityNew = () => {
+    showPassword2.value = !showPassword2.value;
+}
+
+const togglePasswordVisibilityConfirm = () => {
+    showPassword3.value = !showPassword3.value;
+}
 
 const form = useForm({
     current_password: '',
@@ -53,15 +71,29 @@ const updatePassword = () => {
                 <div class="space-y-5">
                     <div>
                         <Label for="current_password" value="Current Password" />
-
-                        <Input
-                            id="current_password"
-                            ref="currentPasswordInput"
-                            v-model="form.current_password"
-                            type="password"
-                            class="mt-1 block w-full"
-                            autocomplete="current-password"
-                        />
+                        
+                        <InputIconWrapper>
+                            <Input
+                                id="current_password"
+                                ref="currentPasswordInput"
+                                :type="showPassword ? 'text' : 'password'"
+                                v-model="form.current_password"
+                                type="password"
+                                class="mt-1 block w-full"
+                                autocomplete="current-password"
+                            />
+                            <div
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                                @click="togglePasswordVisibility"
+                            >
+                                <template v-if="showPassword">
+                                    <EyeIcon aria-hidden="true" class="w-5 h-5" />
+                                </template>
+                                <template v-else>
+                                    <EyeOffIcon aria-hidden="true" class="w-5 h-5" />
+                                </template>
+                            </div>
+                        </InputIconWrapper>
 
                         <InputError
                             :message="form.errors.current_password"
@@ -72,28 +104,56 @@ const updatePassword = () => {
                     <div>
                         <Label for="password" value="New Password" />
 
-                        <Input
-                            id="password"
-                            ref="passwordInput"
-                            v-model="form.password"
-                            type="password"
-                            class="mt-1 block w-full"
-                            autocomplete="new-password"
-                        />
+                        <InputIconWrapper>
+                            <Input
+                                id="password"
+                                ref="passwordInput"
+                                :type="showPassword2 ? 'text' : 'password'"
+                                v-model="form.password"
+                                type="password"
+                                class="mt-1 block w-full"
+                                autocomplete="new-password"
+                            />
+                            <div
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                                @click="togglePasswordVisibilityNew"
+                            >
+                                <template v-if="showPassword2">
+                                    <EyeIcon aria-hidden="true" class="w-5 h-5" />
+                                </template>
+                                <template v-else>
+                                    <EyeOffIcon aria-hidden="true" class="w-5 h-5" />
+                                </template>
+                            </div>
+                        </InputIconWrapper>
 
                         <InputError :message="form.errors.password" class="mt-2" />
                     </div>
 
                     <div>
                         <Label for="password_confirmation" value="Confirm Password" />
-
-                        <Input
-                            id="password_confirmation"
-                            v-model="form.password_confirmation"
-                            type="password"
-                            class="mt-1 block w-full"
-                            autocomplete="new-password"
-                        />
+                        
+                        <InputIconWrapper>
+                            <Input
+                                id="password_confirmation"
+                                :type="showPassword3 ? 'text' : 'password'"
+                                v-model="form.password_confirmation"
+                                type="password"
+                                class="mt-1 block w-full"
+                                autocomplete="new-password"
+                            />
+                            <div
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                                @click="togglePasswordVisibilityConfirm"
+                            >
+                                <template v-if="showPassword3">
+                                    <EyeIcon aria-hidden="true" class="w-5 h-5" />
+                                </template>
+                                <template v-else>
+                                    <EyeOffIcon aria-hidden="true" class="w-5 h-5" />
+                                </template>
+                            </div>
+                        </InputIconWrapper>
 
                         <InputError
                             :message="form.errors.password_confirmation"
@@ -107,7 +167,6 @@ const updatePassword = () => {
                 <Button :disabled="form.processing">Save Changes</Button>
 
             </div>
-
         </form>
 
 
