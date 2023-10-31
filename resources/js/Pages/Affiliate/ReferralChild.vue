@@ -125,11 +125,11 @@ export default {
                                 alt="userPic"
                             />
                             <div class="flex-col ml-3">
-                                <div class="flex gap-2 text-sm font-semibold">
-                                    {{ node.name }}
-                                    <LVL1Icon class="h-5" v-if="node.rank === 2" />
-                                    <LVL2Icon class="h-5" v-if="node.rank === 3" />
-                                    <LVL3Icon class="h-5" v-if="node.rank === 4" />
+                                <div class="flex whitespace-nowrap gap-2 text-sm font-semibold items-center">
+                                    <div class="whitespace-normal">{{ node.name }}</div>
+                                    <LVL1Icon class="h-5 w-5" v-if="node.rank === 2" />
+                                    <LVL2Icon class="h-5 w-5" v-if="node.rank === 3" />
+                                    <LVL3Icon class="h-5 w-5" v-if="node.rank === 4" />
                                     <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">Level {{ node.level }}</span>
                                 </div>
                                 <div class="text-xs font-normal dark:text-gray-400">
@@ -150,7 +150,7 @@ export default {
                             </div>
                             <div class="flex flex-col text-center">
                                 <span class="text-sm font-semibold">$ {{ formatAmount(node.self_deposit) }}</span>
-                                <span class="text-xs font-normal dark:text-gray-400">Self Deposit</span>
+                                <span class="text-xs font-normal dark:text-gray-400">Self Valid Deposit</span>
                             </div>
                             <div class="flex flex-col text-center">
                                 <span class="text-sm font-semibold">$ {{ formatAmount(node.valid_affiliate_deposit) }}</span>

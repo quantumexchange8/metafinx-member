@@ -61,6 +61,7 @@ const form = useForm({
     address_1: user.address_1,
     address_2: user.address_2,
     identity_number: formattedIdentityNumber,
+    kyc_approval: user.kyc_approval,
     proof_front: props.frontIdentityImg,
     proof_back: props.backIdentityImg,
     profile_photo: props.profileImg,
@@ -323,6 +324,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                         <file-pond
                             name="proof_front"
                             ref="pond"
+                            :disabled="form.kyc_approval === 'verified' ? 'true':'false'"
                             :imagePreviewMaxHeight="150"
                             :filePosterMaxHeight="150"
                             v-bind:allow-multiple="false"
@@ -353,6 +355,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                         <file-pond
                                 name="proof_back"
                                 ref="pond"
+                                :disabled="form.kyc_approval === 'verified' ? 'true':'false'"
                                 :imagePreviewMaxHeight="150"
                                 :filePosterMaxHeight="150"
                                 v-bind:allow-multiple="false"
