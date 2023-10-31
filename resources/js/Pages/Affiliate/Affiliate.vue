@@ -7,10 +7,14 @@ import Tooltip from "@/Components/Tooltip.vue";
 import {ref} from "vue";
 import toast from "@/Composables/toast.js";
 import ReferralTree from "@/Pages/Affiliate/ReferralTree.vue";
+import {transactionFormat} from "@/Composables/index.js";
 
 const props = defineProps({
-    referredCounts: Number
+    referredCounts: Number,
+    totalReferralEarning: Number
 })
+
+const { formatAmount } = transactionFormat();
 
 const tooltipContent = ref('Copy');
 function copyReferralCode () {
@@ -79,7 +83,7 @@ function copyReferralCodeLink() {
                     Total Referral Earning since 01 Jan 2023
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
-                    $ 0.00
+                    $ {{ formatAmount(totalReferralEarning) }}
                 </div>
             </div>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
@@ -140,7 +144,7 @@ function copyReferralCodeLink() {
                         Total Referral Earning since 01 Jan 2023
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
-                        $ 0.00
+                        $ {{ formatAmount(totalReferralEarning) }}
                     </div>
                 </div>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">

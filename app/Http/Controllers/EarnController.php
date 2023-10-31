@@ -77,7 +77,7 @@ class EarnController extends Controller
             'investment_plan_id' => $investment_plan->id,
             'subscription_id' => $subscription_id,
             'amount' => $amount,
-            'to_wallet_address' => $request->wallet_address,
+            'total_earning' => 0.00,
         ]);
 
         $cooling_period_date = $investmentSubscription->created_at->addDays(60)->startOfDay();

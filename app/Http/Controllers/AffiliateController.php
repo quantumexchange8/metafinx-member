@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InvestmentSubscription;
 use App\Models\User;
+use App\Models\Earning;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -13,9 +14,11 @@ class AffiliateController extends Controller
     public function referral_view()
     {
         $referredCounts = User::where('upline_id', \Auth::id())->count();
-
+        $totalReferralEarning = Earning::where('upline_id', \Auth::id())->where('type', 'referral_earnings')->sum('after_amount');
+        
         return Inertia::render('Affiliate/Affiliate', [
-            'referredCounts' => $referredCounts
+            'referredCounts' => $referredCounts,
+            'totalReferralEarning' => $totalReferralEarning
         ]);
     }
 

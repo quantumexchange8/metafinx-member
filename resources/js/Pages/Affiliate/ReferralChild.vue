@@ -199,7 +199,7 @@ export default {
                     <span class="text-black dark:text-white py-2">{{ selectedAffiliate.total_affiliate }}</span>
                 </div>
                 <div class="grid grid-cols-3 gap-2 items-center">
-                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Self Deposit</span>
+                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Self Valid Deposit</span>
                     <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedAffiliate.self_deposit) }}</span>
                 </div>
                 <div class="grid grid-cols-3 gap-2 items-center">
