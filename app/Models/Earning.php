@@ -20,4 +20,14 @@ class Earning extends Model
         'after_amount',
         'type',
     ];
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'upline_id', 'id');
+    }
+
+    public function downline(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'downline_id', 'id');
+    }
 }

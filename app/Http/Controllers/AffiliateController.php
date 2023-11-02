@@ -15,10 +15,10 @@ class AffiliateController extends Controller
     {
         $referredCounts = User::where('upline_id', \Auth::id())->count();
         $totalReferralEarning = Earning::where('upline_id', \Auth::id())->where('type', 'referral_earnings')->sum('after_amount');
-        
+
         return Inertia::render('Affiliate/Affiliate', [
             'referredCounts' => $referredCounts,
-            'totalReferralEarning' => $totalReferralEarning
+            'totalReferralEarning' => floatval($totalReferralEarning),
         ]);
     }
 

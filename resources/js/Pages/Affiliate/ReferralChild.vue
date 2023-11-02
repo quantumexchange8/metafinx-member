@@ -130,7 +130,7 @@ export default {
                                     <LVL1Icon class="h-5 w-5" v-if="node.rank === 2" />
                                     <LVL2Icon class="h-5 w-5" v-if="node.rank === 3" />
                                     <LVL3Icon class="h-5 w-5" v-if="node.rank === 4" />
-                                    <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">Level {{ node.level }}</span>
+                                    <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">GEN {{ node.level }}</span>
                                 </div>
                                 <div class="text-xs font-normal dark:text-gray-400">
                                     {{ node.email }}

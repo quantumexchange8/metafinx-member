@@ -5,16 +5,36 @@ import Button from "@/Components/Button.vue";
 import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "@headlessui/vue";
 import ReturnTable from "@/Pages/Report/History/ReturnTable.vue";
 import EarningTable from "@/Pages/Report/History/EarningTable.vue";
+import InvestmentTable from "@/Pages/Report/History/InvestmentTable.vue";
 
-const emit = defineEmits(['clicked'])
+const emit = defineEmits(['clicked', 'update:export'])
 const props = defineProps({
     search: String,
+    type: String,
     date: String,
+    exportStatus: Boolean,
 })
 
+const categories = ref({
+    'Return (Personal)': [
+        {
+            name: 'Return'
+        }
+    ],
+    Earning: [
+        {
+            name: 'Earning'
+        }
+    ],
+    Investment: [
+        {
+            name: 'Investment'
+        }
+    ],
+})
 const isLoading = ref(false);
 const refresh = ref(false);
-const type = ref('Deposit');
+const reportType = ref('Return');
 
 function refreshTable() {
     isLoading.value = !isLoading.value;
@@ -22,7 +42,7 @@ function refreshTable() {
 }
 
 const updateTransactionType = (transaction_type) => {
-    type.value = transaction_type
+    reportType.value = transaction_type
     emit('clicked', transaction_type)
 };
 </script>
@@ -32,11 +52,13 @@ const updateTransactionType = (transaction_type) => {
         <TabGroup>
             <TabList class="max-w-xs md:max-w-full flex py-1 ">
                 <Tab
+                    v-for="category in Object.keys(categories)"
                     as="template"
+                    :key="category"
                     v-slot="{ selected }"
                 >
                     <button
-                        @click="updateTransactionType('Deposit')"
+                        @click="updateTransactionType(category)"
                         :class="[
                               'w-full md:w-1/6 py-2.5 text-sm font-semibold dark:text-gray-400',
                               'ring-white ring-offset-0 focus:outline-none focus:ring-0',
@@ -45,41 +67,7 @@ const updateTransactionType = (transaction_type) => {
                                 : 'border-b border-gray-400',
                            ]"
                     >
-                        Deposit
-                    </button>
-                </Tab>
-                <Tab
-                    as="template"
-                    v-slot="{ selected }"
-                >
-                    <button
-                        @click="updateTransactionType('Withdrawal')"
-                        :class="[
-                              'w-full md:w-1/6 py-2.5 text-sm font-semibold dark:text-gray-400',
-                              'ring-white ring-offset-0 focus:outline-none focus:ring-0',
-                              selected
-                                ? 'dark:text-white border-b-2'
-                                : 'border-b border-gray-400',
-                           ]"
-                    >
-                        Withdrawal
-                    </button>
-                </Tab>
-                <Tab
-                    as="template"
-                    v-slot="{ selected }"
-                >
-                    <button
-                    @click="updateTransactionType('Investment')"
-                        :class="[
-                              'w-full md:w-1/6 py-2.5 text-sm font-semibold dark:text-gray-400',
-                              'ring-white ring-offset-0 focus:outline-none focus:ring-0',
-                              selected
-                                ? 'dark:text-white border-b-2'
-                                : 'border-b border-gray-400',
-                           ]"
-                    >
-                        Investment
+                        {{ category }}
                     </button>
                 </Tab>
                 <RefreshIcon
@@ -88,9 +76,9 @@ const updateTransactionType = (transaction_type) => {
                     aria-hidden="true"
                     @click="refreshTable"
                 />
-                
+
             </TabList>
-            
+
             <TabPanels>
                 <TabPanel>
                     <ReturnTable
@@ -98,8 +86,10 @@ const updateTransactionType = (transaction_type) => {
                         :isLoading="isLoading"
                         :search="search"
                         :date="date"
+                        :exportStatus="exportStatus"
                         @update:loading="isLoading = $event"
                         @update:refresh="refresh = $event"
+                        @update:export="$emit('update:export', $event)"
                     />
                 </TabPanel>
                 <TabPanel>
@@ -107,9 +97,25 @@ const updateTransactionType = (transaction_type) => {
                         :refresh="refresh"
                         :isLoading="isLoading"
                         :search="search"
+                        :type="type"
                         :date="date"
+                        :exportStatus="exportStatus"
                         @update:loading="isLoading = $event"
                         @update:refresh="refresh = $event"
+                        @update:export="$emit('update:export', $event)"
+                    />
+                </TabPanel>
+                <TabPanel>
+                    <InvestmentTable
+                        :refresh="refresh"
+                        :isLoading="isLoading"
+                        :search="search"
+                        :type="type"
+                        :date="date"
+                        :exportStatus="exportStatus"
+                        @update:loading="isLoading = $event"
+                        @update:refresh="refresh = $event"
+                        @update:export="$emit('update:export', $event)"
                     />
                 </TabPanel>
             </TabPanels>

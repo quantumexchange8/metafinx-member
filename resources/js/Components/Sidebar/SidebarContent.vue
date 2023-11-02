@@ -66,7 +66,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
             </template>
         </SidebarLink>
 
-        <!-- <SidebarLink
+        <SidebarLink
             title="Report"
             :href="route('report.finance_history')"
             :active="route().current('report.finance_history')"
@@ -77,7 +77,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
                     aria-hidden="true"
                 />
             </template>
-        </SidebarLink> -->
+        </SidebarLink>
 
         <SidebarLink
             title="Log Out"

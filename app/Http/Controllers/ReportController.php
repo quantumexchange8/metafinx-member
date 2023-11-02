@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Exports\DepositExport;
+use App\Exports\EarningReportExport;
+use App\Exports\InvestmentReportExport;
 use App\Exports\WithdrawalExport;
+use App\Models\Earning;
+use App\Models\InvestmentSubscription;
 use App\Models\Payment;
 use App\Models\Wallet;
 use App\Models\SettingWalletAddress;
@@ -17,43 +21,49 @@ class ReportController extends Controller
 {
     public function detail()
     {
-        $wallets = Wallet::where('user_id', \Auth::id());
+        $totalEarning = Earning::where('upline_id', \Auth::id())
+            ->sum('after_amount');
 
-        $totalBalance = clone $wallets;
+        $totalWithdrawal = Payment::where('user_id', \Auth::id())
+            ->where('type', '=', 'Withdrawal')
+            ->where('status', '=', 'Success')
+            ->sum('amount');
 
-        $wallet_sel = $wallets->get()->map(function ($wallet) {
-            return [
-                'value' => $wallet->id,
-                'label' => $wallet->name,
-            ];
-        });
+        $totalInvestment = InvestmentSubscription::where('user_id', \Auth::id())
+            ->sum('amount');
 
-        $wallet_address = SettingWalletAddress::inRandomOrder()->first();
+        $totalBalance = Wallet::where('user_id', \Auth::id())
+            ->sum('balance');
 
         return Inertia::render('Report/Report', [
-            'wallets' => $wallets->get(),
-            'totalBalance' => $totalBalance->sum('balance'),
-            'wallet_sel' => $wallet_sel,
-            'random_address' => $wallet_address,
+            'totalEarning' => floatval($totalEarning),
+            'totalWithdrawal' => floatval($totalWithdrawal),
+            'totalInvestment' => floatval($totalInvestment),
+            'totalBalance' => floatval($totalBalance),
         ]);
     }
 
-    public function getTransaction(Request $request, $type)
+    public function getEarningRecord(Request $request)
     {
         $user = \Auth::user();
 
-        $query = Payment::query()->with(['user', 'wallet'])->where('user_id', $user->id)->where('type', $type);
+        $query = Earning::query()
+            ->with('downline:id,name,email')
+            ->where('upline_id', $user->id);
 
         if ($request->filled('search')) {
             $search = '%' . $request->input('search') . '%';
             $query->where(function ($q) use ($search) {
-                $q->whereHas('wallet', function ($wallet_query) use ($search) {
-                    $wallet_query->where('name', 'like', $search);
-                })
-                    ->orWhere('transaction_id', 'like', $search)
-                    ->orWhere('amount', 'like', $search)
-                    ->orWhere('price', 'like', $search);
+                $q->whereHas('downline', function ($downline) use ($search) {
+                    $downline->where('name', 'like', $search)
+                        ->orWhere('email', 'like', $search);
+                });
             });
+        }
+
+        if ($request->filled('type')) {
+            $type = $request->input('type');
+            $query->where('type', $type);
         }
 
         if ($request->filled('date')) {
@@ -65,16 +75,57 @@ class ReportController extends Controller
             $query->whereBetween('created_at', [$start_date, $end_date]);
         }
 
-        if ($request->has('export')) {
-            if ($type == 'Deposit') {
-                return Excel::download(new DepositExport($query), Carbon::now() . '-' . $type . '-report.xlsx');
-            } elseif ($type == 'Withdrawal') {
-                return Excel::download(new WithdrawalExport($query), Carbon::now() . '-' . $type . '-report.xlsx');
-            }
+        if ($request->has('exportStatus')) {
+            return Excel::download(new EarningReportExport($query), Carbon::now() . '-earning-report.xlsx');
         }
 
         $results = $query->latest()->paginate(10);
 
-        return response()->json([$type => $results]);
+        $results->each(function ($user_deposit) {
+            $user_deposit->downline->profile_photo_url = $user_deposit->downline->getFirstMediaUrl('profile_photo');
+        });
+
+        return response()->json($results);
+    }
+
+    public function getInvestmentRecord(Request $request)
+    {
+        $user = \Auth::user();
+
+        $query = InvestmentSubscription::query()
+            ->with('investment_plan:id,name,roi_per_annum,investment_period')
+            ->where('user_id', $user->id);
+
+        if ($request->filled('search')) {
+            $search = '%' . $request->input('search') . '%';
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('investment_plan', function ($investment_plan) use ($search) {
+                    $investment_plan->where('name', 'like', $search);
+                })
+                    ->orWhere('subscription_id', 'like', $search);
+            });
+        }
+
+        if ($request->filled('type')) {
+            $type = $request->input('type');
+            $query->where('status', $type);
+        }
+
+        if ($request->filled('date')) {
+            $date = $request->input('date');
+            $dateRange = explode(' - ', $date);
+            $start_date = Carbon::createFromFormat('Y-m-d', $dateRange[0])->startOfDay();
+            $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
+
+            $query->whereBetween('created_at', [$start_date, $end_date]);
+        }
+
+        if ($request->has('exportStatus')) {
+            return Excel::download(new InvestmentReportExport($query), Carbon::now() . '-investment-report.xlsx');
+        }
+
+        $results = $query->latest()->paginate(10);
+
+        return response()->json($results);
     }
 }

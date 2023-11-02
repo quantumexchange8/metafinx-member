@@ -18,12 +18,12 @@ const formatter = ref({
     date: 'YYYY-MM-DD',
     month: 'MM'
 });
-const earnings = ref({data: []});
+const investments = ref({data: []});
 const currentPage = ref(1);
-const refreshEarning = ref(props.refresh);
-const depositLoading = ref(props.isLoading);
+const refreshInvestment = ref(props.refresh);
+const isLoading = ref(props.isLoading);
 const emit = defineEmits(['update:loading', 'update:refresh', 'update:export']);
-const { formatDateTime, formatAmount, formatCategory } = transactionFormat();
+const { formatDateTime, formatAmount, formatType } = transactionFormat();
 
 watch(
     [() => props.search, () => props.type, () => props.date],
@@ -33,9 +33,9 @@ watch(
 );
 
 const getResults = async (page = 1, search = '', type= '', date = '') => {
-    depositLoading.value = true
+    isLoading.value = true
     try {
-        let url = `/report/getEarningRecord?page=${page}`;
+        let url = `/report/getInvestmentRecord?page=${page}`;
 
         if (search) {
             url += `&search=${search}`;
@@ -50,11 +50,11 @@ const getResults = async (page = 1, search = '', type= '', date = '') => {
         }
 
         const response = await axios.get(url);
-        earnings.value = response.data;
+        investments.value = response.data;
     } catch (error) {
         console.error(error);
     } finally {
-        depositLoading.value = false
+        isLoading.value = false
         emit('update:loading', false);
     }
 }
@@ -70,7 +70,7 @@ const handlePageChange = (newPage) => {
 };
 
 watch(() => props.refresh, (newVal) => {
-    refreshEarning.value = newVal;
+    refreshInvestment.value = newVal;
     if (newVal) {
         // Call the getResults function when refresh is true
         getResults();
@@ -79,9 +79,9 @@ watch(() => props.refresh, (newVal) => {
 });
 
 watch(() => props.exportStatus, (newVal) => {
-    refreshEarning.value = newVal;
+    refreshInvestment.value = newVal;
     if (newVal) {
-        let url = `/report/getEarningRecord?exportStatus=yes`;
+        let url = `/report/getInvestmentRecord?exportStatus=yes`;
 
         if (props.date) {
             url += `&date=${props.date}`;
@@ -111,29 +111,35 @@ const paginationActiveClass = [
 
 <template>
     <div class="relative overflow-x-auto sm:rounded-lg">
-        <div v-if="depositLoading" class="w-full flex justify-center my-8">
+        <div v-if="isLoading" class="w-full flex justify-center my-8">
             <Loading />
         </div>
         <table v-else class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
             <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
             <tr>
                 <th scope="col" class="py-3">
-                    Date
+                    Transaction Date
                 </th>
                 <th scope="col" class="py-3">
-                    Downline Name
+                    Valid Thru
                 </th>
                 <th scope="col" class="py-3">
-                    Category
+                    ID Number
+                </th>
+                <th scope="col" class="py-3">
+                    Plan
                 </th>
                 <th scope="col" class="py-3">
                     Amount
                 </th>
+                <th scope="col" class="py-3">
+                    Status
+                </th>
             </tr>
             </thead>
             <tbody>
-            <tr v-if="earnings.data.length === 0" >
-                <th colspan="4" class="py-4 text-lg">
+            <tr v-if="investments.data.length === 0" >
+                <th colspan="6" class="py-4 text-lg">
                     <div class="flex flex-col dark:text-gray-400 mt-3 items-center">
                         <img src="/assets/no_data.png" class="w-60" alt="">
                         No data to show
@@ -141,35 +147,35 @@ const paginationActiveClass = [
                 </th>
             </tr>
             <tr
-                v-for="earning in earnings.data"
-                class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 dark:hover:bg-gray-600"
+                v-for="investment in investments.data"
+                class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600  dark:hover:bg-gray-600"
             >
-                <td class="py-2">
-                    {{ formatDateTime(earning.created_at) }}
+                <td class="py-3">
+                    {{ formatDateTime(investment.created_at) }}
                 </td>
-                <td class="py-2">
-                    <div class="inline-flex items-center gap-2">
-                        <img :src="earning.downline.profile_photo_url ? earning.downline.profile_photo_url : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
-                        <div class="grid">
-                            <span>{{ earning.downline.name }}</span>
-                            <span class="dark:text-gray-400">{{ earning.downline.email }}</span>
-                        </div>
-                    </div>
+                <td class="py-3">
+                    {{ investment.expired_date }}
                 </td>
-                <td class="py-2">
-                    {{ formatCategory(earning.type) }}
+                <td class="py-3">
+                    {{ investment.subscription_id }}
                 </td>
-                <td class="py-2">
-                    $ {{ formatAmount(earning.after_amount) }}
+                <td class="py-3">
+                    {{ investment.investment_plan.name['en'] }}
+                </td>
+                <td class="py-3">
+                    $ {{ formatAmount(investment.amount) }}
+                </td>
+                <td class="py-3 uppercase">
+                    {{ formatType(investment.status) }}
                 </td>
             </tr>
             </tbody>
         </table>
-        <div class="flex justify-center mt-4" v-if="!depositLoading">
+        <div class="flex justify-center mt-4" v-if="!isLoading">
             <TailwindPagination
                 :item-classes=paginationClass
                 :active-classes=paginationActiveClass
-                :data="earnings"
+                :data="investments"
                 :limit=2
                 @pagination-change-page="handlePageChange"
             >

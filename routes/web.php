@@ -53,10 +53,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/getTreeData', [AffiliateController::class, 'getTreeData'])->name('affiliate.getTreeData');
     });
 
-    // Route::prefix('report')->group(function () {
-    //     Route::get('/finance_history', [ReportController::class, 'detail'])->name('report.finance_history');
+     Route::prefix('report')->group(function () {
+         Route::get('/finance_history', [ReportController::class, 'detail'])->name('report.finance_history');
+         Route::get('/getEarningRecord', [ReportController::class, 'getEarningRecord'])->name('report.getEarningRecord');
+         Route::get('/getInvestmentRecord', [ReportController::class, 'getInvestmentRecord'])->name('report.getInvestmentRecord');
 
-    // });
+     });
 });
 
 Route::get('/components/buttons', function () {

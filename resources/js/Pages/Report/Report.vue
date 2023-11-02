@@ -9,6 +9,14 @@ import InputIconWrapper from "@/Components/InputIconWrapper.vue";
 import {SearchIcon, FilterIcon} from "@heroicons/vue/outline";
 import {CloudDownloadIcon} from "@/Components/Icons/outline.jsx";
 import BaseListbox from "@/Components/BaseListbox.vue";
+import {transactionFormat} from "@/Composables/index.js";
+
+const props = defineProps({
+    totalEarning: Number,
+    totalWithdrawal: Number,
+    totalInvestment: Number,
+    totalBalance: Number,
+})
 
 const formatter = ref({
     date: 'YYYY-MM-DD',
@@ -16,45 +24,38 @@ const formatter = ref({
 });
 const search = ref('');
 const date = ref('');
-const filter = ref();
-const test = ref('Deposit');
+const type = ref();
+const reportType = ref('Return (Personal)');
+const exportStatus = ref(false);
+const { formatAmount } = transactionFormat();
 
 const returnFilter = [
-    {value:1, label:"Monthly Return"}, 
+    {value:1, label:"Monthly Return"},
     {value:2, label:"Ticket Bonus"},
     {value:3, label:"Dividend"},
 ];
 const earnFilter = [
-    {value:1, label:"Referral Earning"},
-    {value:2, label:"Affiliate Earning"},
-    {value:3, label:"Dividend Earning"},
+    {value: '', label:"All"},
+    {value: 'referral_earnings', label:"Referral Earning"},
+    {value: 'affiliate_earnings', label:"Affiliate Earning"},
+    {value: 'dividend_earnings', label:"Dividend Earning"},
 
 ];
 const investFilter = [
-    {value:1, label:"Basic"},
-    {value:2, label:"Advance"},
-    {value:3, label:"Pro"},
-    {value:4, label:"Maturity Period"},
+    {value: '', label:"All"},
+    {value: 'CoolingPeriod', label:"Cooling Period"},
+    {value: 'OngoingPeriod', label:"Ongoing Period"},
+    {value: 'MaturityPeriod', label:"Maturity Period"},
+    {value: 'Terminated', label:"Terminated"},
 ];
 
-// const exportDeposit = () => {
-
-//     let url = `/wallet/getTransaction/${type.value}?export=yes`;
-
-//     if (date) {
-//         url += `&date=${date.value}`;
-//     }
-
-//     if (search) {
-//         url += `&search=${search.value}`;
-//     }
-
-//     window.location.href = url;
-// }
-
-const historyType = (childData) => {
-    test.value = childData;
+const historyType = (type) => {
+    reportType.value = type;
 };
+
+const exportReport = () => {
+    exportStatus.value = true;
+}
 
 </script>
 
@@ -72,12 +73,13 @@ const historyType = (childData) => {
                         Track your finance flow of this account.
                     </p>
                 </div>
-                <div class="flex justify-end md:w-1/3 md:h-1/2 md:self-end">
+                <div class="flex justify-end md:w-1/3 md:h-1/2 md:self-end pt-5 md:pt-0">
                     <Button
                         type="button"
                         class="justify-center w-full md:w-2/3 gap-2 border border-gray-600 text-white text-sm dark:hover:bg-gray-600"
                         variant="transparent"
-                        @click=""
+                        :disabled="reportType==='Return (Personal)'"
+                        @click="exportReport"
                     >
                         <CloudDownloadIcon aria-hidden="true" class="w-5 h-5" />
                         <span>Export as Excel</span>
@@ -86,53 +88,7 @@ const historyType = (childData) => {
             </div>
         </template>
 
-        <h3 class="md:hidden text-xl font-semibold leading-tight my-5">
-            Finance Overview
-        </h3>
-        <div class="flex flex-col md:hidden gap-3 overflow-x-auto md:overflow-visible">
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
-                <div class="space-y-2">
-                    <div class="text-xs font-semibold dark:text-white">
-                        Total Growth since 01 Jan 2023
-                    </div>
-                    <div class="text-2xl font-semibold dark:text-white">
-                        $ 10,000.00
-                    </div>
-                </div>
-            </div>
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
-                <div class="space-y-2">
-                    <div class="text-xs font-semibold dark:text-white">
-                        Total Withdrawal since 01 Jan 2023
-                    </div>
-                    <div class="text-2xl font-semibold dark:text-white">
-                        $ 10,000.00
-                    </div>
-                </div>
-            </div>
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
-                <div class="space-y-2">
-                    <div class="text-xs font-semibold dark:text-white">
-                        Total Investment since 01 Jan 2023
-                    </div>
-                    <div class="text-2xl font-semibold dark:text-white">
-                        $ 10,000.00
-                    </div>
-                </div>
-            </div>
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
-                <div class="space-y-2">
-                    <div class="text-xs font-semibold dark:text-white">
-                        Total Balance since 01 Jan 2023
-                    </div>
-                    <div class="text-2xl font-semibold dark:text-white">
-                        $ 10,000.00
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-5 grid grid-cols-1 md:grid-cols-11 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-11 gap-3">
             <div class="md:col-span-4 mt-1">
                 <InputIconWrapper>
                     <template #icon>
@@ -142,23 +98,23 @@ const historyType = (childData) => {
                 </InputIconWrapper>
             </div>
             <div class="md:col-span-2">
-                <BaseListbox v-if="test === 'Deposit'"
-                    v-model="filter"
+                <BaseListbox v-if="reportType === 'Return (Personal)'"
+                    v-model="type"
                     :options="returnFilter"
                     placeholder = "Filters"
                 />
-                <BaseListbox v-if="test === 'Withdrawal'"
-                    v-model="filter"
+                <BaseListbox v-if="reportType === 'Earning'"
+                    v-model="type"
                     :options="earnFilter"
                     placeholder = "Filters"
                 />
-                <BaseListbox v-if="test === 'Investment'"
-                    v-model="filter"
+                <BaseListbox v-if="reportType === 'Investment'"
+                    v-model="type"
                     :options="investFilter"
                     placeholder = "Filters"
                 />
             </div>
-            <div class="md:col-span-2 mt-1">
+            <div class="md:col-span-3 mt-1">
                 <vue-tailwind-datepicker
                     placeholder="Select dates"
                     :formatter="formatter"
@@ -170,10 +126,13 @@ const historyType = (childData) => {
         </div>
 
         <div class="p-5 my-5 bg-white overflow-hidden md:overflow-visible rounded-xl shadow-md dark:bg-gray-700">
-            <History 
-            @clicked="historyType"
-            :search="search"
-            :date="date"
+            <History
+                @clicked="historyType"
+                :search="search"
+                :type="type"
+                :date="date"
+                :exportStatus="exportStatus"
+                @update:export="exportStatus = $event"
             />
         </div>
 
@@ -186,10 +145,10 @@ const historyType = (childData) => {
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
                     <div class="space-y-2">
                         <div class="text-xs font-medium dark:text-gray-400">
-                            Total Growth since 01 Jan 2023
+                            Total Earning since 01 Jan 2023
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
-                            $ 10,000.00
+                            $ {{ formatAmount(totalEarning) }}
                         </div>
                     </div>
                 </div>
@@ -199,7 +158,7 @@ const historyType = (childData) => {
                             Total Withdrawal since 01 Jan 2023
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
-                            $ 10,000.00
+                            $ {{ formatAmount(totalWithdrawal) }}
                         </div>
                     </div>
                 </div>
@@ -209,7 +168,7 @@ const historyType = (childData) => {
                             Total Investment since 01 Jan 2023
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
-                            $ 10,000.00
+                            $ {{ formatAmount(totalInvestment) }}
                         </div>
                     </div>
                 </div>
@@ -219,7 +178,53 @@ const historyType = (childData) => {
                             Total Balance since 01 Jan 2023
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
-                            $ 10,000.00
+                            $ {{ formatAmount(totalBalance) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="md:hidden text-xl font-semibold leading-tight my-5">
+                Finance Overview
+            </h3>
+            <div class="flex flex-col md:hidden gap-3 overflow-x-auto md:overflow-visible">
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
+                    <div class="space-y-2">
+                        <div class="text-xs font-semibold dark:text-white">
+                            Total Earning since 01 Jan 2023
+                        </div>
+                        <div class="text-2xl font-semibold dark:text-white">
+                            $ {{ formatAmount(totalEarning) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
+                    <div class="space-y-2">
+                        <div class="text-xs font-semibold dark:text-white">
+                            Total Withdrawal since 01 Jan 2023
+                        </div>
+                        <div class="text-2xl font-semibold dark:text-white">
+                            $ {{ formatAmount(totalWithdrawal) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
+                    <div class="space-y-2">
+                        <div class="text-xs font-semibold dark:text-white">
+                            Total Investment since 01 Jan 2023
+                        </div>
+                        <div class="text-2xl font-semibold dark:text-white">
+                            $ {{ formatAmount(totalInvestment) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
+                    <div class="space-y-2">
+                        <div class="text-xs font-semibold dark:text-white">
+                            Total Balance since 01 Jan 2023
+                        </div>
+                        <div class="text-2xl font-semibold dark:text-white">
+                            $ {{ formatAmount(totalBalance) }}
                         </div>
                     </div>
                 </div>
