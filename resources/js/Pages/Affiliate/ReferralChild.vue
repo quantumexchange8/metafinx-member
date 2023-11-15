@@ -150,7 +150,7 @@ export default {
                             </div>
                             <div class="flex flex-col text-center">
                                 <span class="text-sm font-semibold">$ {{ formatAmount(node.self_deposit) }}</span>
-                                <span class="text-xs font-normal dark:text-gray-400">Self Valid Deposit</span>
+                                <span class="text-xs font-normal dark:text-gray-400">Valid Self Deposit</span>
                             </div>
                             <div class="flex flex-col text-center">
                                 <span class="text-sm font-semibold">$ {{ formatAmount(node.valid_affiliate_deposit) }}</span>

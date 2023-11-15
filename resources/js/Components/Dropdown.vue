@@ -9,7 +9,7 @@ const props = defineProps({
         default: '48',
     },
     contentClasses: {
-        default: () => ['py-1', 'bg-white dark:bg-gray-800'],
+        default: () => ['p-1', 'bg-white dark:bg-gray-700'],
     },
 })
 
@@ -28,6 +28,8 @@ onUnmounted(() => document.removeEventListener('keydown', closeOnEscape))
 const widthClass = computed(() => {
     return {
         48: 'w-48',
+        56: 'w-56',
+        64: 'w-64',
     }[props.width.toString()]
 })
 
@@ -65,7 +67,7 @@ const alignmentClasses = computed(() => {
         >
             <div
                 v-show="open"
-                class="absolute z-50 mt-2 rounded-md shadow-lg"
+                class="absolute z-50 mt-2 rounded-xl shadow-lg"
                 :class="[widthClass, alignmentClasses]"
                 style="display: none"
                 @click="open = false"

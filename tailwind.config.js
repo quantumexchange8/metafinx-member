@@ -99,8 +99,34 @@ module.exports = {
                 "vtd-primary": colors.rose,
                 "vtd-secondary": colors.gray,
             },
+            typography: ({ theme }) => ({
+                DEFAULT: {
+                    css: {
+                        '--tw-prose-paragraphs': theme('colors.gray[300]'),
+                        '--tw-prose-headings': theme('colors.gray[300]'),
+                        '--tw-prose-counters': theme('colors.gray[300]'),
+                        '--tw-prose-bold': theme('colors.gray[300]'),
+                        h1: {
+                            fontSize: '28px',
+                            lineHeight: '28px'
+                        },
+                        h2: {
+                            fontSize: '24px',
+                            lineHeight: '24px'
+                        },
+                        h3: {
+                            fontSize: '20px',
+                            lineHeight: '20px'
+                        },
+                        p: {
+                            fontSize: '14px',
+                            lineHeight: '24px'
+                        }
+                    },
+                },
+            }),
         },
     },
 
-    plugins: [require('@tailwindcss/forms')],
+    plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 }
