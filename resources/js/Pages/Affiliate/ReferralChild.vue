@@ -162,7 +162,7 @@ export default {
             </div>
         </div>
         <Tree
-            v-if="expanded"
+            v-if="expanded && !isLoading"
             v-for="child in node.children"
             :key="child.name"
             :node="child"

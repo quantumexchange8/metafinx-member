@@ -60,21 +60,21 @@ getResults();
             </div>
         </div>
     </div>
-<!--    <div class="pt-8">-->
-<!--        <InputIconWrapper>-->
-<!--            <template #icon>-->
-<!--                <SearchIcon aria-hidden="true" class="w-5 h-5" />-->
-<!--            </template>-->
-<!--            <Input-->
-<!--                withIcon-->
-<!--                id="search"-->
-<!--                type="text"-->
-<!--                class="block"-->
-<!--                placeholder="Search"-->
-<!--                v-model="search"-->
-<!--            />-->
-<!--        </InputIconWrapper>-->
-<!--    </div>-->
+    <div class="pt-8">
+        <InputIconWrapper>
+            <template #icon>
+                <SearchIcon aria-hidden="true" class="w-5 h-5" />
+            </template>
+            <Input
+                withIcon
+                id="search"
+                type="text"
+                class="block border-transparent w-full md:w-1/3"
+                placeholder="Search"
+                v-model="search"
+            />
+        </InputIconWrapper>
+    </div>
     <ReferralChild
         :node="root"
         :isLoading="isLoading"

@@ -39,15 +39,15 @@ class AffiliateController extends Controller
 
         $user = $searchUser ?? Auth::user();
 
-        $query = User::whereHas('upline', function ($query) use ($user) {
+        $users = User::whereHas('upline', function ($query) use ($user) {
             $query->where('id', $user->id);
-        });
+        })->get();
 
-        if ($searchUser) {
-            $query->orWhere('id', $searchUser->id);
-        }
-
-        $users = $query->get();
+//        if ($searchUser) {
+//            $query->orWhere('id', $searchUser->id);
+//        }
+//
+//        $users = $query->get();
 
         $level = 0;
         $rootNode = [
