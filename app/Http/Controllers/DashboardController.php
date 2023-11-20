@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Earning;
 use App\Models\InvestmentSubscription;
 use App\Models\Wallet;
 use Carbon\Carbon;
@@ -21,10 +22,16 @@ class DashboardController extends Controller
             $investmentEarningsLastUpdate = Carbon::now();
         }
 
+        $referralEarnings = Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'referral_earnings')
+            ->sum('after_amount');
+
         return Inertia::render('Dashboard', [
             'totalWalletBalance' => $wallets->sum('balance'),
             'walletLastUpdate' => $wallets->latest()->first('updated_at'),
-            'investmentEarningsLastUpdate' => $investmentEarningsLastUpdate
+            'investmentEarningsLastUpdate' => $investmentEarningsLastUpdate,
+            'referralEarnings' => $referralEarnings,
         ]);
     }
 
