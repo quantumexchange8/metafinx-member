@@ -119,7 +119,7 @@ const closeModal = () => {
     <div class="px-3 py-2 flex flex-col justify-center">
 
         <Link :href="route('profile.edit')">
-            <div class="p-4 rounded-[10px] hover:bg-gray-700 cursor-pointer" :class=" route().current('profile.edit') ? 'dark:bg-gray-700' : '' ">
+            <div class="p-4 rounded-[10px] hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" :class=" route().current('profile.edit') ? 'dark:bg-gray-700' : '' ">
                 <div class="relative">
                     <img
                         class="h-20 w-20 rounded-full mx-auto"

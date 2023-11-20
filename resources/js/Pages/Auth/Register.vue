@@ -178,7 +178,7 @@ const handleBackRevert = (uniqueId, load, error) => {
         <div class="w-full flex">
             <!-- Col -->
             <div
-                class="flex-col justify-between w-full h-auto hidden lg:flex lg:w-5/12 bg-gray-900"
+                class="flex-col justify-between w-full h-auto hidden lg:flex lg:w-5/12 bg-gray-50 dark:bg-gray-900"
             >
                 <Link href="/">
                     <ApplicationLogo class="w-48" />
@@ -196,11 +196,11 @@ const handleBackRevert = (uniqueId, load, error) => {
             </div>
             <!-- Col -->
             <div class="w-full flex flex-col items-center lg:w-7/12 bg-white p-5 dark:bg-gray-800">
-                <div class="mt-12 flex items-center justify-center w-10 h-10 border dark:border-gray-400 rounded-lg mb-2">
-                    <UserIcon v-if="formStep === 1" aria-hidden="true" class="h-6 w-6 text-white" />
-                    <KeyIcon v-if="formStep === 2" aria-hidden="true" class="h-6 w-6 text-white" />
-                    <ShieldCheckIcon v-if="formStep === 3" aria-hidden="true" class="h-6 w-6 text-white" />
-                    <UsersIcon v-if="formStep === 4" aria-hidden="true" class="h-6 w-6 text-white" />
+                <div class="mt-12 flex items-center justify-center w-10 h-10 border dark:border-gray-400 rounded-lg shadow mb-2">
+                    <UserIcon v-if="formStep === 1" aria-hidden="true" class="h-6 w-6 text-gray-800 dark:text-white" />
+                    <KeyIcon v-if="formStep === 2" aria-hidden="true" class="h-6 w-6 text-gray-800 dark:text-white" />
+                    <ShieldCheckIcon v-if="formStep === 3" aria-hidden="true" class="h-6 w-6 text-gray-800 dark:text-white" />
+                    <UsersIcon v-if="formStep === 4" aria-hidden="true" class="h-6 w-6 text-gray-800 dark:text-white" />
                 </div>
                 <Caption
                     :title="computedTitle"
@@ -218,8 +218,13 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     <UserIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                                 </template>
                                 <Input
-                                    withIcon id="name" type="text" placeholder="Enter your full name" class="block w-full" v-model="form.name" required autofocus autocomplete="name"
-                                    :class="form.errors.name ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                    withIcon id="name"
+                                    type="text"
+                                    placeholder="Enter your full name"
+                                    class="block w-full" v-model="form.name"
+                                    autofocus
+                                    autocomplete="name"
+                                    :class="form.errors.name ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
                                 />
                             </InputIconWrapper>
                             <InputError :message="form.errors.name" class="mt-2" />
@@ -243,8 +248,14 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     <PhoneIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                                 </template>
                                 <Input
-                                    withIcon id="phone" type="text" placeholder="+6011-0000 0000" class="block w-full" v-model="form.phone" required autocomplete="phone"
-                                    :class="form.errors.phone ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                    withIcon
+                                    id="phone"
+                                    type="text"
+                                    placeholder="+6011-0000 0000"
+                                    class="block w-full"
+                                    v-model="form.phone"
+                                    autocomplete="phone"
+                                    :class="form.errors.phone ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
                                 />
                             </InputIconWrapper>
                             <InputError :message="form.errors.phone" class="mt-2" />
@@ -254,11 +265,17 @@ const handleBackRevert = (uniqueId, load, error) => {
                             <Label class="dark:text-white" for="email" value="Email" />
                             <InputIconWrapper>
                                 <template #icon>
-                                    <MailIcon aria-hidden="true" class="w-5 h-5" />
+                                    <MailIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                                 </template>
                                 <Input
-                                    withIcon id="email" type="email" class="block w-full" placeholder="Email" v-model="form.email" required autocomplete="username"
-                                    :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                    withIcon
+                                    id="email"
+                                    type="email"
+                                    class="block w-full"
+                                    placeholder="Email"
+                                    v-model="form.email"
+                                    autocomplete="username"
+                                    :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
                                 />
                             </InputIconWrapper>
                             <InputError :message="form.errors.email" class="mt-2" />
@@ -268,20 +285,34 @@ const handleBackRevert = (uniqueId, load, error) => {
                             <Label class="dark:text-white" for="address_1" value="Address" />
                             <InputIconWrapper>
                                 <template #icon>
-                                    <HomeIcon aria-hidden="true" class="w-5 h-5" />
+                                    <HomeIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                                 </template>
                                 <Input
-                                    withIcon id="address_1" type="text" class="block w-full" placeholder="Line 1" v-model="form.address_1" required autocomplete="address_1"
-                                    :class="form.errors.address_1 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                    withIcon
+                                    id="address_1"
+                                    type="text"
+                                    class="block w-full"
+                                    placeholder="Line 1"
+                                    v-model="form.address_1"
+                                    autocomplete="address_1"
+                                    :class="form.errors.address_1 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
                                 />
                             </InputIconWrapper>
                             <InputError :message="form.errors.address_1" class="mt-2" />
 
                             <InputIconWrapper>
                                 <template #icon>
-                                    <HomeIcon aria-hidden="true" class="w-5 h-5" />
+                                    <HomeIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                                 </template>
-                                <Input withIcon id="address_2" type="text" class="block w-full" placeholder="Line 2 (optional)" v-model="form.address_2" required autocomplete="address_2" />
+                                <Input
+                                    withIcon
+                                    id="address_2"
+                                    type="text"
+                                    class="block w-full border border-gray-300 dark:border-gray-600"
+                                    placeholder="Line 2 (optional)"
+                                    v-model="form.address_2"
+                                    autocomplete="address_2"
+                                />
                             </InputIconWrapper>
                         </div>
 
@@ -293,7 +324,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                             <Label class="dark:text-white" for="password" value="Password" />
                             <InputIconWrapper>
                                 <template #icon>
-                                    <KeyIcon aria-hidden="true" class="w-5 h-5" />
+                                    <KeyIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                                 </template>
                                 <Input
                                     withIcon
@@ -304,14 +335,14 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     v-model="form.password"
                                     required
                                     autocomplete="new-password"
-                                    :class="form.errors.password ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                    :class="form.errors.password ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
                                 />
                                 <div
                                     class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
                                     @click="togglePasswordVisibility"
                                 >
                                     <template v-if="showPassword">
-                                        <EyeIcon aria-hidden="true" class="w-5 h-5" />
+                                        <EyeIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                                     </template>
                                     <template v-else>
                                         <EyeOffIcon aria-hidden="true" class="w-5 h-5" />
@@ -325,7 +356,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                             <Label class="dark:text-white" for="password_confirmation" value="Confirm Password" />
                             <InputIconWrapper>
                                 <template #icon>
-                                    <KeyIcon aria-hidden="true" class="w-5 h-5" />
+                                    <KeyIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                                 </template>
                                 <Input
                                     withIcon
@@ -336,7 +367,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     v-model="form.password_confirmation"
                                     required
                                     autocomplete="new-password"
-                                    :class="form.errors.password_confirmation ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                    :class="form.errors.password_confirmation ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
                                 />
                                 <div
                                     class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
@@ -360,13 +391,13 @@ const handleBackRevert = (uniqueId, load, error) => {
                             <Label class="dark:text-white" for="name" value="Identification Type" />
                             <div class="flex gap-x-12">
                                 <div class="flex">
-                                    <input type="radio" name="verification_type" v-model="form.verification_type" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-pink-500 dark:bg-gray-800 dark:border-gray-400 dark:checked:bg-pink-500 dark:checked:border-pink-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-1" value="nric">
-                                    <label for="hs-radio-group-1" class="text-sm text-gray-300 ml-2 dark:text-white">NRIC</label>
+                                    <input type="radio" name="verification_type" v-model="form.verification_type" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-pink-500 focus:ring-pink-500 dark:bg-gray-800 dark:border-gray-400 dark:checked:bg-pink-500 dark:checked:border-pink-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-1" value="nric">
+                                    <label for="hs-radio-group-1" class="text-sm text-gray-600 ml-2 dark:text-white">NRIC</label>
                                 </div>
 
                                 <div class="flex">
-                                    <input type="radio" name="verification_type" v-model="form.verification_type" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-pink-500 dark:bg-gray-800 dark:border-gray-400 dark:checked:bg-pink-500 dark:checked:border-pink-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-2" value="passport">
-                                    <label for="hs-radio-group-2" class="text-sm text-gray-500 ml-2 dark:text-white">Passport</label>
+                                    <input type="radio" name="verification_type" v-model="form.verification_type" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-pink-500 focus:ring-pink-500 dark:bg-gray-800 dark:border-gray-400 dark:checked:bg-pink-500 dark:checked:border-pink-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-2" value="passport">
+                                    <label for="hs-radio-group-2" class="text-sm text-gray-600 ml-2 dark:text-white">Passport</label>
                                 </div>
                             </div>
                             <InputError :message="form.errors.verification_type" class="mt-2" />
@@ -380,7 +411,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                             class="block w-full"
                             v-model="form.identity_number"
                             placeholder="Enter identification number"
-                            :class="form.errors.identity_number ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                            :class="form.errors.identity_number ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
                             />
 
                             <InputError :message="form.errors.identity_number" class="mt-2" />
@@ -452,7 +483,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                 type="text"
                                 placeholder="Enter referral code"
                                 class="block w-full"
-                                :class="form.errors.referral_code ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                                :class="form.errors.referral_code ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
                                 v-model="form.referral_code"
                                 autocomplete="referral_code" />
                             <InputError :message="form.errors.referral_code" class="mt-2" />

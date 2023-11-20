@@ -41,7 +41,7 @@ onMounted(() => {
             z-index: 100;
         "
         :class="[
-            'fixed inset-y-0 z-20 py-4 flex flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-r dark:border-gray-700',
+            'fixed inset-y-0 z-20 py-4 flex flex-col space-y-6 bg-gray-25 shadow-lg dark:bg-gray-800 border-r dark:border-gray-700',
             {
                 'translate-x-0 w-64':
                     sidebarState.isOpen || sidebarState.isHovered,

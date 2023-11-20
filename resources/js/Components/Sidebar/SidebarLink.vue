@@ -33,9 +33,9 @@ const Tag = !props.external ? Link : 'a'
         :class="[
             'p-2 flex items-center gap-2 rounded-md transition-colors',
             {
-                'text-gray-400 hover:text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700':
+                'text-gray-800 hover:text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700':
                     !active,
-                'text-white bg-purple-500 shadow-lg hover:bg-purple-600 dark:bg-gray-700':
+                'text-gray-800 bg-gray-100 shadow hover:bg-gray-100 dark:bg-gray-700 dark:text-white':
                     active,
             },
         ]"
@@ -57,9 +57,9 @@ const Tag = !props.external ? Link : 'a'
         :class="[
             'p-2 w-full flex items-center gap-2 rounded-md transition-colors',
             {
-                'text-gray-400 hover:text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700':
+                'text-gray-800 hover:text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700':
                     !active,
-                'text-white bg-purple-500 shadow-lg hover:bg-purple-600 dark:bg-gray-700':
+                'text-gray-800 bg-gray-100 shadow hover:bg-gray-100 dark:bg-gray-700 dark:text-white':
                     active,
             },
         ]"

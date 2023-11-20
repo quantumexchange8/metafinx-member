@@ -20,7 +20,7 @@ const getFontSize = (size) => {
 
 <template>
     <div class="text-center mb-6 md:text-4xl" :class="['text-white', 'font-semibold', getFontSize(size)]">
-        <h2 class="mb-2">{{ title }}</h2>
-        <p class="text-sm text-gray-400">{{ caption }}</p>
+        <h2 class="mb-2 text-gray-800 dark:text-white">{{ title }}</h2>
+        <p class="text-sm font-normal text-gray-600 dark:text-gray-400">{{ caption }}</p>
     </div>
 </template>

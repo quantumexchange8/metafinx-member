@@ -41,13 +41,13 @@ const label = computed(() => {
     >
         <div class="relative mt-1">
             <ListboxButton
-                class="relative w-full cursor-default rounded-lg bg-white dark:bg-gray-600 py-2  pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-pink-500 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-opacity-100 focus-visible:ring-offset-2 focus-visible:ring-offset-pink-500"
+                class="relative w-full cursor-default rounded-lg bg-white dark:bg-gray-600 py-2 pl-3 pr-10 text-left focus:outline-none border border-gray-300 dark:border-transparent focus-visible:border-pink-500 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-opacity-100 focus-visible:ring-offset-2 focus-visible:ring-offset-pink-500"
                 :class="[
-                    { 'border border-pink-500': error }
+                    { 'border-error-500': error }
                 ]"
             >
                 <span class="block truncate dark:text-white" v-if="label">{{ label }}</span>
-                <span v-else class="dark:text-gray-400">{{ props.placeholder }}</span>
+                <span v-else class="text-gray-400">{{ props.placeholder }}</span>
                 <span
                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                 >
@@ -75,7 +75,7 @@ const label = computed(() => {
                     >
                         <li
                             :class="[
-                  active ? 'bg-gray-500 dark:text-white' : 'text-gray-900 dark:text-white',
+                  active ? 'bg-gray-100 dark:bg-gray-500 dark:text-white' : 'text-gray-900 dark:text-white',
                   'relative cursor-default select-none py-2 px-4',
                 ]"
                         >
@@ -90,7 +90,7 @@ const label = computed(() => {
                                 v-if="selected"
                                 class="absolute inset-y-0 right-0 flex items-center pr-3 dark:text-white"
                             >
-                  <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                  <CheckIcon class="h-5 w-5 text-pink-500 dark:text-white" aria-hidden="true" />
                 </span>
                         </li>
                     </ListboxOption>

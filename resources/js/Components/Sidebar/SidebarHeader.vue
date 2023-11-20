@@ -3,8 +3,16 @@ import { Link } from '@inertiajs/vue3'
 import ApplicationLogo from '@/Components/ApplicationLogo.vue'
 import Button from '@/Components/Button.vue'
 import { MenuFoldLineLeftIcon, MenuFoldLineRightIcon } from '@/Components/Icons/outline'
-import { XIcon, MenuIcon } from '@heroicons/vue/outline'
+import { XIcon,SunIcon,
+    MoonIcon, MenuIcon } from '@heroicons/vue/outline'
 import { sidebarState } from '@/Composables'
+
+import {
+    handleScroll,
+    isDark,
+    scrolling,
+    toggleDarkMode,
+} from '@/Composables'
 </script>
 
 <template>
@@ -47,5 +55,26 @@ import { sidebarState } from '@/Composables'
                 aria-hidden="true"
                 :class="['lg:hidden', iconSizeClasses]" /> -->
         </Button>
+
+<!--        <Button-->
+<!--            iconOnly-->
+<!--            variant="secondary"-->
+<!--            type="button"-->
+<!--            @click="() => { toggleDarkMode() }"-->
+<!--            v-slot="{ iconSizeClasses }"-->
+<!--            class="hidden md:inline-flex"-->
+<!--            srText="Toggle dark mode"-->
+<!--        >-->
+<!--            <MoonIcon-->
+<!--                v-show="!isDark"-->
+<!--                aria-hidden="true"-->
+<!--                :class="iconSizeClasses"-->
+<!--            />-->
+<!--            <SunIcon-->
+<!--                v-show="isDark"-->
+<!--                aria-hidden="true"-->
+<!--                :class="iconSizeClasses"-->
+<!--            />-->
+<!--        </Button>-->
     </div>
 </template>

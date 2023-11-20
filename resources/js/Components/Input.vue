@@ -30,8 +30,8 @@ onMounted(() => {
 <template>
     <input
         :class="[
-            'py-2 rounded-lg placeholder:text-gray-400 text-gray-800 border-transparent',
-            'focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white',
+            'py-2 rounded-lg placeholder:text-gray-400 text-gray-800',
+            'focus:ring-pink-500 focus:border-pink-500 dark:focus:ring-pink-500 dark:focus:border-pink-700',
             'dark:bg-gray-600 dark:text-white',
             {
                 'px-4': !withIcon,

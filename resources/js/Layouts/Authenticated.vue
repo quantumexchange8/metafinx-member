@@ -40,7 +40,7 @@ onUnmounted(() => removeFinishEventListener());
     <Head :title="title"></Head>
 
     <div
-        class="min-h-screen text-gray-900 bg-gray-100 dark:bg-gray-800 dark:text-white"
+        class="min-h-screen text-gray-900 bg-white dark:bg-gray-800 dark:text-white"
     >
         <!-- Sidebar -->
         <Sidebar />
