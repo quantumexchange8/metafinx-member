@@ -9,6 +9,7 @@ use App\Models\Wallet;
 use App\Models\SettingWalletAddress;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 use function Symfony\Component\Translation\t;
@@ -35,6 +36,29 @@ class WalletController extends Controller
             'totalBalance' => $totalBalance->sum('balance'),
             'wallet_sel' => $wallet_sel,
             'random_address' => $wallet_address,
+        ]);
+    }
+
+    public function getWalletBalance(Request $request)
+    {
+        $selectedPlans = Wallet::query()
+            ->where('user_id', \Auth::id())
+            ->when($request->filled('date'), function ($query) use ($request) {
+                $date = $request->input('date');
+                $dateRange = explode(' - ', $date);
+                $start_date = \Illuminate\Support\Carbon::createFromFormat('Y-m-d', $dateRange[0])->startOfDay();
+                $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+            })
+            ->select('id', 'name', 'balance')
+            ->get();
+
+        $labels = $selectedPlans->pluck('name');
+        $datasetData = $selectedPlans->pluck('balance');
+
+        return response()->json([
+            'labels' => $labels,
+            'datasetData' => $datasetData,
         ]);
     }
 

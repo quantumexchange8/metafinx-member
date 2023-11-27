@@ -32,7 +32,7 @@ const props = defineProps({
             </p>
         </template>
 
-        <div class="p-5 grid grid-cols-2 items-center overflow-hidden bg-white rounded-xl shadow-md dark:bg-gray-700">
+        <div class="p-5 grid md:grid-cols-2 gap-2 sm:gap-5 items-center overflow-hidden bg-white rounded-xl shadow-md dark:bg-gray-700">
             <div class="space-y-2">
                 <p class="text-base font-semibold dark:text-gray-400">
                     Total Balance
@@ -50,10 +50,8 @@ const props = defineProps({
                     />
                 </div>
             </div>
-            <div>
-                <BalanceChart
-                    :wallets="wallets"
-                />
+            <div class="w-full flex justify-center mt-4 md:mt-0">
+                <BalanceChart />
             </div>
         </div>
 

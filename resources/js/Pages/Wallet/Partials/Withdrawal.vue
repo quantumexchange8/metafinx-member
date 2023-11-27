@@ -1,6 +1,6 @@
 <script setup>
 import Button from "@/Components/Button.vue";
-import {DepositIcon, Wallet} from "@/Components/Icons/outline.jsx";
+import {DepositIcon, WithdrawalIcon} from "@/Components/Icons/outline.jsx";
 import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 import QrcodeVue from 'qrcode.vue';
@@ -49,8 +49,8 @@ const submit = () => {
         variant="gray"
         @click="openWithdrawalModal"
     >
-        <DepositIcon aria-hidden="true" class="w-5 h-5" />
-        <span>Withdrawal</span>
+        <WithdrawalIcon aria-hidden="true" class="w-5 h-5" />
+        <span class="uppercase">Withdrawal</span>
     </Button>
 
     <Modal :show="withdrawalModal" title="Withdrawal" @close="closeModal">

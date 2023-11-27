@@ -78,7 +78,7 @@ function copyTestingCode () {
         @click="openDepositModal"
     >
         <DepositIcon aria-hidden="true" class="w-5 h-5" />
-        <span>Deposit</span>
+        <span class="uppercase">Deposit</span>
     </Button>
 
     <Modal :show="depositModal" title="Deposit" @close="closeModal">

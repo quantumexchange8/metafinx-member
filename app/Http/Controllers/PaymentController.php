@@ -16,7 +16,7 @@ class PaymentController extends Controller
         $user = \Auth::user();
         $transaction_id = RunningNumberService::getID('transaction');
 
-        Payment::create([
+        $payment = Payment::create([
             'user_id' => $user->id,
             'wallet_id' => $request->wallet_id,
             'transaction_id' => $transaction_id,
@@ -27,6 +27,8 @@ class PaymentController extends Controller
             'price' => $request->amount,
             'status' => 'Pending'
         ]);
+
+        $hashedToken = md5('MetaFinXmetafinx@support.com');
 
         return redirect()->back()->with('title', 'Submitted successfully')->with('success', 'The deposit request has been submitted successfully.');
     }
