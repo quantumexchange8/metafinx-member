@@ -8,10 +8,11 @@ import {
     MailIcon,
     MailOpenIcon
 } from '@heroicons/vue/solid'
-import { Link } from "@inertiajs/vue3";
-import {ref} from "vue";
+import {Link, usePage} from "@inertiajs/vue3";
+import {computed, ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 import {transactionFormat} from "@/Composables/index.js";
+import {loadLanguageAsync} from "laravel-vue-i18n";
 
 const notificationModal = ref(false);
 const notificationContent = ref(null);
@@ -39,10 +40,32 @@ const closeModal = () => {
     notificationModal.value = false
 }
 
+
+const currentLocale = ref(usePage().props.locale);
+
+const localeTextMap = {
+    en: 'EN',
+    tw: '中文 (简)',
+};
+
+const currentLocaleText = computed(() => {
+    return localeTextMap[currentLocale.value];
+});
+
+const changeLanguage = async (langVal) => {
+    try {
+        currentLocale.value = langVal;
+        await loadLanguageAsync(langVal);
+        await axios.get(`/locale/${langVal}`);
+    } catch (error) {
+        console.error('Error changing locale:', error);
+    }
+};
+
 </script>
 
 <template>
-    <div class="flex justify-end pr-3 gap-3">
+    <div class="flex justify-end">
         <Dropdown width="80" align="right-side">
             <template #trigger>
                 <Button
@@ -87,36 +110,35 @@ const closeModal = () => {
             </template>
         </Dropdown>
 
-<!--        </div>-->
-<!--        <Dropdown align="right">-->
-<!--            <template #trigger>-->
-<!--                <Button-->
-<!--                    iconOnly-->
-<!--                    variant="transparent"-->
-<!--                    type="button"-->
-<!--                    class="border-0 bg-transparent hidden md:inline-flex p-0"-->
-<!--                    srText="Toggle dark mode"-->
-<!--                >-->
-<!--                    <span class="dark:text-gray-400">EN</span>-->
-<!--                    <ChevronDownIcon-->
-<!--                        aria-hidden="true"-->
-<!--                        class="w-4 h-4 dark:text-gray-400"-->
-<!--                    />-->
-<!--                </Button>-->
-<!--            </template>-->
-<!--            <template #content>-->
-<!--                <DropdownLink>-->
-<!--                    <div class="inline-flex items-center gap-2">-->
-<!--                        English-->
-<!--                    </div>-->
-<!--                </DropdownLink>-->
-<!--                <DropdownLink>-->
-<!--                    <div class="inline-flex items-center gap-2">-->
-<!--                        中文 (繁)-->
-<!--                    </div>-->
-<!--                </DropdownLink>-->
-<!--            </template>-->
-<!--        </Dropdown>-->
+<!--        <Dropdown align="right">
+            <template #trigger>
+                <Button
+                    iconOnly
+                    variant="transparent"
+                    type="button"
+                    class="border-0 bg-transparent hidden md:inline-flex p-0"
+                    srText="Select language"
+                >
+                    <span class="dark:text-gray-400">{{ currentLocaleText }}</span>
+                    <ChevronDownIcon
+                        aria-hidden="true"
+                        class="w-4 h-4 dark:text-gray-400"
+                    />
+                </Button>
+            </template>
+            <template #content>
+                <DropdownLink @click="changeLanguage('en')">
+                    <div class="inline-flex items-center gap-2">
+                        English
+                    </div>
+                </DropdownLink>
+                <DropdownLink @click="changeLanguage('tw')">
+                    <div class="inline-flex items-center gap-2">
+                        中文 (繁)
+                    </div>
+                </DropdownLink>
+            </template>
+        </Dropdown>-->
     </div>
 
     <div class="px-3 py-2 flex flex-col justify-center">

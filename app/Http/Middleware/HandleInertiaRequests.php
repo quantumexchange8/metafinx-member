@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'csrf_token' => csrf_token(),
+            'locale' => session('locale') ? session('locale') : app()->getLocale(),
             'title' => session('title'),
             'success' => session('success'),
             'warning' => session('warning'),

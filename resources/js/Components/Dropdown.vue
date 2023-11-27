@@ -9,7 +9,7 @@ const props = defineProps({
         default: '48',
     },
     contentClasses: {
-        default: () => ['pb-5 px-5', 'bg-white dark:bg-gray-800'],
+        default: () => ['pb-1 px-5', 'bg-white dark:bg-gray-800'],
     },
 })
 

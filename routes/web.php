@@ -6,6 +6,8 @@ use App\Http\Controllers\EarnController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ReportController;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -24,6 +26,12 @@ use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return redirect()->route('login');
+});
+Route::get('locale/{locale}', function ($locale) {
+    App::setLocale($locale);
+    Session::put("locale", $locale);
+
+    return redirect()->back();
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

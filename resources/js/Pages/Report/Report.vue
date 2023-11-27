@@ -94,21 +94,25 @@ const exportReport = () => {
                     <template #icon>
                         <SearchIcon aria-hidden="true" class="w-5 h-5" />
                     </template>
-                    <Input withIcon id="search" type="text" class="w-full block" placeholder="Search" v-model="search" />
+                    <Input withIcon id="search" type="text" class="w-full block dark:border-transparent" placeholder="Search" v-model="search" />
                 </InputIconWrapper>
             </div>
             <div class="md:col-span-2">
-                <BaseListbox v-if="reportType === 'Return (Personal)'"
+                <BaseListbox
+                    v-if="reportType === 'Return (Personal)'"
                     v-model="type"
+                    class="bg-white dark:bg-gray-600"
                     :options="returnFilter"
                     placeholder = "Filters"
                 />
-                <BaseListbox v-if="reportType === 'Earning'"
+                <BaseListbox
+                    v-if="reportType === 'Earning'"
                     v-model="type"
                     :options="earnFilter"
                     placeholder = "Filters"
                 />
-                <BaseListbox v-if="reportType === 'Investment'"
+                <BaseListbox
+                    v-if="reportType === 'Investment'"
                     v-model="type"
                     :options="investFilter"
                     placeholder = "Filters"

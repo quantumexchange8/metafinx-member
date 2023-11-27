@@ -15,7 +15,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
         class="relative flex flex-col flex-1 max-h-full gap-2 px-3"
     >
         <SidebarLink
-            title="Dashboard"
+            :title="$t('public.sidebar.Dashboard')"
             :href="route('dashboard')"
             :active="route().current('dashboard')"
         >
