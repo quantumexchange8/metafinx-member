@@ -43,7 +43,7 @@ const closeModal = () => {
 
 <template>
     <div class="flex justify-end pr-3 gap-3">
-        <Dropdown width="56">
+        <Dropdown width="80" align="right-side">
             <template #trigger>
                 <Button
                     iconOnly
@@ -61,12 +61,14 @@ const closeModal = () => {
                 </Button>
             </template>
             <template #content>
+                <h3 class="font-semibold dark:text-white py-5">Notifications</h3>
                 <DropdownLink v-for="notification in $page.props.auth.user.unreadNotifications" class="border-b-2 border-gray-600" @click="openNotificationModal(notification)">
                     <div class="inline-flex items-center gap-2 w-full">
                         <span v-if="clickedNotificationIds.includes(notification.id)" class="w-3 h-3 bg-gray-400 border border-transparent rounded-full shrink-0 grow-0"></span>
                         <span v-else class="w-3 h-3 bg-pink-500 border border-transparent rounded-full shrink-0 grow-0"></span>
                         <div class="flex flex-col">
-                            <span class="my-auto dark:text-white">{{ notification.data['title'] }}</span>
+                            <div class="my-auto dark:text-white">{{ notification.data['title'] }}</div>
+                            <div class="my-auto dark:text-gray-400 break-words overflow-hidden"  style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;" v-html="notification.data['content']"></div>
                         </div>
                     </div>
                 </DropdownLink>
@@ -74,7 +76,8 @@ const closeModal = () => {
                     <div class="inline-flex items-center gap-2">
                         <span v-show="readNotification && readNotification.read_at" class="w-3 h-3 bg-gray-400 border border-transparent rounded-full shrink-0 grow-0"></span>
                         <div class="flex flex-col">
-                            <span class="my-auto dark:text-white">{{ readNotification.data['title'] }}</span>
+                            <div class="my-auto dark:text-white">{{ readNotification.data['title'] }}</div>
+                            <div class="my-auto dark:text-gray-400 break-words overflow-hidden"  style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;" v-html="readNotification.data['content']"></div>
                         </div>
                     </div>
                 </DropdownLink>
