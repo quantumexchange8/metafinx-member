@@ -32,7 +32,7 @@ class EarnController extends Controller
         $translatedInvestmentPlans = $investment_plans->map(function ($investmentPlan) {
             return [
                 'id' => $investmentPlan->id,
-                'name' => $investmentPlan->getTranslation('name', 'en'), // Change 'en' to your desired language code
+                'name' => $investmentPlan->getTranslation('name', app()->getLocale()), // Change 'en' to your desired language code
                 'roi_per_annum' => $investmentPlan->roi_per_annum,
                 'descriptions' => $investmentPlan->descriptions->map(function ($description) {
                     return [
