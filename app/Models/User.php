@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable implements HasMedia, MustVerifyEmail
+class User extends Authenticatable implements HasMedia, MustVerifyEmail, JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, InteractsWithMedia;
 
@@ -63,6 +64,21 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims(): array
+    {
+        return [];
+    }
 
     public function wallets(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
