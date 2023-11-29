@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\AffiliateController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EarnController;
 use App\Http\Controllers\Api\WalletController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,12 +32,27 @@ Route::controller(AuthController::class)->group(function () {
 Route::middleware(['api', 'auth:api'])->group(function () {
     /**
      * ==============================
-     *          Wallet
+     *            Wallet
      * ==============================
      */
     Route::post('deposit', [WalletController::class, 'deposit']);
     Route::post('withdrawal', [WalletController::class, 'withdrawal']);
 
     Route::get('transaction_history', [WalletController::class, 'transaction_history']);
+
+    /**
+     * ==============================
+     *          Affiliate
+     * ==============================
+     */
+    Route::get('my_group', [AffiliateController::class, 'my_group']);
+
+    /**
+     * ==============================
+     *            Earn
+     * ==============================
+     */
+    Route::get('investment_plans', [EarnController::class, 'investment_plans']);
+    Route::get('my_investments', [EarnController::class, 'my_investments']);
 
 });

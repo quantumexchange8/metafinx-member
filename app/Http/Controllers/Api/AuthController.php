@@ -57,6 +57,7 @@ class AuthController extends Controller
             'identity_number' => $user->identity_number,
             'address_line_1' => $user->address_1,
             'address_line_2' => $user->address_2,
+            'referral_code' => $user->referral_code,
             'wallets' => $user->wallets,
             'affiliate' => count($user_affiliate_ids),
             'vsd' => $valid_self_deposit,

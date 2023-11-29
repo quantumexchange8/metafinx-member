@@ -117,4 +117,33 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail, JWTSubj
     {
         return $this->hasMany(User::class, 'upline_id', 'id');
     }
+
+    public function getDescendants(): \Illuminate\Support\Collection
+    {
+        $descendants = collect();
+        $this->loadDescendants($this, $descendants);
+
+        return $descendants;
+    }
+
+    public function getLevel(): int
+    {
+        $level = 1;
+        $parent = $this;
+
+        while ($parent->upline) {
+            $level++;
+            $parent = $parent->upline;
+        }
+
+        return $level;
+    }
+
+    protected function loadDescendants($user, &$descendants): void
+    {
+        foreach ($user->children as $descendant) {
+            $descendants->push($descendant);
+            $this->loadDescendants($descendant, $descendants);
+        }
+    }
 }
