@@ -8,6 +8,7 @@ use App\Models\Earning;
 use App\Models\InvestmentSubscription;
 use App\Models\Payment;
 use App\Models\Wallet;
+use App\Models\SettingWalletAddress;
 use App\Services\RunningNumberService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -136,6 +137,15 @@ class WalletController extends Controller
             'transactions' => $transactions,
             'earnings' => $earnings,
             'subscriptions' => $investmentSubscriptions,
+        ]);
+    }
+
+    public function setting_wallet_address()
+    {
+        $wallet_address = SettingWalletAddress::all();
+
+        return response()->json([
+            'wallet_address' => $wallet_address,
         ]);
     }
 }

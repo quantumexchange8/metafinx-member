@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AffiliateController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EarnController;
 use App\Http\Controllers\Api\WalletController;
+use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,7 @@ Route::middleware(['api', 'auth:api'])->group(function () {
     Route::post('withdrawal', [WalletController::class, 'withdrawal']);
 
     Route::get('transaction_history', [WalletController::class, 'transaction_history']);
+    Route::get('setting_wallet_address', [WalletController::class, 'setting_wallet_address']);
 
     /**
      * ==============================
@@ -54,5 +56,13 @@ Route::middleware(['api', 'auth:api'])->group(function () {
      */
     Route::get('investment_plans', [EarnController::class, 'investment_plans']);
     Route::get('my_investments', [EarnController::class, 'my_investments']);
+
+    /**
+     * ==============================
+     *            Profile
+     * ==============================
+     */
+    Route::get('profile', [ProfileController::class, 'profile']);
+    Route::post('update_profile', [ProfileController::class, 'update_profile']);
 
 });
