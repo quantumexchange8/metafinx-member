@@ -38,6 +38,7 @@ class ProfileController extends Controller
             'affiliate' => count($user_affiliate_ids),
             'vsd' => $valid_self_deposit,
             'vad' => $valid_affiliate_deposit,
+            'wallets' => $user->wallets,
         ];
 
         return response()->json([
@@ -72,7 +73,7 @@ class ProfileController extends Controller
         if ($user->kyc_approval != 'verified') {
             if ($request->hasFile('proof_front')) {
                 $file = $request->file('proof_front');
-    
+
                 $originalFilename = $file->getClientOriginalName();
                 $proof_front = $file->storeAs('uploads/user/kyc', $originalFilename, 'public');
                 $path = storage_path('/app/public/' . $proof_front);
@@ -84,10 +85,10 @@ class ProfileController extends Controller
                     ]);
                 }
             }
-    
+
             if ($request->hasFile('proof_back')) {
                 $file = $request->file('proof_back');
-    
+
                 $originalFilename = $file->getClientOriginalName();
                 $proof_back = $file->storeAs('uploads/user/kyc', $originalFilename, 'public');
                 $path = storage_path('/app/public/' . $proof_back);
