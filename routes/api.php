@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EarnController;
 use App\Http\Controllers\Api\WalletController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\SettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -64,5 +65,12 @@ Route::middleware(['api', 'auth:api'])->group(function () {
      */
     Route::get('profile', [ProfileController::class, 'profile']);
     Route::post('update_profile', [ProfileController::class, 'update_profile']);
+
+    /**
+     * ==============================
+     *            Setting
+     * ==============================
+     */
+    Route::post('change_password', [SettingController::class, 'change_password']);
 
 });

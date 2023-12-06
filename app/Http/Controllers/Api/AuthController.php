@@ -6,9 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\InvestmentSubscription;
 use App\Models\User;
+use App\Models\SettingCountry;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Validation\Rules;
+
 
 class AuthController extends Controller
 {
@@ -35,33 +40,16 @@ class AuthController extends Controller
         }
 
         $user = auth()->guard('api')->user();
-        $user_affiliate_ids = $user->getChildrenIds();
-        $valid_self_deposit = InvestmentSubscription::query()
-            ->where('user_id', $user->id)
-            ->whereDate('expired_date', '>', now())
-            ->sum('amount');
-
-        $valid_affiliate_deposit = InvestmentSubscription::query()
-            ->whereIn('user_id', $user_affiliate_ids)
-            ->whereDate('expired_date', '>', now())
-            ->sum('amount');
+        if (!$user->email_verified_at) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email is not verified.',
+            ], 401);
+        }
 
         $user_data = [
             'name' => $user->name,
-            'image_address' => $user->getFirstMediaUrl('profile_photo'),
-            'rank' => $user->setting_rank_id,
-            'verified' => $user->kyc_approval,
-            'phone' => $user->phone,
-            'email' => $user->email,
-            'nationality' => $user->country,
-            'identity_number' => $user->identity_number,
-            'address_line_1' => $user->address_1,
-            'address_line_2' => $user->address_2,
-            'referral_code' => $user->referral_code,
-            'wallets' => $user->wallets,
-            'affiliate' => count($user_affiliate_ids),
-            'vsd' => $valid_self_deposit,
-            'vad' => $valid_affiliate_deposit,
+            'email_verified' => $user->email_verified_at,
         ];
 
         return response()->json([
@@ -75,30 +63,137 @@ class AuthController extends Controller
 
     }
 
-    public function register(Request $request){
+    public function register(Request $request)
+    {
+
+        $settingCountries = SettingCountry::all();
+
+        $formattedCountries = $settingCountries->map(function ($country) {
+            return [
+                'value' => $country->name_en,
+                'label' => $country->name_en,
+                'phone_code' => $country->phone_code,
+            ];
+        });
+
+        $validCountries = $formattedCountries->pluck('value')->toArray();
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'name' => 'required|regex:/^[a-zA-Z0-9\p{Han}. ]+$/u|max:255',
+            'country' => 'required|in:' . implode(',', $validCountries),
+            'email' => 'required|string|email|max:255|unique:' . User::class,
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8|unique:' . User::class,
+            'address_1' => 'required',
+            'address_2' => 'nullable',
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'verification_type' => 'required|in:nric,passport',
+            'identity_number' => 'required|unique:users,identity_number',
+            'proof_front' => 'nullable',
+            'proof_back' => 'nullable',
+            'referral_code' => 'nullable',
+            'terms' => 'accepted',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+        if($request->has('referral_code'))
+        {
+            $referral_code = $request->input('referral_code');
+
+            $check_referral_code = User::where('referral_code', $referral_code)->first();
+
+            if($check_referral_code)
+            {
+                $upline_id = $check_referral_code->id;
+
+                // if($check_referral_code->hierarchyList != null)
+                // {
+                //     $upline_hierarchy = $check_referral_code->hierarchyList;
+                // }
+
+                if(empty($check_referral_code['hierarchyList'])){
+                    $hierarchyList = "-" . $upline_id . "-";
+                } else {
+                    $hierarchyList = $check_referral_code['hierarchyList'] . $upline_id . "-";
+                }
+
+                $user = User::create([
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'email' => $request->email,
+                    'country' => $request->country,
+                    'address_1' => $request->address_1,
+                    'address_2' => $request->address_2,
+                    'password' => Hash::make($request->password),
+                    'verification_type' => $request->verification_type,
+                    'identity_number' => $request->identity_number,
+                    'upline_id' => $upline_id,
+                    'hierarchyList' => $hierarchyList,
+                    'setting_rank_id' => 1,
+                    'role' => 'user',
+                    'kyc_approval' => 'unverified',
+                ]);
+            }
+        } else {
+            $user = User::create([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'country' => $request->country,
+                'address_1' => $request->address_1,
+                'address_2' => $request->address_2,
+                'password' => Hash::make($request->password),
+                'verification_type' => $request->verification_type,
+                'identity_number' => $request->identity_number,
+                'setting_rank_id' => 1,
+                'role' => 'user',
+                'kyc_approval' => 'unverified',
+            ]);
+        }
+
+        if ($request->hasFile('proof_front')) {
+            $file = $request->file('proof_front');
+
+            $originalFilename = $file->getClientOriginalName();
+            $proof_front = $file->storeAs('uploads/user/kyc', $originalFilename, 'public');
+            $path = storage_path('/app/public/' . $proof_front);
+            if (file_exists($path)) {
+                $user->clearMediaCollection('front_identity');
+                $user->addMedia($path)->toMediaCollection('front_identity');
+                $user->update([
+                    'kyc_approval' => 'pending'
+                ]);
+            }
+        }
+
+        if ($request->hasFile('proof_back')) {
+            $file = $request->file('proof_back');
+
+            $originalFilename = $file->getClientOriginalName();
+            $proof_back = $file->storeAs('uploads/user/kyc', $originalFilename, 'public');
+            $path = storage_path('/app/public/' . $proof_back);
+            if (file_exists($path)) {
+                $user->clearMediaCollection('back_identity');
+                $user->addMedia($path)->toMediaCollection('back_identity');
+                $user->update([
+                    'kyc_approval' => 'pending'
+                ]);
+            }
+        }
+
+        Wallet::create([
+            'user_id' => $user->id,
+            'name' => 'Internal Wallet'
         ]);
 
-        $token = Auth::login($user);
+        $user->setReferralId();
+
+        event(new Registered($user));
+
         return response()->json([
             'status' => 'success',
             'message' => 'User created successfully',
             'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
         ]);
+
     }
 
     public function logout()
