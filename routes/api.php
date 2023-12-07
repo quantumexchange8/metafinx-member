@@ -43,6 +43,9 @@ Route::middleware(['api', 'auth:api'])->group(function () {
     Route::get('transaction_history', [WalletController::class, 'transaction_history']);
     Route::get('setting_wallet_address', [WalletController::class, 'setting_wallet_address']);
 
+    Route::get('notifications', [WalletController::class, 'notifications']);
+    Route::post('read_notification', [WalletController::class, 'read_notification']);
+
     /**
      * ==============================
      *          Affiliate

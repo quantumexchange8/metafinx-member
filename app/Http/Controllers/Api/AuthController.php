@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Validation\Rules;
-
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -49,7 +49,7 @@ class AuthController extends Controller
 
         $user_data = [
             'name' => $user->name,
-            'email_verified' => $user->email_verified_at,
+            'email_verified' => Carbon::parse($user->email_verified_at)->format('Y-m-d h:m:s'),
         ];
 
         return response()->json([

@@ -10,6 +10,7 @@ use App\Models\Payment;
 use App\Models\Wallet;
 use App\Models\SettingWalletAddress;
 use App\Services\RunningNumberService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -146,6 +147,54 @@ class WalletController extends Controller
 
         return response()->json([
             'wallet_address' => $wallet_address,
+        ]);
+    }
+
+    public function notifications()
+    {
+        $user = \Auth::user();
+        $notifications = $user->notifications;
+
+
+        foreach ($notifications as $notification) {
+            $data = $notification->data;
+            $read = $notification->read_at;
+            $mergedData = [
+                "id" => $notification->id,
+                "title" => $data['title'],
+                "content" => $data['content'],
+                "created_at" => Carbon::parse($data['post_date'])->format('Y-m-d h:m:s'),
+                "image_address" => $data['image'],
+                "read" => is_null($read) ? null : Carbon::parse($read)->format('Y-m-d h:m:s'),
+            ];
+
+            $userNotifications[] = $mergedData;
+        }
+
+        return response()->json([
+            'notifications' => $userNotifications,
+        ]);
+    }
+
+    public function read_notification(Request $request)
+    {
+        $user = \Auth::user();
+        $notifications = $user->unreadNotifications;
+
+        $title = 'Notification unavailable';
+        $read = null;
+
+        foreach ($notifications as $notification) {
+            if ($notification->id == $request->id && $notification->read_at == null) {
+                $notification->markAsRead();
+                $title = $notification->data['title'];
+                $read = Carbon::parse($notification->read_at)->format('Y-m-d h:m:s');
+            }
+        }
+
+        return response()->json([
+            'title' => $title,
+            'read_at' => $read
         ]);
     }
 }
