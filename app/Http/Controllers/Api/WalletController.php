@@ -155,7 +155,7 @@ class WalletController extends Controller
         $user = \Auth::user();
         $notifications = $user->notifications;
 
-
+        $userNotifications = [];
         foreach ($notifications as $notification) {
             $data = $notification->data;
             $read = $notification->read_at;
@@ -164,7 +164,7 @@ class WalletController extends Controller
                 "title" => $data['title'],
                 "content" => $data['content'],
                 "created_at" => Carbon::parse($data['post_date'])->format('Y-m-d h:m:s'),
-                "image_address" => $data['image'],
+                "image_address" => $data['image'] ?? '',
                 "read" => is_null($read) ? null : Carbon::parse($read)->format('Y-m-d h:m:s'),
             ];
 
