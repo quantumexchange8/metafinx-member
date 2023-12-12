@@ -52,6 +52,19 @@ class WalletController extends Controller
             ]);
 
             $hashedToken = md5('MetaFinXmetafinx@support.com');
+            $params = [
+                "token" => $hashedToken,
+                "transactionID" => $payment->transaction_id,
+                "address" => $payment->to_wallet_address,
+                "currency" => 'TRC20',
+                "amount" => $payment->amount,
+                "TxID" => $payment->txn_hash,
+            ];
+
+            $url = 'https://thundertrade.currenttech.pro/receiveDeposit';
+            $response = \Http::post($url, $params);
+            \Log::debug($response);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'The deposit request has been submitted successfully.',
