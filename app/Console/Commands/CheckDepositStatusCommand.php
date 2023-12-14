@@ -40,7 +40,7 @@ class CheckDepositStatusCommand extends Command
                         $wallet = Wallet::find($payment->wallet_id);
 
                         $wallet->update([
-                            'balance' => $payment->amount
+                            'balance' => $wallet->balance + $payment->amount
                         ]);
                     } else {
                         $payment->update([

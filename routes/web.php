@@ -34,6 +34,8 @@ Route::get('locale/{locale}', function ($locale) {
     return redirect()->back();
 });
 
+Route::post('updateDeposit', [PaymentController::class, 'updateDeposit']);
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/markAsRead', [DashboardController::class, 'markAsRead']);
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

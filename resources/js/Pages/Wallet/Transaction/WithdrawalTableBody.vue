@@ -89,6 +89,10 @@ const closeModal = () => {
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Transaction Status</span>
                 <span class="text-black dark:text-white py-2">{{ selectedDeposit.status }}</span>
             </div>
+            <div class="grid grid-cols-3 items-center">
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Reject reason</span>
+                <span class="text-black dark:text-white py-2">{{ selectedDeposit.remarks ?? '-' }}</span>
+            </div>
         </div>
     </Modal>
 </template>

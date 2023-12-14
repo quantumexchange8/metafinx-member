@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DepositRequest;
 use App\Http\Requests\WithdrawalRequest;
 use App\Models\Payment;
+use App\Models\PaymentStatus;
 use App\Models\Wallet;
 use App\Services\RunningNumberService;
 use Illuminate\Validation\ValidationException;
@@ -57,5 +58,48 @@ class PaymentController extends Controller
         ]);
 
         return redirect()->back()->with('title', 'Submitted successfully')->with('success', 'The withdrawal request has been submitted successfully.');
+    }
+
+    public function updateDeposit(DepositRequest $request)
+    {
+        $data = $request->all();
+
+        $result = [
+            "token" => $data['token'],
+            "transactionID" => $data['transactionID'],
+            "address" => $data["address"],
+            "amount" => $data["amount"],
+            "status" => $data["status"],
+            "remarks" => $data["remarks"],
+        ];
+
+        $payment = Payment::query()
+            ->where('transaction_id', $result['transactionID'])
+            ->where('to_wallet_address', $result['address'])
+            ->first();
+
+        $dataToHash = md5($payment->transaction_id . $payment->to_wallet_address);
+
+        if ($result['token'] === $dataToHash) {
+            //proceed approval
+            $payment->update([
+                'status' => $result['status'],
+                'remarks' => $result['remarks']
+            ]);
+
+            if ($payment->status =='Success') {
+                $wallet = Wallet::find($payment->wallet_id);
+
+                $wallet->update([
+                    'balance' => $wallet->balance + $payment->amount
+                ]);
+            } else {
+                PaymentStatus::create([
+                    'message' => 'Payment with ID ' . $payment->id . ', STATUS is ' . $payment->status
+                ]);
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Deposit Success']);
     }
 }

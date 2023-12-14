@@ -20,7 +20,8 @@ class RejectDepositCommand extends Command
 
         foreach ($pendingPayments as $payment) {
             $payment->update([
-                'status' => 'Rejected'
+                'status' => 'Rejected',
+                'remarks' => 'Rejected by system because it exceed 30 minutes'
             ]);
 
             PaymentStatus::create([
