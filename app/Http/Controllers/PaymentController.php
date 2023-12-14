@@ -64,6 +64,7 @@ class PaymentController extends Controller
     {
         $data = $request->all();
 
+        \Log::debug($data);
         $result = [
             "token" => $data['token'],
             "transactionID" => $data['transactionID'],
@@ -75,7 +76,6 @@ class PaymentController extends Controller
 
         $payment = Payment::query()
             ->where('transaction_id', $result['transactionID'])
-            ->where('to_wallet_address', $result['address'])
             ->first();
 
         $dataToHash = md5($payment->transaction_id . $payment->to_wallet_address);
