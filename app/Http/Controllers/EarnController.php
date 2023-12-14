@@ -55,6 +55,11 @@ class EarnController extends Controller
         $wallet = Wallet::find($request->wallet_id);
         $amount = $request->amount;
 
+        if ($amount % 100 !== 0) {
+            throw ValidationException::withMessages(['amount' => 'Please enter an amount in increments of 100.']);
+        }
+        
+
         if ($amount < $investment_plan->investment_min_amount) {
             throw ValidationException::withMessages(['amount' => 'Amount minimum is $ ' . $investment_plan->investment_min_amount]);
         }

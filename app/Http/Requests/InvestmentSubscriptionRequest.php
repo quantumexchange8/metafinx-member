@@ -10,7 +10,7 @@ class InvestmentSubscriptionRequest extends FormRequest
     {
         return [
             'wallet_id' => ['required'],
-            'amount' => ['required', 'numeric'],
+            'amount' => ['required', 'numeric', 'integer'],
             'terms' => ['accepted'],
         ];
     }

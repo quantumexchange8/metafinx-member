@@ -92,12 +92,14 @@ const submit = () => {
                         id="amount"
                         type="number"
                         min="0"
+                        step="100"
                         placeholder="$ 0.00"
                         class="block w-full"
                         :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         v-model="form.amount"
-                    />
+                        />
                     <InputError :message="form.errors.amount" class="mt-2" />
+                    <span class="text-xs text-gray-500">Please enter a whole number in increments of 100 (e.g., 1000,1100, 1200 ...) without decimals or fractions.</span>
                 </div>
             </div>
 
