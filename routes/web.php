@@ -24,6 +24,8 @@ use App\Http\Controllers\ProfileController;
 |
 */
 
+Route::post('updateDeposit', [PaymentController::class, 'updateDeposit'])->middleware('guest');
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -33,8 +35,6 @@ Route::get('locale/{locale}', function ($locale) {
 
     return redirect()->back();
 });
-
-Route::post('updateDeposit', [PaymentController::class, 'updateDeposit']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/markAsRead', [DashboardController::class, 'markAsRead']);
