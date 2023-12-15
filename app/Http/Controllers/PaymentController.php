@@ -9,6 +9,7 @@ use App\Models\PaymentStatus;
 use App\Models\Wallet;
 use App\Services\RunningNumberService;
 use Http;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class PaymentController extends Controller
@@ -73,7 +74,7 @@ class PaymentController extends Controller
         return redirect()->back()->with('title', 'Submitted successfully')->with('success', 'The withdrawal request has been submitted successfully.');
     }
 
-    public function updateDeposit(\Request $request)
+    public function updateDeposit(Request $request)
     {
         $data = $request->all();
 
