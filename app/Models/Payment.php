@@ -20,6 +20,7 @@ class Payment extends Model
         'to_wallet_address',
         'type',
         'status',
+        'remarks',
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
