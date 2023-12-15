@@ -72,7 +72,7 @@ const props = defineProps({
             </div>
         </div>
 
-        <div class="p-5 my-5 bg-white overflow-hidden md:overflow-visible rounded-xl shadow-md dark:bg-gray-700">
+        <div class="p-5 my-5 mb-28 bg-white overflow-hidden md:overflow-visible rounded-xl shadow-md dark:bg-gray-700">
             <Transaction />
         </div>
 

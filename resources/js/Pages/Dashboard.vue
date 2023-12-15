@@ -114,7 +114,7 @@ const { formatDateTime, formatAmount } = transactionFormat();
             </div>
         </div>
 
-        <div class="p-5 my-8 bg-white overflow-hidden md:overflow-visible rounded-xl border border-gray-200 dark:border-transparent shadow dark:bg-gray-700">
+        <div class="p-5 my-8 mb-28 bg-white overflow-hidden md:overflow-visible rounded-xl border border-gray-200 dark:border-transparent shadow dark:bg-gray-700">
             <CryptoPriceTable />
         </div>
 
