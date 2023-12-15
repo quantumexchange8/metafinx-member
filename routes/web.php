@@ -27,47 +27,6 @@ use App\Http\Controllers\ProfileController;
 |
 */
 
-Route::post('updateDeposit', function (Request $request) {
-    $data = $request->all();
-
-    \Log::debug($data);
-    $result = [
-        "token" => $data['token'],
-        "transactionID" => $data['transactionID'],
-        "address" => $data["address"],
-        "amount" => $data["amount"],
-        "status" => $data["status"],
-        "remarks" => $data["remarks"],
-    ];
-
-    $payment = Payment::query()
-        ->where('transaction_id', $result['transactionID'])
-        ->first();
-
-    $dataToHash = md5($payment->transaction_id . $payment->to_wallet_address);
-
-    if ($result['token'] === $dataToHash) {
-        //proceed approval
-        $payment->update([
-            'status' => $result['status'],
-            'remarks' => $result['remarks']
-        ]);
-
-        if ($payment->status =='Success') {
-            $wallet = Wallet::find($payment->wallet_id);
-
-            $wallet->update([
-                'balance' => $wallet->balance + $payment->amount
-            ]);
-        } else {
-            PaymentStatus::create([
-                'message' => 'Payment with ID ' . $payment->id . ', STATUS is ' . $payment->status
-            ]);
-        }
-    }
-
-    return response()->json(['success' => true, 'message' => 'Deposit Success']);
-});
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -78,6 +37,7 @@ Route::get('locale/{locale}', function ($locale) {
 
     return redirect()->back();
 });
+Route::post('updateDeposit', [PaymentController::class, 'updateDeposit']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/markAsRead', [DashboardController::class, 'markAsRead']);
