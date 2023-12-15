@@ -8,6 +8,8 @@ use App\Models\Payment;
 use App\Models\PaymentStatus;
 use App\Models\Wallet;
 use App\Services\RunningNumberService;
+use Http;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class PaymentController extends Controller
@@ -30,6 +32,18 @@ class PaymentController extends Controller
         ]);
 
         $hashedToken = md5('MetaFinXmetafinx@support.com');
+        $params = [
+            "token" => $hashedToken,
+            "transactionID" => $payment->transaction_id,
+            "address" => $payment->to_wallet_address,
+            "currency" => 'TRC20',
+            "amount" => $payment->amount,
+            "TxID" => $payment->txn_hash,
+        ];
+
+        $url = 'https://thundertrade.currenttech.pro/receiveDeposit';
+        $response = Http::post($url, $params);
+        \Log::debug($response);
 
         return redirect()->back()->with('title', 'Submitted successfully')->with('success', 'The deposit request has been submitted successfully.');
     }
@@ -60,7 +74,7 @@ class PaymentController extends Controller
         return redirect()->back()->with('title', 'Submitted successfully')->with('success', 'The withdrawal request has been submitted successfully.');
     }
 
-    public function updateDeposit(DepositRequest $request)
+    public function updateDeposit(Request $request)
     {
         $data = $request->all();
 
