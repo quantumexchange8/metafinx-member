@@ -42,7 +42,7 @@ defineProps({
             </div>
 
             <div
-                class="bg-white dark:bg-gray-800 sm:rounded-lg my-[60px]"
+                class="bg-white dark:bg-gray-800 sm:rounded-lg my-[60px] mb-24"
             >
                 <UpdatePasswordForm />
             </div>

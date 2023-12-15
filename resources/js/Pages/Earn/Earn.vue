@@ -74,7 +74,7 @@ const props = defineProps({
             </div>
         </div>
 
-        <div class="flex flex-col gap-5 my-5 md:hidden">
+        <div class="flex flex-col gap-5 my-5 mb-28 md:hidden">
             <h3 class="text-xl font-semibold leading-tight">
                 Investment Performance
             </h3>
