@@ -32,6 +32,7 @@ class DashboardController extends Controller
             'walletLastUpdate' => $wallets->latest()->first('updated_at'),
             'investmentEarningsLastUpdate' => $investmentEarningsLastUpdate,
             'referralEarnings' => $referralEarnings,
+            'walletName' => $wallets->value('name'),
         ]);
     }
 

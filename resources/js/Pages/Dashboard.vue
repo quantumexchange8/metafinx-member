@@ -5,12 +5,15 @@ import { GithubIcon } from '@/Components/Icons/brands'
 import {Link} from "@inertiajs/vue3";
 import {transactionFormat} from "@/Composables/index.js";
 import CryptoPriceTable from "@/Pages/Dashboard/Partials/CryptoPriceTable.vue";
+import Wallet from "@/Components/Wallet.vue"
+import EarnWallet from "@/Components/EarnWallet.vue"
 
 const props = defineProps({
     totalWalletBalance: String,
     walletLastUpdate: Object,
     investmentEarningsLastUpdate: String,
     referralEarnings: String,
+    walletName: String,
 })
 const { formatDateTime, formatAmount } = transactionFormat();
 </script>
@@ -32,12 +35,11 @@ const { formatDateTime, formatAmount } = transactionFormat();
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 mb-8">
             <Link :href="route('wallet.details')">
-                <div class="flex justify-between rounded-xl bg-gradient-to-b from-warning-300 to-warning-500">
+                <div class="flex justify-between rounded-xl bg-gradient-to-b from-pink-300 to-pink-500">
                     <div class="p-5 flex flex-col justify-between">
                         <div>
                             <p class="text-white text-base font-semibold">
-                                Wallet Balance
-                            </p>
+                                {{ props.walletName }}                            </p>
                             <p class="text-white text-[28px] font-semibold">
                                 $ {{ props.totalWalletBalance }}
                             </p>
@@ -47,14 +49,14 @@ const { formatDateTime, formatAmount } = transactionFormat();
                         </p>
                     </div>
                     <div class="pr-1.5">
-                        <img src="/assets/wallet.png" alt="wallet">
+                        <Wallet />
                     </div>
 
                 </div>
             </Link>
 
             <Link :href="route('earn.invest_subscription')">
-                <div class="flex justify-between rounded-xl bg-gradient-to-b from-pink-300 to-pink-500">
+                <div class="flex justify-between rounded-xl bg-gradient-to-b from-warning-300 to-warning-500">
                     <div class="p-5 flex flex-col justify-between">
                         <div>
                             <p class="text-white text-base font-semibold">
@@ -69,7 +71,7 @@ const { formatDateTime, formatAmount } = transactionFormat();
                         </p>
                     </div>
                     <div class="pr-1.5">
-                        <img src="/assets/money_bag.png" width="140" height="140" alt="moneybag">
+                        <EarnWallet />
                     </div>
                 </div>
             </Link>
@@ -85,12 +87,6 @@ const { formatDateTime, formatAmount } = transactionFormat();
             <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
                     <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">Dividend</p>
-                    <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
-                </div>
-            </div>
-            <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
-                <div class="px-5 py-2.5 flex flex-col justify-between">
-                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">Ticket Bonus (0)</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
                 </div>
             </div>
