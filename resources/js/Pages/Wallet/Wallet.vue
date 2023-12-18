@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import Button from "@/Components/Button.vue";
-import {Wallet, WithdrawalIcon} from "@/Components/Icons/outline.jsx";
+import {WithdrawalIcon} from "@/Components/Icons/outline.jsx";
 import BalanceChart from "@/Pages/Wallet/Partials/BalanceChart.vue";
 import Deposit from "@/Pages/Wallet/Partials/Deposit.vue";
 import Transaction from "@/Pages/Wallet/Transaction/Transaction.vue";
@@ -9,6 +9,7 @@ import Alert from "@/Components/Alert.vue";
 import {ref} from "vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import Withdrawal from "@/Pages/Wallet/Partials/Withdrawal.vue";
+import Wallet from "@/Components/Wallet.vue"
 
 const props = defineProps({
     wallets: Object,
