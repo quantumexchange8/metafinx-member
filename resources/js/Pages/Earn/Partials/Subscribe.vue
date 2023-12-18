@@ -74,8 +74,8 @@ const submit = () => {
             </div>
         </div>
         <form class="pt-8">
-            <div class="flex gap-4">
-                <Label class="text-sm dark:text-white w-1/4 pt-0.5" for="amount" value="Select wallet to subscribe" />
+            <div class="flex flex-col sm:flex-row gap-4">
+                <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" value="Select wallet to subscribe" />
                 <div class="flex flex-col w-full">
                     <BaseListbox
                         v-model="form.wallet_id"
@@ -85,8 +85,8 @@ const submit = () => {
                 </div>
             </div>
 
-            <div class="flex gap-4 mt-5">
-                <Label class="text-sm dark:text-white w-1/4" for="amount" value="Amount ($)" />
+            <div class="flex flex-col sm:flex-row gap-4 mt-5">
+                <Label class="text-sm dark:text-white w-full md:w-1/4" for="amount" value="Amount ($)" />
                 <div class="flex flex-col w-full">
                     <Input
                         id="amount"

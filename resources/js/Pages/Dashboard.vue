@@ -77,16 +77,10 @@ const { formatDateTime, formatAmount } = transactionFormat();
             </Link>
         </div>
 
-        <div class="flex flex-nowrap md:grid md:grid-cols-5 gap-3 overflow-x-auto md:overflow-visible my-8">
+        <div class="flex flex-nowrap md:grid md:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible my-8">
             <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
                     <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">Monthly Return</p>
-                    <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
-                </div>
-            </div>
-            <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
-                <div class="px-5 py-2.5 flex flex-col justify-between">
-                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">Dividend</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
                 </div>
             </div>

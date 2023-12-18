@@ -48,6 +48,7 @@ const props = defineProps({
                     />
                     <Withdrawal
                         :wallet_sel="wallet_sel"
+                        :wallets="props.wallets"
                     />
                 </div>
             </div>
