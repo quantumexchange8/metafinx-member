@@ -83,11 +83,11 @@ function copyTestingCode () {
 
     <Modal :show="depositModal" title="Deposit" @close="closeModal">
         <div class="space-y-2">
-            <div class="inline-flex items-center justify-center gap-2 w-full">
+            <div class="hidden md:inline-flex items-center justify-center gap-2 w-full">
                 <span class="rounded-full w-12 h-12 grow-0 shrink-0 bg-pink-600"><Wallet class="w-10 h-10 mt-1 ml-1" /></span>
                 <h3 class="text-xl font-semibold dark:text-white">Internal Wallet</h3>
             </div>
-            <div class="flex justify-center">
+            <div class="hidden md:flex justify-center">
                 <div class="space-y-2">
                     <p class="text-base text-center dark:text-gray-400">
                         Scan QR code to deposit
@@ -105,8 +105,8 @@ function copyTestingCode () {
                 </div>
             </div>
             <form class="pt-2">
-                <div class="flex gap-4">
-                    <Label class="text-sm dark:text-white w-1/4 pt-0.5" for="amount" value="Select Wallet" />
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" value="Select Wallet" />
                     <div class="flex flex-col w-full">
                         <BaseListbox
                             v-model="form.wallet_id"
@@ -116,8 +116,8 @@ function copyTestingCode () {
                     </div>
                 </div>
 
-                <div class="flex gap-4 mt-5">
-                    <Label class="text-sm dark:text-white w-1/4" for="amount" value="Amount ($)" />
+                <div class="flex flex-col sm:flex-row gap-4 mt-5">
+                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="amount" value="Amount ($)" />
                     <div class="flex flex-col w-full">
                         <Input
                             id="amount"
@@ -132,8 +132,8 @@ function copyTestingCode () {
                     </div>
                 </div>
 
-                <div class="flex gap-4 mt-5">
-                    <Label class="text-sm dark:text-white w-1/4" for="txn_hash" value="TXN Hash" />
+                <div class="flex flex-col sm:flex-row gap-4 mt-5">
+                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="txn_hash" value="TXN Hash" />
                     <div class="flex flex-col w-full">
                         <Input
                             id="txn_hash"
