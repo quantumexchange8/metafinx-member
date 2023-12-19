@@ -19,8 +19,10 @@ class EarnController extends Controller
         $investment_plans = InvestmentPlan::query()
             ->with('descriptions:investment_plan_id,description')
             ->where('status', 'active')
-            ->select('id', 'name', 'roi_per_annum')
+            ->select('id', 'name', 'roi_per_annum', 'type')
             ->get();
+
+        $groupedInvestmentPlans = $investment_plans->groupBy('type');
 
         $wallet_sel = $wallets->get()->map(function ($wallet) {
             return [
@@ -29,14 +31,21 @@ class EarnController extends Controller
             ];
         });
 
-        $translatedInvestmentPlans = $investment_plans->map(function ($investmentPlan) {
+        $translatedInvestmentPlans = $groupedInvestmentPlans->map(function ($group, $type) {
+            // Select the fields you want for each group
             return [
-                'id' => $investmentPlan->id,
-                'name' => $investmentPlan->getTranslation('name', app()->getLocale()), // Change 'en' to your desired language code
-                'roi_per_annum' => $investmentPlan->roi_per_annum,
-                'descriptions' => $investmentPlan->descriptions->map(function ($description) {
+                'type' => $type,
+                'plans' => $group->map(function ($investmentPlan) {
                     return [
-                        'description' => $description->getTranslation('description', app()->getLocale()), // Change 'en' to your desired language code
+                        'id' => $investmentPlan->id,
+                        'name' => $investmentPlan->getTranslation('name', app()->getLocale()),
+                        'roi_per_annum' => $investmentPlan->roi_per_annum,
+                        'descriptions' => $investmentPlan->descriptions->map(function ($description) {
+                            return [
+                                'description' => $description->getTranslation('description', app()->getLocale()),
+                            ];
+                        }),
+                        'type' => $investmentPlan->type,
                     ];
                 }),
             ];
@@ -58,7 +67,6 @@ class EarnController extends Controller
         if ($amount % 100 !== 0) {
             throw ValidationException::withMessages(['amount' => 'Please enter an amount in increments of 100.']);
         }
-        
 
         if ($amount < $investment_plan->investment_min_amount) {
             throw ValidationException::withMessages(['amount' => 'Amount minimum is $ ' . $investment_plan->investment_min_amount]);
@@ -82,6 +90,8 @@ class EarnController extends Controller
             'investment_plan_id' => $investment_plan->id,
             'subscription_id' => $subscription_id,
             'amount' => $amount,
+            'unit_number' => $request->unit_number ?? null,
+            'unit_price' => $request->housing_price ?? null,
             'total_earning' => 0.00,
         ]);
 

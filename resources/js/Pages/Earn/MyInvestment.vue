@@ -54,7 +54,8 @@ function calculateWidthPercentage(created_at, period) {
             <div v-for="investment in props.investments" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]">
                 <div class="flex justify-between">
                     <div class="text-xs">
-                        {{ investment.plan_name.name }} &#x2022; $ {{ investment.amount }}
+                        <span v-if="investment.type === 'standard'">{{ investment.plan_name.name }} &#x2022; $ {{ investment.amount }}</span>
+                        <span v-else>{{ investment.plan_name.name }} {{ (investment.amount/10000).toFixed(2) }} &#x2022; $ {{ investment.amount }}</span>
                     </div>
                     <div class="dark:text-gray-400 text-xs">
                         <span class="uppercase">Since {{ formatDate(investment.created_at) }}</span>
