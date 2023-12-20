@@ -1,8 +1,8 @@
 <script setup>
 import Button from "@/Components/Button.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import Modal from "@/Components/Modal.vue";
-import { checkIcon } from '@/Components/Icons/outline'
+import {checkIcon} from '@/Components/Icons/outline'
 import BaseListbox from "@/Components/BaseListbox.vue";
 import Input from "@/Components/Input.vue";
 import Checkbox from "@/Components/Checkbox.vue";
@@ -16,6 +16,8 @@ const props = defineProps({
 })
 
 const subscribeModal = ref(false);
+const housingPrice = ref(null);
+const amountCalculation = ref(0);
 
 const openSubscribeModal = () => {
     subscribeModal.value = true
@@ -28,11 +30,25 @@ const closeModal = () => {
 const form = useForm({
     investment_plan_id: props.plan.id,
     wallet_id: '',
+    unit_number: '',
     amount: '',
+    housing_price: '',
     terms: false
 })
+watch(housingPrice, (newValue) => {
+    let number = newValue / 100;
+    // Divide by 100 and round down to the nearest 100
+    amountCalculation.value = Math.floor(number / 100) * 100;
+});
 
 const submit = () => {
+    if (props.plan.type === 'ebmi') {
+        form.housing_price = housingPrice.value
+        form.amount = amountCalculation.value.toFixed()
+    } else {
+        form.unit_number = undefined
+        form.housing_price = undefined
+    }
     form.post(route('earn.subscribe'), {
         onSuccess: () => {
             closeModal();
@@ -85,7 +101,41 @@ const submit = () => {
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4 mt-5">
+            <div v-if="plan.type === 'ebmi'" class="grid sm:flex gap-4 mt-5">
+                <Label class="text-sm dark:text-white w-1/4" for="unit_number" value="Unit Number" />
+                <div class="flex flex-col w-full">
+                    <Input
+                        id="unit_number"
+                        type="text"
+                        placeholder="eg. B-01-01"
+                        class="block w-full"
+                        :class="form.errors.unit_number ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                        v-model="form.unit_number"
+                        />
+                    <InputError :message="form.errors.unit_number" class="mt-2" />
+                </div>
+            </div>
+
+            <div v-if="plan.type === 'ebmi'" class="grid sm:flex gap-4 mt-5">
+                <Label class="text-sm dark:text-white w-full sm:w-1/4" for="amount" value="Housing Price ($)" />
+                <div class="flex flex-col w-full">
+                    <Input
+                        id="amount"
+                        type="number"
+                        min="0"
+                        step="100"
+                        placeholder="$ 0.00"
+                        class="block w-full"
+                        :class="form.errors.housing_price ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                        v-model="housingPrice"
+                    />
+                    <InputError :message="form.errors.housing_price" class="mt-2" />
+                    <span class="text-sm text-gray-600 dark:text-gray-400 mt-2">Investment amount: $ {{ amountCalculation }}</span>
+                    <span class="text-xs text-gray-500 mt-2">Please enter a whole number in increments of 100 (e.g., 10000, 10100, 10200 ...) without decimals or fractions.</span>
+                </div>
+            </div>
+
+            <div v-else class="grid sm:flex gap-4 mt-5">
                 <Label class="text-sm dark:text-white w-full md:w-1/4" for="amount" value="Amount ($)" />
                 <div class="flex flex-col w-full">
                     <Input
@@ -99,7 +149,7 @@ const submit = () => {
                         v-model="form.amount"
                         />
                     <InputError :message="form.errors.amount" class="mt-2" />
-                    <span class="text-xs text-gray-500">Please enter a whole number in increments of 100 (e.g., 1000,1100, 1200 ...) without decimals or fractions.</span>
+                    <span class="text-xs text-gray-500 mt-2">Please enter a whole number in increments of 100 (e.g., 1000, 1100, 1200 ...) without decimals or fractions.</span>
                 </div>
             </div>
 

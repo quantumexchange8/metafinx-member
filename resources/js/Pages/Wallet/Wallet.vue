@@ -10,6 +10,7 @@ import {ref} from "vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import Withdrawal from "@/Pages/Wallet/Partials/Withdrawal.vue";
 import Wallet from "@/Components/Wallet.vue"
+import EarnWallet from "@/Components/EarnWallet.vue";
 
 const props = defineProps({
     wallets: Object,
@@ -60,17 +61,31 @@ const props = defineProps({
         <h3 class="md:hidden text-xl font-semibold leading-tight my-5">
             Your Assets
         </h3>
-        <div class="flex flex-nowrap md:hidden gap-3 overflow-x-auto md:overflow-visible">
-            <div v-for="wallet in props.wallets" class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] shadow-md bg-gradient-to-bl from-pink-400 to-pink-600 w-full">
-                <div class="space-y-2">
-                    <div class="text-base font-semibold dark:text-white">
-                        {{ wallet.name }}
+        <div class="flex flex-nowrap md:hidden gap-3 overflow-x-auto md:overflow-visible w-full">
+            <div
+                v-for="wallet in props.wallets"
+                class="flex-1 rounded-[20px] shadow-md"
+                :class="{
+                    'bg-gradient-to-bl from-pink-400 to-pink-600': wallet.name === 'USD Wallet',
+                    'bg-gradient-to-bl from-warning-300 to-warning-500': wallet.name === 'MUSD Wallet',
+                }"
+            >
+                <div class="p-5 flex justify-between items-center w-80">
+                    <div class="space-y-2">
+                        <div class="text-base font-semibold dark:text-white">
+                            {{ wallet.name }}
+                        </div>
+                        <div class="text-xl font-semibold dark:text-white">
+                            $ {{ wallet.balance }}
+                        </div>
                     </div>
-                    <div class="text-xl font-semibold dark:text-white">
-                        $ {{ wallet.balance }}
+                    <div v-if="wallet.name === 'USD Wallet'">
+                        <Wallet class="w-24 h-24"/>
+                    </div>
+                    <div v-else>
+                        <EarnWallet class="w-24 h-24" />
                     </div>
                 </div>
-                <Wallet class="w-24 h-24"/>
             </div>
         </div>
 
@@ -84,7 +99,14 @@ const props = defineProps({
                     Your Assets
                 </h3>
 
-                <div v-for="wallet in props.wallets" class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] shadow-md bg-gradient-to-bl from-pink-400 to-pink-600">
+                <div
+                    v-for="wallet in props.wallets"
+                    class="p-5 flex justify-between items-center overflow-hidden rounded-[20px] shadow-md w-full"
+                    :class="{
+                        'bg-gradient-to-bl from-pink-400 to-pink-600': wallet.name === 'USD Wallet',
+                        'bg-gradient-to-bl from-warning-300 to-warning-500': wallet.name === 'MUSD Wallet',
+                    }"
+                >
                     <div class="space-y-2">
                         <div class="text-base font-semibold dark:text-white">
                             {{ wallet.name }}
@@ -93,7 +115,12 @@ const props = defineProps({
                             $ {{ wallet.balance }}
                         </div>
                     </div>
-                    <Wallet class="w-24 h-24"/>
+                    <div v-if="wallet.name === 'USD Wallet'">
+                        <Wallet class="w-24 h-24"/>
+                    </div>
+                    <div v-else>
+                        <EarnWallet class="w-24 h-24" />
+                    </div>
                 </div>
             </div>
         </template>

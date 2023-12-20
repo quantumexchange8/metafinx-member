@@ -27,14 +27,18 @@ const closeModal = () => {
     withdrawalModal.value = false
 }
 
+const transactionFee = computed(() => 2.00.toFixed(2));
+
 const form = useForm({
     wallet_id: '',
     amount: '',
     wallet_address: '',
-    terms: false
+    terms: false,
+    payment_charges:  transactionFee.value
 })
 
 const submit = () => {
+    form.amount = calculatedBalance.value;
     form.post(route('wallet.withdrawal'), {
         onSuccess: () => {
             closeModal();
@@ -120,7 +124,7 @@ const calculatedBalance = computed(() => {
                 <div class="mt-6 border-t dark:border-gray-700"></div>
                     <div class="flex items-center justify-between mt-5">
                         <span class="text-sm dark:text-gray-400 font-Inter">Transaction Fee</span>
-                        <span class="text-sm dark:text-white">$ {{ 2.00.toFixed(2) }}</span>
+                        <span class="text-sm dark:text-white">$ {{ transactionFee }}</span>
                     </div>
                     <div class="flex items-center justify-between mt-2">
                         <span class="text-sm dark:text-gray-400 font-Inter">Balance Received</span>

@@ -15,6 +15,8 @@ class InvestmentSubscription extends Model
         'investment_plan_id',
         'wallet_id',
         'amount',
+        'unit_number',
+        'unit_price',
         'total_earning',
         'status',
         'next_roi_date',

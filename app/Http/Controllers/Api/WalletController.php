@@ -110,6 +110,7 @@ class WalletController extends Controller
                 'transaction_id' => $transaction_id,
                 'type' => 'Withdrawal',
                 'amount' => $amount,
+                'payment_charges' => $request->payment_charges,
                 'to_wallet_address' => $request->wallet_address,
                 'status' => 'Processing'
             ]);
@@ -126,7 +127,7 @@ class WalletController extends Controller
     {
         $user = \Auth::user();
 
-        $transactions = Payment::where('user_id', $user->id)->get();
+        $transactions = Payment::with('wallet:id,user_id,name,balance')->where('user_id', $user->id)->get();
         $earnings = Earning::where('upline_id', $user->id)->select('id', 'upline_id', 'after_amount', 'type', 'created_at')->get();
         $investments = InvestmentSubscription::query()
             ->with('investment_plan:id,name,roi_per_annum,investment_period')

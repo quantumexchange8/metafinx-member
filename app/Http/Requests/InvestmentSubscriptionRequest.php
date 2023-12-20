@@ -11,6 +11,8 @@ class InvestmentSubscriptionRequest extends FormRequest
         return [
             'wallet_id' => ['required'],
             'amount' => ['required', 'numeric', 'integer'],
+            'unit_number' => ['sometimes', 'required'],
+            'housing_price' => ['sometimes', 'required', 'numeric', 'integer'],
             'terms' => ['accepted'],
         ];
     }
@@ -25,6 +27,8 @@ class InvestmentSubscriptionRequest extends FormRequest
         return [
             'wallet_id' => 'Wallet',
             'amount' => 'Amount',
+            'unit_number' => 'Unit Number',
+            'housing_price' => 'Housing Price',
             'terms' => 'Terms & Conditions',
         ];
     }

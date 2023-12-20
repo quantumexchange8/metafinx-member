@@ -169,7 +169,12 @@ class RegisteredUserController extends Controller
 
         Wallet::create([
             'user_id' => $user->id,
-            'name' => 'Internal Wallet'
+            'name' => 'USD Wallet'
+        ]);
+
+        Wallet::create([
+            'user_id' => $user->id,
+            'name' => 'MUSD Wallet'
         ]);
 
         $user->setReferralId();
