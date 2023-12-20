@@ -60,6 +60,7 @@ class EarnController extends Controller
                 'current_month' => $current_month,
                 'id_number' => $investmentSubscription->subscription_id,
                 'amount' => $investmentSubscription->amount,
+                'type' => $investmentSubscription->type,
                 'total_earning' => $investmentSubscription->total_earning,
                 'situation' => $investmentSubscription->status,
                 'next_roi_date' => $investmentSubscription->next_roi_date,

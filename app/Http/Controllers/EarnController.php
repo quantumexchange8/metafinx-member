@@ -112,7 +112,7 @@ class EarnController extends Controller
         $user = \Auth::user();
 
         $investments = InvestmentSubscription::query()
-            ->with('investment_plan:id,name,roi_per_annum,investment_period')
+            ->with('investment_plan:id,name,roi_per_annum,investment_period,type')
             ->where('user_id', $user->id)
             ->get();
 
@@ -127,6 +127,7 @@ class EarnController extends Controller
                 'roi_per_annum' => $investmentSubscription->investment_plan->roi_per_annum,
                 'investment_period' => $investmentSubscription->investment_plan->investment_period,
                 'subscription_id' => $investmentSubscription->subscription_id,
+                'type' => $investmentSubscription->investment_plan->type,
                 'amount' => $investmentSubscription->amount,
                 'total_earning' => $investmentSubscription->total_earning,
                 'status' => $investmentSubscription->status,
