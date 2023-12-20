@@ -26,6 +26,7 @@ class PaymentController extends Controller
             'txn_hash' => $request->txn_hash,
             'type' => 'Deposit',
             'amount' => $request->amount,
+            'payment_charges' => $request->payment_charges,
             'to_wallet_address' => $request->to_wallet_address,
             'price' => $request->amount,
             'status' => 'Pending'
@@ -67,6 +68,7 @@ class PaymentController extends Controller
             'transaction_id' => $transaction_id,
             'type' => 'Withdrawal',
             'amount' => $amount,
+            'payment_charges' => $request->payment_charges,
             'to_wallet_address' => $request->wallet_address,
             'status' => 'Processing'
         ]);

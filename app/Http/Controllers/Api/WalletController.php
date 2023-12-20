@@ -110,6 +110,7 @@ class WalletController extends Controller
                 'transaction_id' => $transaction_id,
                 'type' => 'Withdrawal',
                 'amount' => $amount,
+                'payment_charges' => $request->payment_charges,
                 'to_wallet_address' => $request->wallet_address,
                 'status' => 'Processing'
             ]);
