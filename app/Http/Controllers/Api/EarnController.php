@@ -111,7 +111,7 @@ class EarnController extends Controller
             }
 
             if ($wallet->balance < $amount) {
-                return redirect()->back()->with('title', 'Insufficient Balance')->with('warning', 'The selected wallet does not have enough balance to subscribe the investment plan. Please try again.');
+                throw ValidationException::withMessages(['amount' => trans('Insufficient Balance')]);
             } else {
                 $updated_balance = $wallet->balance - $amount;
 
