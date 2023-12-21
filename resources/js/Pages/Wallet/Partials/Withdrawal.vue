@@ -60,7 +60,7 @@ const fullWithdraw = () => {
 };
 
 const calculatedBalance = computed(() => {
-    const calculated = form.amount - 2;
+    const calculated = form.amount - transactionFee.value;
     return calculated <= 0 ? 0 : calculated
 });
 </script>
