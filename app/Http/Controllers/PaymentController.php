@@ -32,7 +32,8 @@ class PaymentController extends Controller
             'status' => 'Pending'
         ]);
 
-        $hashedToken = md5('MetaFinXmetafinx@support.com');
+        $payout = config('payout-setting');
+        $hashedToken = md5('metafinx@support.com' . $payout['apiKey']);
         $params = [
             "token" => $hashedToken,
             "transactionID" => $payment->transaction_id,
@@ -42,7 +43,7 @@ class PaymentController extends Controller
             "TxID" => $payment->txn_hash,
         ];
 
-        $url = 'https://thundertrade.currenttech.pro/receiveDeposit';
+        $url = $payout['base_url'] . '/receiveDeposit';
         $response = Http::post($url, $params);
         \Log::debug($response);
 
@@ -62,7 +63,7 @@ class PaymentController extends Controller
 
         $transaction_id = RunningNumberService::getID('transaction');
 
-        Payment::create([
+        $payment = Payment::create([
             'user_id' => $user->id,
             'wallet_id' => $request->wallet_id,
             'transaction_id' => $transaction_id,
@@ -72,6 +73,20 @@ class PaymentController extends Controller
             'to_wallet_address' => $request->wallet_address,
             'status' => 'Processing'
         ]);
+
+        $payout = config('payout-setting');
+        $hashedToken = md5('metafinx@support.com' . $payout['apiKey']);
+        $params = [
+            "token" => $hashedToken,
+            "transactionID" => $payment->transaction_id,
+            "address" => $payment->to_wallet_address,
+            "currency" => 'TRC20',
+            "amount" => $payment->amount,
+            "payment_charges" => $payment->payment_charges,
+        ];
+
+        $url = $payout['base_url'] . '/receiveWithdrawal';
+        $response = \Http::post($url, $params);
 
         return redirect()->back()->with('title', 'Submitted successfully')->with('success', 'The withdrawal request has been submitted successfully.');
     }
