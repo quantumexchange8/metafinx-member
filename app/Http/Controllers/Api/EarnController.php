@@ -8,6 +8,7 @@ use App\Models\InvestmentSubscription;
 use App\Models\Wallet;
 use App\Services\RunningNumberService;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class EarnController extends Controller
@@ -75,7 +76,7 @@ class EarnController extends Controller
         return response()->json($investmentSubscriptions);
     }
 
-    public function subscribe(\Request $request)
+    public function subscribe(Request $request)
     {
         $validator = \Validator::make($request->all(), [
             'wallet_id' => ['required'],
