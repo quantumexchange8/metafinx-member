@@ -77,7 +77,7 @@ class WalletController extends Controller
     public function withdrawal(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'amount' => ['required', 'numeric', 'min:20'],
+            'amount' => ['required', 'numeric', 'min:50'],
             'wallet_id' => ['required'],
             'wallet_address' => ['required'],
             'terms' => ['accepted']
@@ -98,7 +98,10 @@ class WalletController extends Controller
             $amount = floatval($request->amount);
             $wallet = Wallet::find($request->wallet_id);
             if ($wallet->balance < $amount) {
-                throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
+                return response()->json([
+                    'status' => 'fail',
+                    'message' => 'Insufficient Balance'
+                ]);
             }
             $wallet->balance -= $amount;
             $wallet->save();

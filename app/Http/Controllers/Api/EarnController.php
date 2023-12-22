@@ -104,15 +104,24 @@ class EarnController extends Controller
             $amount = $request->amount;
 
             if ($amount % 100 !== 0) {
-                throw ValidationException::withMessages(['amount' => 'Please enter an amount in increments of 100.']);
+                return response()->json([
+                    'status' => 'fail',
+                    'message' => 'Please enter an amount in increments of 100.'
+                ]);
             }
 
             if ($amount < $investment_plan->investment_min_amount) {
-                throw ValidationException::withMessages(['amount' => 'Amount minimum is $ ' . $investment_plan->investment_min_amount]);
+                return response()->json([
+                    'status' => 'fail',
+                    'message' => 'Amount minimum is $ ' . $investment_plan->investment_min_amount
+                ]);
             }
 
             if ($wallet->balance < $amount) {
-                throw ValidationException::withMessages(['amount' => trans('Insufficient Balance')]);
+                return response()->json([
+                    'status' => 'fail',
+                    'message' => 'Insufficient Balance'
+                ]);
             } else {
                 $updated_balance = $wallet->balance - $amount;
 
