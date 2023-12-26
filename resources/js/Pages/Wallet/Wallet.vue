@@ -17,6 +17,7 @@ const props = defineProps({
     totalBalance: String,
     wallet_sel: Object,
     random_address: Object,
+    withdrawalFee: Object,
 })
 
 </script>
@@ -50,6 +51,7 @@ const props = defineProps({
                     <Withdrawal
                         :wallet_sel="wallet_sel"
                         :wallets="props.wallets"
+                        :withdrawalFee="props.withdrawalFee"
                     />
                 </div>
             </div>

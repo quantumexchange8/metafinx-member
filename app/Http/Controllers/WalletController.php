@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\DepositExport;
 use App\Exports\WithdrawalExport;
 use App\Models\Payment;
+use App\Models\SettingWithdrawalFee;
 use App\Models\Wallet;
 use App\Models\SettingWalletAddress;
 use Carbon\Carbon;
@@ -36,6 +37,7 @@ class WalletController extends Controller
             'totalBalance' => $totalBalance->sum('balance'),
             'wallet_sel' => $wallet_sel,
             'random_address' => $wallet_address,
+            'withdrawalFee' => SettingWithdrawalFee::latest()->first(),
         ]);
     }
 

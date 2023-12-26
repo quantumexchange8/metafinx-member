@@ -7,6 +7,7 @@ use App\Http\Requests\DepositRequest;
 use App\Models\Earning;
 use App\Models\InvestmentSubscription;
 use App\Models\Payment;
+use App\Models\SettingWithdrawalFee;
 use App\Models\Wallet;
 use App\Models\SettingWalletAddress;
 use App\Services\RunningNumberService;
@@ -179,6 +180,7 @@ class WalletController extends Controller
 
         return response()->json([
             'wallet_address' => $wallet_address,
+            'withdrawalFee' => SettingWithdrawalFee::latest()->first(),
         ]);
     }
 
