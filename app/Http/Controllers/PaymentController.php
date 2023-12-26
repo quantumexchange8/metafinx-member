@@ -117,14 +117,20 @@ class PaymentController extends Controller
                 'status' => $result['status'],
                 'remarks' => $result['remarks']
             ]);
-
+            $wallet = Wallet::find($payment->wallet_id);
             if ($payment->status =='Success') {
-                $wallet = Wallet::find($payment->wallet_id);
-
-                $wallet->update([
-                    'balance' => $wallet->balance + $payment->amount
-                ]);
+                if ($payment->type == 'Deposit') {
+                    $wallet->update([
+                        'balance' => $wallet->balance + $payment->amount
+                    ]);
+                }
             } else {
+                if ($payment->type == 'Withdrawal') {
+                    $wallet->update([
+                        'balance' => $wallet->balance + $payment->amount
+                    ]);
+                }
+
                 PaymentStatus::create([
                     'message' => 'Payment with ID ' . $payment->id . ', STATUS is ' . $payment->status
                 ]);
