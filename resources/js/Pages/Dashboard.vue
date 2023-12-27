@@ -6,7 +6,7 @@ import {Link} from "@inertiajs/vue3";
 import {transactionFormat} from "@/Composables/index.js";
 import CryptoPriceTable from "@/Pages/Dashboard/Partials/CryptoPriceTable.vue";
 import Wallet from "@/Components/Wallet.vue"
-import EarnWallet from "@/Components/EarnWallet.vue"
+import MUSDWallet from "@/Components/MUSDWallet.vue"
 
 const props = defineProps({
     totalWalletBalance: String,
@@ -71,7 +71,7 @@ const { formatDateTime, formatAmount } = transactionFormat();
                         </p>
                     </div>
                     <div class="pr-1.5">
-                        <EarnWallet />
+                        <MUSDWallet />
                     </div>
                 </div>
             </Link>

@@ -63,7 +63,7 @@ onMounted(() => {
 <template>
     <h4 class="font-semibold dark:text-white">Cryptocurrency Market Price</h4>
     <div class="relative overflow-x-auto sm:rounded-lg">
-        <table class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
             <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
             <tr>
                 <th scope="col" class="py-3">
@@ -72,7 +72,7 @@ onMounted(() => {
                 <th scope="col" class="py-3">
                     Price
                 </th>
-                <th scope="col" class="py-3">
+                <th scope="col" class="py-3 text-end">
                     Change
                 </th>
             </tr>
@@ -91,13 +91,13 @@ onMounted(() => {
                         <span class="dark:text-white text-sm">{{ crypto.coin }}</span> <span class="dark:text-gray-400">{{ crypto.name }}</span>
                     </div>
                 </td>
-                <td class="py-3 w-1/4">
+                <td class="p-2 w-1/4">
                     <div v-if="isLoading" class="animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-500 w-32 mb-2.5"></div>
                     <div v-else>
                         ${{ cryptoPrices[crypto.name] }}
                     </div>
                 </td>
-                <td class="py-3 w-1/4">
+                <td class="p-2 w-1/4 text-end">
                     <div v-if="isLoading" class="animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-500 w-32 mb-2.5"></div>
                     <div v-else>
                          <div :class="{ 'text-success-500': parseFloat(cryptoPricesChanges[crypto.name]) > 0, 'text-error-500': parseFloat(cryptoPricesChanges[crypto.name]) < 0 }">

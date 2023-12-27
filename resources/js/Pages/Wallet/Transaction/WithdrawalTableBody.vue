@@ -1,5 +1,5 @@
 <script setup>
-import {InternalWalletIcon} from "@/Components/Icons/outline.jsx";
+import {InternalUSDWalletIcon, InternalMUSDWalletIcon} from "@/Components/Icons/outline.jsx";
 import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 import {transactionFormat} from "@/Composables/index.js";
@@ -34,8 +34,11 @@ const closeModal = () => {
         @click="openTransactionModal(withdrawal)"
     >
         <td class="pl-5 py-3 inline-flex items-center gap-2">
-            <div class="bg-gradient-to-t from-pink-300 to-pink-600 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
-                <InternalWalletIcon class="mt-0.5 ml-0.5"/>
+            <div v-if="withdrawal.wallet.name === 'USD Wallet'" class="bg-gradient-to-t from-pink-300 to-pink-600 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
+                <InternalUSDWalletIcon class="mt-0.5 ml-0.5"/>
+            </div>
+            <div v-else-if="withdrawal.wallet.name === 'MUSD Wallet'" class="bg-gradient-to-t from-warning-300 to-warning-600 dark:shadow-warning-500 rounded-full w-4 h-4 shrink-0 grow-0">
+                <InternalMUSDWalletIcon class="mt-0.5 ml-0.5"/>
             </div>
             {{ withdrawal.wallet.name }}
         </td>
