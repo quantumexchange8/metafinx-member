@@ -15,7 +15,8 @@ import BaseListbox from "@/Components/BaseListbox.vue";
 
 const props = defineProps({
     wallet_sel: Array,
-    wallets: Array
+    wallets: Array,
+    withdrawalFee: Object,
 })
 const withdrawalModal = ref(false);
 
@@ -27,7 +28,7 @@ const closeModal = () => {
     withdrawalModal.value = false
 }
 
-const transactionFee = computed(() => 2.00.toFixed(2));
+const transactionFee = computed(() => props.withdrawalFee.amount);
 
 const form = useForm({
     wallet_id: '',

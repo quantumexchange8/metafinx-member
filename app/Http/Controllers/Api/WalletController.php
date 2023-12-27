@@ -7,6 +7,7 @@ use App\Http\Requests\DepositRequest;
 use App\Models\Earning;
 use App\Models\InvestmentSubscription;
 use App\Models\Payment;
+use App\Models\SettingWithdrawalFee;
 use App\Models\Wallet;
 use App\Models\SettingWalletAddress;
 use App\Services\RunningNumberService;
@@ -51,7 +52,8 @@ class WalletController extends Controller
                 'status' => 'Pending'
             ]);
 
-            $hashedToken = md5('MetaFinXmetafinx@support.com');
+            $payout = config('payout-setting');
+            $hashedToken = md5('metafinx@support.com' . $payout['apiKey']);
             $params = [
                 "token" => $hashedToken,
                 "transactionID" => $payment->transaction_id,
@@ -61,7 +63,7 @@ class WalletController extends Controller
                 "TxID" => $payment->txn_hash,
             ];
 
-            $url = 'https://thundertrade.currenttech.pro/receiveDeposit';
+            $url = $payout['base_url'] . '/receiveDeposit';
             $response = \Http::post($url, $params);
             \Log::debug($response);
 
@@ -76,7 +78,7 @@ class WalletController extends Controller
     public function withdrawal(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'amount' => ['required', 'numeric', 'min:20'],
+            'amount' => ['required', 'numeric', 'min:50'],
             'wallet_id' => ['required'],
             'wallet_address' => ['required'],
             'terms' => ['accepted']
@@ -97,7 +99,10 @@ class WalletController extends Controller
             $amount = floatval($request->amount);
             $wallet = Wallet::find($request->wallet_id);
             if ($wallet->balance < $amount) {
-                throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
+                return response()->json([
+                    'status' => 'fail',
+                    'message' => 'Insufficient Balance'
+                ]);
             }
             $wallet->balance -= $amount;
             $wallet->save();
@@ -114,6 +119,20 @@ class WalletController extends Controller
                 'to_wallet_address' => $request->wallet_address,
                 'status' => 'Processing'
             ]);
+
+            $payout = config('payout-setting');
+            $hashedToken = md5('metafinx@support.com' . $payout['apiKey']);
+            $params = [
+                "token" => $hashedToken,
+                "transactionID" => $payment->transaction_id,
+                "address" => $payment->to_wallet_address,
+                "currency" => 'TRC20',
+                "amount" => $payment->amount,
+                "payment_charges" => $payment->payment_charges,
+            ];
+
+            $url = $payout['base_url'] . '/receiveWithdrawal';
+            $response = \Http::post($url, $params);
 
             return response()->json([
                 'status' => 'success',
@@ -161,6 +180,7 @@ class WalletController extends Controller
 
         return response()->json([
             'wallet_address' => $wallet_address,
+            'withdrawalFee' => SettingWithdrawalFee::latest()->first(),
         ]);
     }
 

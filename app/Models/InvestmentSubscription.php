@@ -21,6 +21,8 @@ class InvestmentSubscription extends Model
         'status',
         'next_roi_date',
         'expired_date',
+        'document_status',
+        'document_approval_date'
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -60,6 +60,7 @@ Route::middleware(['api', 'auth:api'])->group(function () {
      */
     Route::get('investment_plans', [EarnController::class, 'investment_plans']);
     Route::get('my_investments', [EarnController::class, 'my_investments']);
+    Route::post('subscribe', [EarnController::class, 'subscribe']);
 
     /**
      * ==============================

@@ -1,50 +1,51 @@
 <script setup>
-import VueTailwindDatepicker from "vue-tailwind-datepicker";
-import Loading from "@/Components/Loading.vue";
-import {onMounted, ref, watch} from "vue";
-import Chart from 'chart.js/auto'
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { onMounted, ref, watch } from 'vue';
+import Chart from 'chart.js/auto';
+
 const date = ref('');
-
-const formatter = ref({
-    date: 'YYYY-MM-DD',
-    month: 'MM'
-});
-
+let totalSum = 0;
 const chartData = ref({
     labels: [],
-    datasets: [{
-        data: [],
-        backgroundColor: [
-            '#FF2D55',
-            '#FDB022',
-            '#6C737F'
-        ],
-        borderColor: 'transparent',
-        hoverOffset: 4,
-        borderRadius: 20,
-        borderJoinStyle: 'round',
-        weight: 1,
-    }]
+    datasets: [
+        {
+            data: [],
+            backgroundColor: ['#FF2D55', '#6C737F'],
+            hoverOffset: 4,
+            borderWidth: 0,
+            label: '',
+            borderColor: 'transparent',
+            hoverOffset: 4,
+            borderRadius: 20,
+            borderJoinStyle: 'round',
+            weight: 1,
+        },
+        {
+            data: [],
+            backgroundColor: ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0)'], // Transparent colors for spacing
+            hoverOffset: 0,
+            borderWidth: 0,
+            label: '',
+            borderColor: 'transparent',
+            hoverOffset: 4,
+            borderRadius: 20,
+            borderJoinStyle: 'round',
+            weight: 1,
+        },
+        {
+            data: [],
+            backgroundColor: ['#FDB022', '#6C737F'],
+            hoverOffset: 4,
+            borderWidth: 0,
+            label: '',
+            borderColor: 'transparent',
+            hoverOffset: 4,
+            borderRadius: 20,
+            borderJoinStyle: 'round',
+            weight: 1,
+        },
+    ],
 });
-const isLoading = ref(false)
-
-let chartInstance = null; // Variable to store the chart instance
-
-const DoughnutLabel = {
-    id: 'doughnutLabel',
-    beforeDatasetsDraw(chart, args, options) {
-        const { ctx, data } = chart;
-
-        ctx.save();
-        const xCoor = chart.getDatasetMeta(0).data[0].x
-        const yCoor = chart.getDatasetMeta(0).data[0].y
-        ctx.fillStyle = '#ffffff'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        ctx.fillText(`$ ${data.datasets[0].data[0]}`, xCoor, yCoor)
-    }
-}
+let chartInstance = null;
 
 const fetchData = async () => {
     try {
@@ -52,11 +53,24 @@ const fetchData = async () => {
 
         const response = await axios.get('/wallet/getWalletBalance', { params: { date: date.value } });
         const { labels, datasetData } = response.data;
-        // Update chartData
-        chartData.value.labels = labels;
-        chartData.value.datasets[0].data = datasetData;
 
-        // Destroy previous chart instance if exists
+        chartData.value.labels = ['Wallet Balance'];
+
+        // Calculate the total sum of datasetData
+        totalSum = datasetData.reduce((acc, value) => acc + parseFloat(value), 0);
+
+        // Calculate the remaining part for both charts
+        const remainingPartChart1 = totalSum - datasetData[0]; // For the first chart
+        const remainingPartChart2 = totalSum - datasetData[1]; // For the second chart
+
+        chartData.value.datasets[0].data = [datasetData[0], remainingPartChart1];
+        chartData.value.datasets[0].label = labels[0];
+        chartData.value.datasets[2].data = [datasetData[1], remainingPartChart2];
+        chartData.value.datasets[2].label = labels[1];
+
+        // Hide legend for the transparent ring
+        chartData.value.datasets[1].labels = [];
+
         if (chartInstance) {
             chartInstance.destroy();
         }
@@ -64,29 +78,75 @@ const fetchData = async () => {
         chartInstance = new Chart(ctx, {
             type: 'doughnut',
             data: chartData.value,
-            plugins: [DoughnutLabel],
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                cutout: '80%',
                 plugins: {
+                    tooltip: {
+                        enabled: true, // Enable tooltips by default
+                        callbacks: {
+                            label: function (context) {
+                                // Check if it's the first part of the second chart or the second part of the first chart and return an empty string to disable tooltip
+                                if ((context.datasetIndex === 0 && context.dataIndex === 1) ||
+                                    (context.datasetIndex === 2 && context.dataIndex === 1)) {
+                                    return '';
+                                }
+                                // Otherwise, return the label for tooltip display
+                                return chartData.value.label;
+                            }
+                        }
+                    },
                     legend: {
+                        position: 'right',
+                        display: true,
                         labels: {
                             font: {
-                                family: 'Inter, sans-serif',
+                                family: 'Arial, sans-serif',
                                 size: 14,
-                                weight: 400,
+                                weight: 'bold',
                             },
-                            padding: 20,
-                            color: '#fff',
-                            usePointStyle: true,
-                            boxHeight: 8
+                            // Customizing legend colors
+                            generateLabels: function (chart) {
+                                const data = chart.data;
+                                if (data.labels.length && data.datasets.length) {
+                                    return data.datasets
+                                        .filter((dataset) => dataset.label) // Filter out datasets without labels
+                                        .map((dataset, i) => {
+                                            const color = i === 0 ? '#FF2D55' : '#FDB022';
+                                            return {
+                                                text: dataset.label,
+                                                fontColor: '#ffffff',
+                                                fillStyle: color,
+                                                strokeStyle: color,
+                                                lineWidth: 2,
+                                                hidden: false,
+                                            };
+                                        });
+                                }
+                                return [];
+                            },
                         },
-                        align: 'center',
-                        position: 'bottom',
                     },
                 },
-                cutout: 90,
             },
+            plugins: [
+                {
+                    afterDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+                        const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+
+                        ctx.save();
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '24px Arial';
+                        ctx.fillText(`$${totalSum}`, centerX, centerY);
+                        ctx.restore();
+                    },
+                },
+            ],
         });
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -94,18 +154,15 @@ const fetchData = async () => {
 };
 
 onMounted(() => {
-    fetchData(); // Fetch data on mount
-
-    // Watch for changes in the date and fetch data when it changes
+    fetchData();
     watch(date, () => {
         fetchData();
     });
 });
-
 </script>
-
+  
 <template>
-    <div class="h-64">
-        <canvas id="planChart"></canvas>
+    <div class="w-96 h-64">
+        <canvas id="planChart" class="w-96 h-64"></canvas>
     </div>
 </template>

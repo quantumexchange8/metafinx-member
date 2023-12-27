@@ -10,13 +10,14 @@ import {ref} from "vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import Withdrawal from "@/Pages/Wallet/Partials/Withdrawal.vue";
 import Wallet from "@/Components/Wallet.vue"
-import EarnWallet from "@/Components/EarnWallet.vue";
+import MUSDWallet from "@/Components/MUSDWallet.vue";
 
 const props = defineProps({
     wallets: Object,
     totalBalance: String,
     wallet_sel: Object,
     random_address: Object,
+    withdrawalFee: Object,
 })
 
 </script>
@@ -50,6 +51,7 @@ const props = defineProps({
                     <Withdrawal
                         :wallet_sel="wallet_sel"
                         :wallets="props.wallets"
+                        :withdrawalFee="props.withdrawalFee"
                     />
                 </div>
             </div>
@@ -82,8 +84,10 @@ const props = defineProps({
                     <div v-if="wallet.name === 'USD Wallet'">
                         <Wallet class="w-24 h-24"/>
                     </div>
+                    <div v-else-if="wallet.name === 'MUSD Wallet'">
+                        <MUSDWallet class="w-24 h-24"/>
+                    </div>
                     <div v-else>
-                        <EarnWallet class="w-24 h-24" />
                     </div>
                 </div>
             </div>
@@ -118,8 +122,10 @@ const props = defineProps({
                     <div v-if="wallet.name === 'USD Wallet'">
                         <Wallet class="w-24 h-24"/>
                     </div>
+                    <div v-else-if="wallet.name === 'MUSD Wallet'">
+                        <MUSDWallet class="w-24 h-24"/>
+                    </div>
                     <div v-else>
-                        <EarnWallet class="w-24 h-24" />
                     </div>
                 </div>
             </div>
