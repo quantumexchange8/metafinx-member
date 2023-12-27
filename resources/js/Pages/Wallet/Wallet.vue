@@ -1,7 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import Button from "@/Components/Button.vue";
-import {WithdrawalIcon} from "@/Components/Icons/outline.jsx";
 import BalanceChart from "@/Pages/Wallet/Partials/BalanceChart.vue";
 import Deposit from "@/Pages/Wallet/Partials/Deposit.vue";
 import Transaction from "@/Pages/Wallet/Transaction/Transaction.vue";
@@ -68,7 +67,7 @@ const props = defineProps({
                 v-for="wallet in props.wallets"
                 class="flex-1 rounded-[20px] shadow-md"
                 :class="{
-                    'bg-gradient-to-bl from-pink-400 to-pink-600': wallet.name === 'USD Wallet',
+                    'bg-gradient-to-bl from-pink-400 to-pink-600': wallet.name === 'Internal Wallet',
                     'bg-gradient-to-bl from-warning-300 to-warning-500': wallet.name === 'MUSD Wallet',
                 }"
             >
@@ -81,13 +80,11 @@ const props = defineProps({
                             $ {{ wallet.balance }}
                         </div>
                     </div>
-                    <div v-if="wallet.name === 'USD Wallet'">
+                    <div v-if="wallet.name === 'Internal Wallet'">
                         <Wallet class="w-24 h-24"/>
                     </div>
-                    <div v-else-if="wallet.name === 'MUSD Wallet'">
+                    <div v-if="wallet.name === 'MUSD Wallet'">
                         <MUSDWallet class="w-24 h-24"/>
-                    </div>
-                    <div v-else>
                     </div>
                 </div>
             </div>
@@ -105,9 +102,9 @@ const props = defineProps({
 
                 <div
                     v-for="wallet in props.wallets"
-                    class="p-5 flex justify-between items-center overflow-hidden rounded-[20px] shadow-md w-full"
+                    class="p-5 flex justify-between items-center rounded-[20px] shadow-md w-full"
                     :class="{
-                        'bg-gradient-to-bl from-pink-400 to-pink-600': wallet.name === 'USD Wallet',
+                        'bg-gradient-to-bl from-pink-400 to-pink-600': wallet.name === 'Internal Wallet',
                         'bg-gradient-to-bl from-warning-300 to-warning-500': wallet.name === 'MUSD Wallet',
                     }"
                 >
@@ -119,13 +116,11 @@ const props = defineProps({
                             $ {{ wallet.balance }}
                         </div>
                     </div>
-                    <div v-if="wallet.name === 'USD Wallet'">
-                        <Wallet class="w-24 h-24"/>
-                    </div>
-                    <div v-else-if="wallet.name === 'MUSD Wallet'">
-                        <MUSDWallet class="w-24 h-24"/>
+                    <div v-if="wallet.name === 'Internal Wallet'">
+                        <Wallet class="w-32 h-24"/>
                     </div>
                     <div v-else>
+                        <img src="/images/icons/icon-no-color.png" alt="" class="w-32 h-24">
                     </div>
                 </div>
             </div>

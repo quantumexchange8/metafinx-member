@@ -169,7 +169,7 @@ class RegisteredUserController extends Controller
 
         Wallet::create([
             'user_id' => $user->id,
-            'name' => 'USD Wallet'
+            'name' => 'Internal Wallet'
         ]);
 
         Wallet::create([
