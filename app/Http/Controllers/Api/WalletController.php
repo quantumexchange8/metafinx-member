@@ -104,7 +104,9 @@ class WalletController extends Controller
                     'message' => 'Insufficient Balance'
                 ]);
             }
-            $wallet->balance -= $amount;
+            $withdrawal_fee = SettingWithdrawalFee::latest()->first();
+            $amount_with_fee = $amount + $withdrawal_fee->amount;
+            $wallet->balance -= $amount_with_fee;
             $wallet->save();
 
             $transaction_id = RunningNumberService::getID('transaction');

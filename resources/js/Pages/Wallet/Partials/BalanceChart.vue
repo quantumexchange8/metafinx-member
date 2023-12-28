@@ -9,38 +9,29 @@ const chartData = ref({
     datasets: [
         {
             data: [],
-            backgroundColor: ['#FF2D55', '#6C737F'],
+            backgroundColor: ['#FF2D55', '#4d5761'],
             hoverOffset: 4,
             borderWidth: 0,
             label: '',
             borderColor: 'transparent',
-            hoverOffset: 4,
-            borderRadius: 20,
-            borderJoinStyle: 'round',
             weight: 1,
         },
         {
             data: [],
-            backgroundColor: ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0)'], // Transparent colors for spacing
+            backgroundColor: ['#4d5761', '#4d5761'], // Transparent colors for spacing
             hoverOffset: 0,
             borderWidth: 0,
             label: '',
             borderColor: 'transparent',
-            hoverOffset: 4,
-            borderRadius: 20,
-            borderJoinStyle: 'round',
             weight: 1,
         },
         {
             data: [],
-            backgroundColor: ['#FDB022', '#6C737F'],
+            backgroundColor: ['#FDB022', '#4d5761'],
             hoverOffset: 4,
             borderWidth: 0,
             label: '',
             borderColor: 'transparent',
-            hoverOffset: 4,
-            borderRadius: 20,
-            borderJoinStyle: 'round',
             weight: 1,
         },
     ],
@@ -102,10 +93,13 @@ const fetchData = async () => {
                         display: true,
                         labels: {
                             font: {
-                                family: 'Arial, sans-serif',
+                                family: 'Inter, sans',
                                 size: 14,
                                 weight: 'bold',
                             },
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            boxHeight: 8,
                             // Customizing legend colors
                             generateLabels: function (chart) {
                                 const data = chart.data;
@@ -141,7 +135,7 @@ const fetchData = async () => {
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         ctx.fillStyle = '#ffffff';
-                        ctx.font = '24px Arial';
+                        ctx.font = '24px Inter';
                         ctx.fillText(`$${totalSum}`, centerX, centerY);
                         ctx.restore();
                     },
@@ -160,9 +154,9 @@ onMounted(() => {
     });
 });
 </script>
-  
+
 <template>
-    <div class="w-96 h-64">
-        <canvas id="planChart" class="w-96 h-64"></canvas>
+    <div class="w-full md:h-[200px]">
+        <canvas id="planChart"></canvas>
     </div>
 </template>

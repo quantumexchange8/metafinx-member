@@ -201,6 +201,11 @@ class AuthController extends Controller
                 'name' => 'Internal Wallet'
             ]);
 
+            Wallet::create([
+                'user_id' => $user->id,
+                'name' => 'MUSD Wallet'
+            ]);
+
             $user->setReferralId();
 
             event(new Registered($user));
