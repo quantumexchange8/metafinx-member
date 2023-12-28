@@ -119,9 +119,6 @@ const props = defineProps({
                     <div v-if="wallet.name === 'Internal Wallet'">
                         <Wallet class="w-24 h-24"/>
                     </div>
-                    <div v-if="wallet.name === 'MUSD Wallet'">
-                        <MUSDWallet class="w-24 h-24"/>
-                    </div>
                     <div v-else>
                         <img src="/images/icons/icon-no-color.png" alt="" class="w-32 h-24">
                     </div>
