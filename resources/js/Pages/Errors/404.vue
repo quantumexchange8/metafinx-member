@@ -7,7 +7,7 @@ import Button from '@/Components/Button.vue'
 </script>
 
 <template>
-    <Head title="Error 404" />
+    <Head :title="$t('public.error.error_404')" />
     <div
         class="flex flex-col items-center justify-center min-h-screen gap-4 py-6 bg-white dark:bg-gray-800"
     >
@@ -25,14 +25,14 @@ import Button from '@/Components/Button.vue'
                     <img src="/assets/404.png" class="" alt="">
                     <div class="flex flex-col items-center mt-3 gap-5">
                         <div class="flex flex-col dark:text-gray-400 text-center gap-2">
-                            <h2 class="dark:text-white font-semibold text-3xl">Page Not Found!</h2>
-                            We're sorry, the page you requested could not be found. Please go back to the dashboard.
+                            <h2 class="dark:text-white font-semibold text-3xl">{{$t('public.error.page_not_found')}}</h2>
+                            {{$t('public.error.page_not_exist')}}
                         </div>
                         <Button
                             :href="route('dashboard')"
                             class="sm:w-1/3 justify-center"
                         >
-                        Back to dashboard
+                        {{$t('public.error.back_to_dashboard')}}
                         </Button>
                     </div>
                 </div>

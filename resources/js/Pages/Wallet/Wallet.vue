@@ -22,22 +22,22 @@ const props = defineProps({
 </script>
 
 <template>
-    <AuthenticatedLayout title="Wallet">
+    <AuthenticatedLayout :title="$t('public.wallet.wallet')">
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-2xl font-semibold leading-tight">
-                    Wallet
+                    {{$t('public.wallet.wallet')}}
                 </h2>
             </div>
             <p class="text-base font-normal dark:text-gray-400">
-                Track your current wallet balance and manage your wallets.
+                {{$t('public.wallet.track_wallet')}}
             </p>
         </template>
 
         <div class="p-5 grid md:grid-cols-2 gap-2 sm:gap-5 items-center overflow-hidden bg-white rounded-xl shadow-md dark:bg-gray-700">
             <div class="space-y-2">
                 <p class="text-base font-semibold dark:text-gray-400">
-                    Total Balance
+                    {{$t('public.wallet.total_balance')}}
                 </p>
                 <p class="text-[28px] font-semibold dark:text-white">
                     $ {{ props.totalBalance }}
@@ -60,7 +60,7 @@ const props = defineProps({
         </div>
 
         <h3 class="md:hidden text-xl font-semibold leading-tight my-5">
-            Your Assets
+            {{$t('public.wallet.your_assets')}}
         </h3>
         <div class="flex flex-nowrap md:hidden gap-3 overflow-x-auto md:overflow-visible w-full">
             <div
@@ -97,7 +97,7 @@ const props = defineProps({
         <template #asideRight>
             <div class="inset-y-0 p-6 flex flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-l dark:border-gray-700 w-96 fixed right-0">
                 <h3 class="text-xl font-semibold leading-tight">
-                    Your Assets
+                    {{$t('public.wallet.your_assets')}}
                 </h3>
 
                 <div
@@ -117,7 +117,10 @@ const props = defineProps({
                         </div>
                     </div>
                     <div v-if="wallet.name === 'Internal Wallet'">
-                        <Wallet class="w-32 h-24"/>
+                        <Wallet class="w-24 h-24"/>
+                    </div>
+                    <div v-if="wallet.name === 'MUSD Wallet'">
+                        <MUSDWallet class="w-24 h-24"/>
                     </div>
                     <div v-else>
                         <img src="/images/icons/icon-no-color.png" alt="" class="w-32 h-24">

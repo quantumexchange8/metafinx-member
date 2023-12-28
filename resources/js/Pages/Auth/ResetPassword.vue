@@ -42,7 +42,7 @@ const togglePasswordVisibilityConfirm = () => {
 </script>
 
 <template>
-    <GuestLayout title="Reset Password">
+    <GuestLayout :title="$t('public.reset_password.reset_password')">
         <div class="flex flex-col items-center mb-8">
             <div>
                 <div class="flex items-center justify-center w-10 h-10 border rounded-lg dark:border-gray-400">
@@ -50,28 +50,28 @@ const togglePasswordVisibilityConfirm = () => {
                 </div>
             </div>
             <div class="my-3 text-[28px] font-semibold text-gray-600 dark:text-white">
-                Choose a password
+                {{$t('public.reset_password.choose_password')}}
             </div>
             <div class="text-[16px] text-gray-400 font-normal">
-                Must be at least 8 characters
+                {{$t('public.reset_password.password_restriction')}}
             </div>
         </div>
 
         <form @submit.prevent="submit">
             <div class="grid gap-6">
                 <div class="space-y-2">
-                    <Label for="email" value="Email" />
+                    <Label for="email" :value="$t('public.reset_password.email')" />
                     <InputIconWrapper>
                         <template #icon>
                             <MailIcon aria-hidden="true" class="w-5 h-5" />
                         </template>
-                        <Input withIcon id="email" type="email" placeholder="Email" class="block w-full" v-model="form.email" readonly required autofocus autocomplete="username" />
+                        <Input withIcon id="email" type="email" :placeholder="$t('public.reset_password.email_placeholder')" class="block w-full" v-model="form.email" readonly required autofocus autocomplete="username" />
                     </InputIconWrapper>
                     <InputError :message="form.errors.email" class="mt-2" />
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="password" value="Password" />
+                    <Label for="password" :value="$t('public.reset_password.password')" />
                     <InputIconWrapper>
                         <template #icon>
                             <LockClosedIcon aria-hidden="true" class="w-5 h-5" />
@@ -80,7 +80,7 @@ const togglePasswordVisibilityConfirm = () => {
                             withIcon
                             id="password"
                             :type="showPassword ? 'text' : 'password'"
-                            placeholder="Password"
+                            :placeholder="$t('public.reset_password.password_placeholder')"
                             class="block w-full"
                             v-model="form.password"
                             :class="form.errors.password ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
@@ -102,7 +102,7 @@ const togglePasswordVisibilityConfirm = () => {
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="password_confirmation" value="Confirm Password" />
+                    <Label for="password_confirmation" :value="$t('public.reset_password.confirm_password')" />
                     <InputIconWrapper>
                         <template #icon>
                             <LockClosedIcon aria-hidden="true" class="w-5 h-5" />
@@ -111,7 +111,7 @@ const togglePasswordVisibilityConfirm = () => {
                             withIcon
                             id="password_confirmation"
                             :type="showPassword2 ? 'text' : 'password'"
-                            placeholder="Confirm Password"
+                            :placeholder="$t('public.reset_password.confirm_password_placeholder')"
                             class="block w-full"
                             v-model="form.password_confirmation"
                             autocomplete="new-password"
@@ -133,7 +133,7 @@ const togglePasswordVisibilityConfirm = () => {
 
                 <div>
                     <Button class="w-full justify-center" :disabled="form.processing">
-                        Reset Password
+                        {{$t('public.reset_password.reset_password')}}
                     </Button>
                 </div>
             </div>

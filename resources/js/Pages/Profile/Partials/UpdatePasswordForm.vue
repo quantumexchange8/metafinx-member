@@ -57,11 +57,10 @@ const updatePassword = () => {
             <header class="flex justify-between items-center gap-2">
                 <div>
                     <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                        Update Password
+                        {{$t('public.profile.update_password')}}
                     </h2>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        Ensure your account is using a long, random password to stay
-                        secure.
+                        {{$t('public.profile.password_warning_message')}}.
                     </p>
                 </div>
             </header>
@@ -164,7 +163,7 @@ const updatePassword = () => {
 
             </section>
             <div class="flex justify-end">
-                <Button :disabled="form.processing">Save Changes</Button>
+                <Button :disabled="form.processing">{{$t('public.profile.save_changes')}}</Button>
 
             </div>
         </form>

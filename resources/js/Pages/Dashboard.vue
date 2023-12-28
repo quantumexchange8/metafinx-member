@@ -19,11 +19,11 @@ const { formatDateTime, formatAmount } = transactionFormat();
 </script>
 
 <template>
-    <AuthenticatedLayout title="Dashboard">
+    <AuthenticatedLayout :title="$t('public.dashboard.dashboard')">
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-xl md:text-2xl font-semibold leading-tight">
-                    Welcome Back
+                    {{$t('public.dashboard.welcome_back')}}
                     <!-- , {{ $page.props.auth.user.name }}! -->
                 </h2>
             </div>
@@ -45,7 +45,7 @@ const { formatDateTime, formatAmount } = transactionFormat();
                             </p>
                         </div>
                         <p class="text-xs text-white font-normal">
-                            Latest updated on {{ formatDateTime(props.walletLastUpdate.updated_at) }}
+                            {{$t('public.dashboard.latest_updated')}} {{ formatDateTime(props.walletLastUpdate.updated_at) }}
                         </p>
                     </div>
                     <div class="pr-1.5">
@@ -67,7 +67,7 @@ const { formatDateTime, formatAmount } = transactionFormat();
                             </p>
                         </div>
                         <p class="text-[12px] text-white">
-                            Latest updated on {{ formatDateTime(props.investmentEarningsLastUpdate) }}
+                            {{$t('public.dashboard.latest_updated')}} {{ formatDateTime(props.investmentEarningsLastUpdate) }}
                         </p>
                     </div>
                     <div class="pr-1.5">
@@ -80,25 +80,25 @@ const { formatDateTime, formatAmount } = transactionFormat();
         <div class="flex flex-nowrap md:grid md:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible my-8">
             <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
-                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">Monthly Return</p>
+                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.monthly_return')}}</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
                 </div>
             </div>
             <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
-                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">Referral Earning</p>
+                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.referral_earning')}}</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ {{ formatAmount(props.referralEarnings) }}</p>
                 </div>
             </div>
             <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
-                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">Affiliate Earning</p>
+                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.affiliate_earning')}}</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
                 </div>
             </div>
             <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
-                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">Dividend Earning</p>
+                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.dividend_earning')}}</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
                 </div>
             </div>

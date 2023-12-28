@@ -171,7 +171,7 @@ const handleBackRevert = (uniqueId, load, error) => {
 </script>
 
 <template>
-    <Head title="Register" />
+    <Head :title="$t('public.register.register')" />
 
     <div class="flex justify-center min-h-screen">
         <!-- Row -->
@@ -212,7 +212,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                     <!-- Step 1 -->
                     <div v-if="formStep === 1" class="grid gap-6">
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="name" value="Name" />
+                            <Label class="dark:text-white" for="name" :value="$t('public.register.name')" />
                             <InputIconWrapper>
                                 <template #icon>
                                     <UserIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
@@ -220,7 +220,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                 <Input
                                     withIcon id="name"
                                     type="text"
-                                    placeholder="Enter your full name"
+                                    :placeholder="$t('public.register.name_placeholder')"
                                     class="block w-full" v-model="form.name"
                                     autofocus
                                     autocomplete="name"
@@ -231,7 +231,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="country" value="Country" />
+                            <Label class="dark:text-white" for="country" :value="$t('public.register.country')" />
 
                             <BaseListbox
                                 v-model="selectedCountry"
@@ -242,7 +242,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="phone" value="Phone" />
+                            <Label class="dark:text-white" for="phone" :value="$t('public.register.phone')" />
                             <InputIconWrapper>
                                 <template #icon>
                                     <PhoneIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
@@ -251,7 +251,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     withIcon
                                     id="phone"
                                     type="text"
-                                    placeholder="+6011-0000 0000"
+                                    :placeholder="$t('public.register.phone_placeholder')"
                                     class="block w-full"
                                     v-model="form.phone"
                                     autocomplete="phone"
@@ -262,7 +262,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="email" value="Email" />
+                            <Label class="dark:text-white" for="email" :value="$t('public.register.email')" />
                             <InputIconWrapper>
                                 <template #icon>
                                     <MailIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
@@ -272,7 +272,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     id="email"
                                     type="email"
                                     class="block w-full"
-                                    placeholder="Email"
+                                    :placeholder="$t('public.register.email_placeholder')"
                                     v-model="form.email"
                                     autocomplete="username"
                                     :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
@@ -282,7 +282,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="address_1" value="Address" />
+                            <Label class="dark:text-white" for="address_1" :value="$t('public.register.address')" />
                             <InputIconWrapper>
                                 <template #icon>
                                     <HomeIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
@@ -292,7 +292,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     id="address_1"
                                     type="text"
                                     class="block w-full"
-                                    placeholder="Line 1"
+                                    :placeholder="$t('public.register.address_placeholder_line_1')"
                                     v-model="form.address_1"
                                     autocomplete="address_1"
                                     :class="form.errors.address_1 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
@@ -309,7 +309,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     id="address_2"
                                     type="text"
                                     class="block w-full border border-gray-300 dark:border-gray-600"
-                                    placeholder="Line 2 (optional)"
+                                    :placeholder="$t('public.register.address_placeholder_line_2')"
                                     v-model="form.address_2"
                                     autocomplete="address_2"
                                 />
@@ -321,7 +321,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                     <!-- Step 2 -->
                     <div v-if="formStep === 2" class="grid gap-6">
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="password" value="Password" />
+                            <Label class="dark:text-white" for="password" :value="$t('public.register.password')" />
                             <InputIconWrapper>
                                 <template #icon>
                                     <KeyIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
@@ -331,7 +331,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     id="password"
                                     :type="showPassword ? 'text' : 'password'"
                                     class="block w-full"
-                                    placeholder="Minimum 8 characters"
+                                    :placeholder="$t('public.register.password_placeholder')"
                                     v-model="form.password"
                                     required
                                     autocomplete="new-password"
@@ -353,7 +353,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="password_confirmation" value="Confirm Password" />
+                            <Label class="dark:text-white" for="password_confirmation" :value="$t('public.register.confirm_password')" />
                             <InputIconWrapper>
                                 <template #icon>
                                     <KeyIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
@@ -363,7 +363,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                     id="password_confirmation"
                                     :type="showPassword2 ? 'text' : 'password'"
                                     class="block w-full"
-                                    placeholder="Confirm Password"
+                                    :placeholder="$t('public.register.confirm_password_placeholder')"
                                     v-model="form.password_confirmation"
                                     required
                                     autocomplete="new-password"
@@ -388,7 +388,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                     <div v-if="formStep === 3" class="grid gap-6">
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="name" value="Identification Type" />
+                            <Label class="dark:text-white" for="name" :value="$t('public.register.identification_type')" />
                             <div class="flex gap-x-12">
                                 <div class="flex">
                                     <input type="radio" name="verification_type" v-model="form.verification_type" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-pink-500 focus:ring-pink-500 dark:bg-gray-800 dark:border-gray-400 dark:checked:bg-pink-500 dark:checked:border-pink-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-1" value="nric">
@@ -404,13 +404,13 @@ const handleBackRevert = (uniqueId, load, error) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="identification_number" value="NRIC / Passport Number" />
+                            <Label class="dark:text-white" for="identification_number" :value="$t('public.register.nric_passport_number')" />
                             <Input
                             id="identification_number"
                             type="text"
                             class="block w-full"
                             v-model="form.identity_number"
-                            placeholder="Enter identification number"
+                            :placeholder="$t('public.register.identification_placeholder')"
                             :class="form.errors.identity_number ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
                             />
 
@@ -418,7 +418,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="password" value="Proof of Identity (FRONT)" />
+                            <Label class="dark:text-white" for="password" :value="$t('public.register.proof_of_identity(f)')" />
                             <file-pond
                                 name="proof_front"
                                 ref="pond"
@@ -445,7 +445,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="password" value="Proof of Identity (BACK)" />
+                            <Label class="dark:text-white" for="password" :value="$t('public.register.proof_of_identity(b)')" />
                             <file-pond
                                 name="proof_back"
                                 ref="pond"
@@ -477,11 +477,11 @@ const handleBackRevert = (uniqueId, load, error) => {
                     <div v-if="formStep === 4" class="grid gap-6">
 
                         <div class="space-y-2">
-                            <Label class="dark:text-white" for="referral_code" value="Referral Code" />
+                            <Label class="dark:text-white" for="referral_code" :value="$t('public.register.referral_code')" />
                             <Input
                                 id="referral_code"
                                 type="text"
-                                placeholder="Enter referral code"
+                                :placeholder="$t('public.register.referral_code_placeholder')"
                                 class="block w-full"
                                 :class="form.errors.referral_code ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
                                 v-model="form.referral_code"
@@ -497,7 +497,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                             v-if="formStep !== 4"
                             @click.prevent="nextStep"
                         >
-                            <span>Continue</span>
+                            <span>{{$t('public.register.continue')}}</span>
                         </Button>
                         <Button
                             class="justify-center gap-2 w-full"
@@ -505,7 +505,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                             @click="submit"
                             :disabled="form.processing"
                         >
-                            <span>Sign Up</span>
+                            <span>{{$t('public.register.sign_up')}}</span>
                         </Button>
                     </div>
 

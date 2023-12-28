@@ -44,19 +44,19 @@ getResults();
         <div class="inline-flex items-center gap-3">
             <LVL1Icon class="h-12" />
             <div class="font-semibold text-sm">
-                LVL 1
+                {{$t('public.affiliate.lvl_1')}}
             </div>
         </div>
         <div class="inline-flex items-center gap-3">
             <LVL2Icon class="h-12" />
             <div class="font-semibold text-sm">
-                LVL 2
+                {{$t('public.affiliate.lvl_2')}}
             </div>
         </div>
         <div class="inline-flex items-center gap-3">
             <LVL3Icon class="h-12" />
             <div class="font-semibold text-sm">
-                LVL 3
+                {{$t('public.affiliate.lvl_3')}}
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@ getResults();
                 id="search"
                 type="text"
                 class="block border-transparent w-full md:w-1/3"
-                placeholder="Search"
+                :placeholder="$t('public.affiliate.search_placeholder')"
                 v-model="search"
             />
         </InputIconWrapper>

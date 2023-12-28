@@ -60,15 +60,15 @@ function copyReferralCodeLink() {
 </script>
 
 <template>
-    <AuthenticatedLayout title="Affiliate">
+    <AuthenticatedLayout :title="$t('public.affiliate.affiliate')">
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-2xl font-semibold leading-tight">
-                    Affiliate
+                    {{$t('public.affiliate.affiliate')}}
                 </h2>
             </div>
             <p class="text-base font-normal dark:text-gray-400">
-                You can get rewarded when you invite your friends to join MetafinX.
+                {{$t('public.affiliate.proproganda')}}
             </p>
         </template>
 
@@ -76,11 +76,11 @@ function copyReferralCodeLink() {
 
         <div class="flex flex-col space-y-6 pt-8 pb-12 mb-16 md:hidden">
             <h3 class="text-xl font-semibold leading-tight">
-                Referral Program
+                {{$t('public.affiliate.referral_program')}}
             </h3>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
-                    Total Referral Earning since 01 Jan 2023
+                    {{$t('public.affiliate.total_referral_earning')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
                     $ {{ formatAmount(totalReferralEarning) }}
@@ -88,7 +88,7 @@ function copyReferralCodeLink() {
             </div>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
-                    Total Affiliate Earning since 01 Jan 2023
+                    {{$t('public.affiliate.total_affiliate_earning')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
                     $ 0.00
@@ -96,9 +96,9 @@ function copyReferralCodeLink() {
             </div>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col items-center justify-center gap-8 pb-12">
                 <div class="grid gap-2 font-medium text-base dark:text-gray-400 text-center">
-                    You’ve successfully referred
+                    {{$t('public.affiliate.referred')}}
                     <div>
-                        <span class="dark:text-white font-semibold">{{ props.referredCounts }}</span> <span class="dark:text-gray-400">members</span>
+                        <span class="dark:text-white font-semibold">{{ props.referredCounts }}</span> <span class="dark:text-gray-400">{{$t('public.affiliate.members')}}</span>
                     </div>
                 </div>
                 <div class="flex rounded-md shadow-sm">
@@ -113,7 +113,7 @@ function copyReferralCodeLink() {
                                 aria-hidden="true"
                                 class="h-5"
                             />
-                            Copy
+                            {{$t('public.copy')}}
                         </button>
                     </Tooltip>
                 </div>
@@ -124,7 +124,7 @@ function copyReferralCodeLink() {
                     @click="copyReferralCodeLink"
                 >
                     <div class="inline-flex justify-center items-center w-full">
-                        <span class="uppercase font-semibold">Invite a friend</span>
+                        <span class="uppercase font-semibold">{{$t('public.affiliate.invite_friend')}}</span>
                         <ShareIcon
                             aria-hidden="true"
                             class="h-5 ml-2"
@@ -137,11 +137,11 @@ function copyReferralCodeLink() {
         <template #asideRight>
             <div class="inset-y-0 p-6 flex flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-l dark:border-gray-700 w-96 fixed right-0">
                 <h3 class="text-xl font-semibold leading-tight">
-                    Referral Program
+                    {{$t('public.affiliate.referral_program')}}
                 </h3>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
-                        Total Referral Earning since 01 Jan 2023
+                        {{$t('public.affiliate.total_referral_earning')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
                         $ {{ formatAmount(totalReferralEarning) }}
@@ -149,7 +149,7 @@ function copyReferralCodeLink() {
                 </div>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
-                        Total Affiliate Earning since 01 Jan 2023
+                        {{$t('public.affiliate.total_affiliate_earning')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
                         $ 0.00
@@ -157,9 +157,9 @@ function copyReferralCodeLink() {
                 </div>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col items-center justify-center gap-8">
                     <div class="grid gap-2 font-medium text-base dark:text-gray-400 text-center">
-                        You’ve successfully referred
+                        {{$t('public.affiliate.referred')}}
                         <div>
-                            <span class="dark:text-white font-semibold">{{ props.referredCounts }}</span> <span class="dark:text-gray-400">members</span>
+                            <span class="dark:text-white font-semibold">{{ props.referredCounts }}</span> <span class="dark:text-gray-400">{{$t('public.affiliate.members')}}</span>
                         </div>
                     </div>
                     <div class="flex rounded-md shadow-sm">
@@ -174,7 +174,7 @@ function copyReferralCodeLink() {
                                     aria-hidden="true"
                                     class="h-5"
                                 />
-                                Copy
+                                {{$t('public.copy')}}
                             </button>
                         </Tooltip>
                     </div>
@@ -185,7 +185,7 @@ function copyReferralCodeLink() {
                         @click="copyReferralCodeLink"
                     >
                         <div class="inline-flex justify-center items-center w-full">
-                            <span class="uppercase font-semibold">Invite a friend</span>
+                            <span class="uppercase font-semibold">{{$t('public.affiliate.invite_friend')}}</span>
                             <ShareIcon
                                 aria-hidden="true"
                                 class="h-5 ml-2"

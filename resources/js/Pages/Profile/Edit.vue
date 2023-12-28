@@ -15,15 +15,15 @@ defineProps({
 </script>
 
 <template>
-    <AuthenticatedLayout title="Profile">
+    <AuthenticatedLayout :title="$t('public.profile.profile')">
         <template #header>
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
             >
-                My Profile
+                {{$t('public.profile.my_profile')}}
             </h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Update your photo and personal details here.
+                {{$t('public.profile.update_personal_details')}}
             </p>
         </template>
 

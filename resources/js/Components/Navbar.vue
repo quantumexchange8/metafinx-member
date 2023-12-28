@@ -120,7 +120,7 @@ const closeModal = () => {
                     </Button>
                 </template>
                 <template #content>
-                    <h3 class="font-semibold dark:text-white py-5">Notifications</h3>
+                    <h3 class="font-semibold dark:text-white py-5">{{$t('public.navbar.notifications')}}</h3>
                     <DropdownLink v-for="notification in $page.props.auth.user.unreadNotifications" class="border-b-2 border-gray-600" @click="openNotificationModal(notification)">
                         <div class="inline-flex items-center gap-2 w-full">
                             <span v-if="clickedNotificationIds.includes(notification.id)" class="w-3 h-3 bg-gray-400 border border-transparent rounded-full shrink-0 grow-0"></span>
@@ -141,7 +141,7 @@ const closeModal = () => {
                         </div>
                     </DropdownLink>
                     <DropdownLink v-if="$page.props.auth.user.notifications.length === 0" class="border-b-2 border-gray-600">
-                        <div class="dark:text-dark-eval-5">No notifications</div>
+                        <div class="dark:text-dark-eval-5">{{$t('public.navbar.no_notifications')}}</div>
                     </DropdownLink>
                 </template>
             </Dropdown>
@@ -214,7 +214,7 @@ const closeModal = () => {
                 </div>
                 <div class="flex justify-center items-center mt-7 w-16">
                     <p :class="route().current('dashboard') ? 'text-pink-500' : 'text-white' " class="text-xs">
-                        Dashboard
+                        {{$t('public.navbar.dashboard')}}
                     </p>
                 </div>
             </Link>
@@ -233,7 +233,7 @@ const closeModal = () => {
                         aria-hidden="true"
                     />
                     <p :class="route().current('earn.*') ? 'text-pink-500' : 'text-white' " class="text-xs">
-                        Earn
+                        {{$t('public.navbar.earn')}}
                     </p>
                 </div>
 
@@ -254,7 +254,7 @@ const closeModal = () => {
                         aria-hidden="true"
                     />
                     <p :class="route().current('wallet.details') ? 'text-pink-500' : 'text-white' " class="text-xs">
-                        Wallet
+                        {{$t('public.navbar.wallet')}}
                     </p>
                 </div>
 
@@ -275,7 +275,7 @@ const closeModal = () => {
                         aria-hidden="true"
                     />
                     <p :class="route().current('affiliate.referral_view') ? 'text-pink-500' : 'text-white' " class="text-xs">
-                        Affiliate
+                        {{$t('public.navbar.affiliate')}}
                     </p>
                 </div>
 
@@ -284,7 +284,7 @@ const closeModal = () => {
     </div>
 
     <!-- Notification Modal -->
-    <Modal :show="notificationModal" title="Details" @close="closeModal" max-width="xl">
+    <Modal :show="notificationModal" :title="$t('public.navbar.details')" @close="closeModal" max-width="xl">
         <div class="text-xs dark:text-gray-400">{{ formatDateTime(notificationContent.data['post_date']) }}</div>
         <div class="my-5">
             <img class="rounded-lg w-full" :src="notificationContent.data['image']" alt="announcement image" />

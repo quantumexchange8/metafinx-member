@@ -73,14 +73,14 @@ const calculatedBalance = computed(() => {
         @click="openWithdrawalModal"
     >
         <WithdrawalIcon aria-hidden="true" class="w-5 h-5" />
-        <span class="uppercase">Withdrawal</span>
+        <span class="uppercase">{{$t('public.wallet.withdrawal')}}</span>
     </Button>
 
-    <Modal :show="withdrawalModal" title="Withdrawal" @close="closeModal">
+    <Modal :show="withdrawalModal" :title="$t('public.wallet.withdrawal')" @close="closeModal">
         <div class="space-y-2">
             <form class="pt-2">
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" value="Select Wallet" />
+                    <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" :value="$t('public.wallet.select_wallet')" />
                     <div class="flex flex-col w-full">
                         <BaseListbox
                             v-model="form.wallet_id"
@@ -91,12 +91,12 @@ const calculatedBalance = computed(() => {
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4 mt-5">
-                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="wallet_address" value="Wallet Address" />
+                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="wallet_address" :value="$t('public.wallet.wallet_address')" />
                     <div class="flex flex-col w-full">
                         <Input
                             id="wallet_address"
                             type="text"
-                            placeholder="Wallet Address"
+                            :placeholder="$t('public.wallet.wallet_address_placeholder')"
                             class="block w-full"
                             :class="form.errors.wallet_address ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             v-model="form.wallet_address"
@@ -107,35 +107,35 @@ const calculatedBalance = computed(() => {
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4 mt-5">
-                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="amount" value="Amount ($)" />
+                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="amount" :value="$t('public.wallet.amount($)')" />
                     <div class="relative flex flex-col w-full">
                         <Input
                             id="amount"
                             type="number"
                             min="50"
-                            placeholder="Min. amount $ 50.00"
+                            :placeholder="$t('public.wallet.withdrawl_amount_placeholder')"
                             class="block w-full"
                             :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             v-model="form.amount"
                         />
-                        <Button variant="gray" size="sm" class="absolute  top-1/2 transform -translate-y-1/2 end-3" @click.stop="fullWithdraw" @click.prevent="openWithdrawalModal">Full Amount</Button>
+                        <Button variant="gray" size="sm" class="absolute  top-1/2 transform -translate-y-1/2 end-3" @click.stop="fullWithdraw" @click.prevent="openWithdrawalModal">{{$t('public.wallet.full_amount')}}</Button>
                         <InputError :message="form.errors.amount" class="mt-2" />
                     </div>
                 </div>
                 <div class="mt-6 border-t dark:border-gray-700"></div>
                     <div class="flex items-center justify-between mt-5">
-                        <span class="text-sm dark:text-gray-400 font-Inter">Transaction Fee</span>
+                        <span class="text-sm dark:text-gray-400 font-Inter">{{$t('public.wallet.transaction_fee')}}</span>
                         <span class="text-sm dark:text-white">$ {{ transactionFee }}</span>
                     </div>
                     <div class="flex items-center justify-between mt-2">
-                        <span class="text-sm dark:text-gray-400 font-Inter">Balance Received</span>
+                        <span class="text-sm dark:text-gray-400 font-Inter">{{$t('public.wallet.balance_received')}}</span>
                         <span class="text-sm dark:text-white">$ {{ (calculatedBalance).toFixed(2) }}</span>
                     </div>
                 <div class="mt-6 pb-6 border-b dark:border-gray-700">
                     <label>
                         <div class="flex">
                             <Checkbox name="remember" v-model:checked="form.terms" />
-                            <span class="ml-2 text-xs dark:text-gray-400">By proceeding, I agree that I have read the supporting documents and agree to the Terms and Conditions and Privacy Notice.</span>
+                            <span class="ml-2 text-xs dark:text-gray-400">{{$t('public.agreement')}}</span>
                         </div>
                         <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                     </label>
@@ -144,9 +144,9 @@ const calculatedBalance = computed(() => {
 
                 <div class="py-5 grid grid-cols-2 gap-4 w-full md:w-1/3 md:float-right">
                     <Button variant="secondary" type="button" class="justify-center" @click.prevent="closeModal">
-                        Cancel
+                        {{$t('public.cancel')}}
                     </Button>
-                    <Button class="justify-center" @click="submit" :disabled="form.processing">Confirm</Button>
+                    <Button class="justify-center" @click="submit" :disabled="form.processing">{{$t('public.confirm')}}</Button>
                 </div>
             </form>
         </div>

@@ -47,7 +47,7 @@ const updateTransactionType = (transaction_type) => {
 
 <template>
     <div class="flex justify-between">
-        <h4 class="font-semibold dark:text-white">All Transactions</h4>
+        <h4 class="font-semibold dark:text-white">{{$t('public.wallet.all_transactions')}}</h4>
         <RefreshIcon
             :class="{ 'animate-spin': isLoading }"
             class="flex-shrink-0 w-5 h-5 cursor-pointer dark:text-white"
@@ -62,12 +62,12 @@ const updateTransactionType = (transaction_type) => {
                 <template #icon>
                     <SearchIcon aria-hidden="true" class="w-5 h-5" />
                 </template>
-                <Input withIcon id="search" type="text" class="block w-full border border-transparent" placeholder="Search" v-model="search" />
+                <Input withIcon id="search" type="text" class="block w-full border border-transparent" :placeholder="$t('public.wallet.search_placeholder')" v-model="search" />
             </InputIconWrapper>
         </div>
         <div class="md:w-2/3">
             <vue-tailwind-datepicker
-                placeholder="Select dates"
+                :placeholder="$t('public.wallet.date_picker_placeholder')"
                 :formatter="formatter"
                 separator=" - "
                 v-model="date"
@@ -82,16 +82,16 @@ const updateTransactionType = (transaction_type) => {
                 @click="exportDeposit"
             >
                 <CloudDownloadIcon aria-hidden="true" class="w-5 h-5" />
-                <span>Export as Excel</span>
+                <span>{{$t('public.export_excel')}}</span>
             </Button>
         </div>
 
     </div>
     <div class="flex gap-4 mt-5">
-        <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-green-500 dark:bg-error-500 rounded-full mr-2 flex-shrink-0"></span>Rejected</span>
-        <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-red-500 dark:bg-warning-500 rounded-full mr-2 flex-shrink-0"></span>Pending</span>
-        <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-red-500 dark:bg-[#007AFF] rounded-full mr-2 flex-shrink-0"></span>Processing</span>
-        <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-red-500 dark:bg-success-500 rounded-full mr-2 flex-shrink-0"></span>Success</span>
+        <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-green-500 dark:bg-error-500 rounded-full mr-2 flex-shrink-0"></span>{{$t('public.wallet.rejected')}}</span>
+        <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-red-500 dark:bg-warning-500 rounded-full mr-2 flex-shrink-0"></span>{{$t('public.wallet.pending')}}</span>
+        <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-red-500 dark:bg-[#007AFF] rounded-full mr-2 flex-shrink-0"></span>{{$t('public.wallet.processing')}}</span>
+        <span class="flex items-center text-xs font-normal text-gray-900 dark:text-white"><span class="flex w-2 h-2 bg-red-500 dark:bg-success-500 rounded-full mr-2 flex-shrink-0"></span>{{$t('public.wallet.success')}}</span>
     </div>
 
     <div class="w-full pt-5">
@@ -111,7 +111,7 @@ const updateTransactionType = (transaction_type) => {
                                 : 'border-b border-gray-400',
                            ]"
                     >
-                        Deposit
+                        {{$t('public.wallet.deposit')}}
                     </button>
                 </Tab>
                 <Tab
@@ -128,7 +128,7 @@ const updateTransactionType = (transaction_type) => {
                                 : 'border-b border-gray-400',
                            ]"
                     >
-                        Withdrawal
+                        {{$t('public.wallet.withdrawal')}}
                     </button>
                 </Tab>
             </TabList>

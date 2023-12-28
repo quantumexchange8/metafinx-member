@@ -30,13 +30,13 @@ const props = defineProps({
                     :class="formStep === 1 ? 'text-gray-800 dark:text-white' : 'text-gray-500 dark:text-gray-400'"
                     class="font-semibold"
                 >
-                    Your details
+                    {{$t('public.register_stepper.your_details')}}
                 </p>
                 <p
                     :class="formStep === 1 ? 'text-gray-800 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400'"
                     class="text-sm"
                 >
-                    Please provide your name and contact details
+                    {{$t('public.register_stepper.name_contact_details')}}
                 </p>
             </div>
         </div>
@@ -61,13 +61,13 @@ const props = defineProps({
                     :class="formStep === 2 ? 'text-gray-800 dark:text-white' : 'text-gray-500 dark:text-gray-400'"
                     class="font-semibold"
                 >
-                    Choose a password
+                    {{$t('public.register_stepper.password')}}
                 </p>
                 <p
                     :class="formStep === 2 ? 'text-gray-800 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400'"
                     class="text-sm"
                 >
-                    Choose a secure password
+                    {{$t('public.register_stepper.secure_password')}}
                 </p>
             </div>
         </div>
@@ -92,13 +92,13 @@ const props = defineProps({
                     :class="formStep === 3 ? 'text-gray-800 dark:text-white' : 'text-gray-500 dark:text-gray-400'"
                     class="font-semibold"
                 >
-                    Your identity
+                    {{$t('public.register_stepper.identity')}}
                 </p>
                 <p
                     :class="formStep === 3 ? 'text-gray-800 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400'"
                     class="text-sm"
                 >
-                    One last step to verify your identity
+                    {{$t('public.register_stepper.verify_identity')}}
                 </p>
             </div>
         </div>
@@ -122,13 +122,13 @@ const props = defineProps({
                     :class="formStep === 4 ? 'text-gray-800 dark:text-white' : 'text-gray-500 dark:text-gray-400'"
                     class="font-semibold"
                 >
-                    Join your team
+                    {{$t('public.register_stepper.join_team')}}
                 </p>
                 <p
                     :class="formStep === 4 ? 'text-gray-800 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400'"
                     class="text-sm"
                 >
-                    Join with your friends to enjoy more benefits
+                    {{$t('public.register_stepper.join_with_friends')}}
                 </p>
             </div>
         </div>

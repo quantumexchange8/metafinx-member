@@ -40,18 +40,16 @@ const closeModal = () => {
     <section class="space-y-6">
         <header>
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                Delete Account
+                {{$t('public.profile.delete_account')}}
             </h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Once your account is deleted, all of its resources and data will
-                be permanently deleted. Before deleting your account, please
-                download any data or information that you wish to retain.
+                {{$t('public.profile.warning_message')}}
             </p>
         </header>
 
         <Button variant="danger" @click="confirmUserDeletion">
-            Delete Account
+            {{$t('public.profile.delete_account')}}
         </Button>
 
         <Modal :show="confirmingUserDeletion" @close="closeModal">
@@ -59,17 +57,15 @@ const closeModal = () => {
                 <h2
                     class="text-lg font-medium text-gray-900 dark:text-gray-100"
                 >
-                    Are you sure you want to delete your account?
+                    {{$t('public.profile.confirm_delete_message')}}
                 </h2>
 
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Once your account is deleted, all of its resources and data
-                    will be permanently deleted. Please enter your password to
-                    confirm you would like to permanently delete your account.
+                    {{$t('public.profile.warning_message')}}
                 </p>
 
                 <div class="mt-6">
-                    <Label for="password" value="Password" class="sr-only" />
+                    <Label for="password" :value="$t('public.profile.password')" class="sr-only" />
 
                     <Input
                         id="password"
@@ -77,7 +73,7 @@ const closeModal = () => {
                         v-model="form.password"
                         type="password"
                         class="mt-1 block w-3/4"
-                        placeholder="Password"
+                        :placeholder="$t('public.profile.password_placeholder')"
                         @keyup.enter="deleteUser"
                     />
 
@@ -86,7 +82,7 @@ const closeModal = () => {
 
                 <div class="mt-6 flex justify-end">
                     <Button variant="secondary" @click="closeModal">
-                        Cancel
+                        {{$t('public.cancel')}}
                     </Button>
 
                     <Button
@@ -96,7 +92,7 @@ const closeModal = () => {
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
-                        Delete Account
+                    {{$t('public.profile.delete_account')}}
                     </Button>
                 </div>
             </div>

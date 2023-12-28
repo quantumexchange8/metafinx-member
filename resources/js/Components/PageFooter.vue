@@ -11,14 +11,14 @@ import { MailIcon } from '@heroicons/vue/outline'
             <span>
                 <MailIcon class="w-4 h-4 md:w-6 md:h-6" />
 
-                <span className="sr-only">Email</span>
+                <span className="sr-only">{{$t('public.email')}}</span>
             </span>
                 <a
                     href="mailto:support@metafinx.com"
                     target="_blank"
                     class="hover:underline text-xs md:text-sm"
                 >
-                    support@metafinx.com
+                {{$t('public.metafinx_support')}}
                 </a>
         </div>
     </footer>

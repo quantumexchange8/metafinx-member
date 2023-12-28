@@ -45,7 +45,7 @@ const currentLocale = ref(usePage().props.locale);
 
 const localeTextMap = {
     en: 'EN',
-    tw: '中文 (简)',
+    tw: '中文 (繁)',
 };
 
 const currentLocaleText = computed(() => {
@@ -110,7 +110,7 @@ const changeLanguage = async (langVal) => {
             </template>
         </Dropdown>
 
-<!--        <Dropdown align="right">
+       <Dropdown align="right">
             <template #trigger>
                 <Button
                     iconOnly
@@ -138,7 +138,7 @@ const changeLanguage = async (langVal) => {
                     </div>
                 </DropdownLink>
             </template>
-        </Dropdown>-->
+        </Dropdown>
     </div>
 
     <div class="px-3 py-2 flex flex-col justify-center">
@@ -195,7 +195,7 @@ const changeLanguage = async (langVal) => {
     </div>
 
     <!-- Notification Modal -->
-    <Modal :show="notificationModal" title="Details" @close="closeModal" max-width="xl">
+    <Modal :show="notificationModal" :title="$t('public.sidebar.details')" @close="closeModal" max-width="xl">
         <div class="text-xs dark:text-gray-400">{{ formatDateTime(notificationContent.data['post_date']) }}</div>
         <div class="my-5">
             <img class="rounded-lg w-full" :src="notificationContent.data['image']" alt="announcement image" />

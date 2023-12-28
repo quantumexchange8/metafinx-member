@@ -7,7 +7,7 @@ import Button from '@/Components/Button.vue'
 </script>
 
 <template>
-    <Head title="Error 403" />
+    <Head :title="$t('public.error.error_403')" />
     <div
         class="flex flex-col items-center justify-center min-h-screen gap-4 py-6 bg-white dark:bg-gray-800"
     >
@@ -25,15 +25,15 @@ import Button from '@/Components/Button.vue'
                 <img src="/assets/403.png" class="" alt="">
                 <div class="flex flex-col  mt-3 gap-5">
                     <div class="flex flex-col dark:text-gray-400 text-center gap-2">
-                        <h2 class="dark:text-white font-semibold text-3xl">User does not have the right roles!</h2>
-                        Opps, access denied. It seems like you've reached a restricted area of our website.
+                        <h2 class="dark:text-white font-semibold text-3xl">{{$t('public.error.not_right_roles')}}</h2>
+                        {{$t('public.error.access_denied')}}
                     </div>
                     <div class="flex flex-row gap-5 justify-center ">
                         <Button
                             :href="route('dashboard')"
                             class="sm:w-1/3 justify-center"
                         >
-                        Back to dashboard
+                        {{$t('public.error.back_to_dashboard')}}
                         </Button>
                         <Button
                             :href="route('logout')"
@@ -41,7 +41,7 @@ import Button from '@/Components/Button.vue'
                             variant="gray"
                             class="sm:w-1/3 justify-center"
                         >
-                        Log Out
+                        {{$t('public.logout')}}
                         </Button>
                     </div>
                 </div>

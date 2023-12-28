@@ -37,18 +37,18 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout title="Log in">
+    <GuestLayout :title="$t('public.login.login')">
 
         <div class="text-center">
             <Caption
-                title="Log in to your account"
-                caption="Welcome back! Please enter your details."
+                :title="$t('public.login.login_account')"
+                :caption="$t('public.login.welcome_message')"
             />
         </div>
         <form @submit.prevent="submit">
             <div class="grid gap-6">
                 <div class="space-y-2">
-                    <Label for="email" value="Email" />
+                    <Label for="email" :value="$t('public.login.email')" />
                     <InputIconWrapper>
                         <template #icon>
                             <MailIcon aria-hidden="true" class="w-5 h-5" />
@@ -59,7 +59,7 @@ const submit = () => {
                             type="email"
                             :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             class="block w-full"
-                            placeholder="you@example.com"
+                            :placeholder="$t('public.login.email_placeholder')"
                             v-model="form.email"
                             autofocus
                             autocomplete="username"
@@ -69,7 +69,7 @@ const submit = () => {
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="password" value="Password" />
+                    <Label for="password" :value="$t('public.login.password')" />
                     <InputIconWrapper>
                         <template #icon>
                             <KeyIcon aria-hidden="true" class="w-5 h-5" />
@@ -80,7 +80,7 @@ const submit = () => {
                             :type="showPassword ? 'text' : 'password'"
                             :class="form.errors.password ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             class="block w-full"
-                            placeholder="Enter password"
+                            :placeholder="$t('public.login.password_placeholder')"
                             v-model="form.password"
                             autocomplete="current-password"
                         />
@@ -106,24 +106,24 @@ const submit = () => {
                 <div class="flex items-center justify-between">
                     <label class="flex items-center">
                         <Checkbox name="remember" v-model:checked="form.remember" />
-                        <span class="ml-2 text-sm text-gray-600 dark:text-white">Remember for 30 days</span>
+                        <span class="ml-2 text-sm text-gray-600 dark:text-white">{{$t('public.login.remember_token')}}</span>
                     </label>
 
                     <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm text-pink-500 font-semibold dark:text-gray-400 hover:underline">
-                        Forgot password
+                        {{$t('public.login.forgot_password')}}
                     </Link>
                 </div>
 
                 <div>
                     <Button class="justify-center gap-2 w-full" :disabled="form.processing">
-                        <span>Sign In</span>
+                        <span>{{$t('public.login.sign_in')}}</span>
                     </Button>
                 </div>
 
                 <p class="text-center text-gray-600 dark:text-gray-400">
-                    Don't have an account?
+                    {{$t('public.login.register_message')}}
                     <Link :href="route('register')" class="text-pink-500 hover:underline font-semibold">
-                        Sign Up
+                        {{$t('public.login.sign_up')}}
                     </Link>
                 </p>
             </div>

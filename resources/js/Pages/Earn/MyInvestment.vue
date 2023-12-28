@@ -38,15 +38,15 @@ function calculateWidthPercentage(created_at, period) {
 </script>
 
 <template>
-    <AuthenticatedLayout title="My Investment">
+    <AuthenticatedLayout :title="$t('public.earn.my_investment')">
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-2xl font-semibold leading-tight">
-                    My Investment
+                    {{$t('public.earn.my_investment')}}
                 </h2>
             </div>
             <p class="text-base font-normal dark:text-gray-400">
-                Track your investment growth here.
+                    {{$t('public.earn.track_investment')}}
             </p>
         </template>
 
@@ -58,7 +58,7 @@ function calculateWidthPercentage(created_at, period) {
                         <span v-else>{{ investment.plan_name.name }} {{ (investment.amount/10000).toFixed(2) }} &#x2022; $ {{ investment.amount }}</span>
                     </div>
                     <div class="dark:text-gray-400 text-xs">
-                        <span class="uppercase">Since {{ formatDate(investment.created_at) }}</span>
+                        <span class="uppercase">{{$t('public.earn.since')}} {{ formatDate(investment.created_at) }}</span>
                     </div>
                 </div>
                 <div class="relative my-3">
@@ -84,7 +84,7 @@ function calculateWidthPercentage(created_at, period) {
                 </div>
                 <div class="flex justify-between mb-1">
                     <div class="dark:text-gray-400 text-xs">
-                        Situation
+                        {{$t('public.earn.situation')}}
                     </div>
                     <div class="dark:text-white text-xs">
                         <span class="uppercase dark:text-error-500 font-semibold" v-if="investment.status === 'Terminated'">{{ formatType(investment.status) }}</span>
@@ -95,7 +95,7 @@ function calculateWidthPercentage(created_at, period) {
                 </div>
                 <div class="flex justify-between mb-1">
                     <div class="dark:text-gray-400 text-xs">
-                        Next ROI release on
+                        {{$t('public.earn.next_roi')}}
                     </div>
                     <div class="dark:text-white text-xs">
                         <span class="uppercase">{{ formatDate(investment.next_roi_date) }}</span>
@@ -103,7 +103,7 @@ function calculateWidthPercentage(created_at, period) {
                 </div>
                 <div class="flex justify-between mb-1">
                     <div class="dark:text-gray-400 text-xs">
-                        Valid thru
+                        {{$t('public.earn.valid')}}
                     </div>
                     <div class="dark:text-white text-xs">
                         <span class="uppercase">{{ formatDate(investment.expired_date) }}</span>
@@ -111,7 +111,7 @@ function calculateWidthPercentage(created_at, period) {
                 </div>
                 <div class="flex justify-between mb-1">
                     <div class="dark:text-gray-400 text-xs">
-                        ID Number
+                        {{$t('public.earn.id_number')}}
                     </div>
                     <div class="dark:text-white text-xs">
                         <span class="uppercase">{{ investment.subscription_id }}</span>
@@ -119,14 +119,14 @@ function calculateWidthPercentage(created_at, period) {
                 </div>
                 <div class="flex justify-between mb-1">
                     <div class="dark:text-gray-400 text-xs">
-                        Total Earning
+                        {{$t('public.earn.total_earning')}}
                     </div>
                     <div class="dark:text-white text-xs">
                         <span class="uppercase">$ {{ investment.total_earning }}</span>
                     </div>
                 </div>
                 <div class="mt-4 text-xs">
-                    <span class="dark:text-gray-400">*T&Cs apply.</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">Learn more.</span>
+                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">Learn more.</span>
                 </div>
             </div>
         </div>
@@ -134,59 +134,59 @@ function calculateWidthPercentage(created_at, period) {
         <div v-if="investments.length === 0" class="flex flex-col items-center justify-center my-8">
             <img src="/assets/no_data.png" class="w-1/2" alt="">
             <div class="dark:text-gray-400 mt-3">
-                No data to show
+                {{$t('public.no_data')}}
             </div>
         </div>
 
-        <Modal :show="tncModal" title="Terms & Conditions" @close="closeModal">
+        <Modal :show="tncModal" :title="$t('public.earn.t&c_apply')" @close="closeModal">
             <div class="text-xs font-medium dark:text-gray-400 my-4">
-                IMPORTANT: Please carefully read and understand the following terms and conditions before subscribing to our investment services. Your subscription is subject to your acceptance of these terms.
+                {{$t('public.earn.important')}}
             </div>
             <div class="text-xs font-normal dark:text-gray-400 mb-4">
-                By clicking "Confirm" below, you agree to the following terms and conditions:
+                {{$t('public.earn.click_confirm')}}
             </div>
 
             <ol class="text-[10px] list-decimal list-inside dark:text-gray-400">
                 <li>
-                    Subscription Agreement
+                    {{$t('public.earn.subscription_agreement')}}
                     <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>Eligibility: By subscribing to our investment services, you confirm that you are at least 21 years of age and have the legal capacity to enter into this agreement.</li>
-                        <li>Subscription Fee: You agree to pay the subscription fee as displayed on our website at the time of subscription. This fee is non-refundable.</li>
-                        <li>Subscription Term: The subscription term will be specified during the sign-up process and may vary depending on the plan you choose.</li>
+                        <li>{{$t('public.earn.eligibility')}}</li>
+                        <li>{{$t('public.earn.subscription_fee')}}</li>
+                        <li>{{$t('public.earn.subscription_term')}}</li>
                     </ul>
                 </li>
                 <li>
-                    Investment Services
+                    {{$t('public.earn.investment_services')}}
                     <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>Investment Strategy: We will provide investment advisory and management services based on the strategy and risk tolerance you specify during the subscription process. We do not guarantee any specific investment results or returns.</li>
-                        <li>Risk Disclosure: You acknowledge that all investments involve risk, and past performance is not indicative of future results. We are not liable for any losses incurred as a result of your investment decisions.</li>
-                        <li>Information Accuracy: You are responsible for providing accurate and complete information to us for the provision of our services. We are not liable for any losses resulting from inaccurate or incomplete information provided by you.</li>
+                        <li>{{$t('public.earn.investment_strategy')}}</li>
+                        <li>{{$t('public.earn.risk_disclosure')}}</li>
+                        <li>{{$t('public.earn.information_accuracy')}}</li>
                     </ul>
                 </li>
                 <li>
-                    Confidentiality and Privacy
+                    {{$t('public.earn.confidentiality_privacy')}}
                     <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>Confidentiality: We will maintain the confidentiality of your personal and financial information in accordance with applicable privacy laws and regulations.</li>
-                        <li>Data Usage: We may collect and use your data for the purpose of providing our services. By subscribing, you consent to the collection and use of your data in accordance with our Privacy Policy.</li>
+                        <li>{{$t('public.earn.confidentiality')}}</li>
+                        <li>{{$t('public.earn.data_usage')}}</li>
                     </ul>
                 </li>
                 <li>
-                    Termination
+                    {{$t('public.earn.termination')}}
                     <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>Termination by Us: We reserve the right to terminate your subscription and access to our services at our sole discretion, with or without cause, by providing notice to you.</li>
+                        <li>{{$t('public.earn.termination_by_us')}}</li>
                     </ul>
                 </li>
                 <li>
-                    Limitation of Liability
+                    {{$t('public.earn.limitation')}}
                     <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>No Liability: We shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from or related to our services, including but not limited to losses on investments.</li>
+                        <li>{{$t('public.earn.no_liability')}}</li>
                     </ul>
                 </li>
                 <li>
-                    Miscellaneous
+                    {{$t('public.earn.miscellaneous')}}
                     <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>Amendment: We reserve the right to amend these Terms and Conditions at any time. Notice of such amendments will be provided to you, and your continued use of our services constitutes acceptance of the amended terms.</li>
-                        <li>Entire Agreement: This Agreement constitutes the entire agreement between you and us with respect to our services and supersedes all prior agreements and understandings.</li>
+                        <li>{{$t('public.earn.amendment')}}</li>
+                        <li>{{$t('public.earn.entire_agreement')}}</li>
                     </ul>
                 </li>
             </ol>

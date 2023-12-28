@@ -25,7 +25,7 @@ const closeModal = () => {
 <template>
     <tr v-if="deposits.data.length === 0">
         <th colspan="5" class="py-4 text-lg text-center">
-            No History
+            {{$t('public.wallet.no_history')}}
         </th>
     </tr>
     <tr
@@ -59,34 +59,34 @@ const closeModal = () => {
         </td>
     </tr>
 
-    <Modal :show="transactionModal" title="Transaction Details" @close="closeModal">
+    <Modal :show="transactionModal" :title="$t('public.wallet.transaction_details')" @close="closeModal">
         <div v-if="selectedDeposit">
             <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Transaction Type</span>
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_type')}}</span>
                 <span class="text-black dark:text-white py-2">{{ selectedDeposit.type }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Transaction ID</span>
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_id')}}</span>
                 <span class="text-black dark:text-white py-2">{{ selectedDeposit.transaction_id }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Date & Time</span>
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.date_time')}}</span>
                 <span class="text-black dark:text-white py-2">{{ formatDateTime(selectedDeposit.created_at) }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">To</span>
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.to')}}</span>
                 <span class="text-black dark:text-white py-2">{{ selectedDeposit.to_wallet_address }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Amount</span>
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.amount')}}</span>
                 <span class="text-black dark:text-white py-2">$ {{ selectedDeposit.amount }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Transaction Status</span>
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>
                 <span class="text-black dark:text-white py-2">{{ selectedDeposit.status }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Reject reason</span>
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.reject_reason')}}</span>
                 <span class="text-black dark:text-white py-2">{{ selectedDeposit.remarks ?? '-' }}</span>
             </div>
         </div>

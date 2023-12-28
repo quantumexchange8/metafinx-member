@@ -64,15 +64,15 @@ const categories = ref({
 
 <template>
 
-    <AuthenticatedLayout title="Earn">
+    <AuthenticatedLayout :title="$t('public.earn.earn')">
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h2 class="text-2xl font-semibold leading-tight">
-                        Earn
+                        {{$t('public.earn.earn')}}
                     </h2>
                     <p class="text-base dark:text-gray-400">
-                        Simple and transparent investments that grow with you. Subscribe now.
+                        {{$t('public.earn.simple_subscribe')}}
                     </p>
                 </div>
 
@@ -90,7 +90,7 @@ const categories = ref({
                                 aria-hidden="true"
                                 class="mr-2"
                             />
-                            <span>My Investment</span>
+                            <span>{{$t('public.earn.my_investment')}}</span>
                         </div>
                     </Button>
                 </div>
@@ -116,7 +116,7 @@ const categories = ref({
                                 'bg-transparent dark:bg-[#38425080] dark:text-white': selected
                             }"
                         >
-                            <span class="uppercase">{{ category.type }} Plan</span>
+                            <span class="uppercase">{{ category.type }} {{$t('public.earn.plan')}}</span>
                         </button>
                     </Tab>
                 </TabList>
@@ -161,11 +161,11 @@ const categories = ref({
 
         <div class="flex flex-col gap-5 my-5 mb-28 md:hidden">
             <h3 class="text-xl font-semibold leading-tight">
-                Investment Performance
+                {{$t('public.earn.investment_performance')}}
             </h3>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
-                    Incoming Monthly Return
+                    {{$t('public.earn.incoming_monthly_return')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
                     $ 0.00
@@ -173,18 +173,18 @@ const categories = ref({
             </div>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
-                    Incoming Dividend
+                    {{$t('public.earn.incoming_dividend')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
                     $ 0.00
                 </div>
             </div>
             <h3 class="text-xl font-semibold leading-tight pt-4">
-                Affiliate Performance
+                {{$t('public.earn.affiliate_performance')}}
             </h3>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
-                    Incoming Affiliate Earnings
+                    {{$t('public.earn.incoming_affiliate_earnings')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
                     $ 0.00
@@ -192,7 +192,7 @@ const categories = ref({
             </div>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
-                    Incoming Dividend Earnings
+                    {{$t('public.earn.incoming_dividend_earnings')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
                     $ 0.00
@@ -204,11 +204,11 @@ const categories = ref({
         <template #asideRight>
             <div class="inset-y-0 p-6 flex flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-l dark:border-gray-700 lg:w-96 fixed right-0">
                 <h3 class="text-xl font-semibold leading-tight">
-                    Investment Performance
+                    {{$t('public.earn.investment_performance')}}
                 </h3>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
-                        Incoming Monthly Return
+                    {{$t('public.earn.incoming_monthly_return')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
                         $ 0.00
@@ -216,18 +216,18 @@ const categories = ref({
                 </div>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
-                        Incoming Dividend
+                    {{$t('public.earn.incoming_dividend')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
                         $ 0.00
                     </div>
                 </div>
                 <h3 class="text-xl font-semibold leading-tight pt-4">
-                    Affiliate Performance
+                {{$t('public.earn.affiliate_performance')}}
                 </h3>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
-                        Incoming Affiliate Earnings
+                    {{$t('public.earn.incoming_affiliate_earnings')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
                         $ 0.00
@@ -235,7 +235,7 @@ const categories = ref({
                 </div>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
-                        Incoming Dividend Earnings
+                    {{$t('public.earn.incoming_dividend_earnings')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
                         $ 0.00

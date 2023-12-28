@@ -112,7 +112,7 @@ export default {
                                     <div class="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-600"></div>
                                 </div>
                             </div>
-                            <span class="sr-only">Loading...</span>
+                            <span class="sr-only">{{$t('public.loading')}}</span>
                         </div>
 
                         <div
@@ -130,7 +130,7 @@ export default {
                                     <LVL1Icon class="h-5 w-5" v-if="node.rank === 2" />
                                     <LVL2Icon class="h-5 w-5" v-if="node.rank === 3" />
                                     <LVL3Icon class="h-5 w-5" v-if="node.rank === 4" />
-                                    <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">GEN {{ node.level }}</span>
+                                    <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">{{$t('public.affiliate.gen')}} {{ node.level }}</span>
                                 </div>
                                 <div class="text-xs font-normal dark:text-gray-400">
                                     {{ node.email }}
@@ -146,15 +146,15 @@ export default {
                         <div v-else class="flex items-center w-full md:w-auto gap-3 text-lg dark:text-white">
                             <div class="flex flex-col text-center">
                                 <span class="text-sm font-semibold">{{ node.total_affiliate }}</span>
-                                <span class="text-xs font-normal dark:text-gray-400">Affiliate</span>
+                                <span class="text-xs font-normal dark:text-gray-400">{{$t('public.affiliate.affiliate')}}</span>
                             </div>
                             <div class="flex flex-col text-center">
                                 <span class="text-sm font-semibold">$ {{ formatAmount(node.self_deposit) }}</span>
-                                <span class="text-xs font-normal dark:text-gray-400">Valid Self Deposit</span>
+                                <span class="text-xs font-normal dark:text-gray-400">{{$t('public.affiliate.valid_self_deposit')}}</span>
                             </div>
                             <div class="flex flex-col text-center">
                                 <span class="text-sm font-semibold">$ {{ formatAmount(node.valid_affiliate_deposit) }}</span>
-                                <span class="text-xs font-normal dark:text-gray-400">Valid Affiliate Deposit</span>
+                                <span class="text-xs font-normal dark:text-gray-400">{{$t('public.affiliate.valid_affiliate_deposit')}}</span>
                             </div>
                         </div>
                     </div>
@@ -169,7 +169,7 @@ export default {
             :depth="depth + 1"
             @onClick="(node) => $emit('onClick', node)"
         />
-        <Modal :show="affiliateModal" title="Affiliate Details" @close="closeModal">
+        <Modal :show="affiliateModal" :title="$t('public.affiliate.affiliate_details')" @close="closeModal">
             <div v-if="selectedAffiliate">
                 <div class="flex items-center p-2.5 mb-3 text-sm text-gray-800 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white">
                     <img
@@ -183,7 +183,7 @@ export default {
                             <LVL1Icon class="h-5" v-if="selectedAffiliate.rank === 2" />
                             <LVL2Icon class="h-5" v-if="selectedAffiliate.rank === 3" />
                             <LVL3Icon class="h-5" v-if="selectedAffiliate.rank === 4" />
-                            <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">Level {{ selectedAffiliate.level }}</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">{{$t('public.affiliate.level')}} {{ selectedAffiliate.level }}</span>
                         </div>
                         <div class="text-xs font-normal dark:text-gray-400">
                             {{ selectedAffiliate.email }}
@@ -191,19 +191,19 @@ export default {
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-2 items-center">
-                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Direct Referrals</span>
+                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.affiliate.direct_referrals')}}</span>
                     <span class="text-black dark:text-white py-2">{{ selectedAffiliate.children ? selectedAffiliate.children.length : 0 }}</span>
                 </div>
                 <div class="grid grid-cols-3 gap-2 items-center">
-                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Total Affiliates</span>
+                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.affiliate.total_affiliates')}}</span>
                     <span class="text-black dark:text-white py-2">{{ selectedAffiliate.total_affiliate }}</span>
                 </div>
                 <div class="grid grid-cols-3 gap-2 items-center">
-                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Self Valid Deposit</span>
+                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.affiliate.valid_self_deposit')}}</span>
                     <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedAffiliate.self_deposit) }}</span>
                 </div>
                 <div class="grid grid-cols-3 gap-2 items-center">
-                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Valid Affiliate Deposit</span>
+                    <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.affiliate.valid_affiliate_deposit')}}</span>
                     <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedAffiliate.valid_affiliate_deposit) }}</span>
                 </div>
             </div>

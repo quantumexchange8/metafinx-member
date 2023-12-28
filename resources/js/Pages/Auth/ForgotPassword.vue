@@ -22,7 +22,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout title="Forgot Password">
+    <GuestLayout :title="$t('public.forgot_password.forgot_password')">
         <div class="flex flex-col items-center mb-8">
             <div>
                 <div class="flex items-center justify-center w-10 h-10 border rounded-lg shadow dark:border-gray-400">
@@ -30,10 +30,10 @@ const submit = () => {
                 </div>
             </div>
             <div class="my-3 text-[28px] font-semibold text-gray-600 dark:text-white">
-                Forgot password?
+                {{$t('public.forgot_password.forgot_password_label')}}
             </div>
             <div class="text-[16px] text-gray-600 dark:text-gray-400 font-normal">
-                No worries, we'll send you reset instructions.
+                {{$t('public.forgot_password.forgot_password_message')}}
             </div>
         </div>
 
@@ -42,7 +42,7 @@ const submit = () => {
         <form @submit.prevent="submit">
             <div class="grid gap-6">
                 <div class="space-y-2">
-                    <Label for="email" value="Email" />
+                    <Label for="email" :value="$t('public.forgot_password.email')" />
                     <InputIconWrapper>
                         <template #icon>
                             <MailIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
@@ -52,7 +52,7 @@ const submit = () => {
                             id="email"
                             type="email"
                             class="block w-full"
-                            placeholder="you@example.com"
+                            :placeholder="$t('public.forgot_password.email_placeholder')"
                             v-model="form.email"
                             autofocus
                             :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-300 dark:border-gray-600'"
@@ -65,7 +65,7 @@ const submit = () => {
 
                 <div>
                     <Button class="justify-center gap-2 w-full" :disabled="form.processing" v-slot="{ iconSizeClasses }">
-                        <span>Reset Password</span>
+                        <span>{{$t('public.forgot_password.reset_password')}}</span>
                     </Button>
 
 
@@ -74,7 +74,7 @@ const submit = () => {
                     <div class="flex">
                         <Link :href="route('login')" class="text-base flex items-center text-gray-400 hover:underline">
                             <ArrowNarrowLeftIcon class="text-pink-500 dark:text-gray-400 w-5 mr-2" />
-                            <span class="text-pink-500 dark:text-white font-semibold">Back to log in</span>
+                            <span class="text-pink-500 dark:text-white font-semibold">{{$t('public.forgot_password.Back_to_login')}}</span>
                         </Link>
                     </div>
 

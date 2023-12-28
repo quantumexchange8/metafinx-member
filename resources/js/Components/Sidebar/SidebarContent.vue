@@ -15,7 +15,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
         class="relative flex flex-col flex-1 max-h-full gap-2 px-3"
     >
         <SidebarLink
-            :title="$t('public.sidebar.Dashboard')"
+            :title="$t('public.sidebar.dashboard')"
             :href="route('dashboard')"
             :active="route().current('dashboard')"
         >
@@ -28,7 +28,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
         </SidebarLink>
 
         <SidebarLink
-            title="Earn"
+        :title="$t('public.sidebar.earn')"
             :href="route('earn.invest_subscription')"
             :active="route().current('earn.*')"
         >
@@ -41,7 +41,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
         </SidebarLink>
 
         <SidebarLink
-            title="Wallet"
+        :title="$t('public.sidebar.wallet')"
             :href="route('wallet.details')"
             :active="route().current('wallet.*')"
         >
@@ -54,7 +54,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
         </SidebarLink>
 
         <SidebarLink
-            title="Affiliate"
+            :title="$t('public.sidebar.affiliate')"
             :href="route('affiliate.referral_view')"
             :active="route().current('affiliate.referral_view')"
         >
@@ -67,7 +67,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
         </SidebarLink>
 
         <SidebarLink
-            title="Report"
+        :title="$t('public.sidebar.report')"
             :href="route('report.finance_history')"
             :active="route().current('report.finance_history')"
         >
@@ -80,7 +80,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
         </SidebarLink>
 
         <SidebarLink
-            title="Log Out"
+            :title="$t('public.sidebar.logout')"
             :href="route('logout')"
             method="post"
             as="button"

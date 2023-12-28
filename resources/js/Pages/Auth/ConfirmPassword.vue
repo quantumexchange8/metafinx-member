@@ -20,9 +20,9 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout title="Confirm Password">
+    <GuestLayout :title="$t('public.confirm_password.confirm_password')">
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            This is a secure area of the application. Please confirm your password before continuing.
+            {{$t('public.confirm_password.warning_message')}}
         </div>
 
         <ValidationErrors class="mb-4" />
@@ -30,18 +30,18 @@ const submit = () => {
         <form @submit.prevent="submit">
             <div class="grid gap-4">
                 <div class="space-y-2">
-                    <Label for="password" value="Password" />
+                    <Label for="password" :value="$t('public.confirm_password.password')" />
                     <InputIconWrapper>
                         <template #icon>
                             <LockClosedIcon aria-hidden="true" class="w-5 h-5" />
                         </template>
-                        <Input withIcon id="password" type="password" class="block w-full" placeholder="Password" v-model="form.password" required autocomplete="current-password" autofocus />
+                        <Input withIcon id="password" type="password" class="block w-full" :placeholder="$t('public.confirm_password.password_placeholder')" v-model="form.password" required autocomplete="current-password" autofocus />
                     </InputIconWrapper>
                 </div>
 
                 <div>
                     <Button class="w-full justify-center" :disabled="form.processing">
-                        Confirm
+                        {{$t('public.cancel')}}
                     </Button>
                 </div>
             </div>

@@ -118,22 +118,22 @@ const paginationActiveClass = [
             <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
             <tr>
                 <th scope="col" class="py-3">
-                    Transaction Date
+                    {{$t('public.report.transaction_date')}}
                 </th>
                 <th scope="col" class="py-3">
-                    Valid Thru
+                    {{$t('public.report.valid_thru')}}
                 </th>
                 <th scope="col" class="py-3">
-                    ID Number
+                    {{$t('public.report.id_number')}}
                 </th>
                 <th scope="col" class="py-3">
-                    Plan
+                    {{$t('public.report.plan')}}
                 </th>
                 <th scope="col" class="py-3">
-                    Amount
+                    {{$t('public.report.amount')}}
                 </th>
                 <th scope="col" class="py-3">
-                    Status
+                    {{$t('public.report.status')}}
                 </th>
             </tr>
             </thead>
@@ -142,7 +142,7 @@ const paginationActiveClass = [
                 <th colspan="6" class="py-4 text-lg">
                     <div class="flex flex-col dark:text-gray-400 mt-3 items-center">
                         <img src="/assets/no_data.png" class="w-60" alt="">
-                        No data to show
+                        {{$t('public.no_data')}}
                     </div>
                 </th>
             </tr>
@@ -180,10 +180,10 @@ const paginationActiveClass = [
                 @pagination-change-page="handlePageChange"
             >
                 <template #prev-nav>
-                    <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> Previous</span>
+                    <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> {{$t('public.previous')}}</span>
                 </template>
                 <template #next-nav>
-                    <span class="flex gap-2">Next <ArrowRightIcon class="w-5 h-5" /></span>
+                    <span class="flex gap-2">{{$t('public.next')}} <ArrowRightIcon class="w-5 h-5" /></span>
                 </template>
             </TailwindPagination>
         </div>

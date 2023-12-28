@@ -96,19 +96,19 @@ const paginationActiveClass = [
             <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
             <tr>
                 <th scope="col" class="pl-5 py-3">
-                    Asset
+                    {{$t('public.wallet.asset')}}
                 </th>
                 <th scope="col" class="py-3">
-                    Transaction ID
+                    {{$t('public.wallet.transaction_id')}}
                 </th>
                 <th scope="col" class="py-3">
-                    Date
+                    {{$t('public.wallet.date')}}
                 </th>
                 <th scope="col" class="py-3">
-                    Amount
+                    {{$t('public.wallet.amount')}}
                 </th>
                 <th scope="col" class="py-3 text-center">
-                    Status
+                    {{$t('public.wallet.status')}}
                 </th>
             </tr>
             </thead>
@@ -127,10 +127,10 @@ const paginationActiveClass = [
                 @pagination-change-page="handlePageChange"
             >
                 <template #prev-nav>
-                    <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> Previous</span>
+                    <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> {{$t('public.previous')}}</span>
                 </template>
                 <template #next-nav>
-                    <span class="flex gap-2">Next <ArrowRightIcon class="w-5 h-5" /></span>
+                    <span class="flex gap-2">{{$t('public.next')}} <ArrowRightIcon class="w-5 h-5" /></span>
                 </template>
             </TailwindPagination>
         </div>

@@ -60,17 +60,17 @@ const exportReport = () => {
 </script>
 
 <template>
-    <AuthenticatedLayout title="Report">
+    <AuthenticatedLayout :title="$t('public.report.report')">
         <template #header>
             <div class="md:flex md:flex-row md:justify-between">
                 <div class="flex flex-col gap-1 md:w-1/2">
                     <div class="md:flex-row md:items-center md:justify-between">
                         <h2 class="text-3xl font-semibold leading-tight">
-                            Report
+                            {{$t('public.report.report')}}
                         </h2>
                     </div>
                     <p class="text-base font-normal dark:text-gray-400">
-                        Track your finance flow of this account.
+                        {{$t('public.report.track_finance_flow')}}
                     </p>
                 </div>
                 <div class="flex justify-end md:w-1/3 md:h-1/2 md:self-end pt-5 md:pt-0">
@@ -82,7 +82,7 @@ const exportReport = () => {
                         @click="exportReport"
                     >
                         <CloudDownloadIcon aria-hidden="true" class="w-5 h-5" />
-                        <span>Export as Excel</span>
+                        <span>{{$t('public.export_excel')}}</span>
                     </Button>
                 </div>
             </div>
@@ -94,7 +94,7 @@ const exportReport = () => {
                     <template #icon>
                         <SearchIcon aria-hidden="true" class="w-5 h-5" />
                     </template>
-                    <Input withIcon id="search" type="text" class="w-full block dark:border-transparent" placeholder="Search" v-model="search" />
+                    <Input withIcon id="search" type="text" class="w-full block dark:border-transparent" :placeholder="$t('public.report.search_placeholder')" v-model="search" />
                 </InputIconWrapper>
             </div>
             <div class="md:col-span-2">
@@ -103,24 +103,24 @@ const exportReport = () => {
                     v-model="type"
                     class="bg-white dark:bg-gray-600"
                     :options="returnFilter"
-                    placeholder = "Filters"
+                    :placeholder="$t('public.report.filters_placeholder')"
                 />
                 <BaseListbox
                     v-if="reportType === 'Earning'"
                     v-model="type"
                     :options="earnFilter"
-                    placeholder = "Filters"
+                    :placeholder="$t('public.report.filters_placeholder')"
                 />
                 <BaseListbox
                     v-if="reportType === 'Investment'"
                     v-model="type"
                     :options="investFilter"
-                    placeholder = "Filters"
+                    :placeholder="$t('public.report.filters_placeholder')"
                 />
             </div>
             <div class="md:col-span-3 mt-1">
                 <vue-tailwind-datepicker
-                    placeholder="Select dates"
+                :placeholder="$t('public.report.date_picker_placeholder')"
                     :formatter="formatter"
                     separator=" - "
                     v-model="date"
@@ -143,13 +143,13 @@ const exportReport = () => {
         <template #asideRight>
             <div class="inset-y-0 p-6 flex flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-l dark:border-gray-700 w-96 fixed right-0">
                 <h3 class="text-xl font-semibold leading-tight">
-                    Finance Overview
+                    {{$t('public.report.finance_overview')}}
                 </h3>
 
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
                     <div class="space-y-2">
                         <div class="text-xs font-medium dark:text-gray-400">
-                            Total Earning since 01 Jan 2023
+                            {{$t('public.report.total_earning')}}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
                             $ {{ formatAmount(totalEarning) }}
@@ -159,7 +159,7 @@ const exportReport = () => {
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
                     <div class="space-y-2">
                         <div class="text-xs font-medium dark:text-gray-400">
-                            Total Withdrawal since 01 Jan 2023
+                            {{$t('public.report.total_withdrawal')}}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
                             $ {{ formatAmount(totalWithdrawal) }}
@@ -169,7 +169,7 @@ const exportReport = () => {
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
                     <div class="space-y-2">
                         <div class="text-xs font-medium dark:text-gray-400">
-                            Total Investment since 01 Jan 2023
+                            {{$t('public.report.total_investment')}}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
                             $ {{ formatAmount(totalInvestment) }}
@@ -179,7 +179,7 @@ const exportReport = () => {
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
                     <div class="space-y-2">
                         <div class="text-xs font-medium dark:text-gray-400">
-                            Total Balance since 01 Jan 2023
+                            {{$t('public.report.total_balance')}}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
                             $ {{ formatAmount(totalBalance) }}
@@ -189,13 +189,13 @@ const exportReport = () => {
             </div>
 
             <h3 class="md:hidden text-xl font-semibold leading-tight my-5">
-                Finance Overview
+                {{$t('public.report.finance_overview')}}
             </h3>
             <div class="flex flex-col md:hidden gap-3 overflow-x-auto md:overflow-visible">
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
                     <div class="space-y-2">
                         <div class="text-xs font-semibold dark:text-white">
-                            Total Earning since 01 Jan 2023
+                            {{$t('public.report.total_earning')}}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
                             $ {{ formatAmount(totalEarning) }}
@@ -205,7 +205,7 @@ const exportReport = () => {
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
                     <div class="space-y-2">
                         <div class="text-xs font-semibold dark:text-white">
-                            Total Withdrawal since 01 Jan 2023
+                            {{$t('public.report.total_withdrawal')}}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
                             $ {{ formatAmount(totalWithdrawal) }}
@@ -215,7 +215,7 @@ const exportReport = () => {
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
                     <div class="space-y-2">
                         <div class="text-xs font-semibold dark:text-white">
-                            Total Investment since 01 Jan 2023
+                            {{$t('public.report.total_investment')}}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
                             $ {{ formatAmount(totalInvestment) }}
@@ -225,7 +225,7 @@ const exportReport = () => {
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700 w-full">
                     <div class="space-y-2">
                         <div class="text-xs font-semibold dark:text-white">
-                            Total Balance since 01 Jan 2023
+                            {{$t('public.report.total_balance')}}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
                             $ {{ formatAmount(totalBalance) }}

@@ -184,7 +184,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
         >
             <header class="flex justify-between items-center">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                    Personal Information
+                    {{$t('public.profile.personal_information')}}
                 </h2>
             </header>
             <hr class="h-px mt-3 bg-gray-200 border-0 dark:bg-gray-700">
@@ -193,7 +193,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                 <!-- personal details -->
                 <div class="space-y-5">
                     <div>
-                        <Label class="text-[14px] dark:text-white mb-2" for="name" value="Name" />
+                        <Label class="text-[14px] dark:text-white mb-2" for="name" :value="$t('public.profile.name')" />
 
                         <Input
                             id="name"
@@ -210,7 +210,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                     </div>
 
                     <div>
-                        <Label class="text-[14px] dark:text-white mb-2" for="country" value="Country" />
+                        <Label class="text-[14px] dark:text-white mb-2" for="country" :value="$t('public.profile.name')" />
 
                         <BaseListbox
                             v-model="selectedCountry"
@@ -223,14 +223,14 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                     </div>
 
                     <div>
-                        <Label class="text-[14px] dark:text-white mb-2" for="phone" value="Phone Number" />
+                        <Label class="text-[14px] dark:text-white mb-2" for="phone" :value="$t('public.profile.phone_number')" />
 
                         <InputIconWrapper>
                             <template #icon>
                                 <PhoneIcon aria-hidden="true" class="w-5 h-5 text-gray-400" />
                             </template>
                             <Input
-                                withIcon id="phone" type="text" placeholder="+6011-0000 0000" class="block w-full" v-model="form.phone" required disabled autocomplete="phone"
+                                withIcon id="phone" type="text" :placeholder="$t('public.profile.phone_number_placeholder')" class="block w-full" v-model="form.phone" required disabled autocomplete="phone"
                                 :class="form.errors.phone ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             />
                         </InputIconWrapper>
@@ -239,14 +239,14 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                     </div>
 
                     <div>
-                        <Label class="text-[14px] dark:text-white mb-2" for="email" value="Email" />
+                        <Label class="text-[14px] dark:text-white mb-2" for="email" :value="$t('public.profile.email')" />
 
                         <InputIconWrapper>
                             <template #icon>
                                 <MailIcon aria-hidden="true" class="w-5 h-5" />
                             </template>
                             <Input
-                                withIcon id="email" type="email" class="block w-full" disabled placeholder="Email" v-model="form.email" required autocomplete="username"
+                                withIcon id="email" type="email" class="block w-full" disabled :placeholder="$t('public.profile.email_placeholder')" v-model="form.email" required autocomplete="username"
                                 :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             />
                         </InputIconWrapper>
@@ -256,14 +256,14 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
 
                     <div class="space-y-3">
                         <div>
-                            <Label class="text-[14px] dark:text-white mb-2" for="address_1" value="Address" />
+                            <Label class="text-[14px] dark:text-white mb-2" for="address_1" :value="$t('public.profile.address')" />
 
                             <InputIconWrapper>
                                 <template #icon>
                                     <HomeIcon aria-hidden="true" class="w-5 h-5" />
                                 </template>
                                 <Input
-                                    withIcon id="address_1" type="text" class="block w-full" disabled placeholder="Line 1" v-model="form.address_1" required autocomplete="address_1"
+                                    withIcon id="address_1" type="text" class="block w-full" disabled :placeholder="$t('public.profile.address_placeholder_line_1')" v-model="form.address_1" required autocomplete="address_1"
                                     :class="form.errors.address_1 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                                 />
                             </InputIconWrapper>
@@ -278,7 +278,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                                     <HomeIcon aria-hidden="true" class="w-5 h-5" />
                                 </template>
                                 <Input
-                                    withIcon id="address2" type="text" class="block w-full" disabled placeholder="Line 2 (Optional)" v-model="form.address_2" autocomplete="address_2"
+                                    withIcon id="address2" type="text" class="block w-full" disabled :placeholder="$t('public.profile.address_placeholder_line_2')" v-model="form.address_2" autocomplete="address_2"
                                     :class="form.errors.address_2 ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                                 />
                             </InputIconWrapper>
@@ -292,14 +292,14 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                         v-if="props.mustVerifyEmail && user.email_verified_at === null"
                     >
                         <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                            Your email address is unverified.
+                            {{$t('public.profile.emain_unverified')}}
                             <Link
                                 :href="route('verification.send')"
                                 method="post"
                                 as="button"
                                 class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                             >
-                                Click here to re-send the verification email.
+                            {{$t('public.profile.reverificate_notification')}}
                             </Link>
                         </p>
 
@@ -307,20 +307,20 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                             v-show="props.status === 'verification-link-sent'"
                             class="mt-2 font-medium text-sm text-green-600 dark:text-green-400"
                         >
-                            A new verification link has been sent to your email address.
+                        {{$t('public.profile.reverificate_message')}}
                         </div>
                     </div>
                 </div>
                 <!-- personal kyc -->
                 <div class="space-y-5">
                     <div>
-                        <Label class="text-[14px] dark:text-white mb-2" for="name" value="Identification Number" />
+                        <Label class="text-[14px] dark:text-white mb-2" for="name" :value="$t('public.profile.identification_number')" />
                         <Input type="text" class="block w-full" disabled v-model="form.identity_number" required autocomplete="username"
                                 :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"/>
                     </div>
 
                     <div>
-                        <Label class="text-[14px] dark:text-white mb-2" for="proof_front" value="Proof of Indentity (FRONT)" />
+                        <Label class="text-[14px] dark:text-white mb-2" for="proof_front" :value="$t('public.profile.proof_of_identity(f)')" />
                         <file-pond
                             name="proof_front"
                             ref="pond"
@@ -350,7 +350,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                         <InputError :message="form.errors.proof_front" class="mt-2" />
                     </div>
                     <div>
-                        <Label class="text-[14px] dark:text-white mb-2" for="proof_back" value="Proof of Indentity (BACK)" />
+                        <Label class="text-[14px] dark:text-white mb-2" for="proof_back" :value="$t('public.profile.proof_of_identity(b)')" />
 
                         <file-pond
                                 name="proof_back"
@@ -381,7 +381,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                             <InputError :message="form.errors.proof_back" class="mt-2" />
                     </div>
                     <div>
-                        <Label class="text-[14px] dark:text-white mb-2" for="profile_photo" value="Profile Photo" />
+                        <Label class="text-[14px] dark:text-white mb-2" for="profile_photo" :value="$t('public.profile.profile_photo')" />
 
                         <file-pond
                                     name="profile_photo"
@@ -416,7 +416,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
 
             <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
             <div class="flex justify-end">
-                <Button :disabled="form.processing">Save Changes</Button>
+                <Button :disabled="form.processing">{{$t('public.profile.save_changes')}}</Button>
 
             </div>
 

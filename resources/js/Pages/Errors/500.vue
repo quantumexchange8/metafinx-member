@@ -7,7 +7,7 @@ import Button from '@/Components/Button.vue'
 </script>
 
 <template>
-    <Head title="Error 500" />
+    <Head :title="$t('public.error.error_500')" />
     <div
         class="flex flex-col items-center justify-center min-h-screen gap-4 py-6 bg-white dark:bg-gray-800"
     >
@@ -25,15 +25,14 @@ import Button from '@/Components/Button.vue'
                     <img src="/assets/500.png" class="" alt="">
                     <div class="flex flex-col items-center mt-3 gap-5">
                         <div class="flex flex-col dark:text-gray-400 text-center gap-2">
-                            <h2 class="dark:text-white font-semibold text-3xl">Internal Server Error</h2>
-                            We're sorry, something went wrong on our end and we can't serve the page you're looking for at the moment. 
-                            It's not your fault, but we are working diligently to fix it.
+                            <h2 class="dark:text-white font-semibold text-3xl">{{$t('public.error.internal_server_error')}}</h2>
+                            {{$t('public.error.server_error_message')}} 
                         </div>
                         <Button
                             :href="route('dashboard')"
                             class="sm:w-1/3 justify-center"
                         >
-                        Back to dashboard
+                        {{$t('public.error.back_to_dashboard')}}
                         </Button>
                     </div>
                 </div>

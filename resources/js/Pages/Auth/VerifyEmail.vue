@@ -23,7 +23,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
 </script>
 
 <template>
-    <GuestLayout title="Email Verification">
+    <GuestLayout :title="$t('public.email_verification.email_verification')">
         <div class="flex flex-col items-center mb-8">
             <div>
                 <div class="flex items-center justify-center w-10 h-10 border rounded-lg dark:border-gray-400">
@@ -31,12 +31,10 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                 </div>
             </div>
             <div class="my-3 text-[28px] font-semibold text-gray-600 dark:text-white">
-                Verify Email
+                {{$t('public.email_verification.verify_email')}}
             </div>
             <div class="mb-4 text-[16px] text-gray-600 dark:text-gray-400 font-normal text-center">
-                Thanks for signing up! Before getting started, could you verify your
-                email address by clicking on the link we just emailed to you? If you
-                didn't receive the email, we will gladly send you another.
+                {{$t('public.email_verification.verify_notification')}}
             </div>
         </div>
 
@@ -44,8 +42,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
             class="mb-4 text-sm font-medium text-green-600 text-center"
             v-if="verificationLinkSent"
         >
-            A new verification link has been sent to the email address you provided
-            during registration.
+                {{$t('public.email_verification.verify_link_message')}}
         </div>
 
         <form @submit.prevent="submit">
@@ -55,7 +52,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Resend Verification Email
+                {{$t('public.email_verification.resend_verification_email')}}
                 </Button>
 
                 <Link
@@ -64,7 +61,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                     as="button"
                     class="text-[16px] text-gray-600 hover:underline dark:text-gray-400"
                 >
-                    Log Out
+                {{$t('public.logout')}}
                 </Link>
             </div>
         </form>

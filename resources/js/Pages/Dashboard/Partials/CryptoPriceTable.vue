@@ -61,19 +61,19 @@ onMounted(() => {
 </script>
 
 <template>
-    <h4 class="font-semibold dark:text-white">Cryptocurrency Market Price</h4>
+    <h4 class="font-semibold dark:text-white">{{$t('public.crypto_price_table.cryptocurrency_market_price')}}</h4>
     <div class="relative overflow-x-auto sm:rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
             <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
             <tr>
                 <th scope="col" class="py-3">
-                    Name
+                    {{$t('public.crypto_price_table.name')}}
                 </th>
                 <th scope="col" class="py-3">
-                    Price
+                    {{$t('public.crypto_price_table.price')}}
                 </th>
                 <th scope="col" class="py-3 text-end">
-                    Change
+                    {{$t('public.crypto_price_table.change')}}
                 </th>
             </tr>
             </thead>

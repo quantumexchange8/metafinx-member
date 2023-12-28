@@ -64,10 +64,10 @@ const submit = () => {
         class="w-full flex justify-center uppercase font-semibold text-sm"
         @click="openSubscribeModal"
     >
-        Subscribe
+    {{$t('public.earn.subscribe')}}
     </Button>
 
-    <Modal :show="subscribeModal" title="Subscribe" @close="closeModal">
+    <Modal :show="subscribeModal" :title="$t('public.earn.subscribe')" @close="closeModal">
         <div class="p-5 bg-white rounded-xl shadow-md dark:bg-gray-700">
             <div class="grid grid-cols-2 gap gap-5">
                 <div class="flex flex-col gap-2 items-center justify-center">
@@ -91,7 +91,7 @@ const submit = () => {
         </div>
         <form class="pt-8">
             <div class="flex flex-col sm:flex-row gap-4">
-                <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" value="Select wallet to subscribe" />
+                <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" :value="$t('public.earn.wallet_selection')" />
                 <div class="flex flex-col w-full">
                     <BaseListbox
                         v-model="form.wallet_id"
@@ -102,12 +102,12 @@ const submit = () => {
             </div>
 
             <div v-if="plan.type === 'ebmi'" class="grid sm:flex gap-4 mt-5">
-                <Label class="text-sm dark:text-white w-1/4" for="unit_number" value="Unit Number" />
+                <Label class="text-sm dark:text-white w-1/4" for="unit_number" :value="$t('public.earn.unit_number')" />
                 <div class="flex flex-col w-full">
                     <Input
                         id="unit_number"
                         type="text"
-                        placeholder="eg. B-01-01"
+                        :placeholder="$t('public.earn.unit_number_placeholder')"
                         class="block w-full"
                         :class="form.errors.unit_number ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         v-model="form.unit_number"
@@ -117,39 +117,39 @@ const submit = () => {
             </div>
 
             <div v-if="plan.type === 'ebmi'" class="grid sm:flex gap-4 mt-5">
-                <Label class="text-sm dark:text-white w-full sm:w-1/4" for="amount" value="Housing Price ($)" />
+                <Label class="text-sm dark:text-white w-full sm:w-1/4" for="amount" :value="$t('public.earn.housing_price')" />
                 <div class="flex flex-col w-full">
                     <Input
                         id="amount"
                         type="number"
                         min="0"
                         step="100"
-                        placeholder="$ 0.00"
+                        :placeholder="$t('public.earn.housing_price_placeholder')"
                         class="block w-full"
                         :class="form.errors.housing_price ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         v-model="housingPrice"
                     />
                     <InputError :message="form.errors.housing_price" class="mt-2" />
-                    <span class="text-sm text-gray-600 dark:text-gray-400 mt-2">Investment amount: $ {{ amountCalculation }}</span>
-                    <span class="text-xs text-gray-500 mt-2">Please enter a whole number in increments of 100 (e.g., 10000, 10100, 10200 ...) without decimals or fractions.</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{$t('public.earn.investment_amount')}} $ {{ amountCalculation }}</span>
+                    <span class="text-xs text-gray-500 mt-2">{{$t('public.earn.investment_amount_rule')}}</span>
                 </div>
             </div>
 
             <div v-else class="grid sm:flex gap-4 mt-5">
-                <Label class="text-sm dark:text-white w-full md:w-1/4" for="amount" value="Amount ($)" />
+                <Label class="text-sm dark:text-white w-full md:w-1/4" for="amount" :value="$t('public.earn.input_amount')" />
                 <div class="flex flex-col w-full">
                     <Input
                         id="amount"
                         type="number"
                         min="0"
                         step="100"
-                        placeholder="$ 0.00"
+                        :placeholder="$t('public.earn.input_amount_placeholder')"
                         class="block w-full"
                         :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         v-model="form.amount"
                         />
                     <InputError :message="form.errors.amount" class="mt-2" />
-                    <span class="text-xs text-gray-500 mt-2">Please enter a whole number in increments of 100 (e.g., 1000, 1100, 1200 ...) without decimals or fractions.</span>
+                    <span class="text-xs text-gray-500 mt-2">{{$t('public.earn.investment_amount_rule')}}</span>
                 </div>
             </div>
 
@@ -157,7 +157,7 @@ const submit = () => {
                 <label>
                     <div class="flex">
                         <Checkbox name="remember" v-model:checked="form.terms" />
-                        <span class="ml-2 text-xs dark:text-gray-400">By proceeding, I agree that I have read the supporting documents and agree to the Terms and Conditions and Privacy Notice.</span>
+                        <span class="ml-2 text-xs dark:text-gray-400">{{$t('public.agreement')}}</span>
                     </div>
                     <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                 </label>
@@ -166,9 +166,9 @@ const submit = () => {
 
             <div class="py-5 grid grid-cols-2 gap-4 w-full md:w-1/3 md:float-right">
                 <Button variant="secondary" type="button" class="justify-center" @click.prevent="closeModal">
-                    Cancel
+                    {{$t('public.cancel')}}
                 </Button>
-                <Button class="justify-center" @click="submit" :disabled="form.processing">Confirm</Button>
+                <Button class="justify-center" @click="submit" :disabled="form.processing">{{$t('public.confirm')}}</Button>
             </div>
         </form>
     </Modal>

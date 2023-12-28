@@ -78,19 +78,19 @@ function copyTestingCode () {
         @click="openDepositModal"
     >
         <DepositIcon aria-hidden="true" class="w-5 h-5" />
-        <span class="uppercase">Deposit</span>
+        <span class="uppercase">{{$t('public.wallet.deposit')}}</span>
     </Button>
 
-    <Modal :show="depositModal" title="Deposit" @close="closeModal">
+    <Modal :show="depositModal" :title="$t('public.wallet.deposit')" @close="closeModal">
         <div class="space-y-2">
             <div class="hidden md:inline-flex items-center justify-center gap-2 w-full">
                 <span class="rounded-full w-12 h-12 grow-0 shrink-0 bg-pink-600"><Wallet class="w-10 h-10 mt-1 ml-1" /></span>
-                <h3 class="text-xl font-semibold dark:text-white">Internal Wallet</h3>
+                <h3 class="text-xl font-semibold dark:text-white">{{$t('public.wallet.internal_wallet')}}</h3>
             </div>
             <div class="hidden md:flex justify-center">
                 <div class="space-y-2">
                     <p class="text-base text-center dark:text-gray-400">
-                        Scan QR code to deposit
+                        {{$t('public.wallet.scan_QR')}}
                     </p>
                     <div class="flex justify-center">
                         <qrcode-vue :class="['border-4 border-white']" :value="props.random_address.wallet_address" :size="200"></qrcode-vue>
@@ -106,7 +106,7 @@ function copyTestingCode () {
             </div>
             <form class="pt-2">
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" value="Select Wallet" />
+                    <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" :value="$t('public.wallet.select_wallet')" />
                     <div class="flex flex-col w-full">
                         <BaseListbox
                             v-model="form.wallet_id"
@@ -117,13 +117,13 @@ function copyTestingCode () {
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4 mt-5">
-                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="amount" value="Amount ($)" />
+                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="amount" :value="$t('public.wallet.amount($)')" />
                     <div class="flex flex-col w-full">
                         <Input
                             id="amount"
                             type="number"
                             min="0"
-                            placeholder="Min. amount $ 20.00"
+                            :placeholder="$t('public.wallet.deposit_amount_placeholder')"
                             class="block w-full"
                             :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             v-model="form.amount"
@@ -133,12 +133,12 @@ function copyTestingCode () {
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4 mt-5">
-                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="txn_hash" value="TXN Hash" />
+                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="txn_hash" :value="$t('public.wallet.txn_hash')" />
                     <div class="flex flex-col w-full">
                         <Input
                             id="txn_hash"
                             type="text"
-                            placeholder="Transaction Hashes"
+                            :placeholder="$t('public.wallet.txn_hash_placeholder')"
                             class="block w-full"
                             :class="form.errors.txn_hash ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             v-model="form.txn_hash"
@@ -152,7 +152,7 @@ function copyTestingCode () {
                     <label>
                         <div class="flex">
                             <Checkbox name="remember" v-model:checked="form.terms" />
-                            <span class="ml-2 text-xs dark:text-gray-400">By proceeding, I agree that I have read the supporting documents and agree to the Terms and Conditions and Privacy Notice.</span>
+                            <span class="ml-2 text-xs dark:text-gray-400">{{$t('public.agreement')}}</span>
                         </div>
                         <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                     </label>
@@ -161,9 +161,9 @@ function copyTestingCode () {
 
                 <div class="py-5 grid grid-cols-2 gap-4 w-full md:w-1/3 md:float-right">
                     <Button variant="secondary" type="button" class="justify-center" @click.prevent="closeModal">
-                        Cancel
+                        {{$t('public.cancel')}}
                     </Button>
-                    <Button class="justify-center" @click="submit" :disabled="form.processing">Confirm</Button>
+                    <Button class="justify-center" @click="submit" :disabled="form.processing">{{$t('public.confirm')}}</Button>
                 </div>
             </form>
         </div>

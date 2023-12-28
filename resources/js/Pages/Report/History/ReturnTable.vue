@@ -4,7 +4,7 @@ import {TailwindPagination} from "laravel-vue-pagination";
 import {ref, watch} from "vue";
 import debounce from "lodash/debounce.js";
 import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/outline";
-import {InternalWalletIcon} from "@/Components/Icons/outline.jsx";
+import {InternalUSDWalletIcon} from "@/Components/Icons/outline.jsx";
 
 const props = defineProps({
     search: String,
@@ -90,13 +90,13 @@ const paginationActiveClass = [
             <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
             <tr>
                 <th scope="col" class="py-3 w-1/3">
-                    Date
+                    {{$t('public.report.date')}}
                 </th>
                 <th scope="col" class="py-3 w-1/3 text-center">
-                    Category
+                    {{$t('public.report.category')}}
                 </th>
                 <th scope="col" class="py-3 w-1/3 text-center">
-                    Amount
+                    {{$t('public.report.amount')}}
                 </th>
             </tr>
             </thead>
@@ -108,7 +108,7 @@ const paginationActiveClass = [
 <!--            >-->
 <!--                <td class="pl-5 py-3 inline-flex items-center gap-2">-->
 <!--                    <div class="bg-gradient-to-t from-pink-300 to-pink-600 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">-->
-<!--                        <InternalWalletIcon class="mt-0.5 ml-0.5"/>-->
+<!--                        <InternalUSDWalletIcon class="mt-0.5 ml-0.5"/>-->
 <!--                    </div>-->
 <!--                    {{ deposit.wallet.name }}-->
 <!--                </td>-->
@@ -132,7 +132,7 @@ const paginationActiveClass = [
         </table>
         <div class="flex flex-col dark:text-gray-400 mt-3 items-center">
             <img src="/assets/no_data.png" class="w-60" alt="">
-            No data to show
+            {{$t('public.no_data')}}
         </div>
         <div class="flex justify-center mt-4 " v-if="!depositLoading">
             <TailwindPagination
@@ -143,10 +143,10 @@ const paginationActiveClass = [
                 @pagination-change-page="handlePageChange"
             >
             <template #prev-nav>
-                <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> Previous</span>
+                <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> {{$t('public.previous')}}</span>
             </template>
             <template #next-nav>
-                <span class="flex gap-2">Next <ArrowRightIcon class="w-5 h-5" /></span>
+                <span class="flex gap-2">{{$t('public.next')}} <ArrowRightIcon class="w-5 h-5" /></span>
             </template>
             </TailwindPagination>
         </div>
