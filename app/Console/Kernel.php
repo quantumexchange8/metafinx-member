@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
          $schedule->command('check:deposit-status')->everyFiveMinutes();
          $schedule->command('reject:deposit')->everyFiveMinutes();
+         $schedule->command('update:subscription')->daily();
     }
 
     /**
