@@ -48,7 +48,7 @@ class PaymentController extends Controller
         $response = Http::post($url, $params);
         \Log::debug($response);
 
-        return redirect()->back()->with('title', 'Submitted successfully')->with('success', 'The deposit request has been submitted successfully.');
+        return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.deposit_submit_success_message'));
     }
 
     public function withdrawal(WithdrawalRequest $request)
@@ -91,7 +91,7 @@ class PaymentController extends Controller
         $url = $payout['base_url'] . '/receiveWithdrawal';
         $response = \Http::post($url, $params);
 
-        return redirect()->back()->with('title', 'Submitted successfully')->with('success', 'The withdrawal request has been submitted successfully.');
+        return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.withdrawal_submit_success_message'));
     }
 
     public function updateDeposit(Request $request)

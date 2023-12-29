@@ -56,7 +56,7 @@ class ProfileController extends Controller
 
         $this->processImage($request);
 
-        return Redirect::route('profile.edit')->with('title', 'Profile updated')->with('success', 'The profile details has been updated successfully.');
+        return Redirect::route('profile.edit')->with('title', trans('public.profile_updated'))->with('success', trans('public.profile_updated_message'));
     }
 
     /**

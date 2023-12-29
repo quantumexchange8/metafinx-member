@@ -40,10 +40,8 @@ const submit = () => {
     <GuestLayout :title="$t('public.login.login')">
 
         <div class="text-center">
-            <Caption
-                :title="$t('public.login.login_account')"
-                :caption="$t('public.login.welcome_message')"
-            />
+            <h2 class="text-4xl	font-sans font-bold mb-2  text-gray-800 dark:text-white">{{ $t('public.login.login_account') }}</h2>
+            <p class="font-sans text-gray-600 dark:text-gray-400">{{ $t('public.login.welcome_message') }}</p>
         </div>
         <form @submit.prevent="submit">
             <div class="grid gap-6">

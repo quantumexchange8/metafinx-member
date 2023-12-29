@@ -52,11 +52,11 @@ class RegisteredUserController extends Controller
         ];
 
         $attributes = [
-            'name' => 'Name',
-            'country' => 'Country',
-            'email' => 'Email',
-            'phone' => 'Mobile',
-            'address_1' => 'Address',
+            'name'=> trans('public.profile.name'),
+            'country' => trans('public.profile.country'),
+            'email' => trans('public.profile.email'),
+            'phone' => trans('public.profile.phone_number'),
+            'address_1' => trans('public.profile.address'),
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -71,7 +71,7 @@ class RegisteredUserController extends Controller
             $rules = array_merge($rules, $additionalRules);
 
             $additionalAttributes = [
-                'password' => 'Password',
+                'password' => trans('public.profile.password'),
             ];
             $attributes = array_merge($attributes, $additionalAttributes);
 
@@ -90,7 +90,7 @@ class RegisteredUserController extends Controller
 
             $additionalAttributes = [
                 'verification_type' => 'Verification Type',
-                'identity_number' => 'Identification Number',
+                'identity_number' => trans('public.profile.identification_number'),
                 'passport_number' => 'Passport Number',
                 'proof_front' => 'Proof of Identity (FRONT)',
                 'proof_back' => 'Proof of Identity (BACK)',
@@ -183,7 +183,7 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        return redirect()->route('login')->with('title', 'Account signed up!')->with('success', 'Your account has been signed up successfully. Please check your email for verification.');
+        return redirect()->route('login')->with('title', trans('public.account_sign_up'))->with('success', trans('public.account_sign_up_message'));
     }
 
     public function upload(Request $request)

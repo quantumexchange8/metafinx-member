@@ -73,7 +73,7 @@ class EarnController extends Controller
         }
 
         if ($wallet->balance < $amount) {
-            return redirect()->back()->with('title', 'Insufficient Balance')->with('warning', 'The selected wallet does not have enough balance to subscribe the investment plan. Please try again.');
+            return redirect()->back()->with('title', trans('public.insufficient_balance'))->with('warning', trans('public.insufficient_balance_warning'));
         } else {
             $updated_balance = $wallet->balance - $amount;
 
@@ -104,7 +104,7 @@ class EarnController extends Controller
             'expired_date' => $expired_date,
         ]);
 
-        return redirect()->back()->with('title', 'Subscribed!')->with('success', 'The selected investment plan has been subscribed successfully.');
+        return redirect()->back()->with('title', trans('public.subscribed'))->with('success', trans('public.subscribed_success'));
     }
 
     public function investment()

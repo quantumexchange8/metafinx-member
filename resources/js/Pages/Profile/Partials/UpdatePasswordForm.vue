@@ -69,7 +69,7 @@ const updatePassword = () => {
             <section class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div class="space-y-5">
                     <div>
-                        <Label for="current_password" value="Current Password" />
+                        <Label for="current_password" :value="$t('public.profile.current_password')" />
                         
                         <InputIconWrapper>
                             <Input
@@ -101,7 +101,7 @@ const updatePassword = () => {
                     </div>
 
                     <div>
-                        <Label for="password" value="New Password" />
+                        <Label for="password" :value="$t('public.profile.new_password')" />
 
                         <InputIconWrapper>
                             <Input
@@ -130,7 +130,7 @@ const updatePassword = () => {
                     </div>
 
                     <div>
-                        <Label for="password_confirmation" value="Confirm Password" />
+                        <Label for="password_confirmation" :value="$t('public.profile.confirm_password')" />
                         
                         <InputIconWrapper>
                             <Input

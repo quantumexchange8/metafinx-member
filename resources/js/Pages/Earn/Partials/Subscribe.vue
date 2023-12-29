@@ -97,6 +97,7 @@ const submit = () => {
                         v-model="form.wallet_id"
                         :options="wallet_sel"
                         :error="form.errors.wallet_id"
+                        :placeholder="$t('public.earn.wallet_selection_placeholder')"
                     />
                 </div>
             </div>
@@ -124,7 +125,7 @@ const submit = () => {
                         type="number"
                         min="0"
                         step="100"
-                        :placeholder="$t('public.earn.housing_price_placeholder')"
+                        placeholder="$ 0.00"
                         class="block w-full"
                         :class="form.errors.housing_price ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         v-model="housingPrice"
@@ -143,7 +144,7 @@ const submit = () => {
                         type="number"
                         min="0"
                         step="100"
-                        :placeholder="$t('public.earn.input_amount_placeholder')"
+                        placeholder="$ 0.00"
                         class="block w-full"
                         :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         v-model="form.amount"

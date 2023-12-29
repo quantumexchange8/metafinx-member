@@ -24,10 +24,10 @@ class DepositRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'wallet_id' => 'Wallet',
-            'amount' => 'Amount',
-            'txn_hash' => 'TXN Hash',
-            'terms' => 'Terms and Conditions'
+            'wallet_id' => trans('public.wallet.wallet'),
+            'amount' => trans('public.wallet.amount'),
+            'txn_hash' => trans('public.wallet.txn_hash'),
+            'terms' => trans('public.earn.t&c')
         ];
     }
 }

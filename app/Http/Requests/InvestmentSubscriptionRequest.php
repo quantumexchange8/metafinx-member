@@ -25,11 +25,11 @@ class InvestmentSubscriptionRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'wallet_id' => 'Wallet',
-            'amount' => 'Amount',
-            'unit_number' => 'Unit Number',
-            'housing_price' => 'Housing Price',
-            'terms' => 'Terms & Conditions',
+            'wallet_id' => trans('public.wallet.wallet'),
+            'amount' => trans('public.wallet.amount'),
+            'unit_number' => trans('public.earn.unit_number'),
+            'housing_price' => trans('public.earn.housing_price'),
+            'terms' => trans('public.earn.t&c'),
         ];
     }
 }

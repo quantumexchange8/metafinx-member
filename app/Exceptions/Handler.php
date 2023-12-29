@@ -40,7 +40,7 @@ class Handler extends ExceptionHandler
                 404 => Inertia::render('Errors/404')->toResponse($request)->setStatusCode($status),
                 500, 503 => Inertia::render('Errors/500')->toResponse($request)->setStatusCode($status),
                 403 => Inertia::render('Errors/403')->toResponse($request)->setStatusCode($status),
-                419 => redirect()->back()->with('title', 'Page Expired')->with('warning', 'Please try again later.'),
+                419 => redirect()->back()->with('title', trans('public.handler_title'))->with('warning', trans('public.handler_warning')),
                 default => $response
             };
 

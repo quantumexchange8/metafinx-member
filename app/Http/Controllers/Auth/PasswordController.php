@@ -24,6 +24,6 @@ class PasswordController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return redirect()->back()->with('title', 'Password updated')->with('success', 'The password has been updated successfully.');
+        return redirect()->back()->with('title', trans('public.password_updated'))->with('success', trans('public.password_updated_message'));
     }
 }
