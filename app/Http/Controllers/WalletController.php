@@ -23,7 +23,7 @@ class WalletController extends Controller
 
         $totalBalance = clone $wallets;
 
-        $wallet_sel = $wallets->get()->map(function ($wallet) {
+        $wallet_sel = $wallets->where('type', 'internal_wallet')->get()->map(function ($wallet) {
             return [
                 'value' => $wallet->id,
                 'label' => $wallet->name,

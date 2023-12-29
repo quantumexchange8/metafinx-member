@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Earning;
 use App\Models\InvestmentSubscription;
+use App\Models\SettingWalletAddress;
 use App\Models\Wallet;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,25 +15,34 @@ class DashboardController extends Controller
     public function index()
     {
         $wallets = Wallet::where('user_id', \Auth::id());
-        $investmentEarnings = InvestmentSubscription::where('user_id', \Auth::id())->first('updated_at');
-
-        if ($investmentEarnings) {
-            $investmentEarningsLastUpdate = $investmentEarnings->updated_at;
-        } else {
-            $investmentEarningsLastUpdate = Carbon::now();
-        }
+//        $investmentEarnings = InvestmentSubscription::where('user_id', \Auth::id())->first('updated_at');
+//
+//        if ($investmentEarnings) {
+//            $investmentEarningsLastUpdate = $investmentEarnings->updated_at;
+//        } else {
+//            $investmentEarningsLastUpdate = Carbon::now();
+//        }
+        $walletDeposits = clone $wallets;
 
         $referralEarnings = Earning::query()
             ->where('upline_id', \Auth::id())
             ->where('type', 'referral_earnings')
             ->sum('after_amount');
 
+        $wallet_sel = $walletDeposits->where('type', 'internal_wallet')->get()->map(function ($wallet) {
+            return [
+                'value' => $wallet->id,
+                'label' => $wallet->name,
+            ];
+        });
+
+        $wallet_address = SettingWalletAddress::inRandomOrder()->first();
+
         return Inertia::render('Dashboard', [
-            'totalWalletBalance' => $wallets->sum('balance'),
-            'walletLastUpdate' => $wallets->latest()->first('updated_at'),
-            'investmentEarningsLastUpdate' => $investmentEarningsLastUpdate,
+            'wallets' => $wallets->get(),
             'referralEarnings' => $referralEarnings,
-            'walletName' => $wallets->value('name'),
+            'wallet_sel' => $wallet_sel,
+            'random_address' => $wallet_address,
         ]);
     }
 

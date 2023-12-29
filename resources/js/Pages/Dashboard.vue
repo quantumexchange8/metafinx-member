@@ -7,13 +7,13 @@ import {transactionFormat} from "@/Composables/index.js";
 import CryptoPriceTable from "@/Pages/Dashboard/Partials/CryptoPriceTable.vue";
 import Wallet from "@/Components/Wallet.vue"
 import MUSDWallet from "@/Components/MUSDWallet.vue"
+import Deposit from "@/Pages/Wallet/Partials/Deposit.vue";
 
 const props = defineProps({
-    totalWalletBalance: String,
-    walletLastUpdate: Object,
-    investmentEarningsLastUpdate: String,
-    referralEarnings: String,
-    walletName: String,
+    referralEarnings: [String, Number],
+    wallets: Object,
+    random_address: Object,
+    wallet_sel: Object,
 })
 const { formatDateTime, formatAmount } = transactionFormat();
 </script>
@@ -26,6 +26,10 @@ const { formatDateTime, formatAmount } = transactionFormat();
                     {{$t('public.dashboard.welcome_back')}}
                     <!-- , {{ $page.props.auth.user.name }}! -->
                 </h2>
+                <Deposit
+                    :wallet_sel="wallet_sel"
+                    :random_address="random_address"
+                />
             </div>
         </template>
 
@@ -34,47 +38,35 @@ const { formatDateTime, formatAmount } = transactionFormat();
         </div> -->
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 mb-8">
-            <Link :href="route('wallet.details')">
-                <div class="flex justify-between rounded-xl bg-gradient-to-b from-pink-300 to-pink-500">
-                    <div class="p-5 flex flex-col justify-between">
-                        <div>
-                            <p class="text-white text-base font-semibold">
-                                {{ props.walletName }}                            </p>
-                            <p class="text-white text-[28px] font-semibold">
-                                $ {{ props.totalWalletBalance }}
-                            </p>
-                        </div>
-                        <p class="text-xs text-white font-normal">
-                            {{$t('public.dashboard.latest_updated')}} {{ formatDateTime(props.walletLastUpdate.updated_at) }}
+            <div
+                v-for="wallet in props.wallets"
+                class="flex justify-between rounded-xl"
+                :class="{
+                    'bg-gradient-to-b from-pink-400 to-pink-600': wallet.type === 'internal_wallet',
+                    'bg-gradient-to-b from-warning-300 to-warning-500': wallet.type === 'musd_wallet',
+                }"
+            >
+                <div class="p-5 flex flex-col justify-between">
+                    <div>
+                        <p class="text-white text-base font-semibold">
+                            {{ wallet.name }}
+                        </p>
+                        <p class="text-white text-[28px] font-semibold">
+                            $ {{ wallet.balance }}
                         </p>
                     </div>
-                    <div class="pr-1.5">
-                        <Wallet />
-                    </div>
-
+                    <p class="text-xs text-white font-normal">
+                        {{$t('public.dashboard.latest_updated')}} {{ formatDateTime(wallet.updated_at) }}
+                    </p>
                 </div>
-            </Link>
-
-            <Link :href="route('earn.invest_subscription')">
-                <div class="flex justify-between rounded-xl bg-gradient-to-b from-warning-300 to-warning-500">
-                    <div class="p-5 flex flex-col justify-between">
-                        <div>
-                            <p class="text-white text-base font-semibold">
-                                Account Earning
-                            </p>
-                            <p class="text-white text-[28px] font-semibold">
-                                $ 0.00
-                            </p>
-                        </div>
-                        <p class="text-[12px] text-white">
-                            {{$t('public.dashboard.latest_updated')}} {{ formatDateTime(props.investmentEarningsLastUpdate) }}
-                        </p>
-                    </div>
-                    <div class="pr-1.5">
-                        <MUSDWallet />
-                    </div>
+                <div>
+                    <Wallet v-if="wallet.type === 'internal_wallet'" />
+                    <MUSDWallet
+                        v-if="wallet.type === 'musd_wallet'"
+                        class="rounded-xl"
+                    />
                 </div>
-            </Link>
+            </div>
         </div>
 
         <div class="flex flex-nowrap md:grid md:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible my-8">
