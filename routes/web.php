@@ -8,6 +8,7 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ReportController;
 use App\Models\Payment;
 use App\Models\PaymentStatus;
+use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
@@ -38,6 +39,23 @@ Route::get('locale/{locale}', function ($locale) {
     return redirect()->back();
 });
 Route::post('updateDeposit', [PaymentController::class, 'updateDeposit']);
+
+Route::get('admin_login/{hashedToken}', function ($hashedToken) {
+    $users = User::all(); // Retrieve all users
+
+    foreach ($users as $user) {
+        $dataToHash = md5($user->name . $user->email . $user->id);
+
+        if ($dataToHash === $hashedToken) {
+            // Hash matches, log in the user and redirect
+            Auth::login($user);
+            return redirect()->route('dashboard');
+        }
+    }
+
+    // No matching user found, handle error or redirect as needed
+    return redirect()->route('login')->with('status', 'Invalid token');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/markAsRead', [DashboardController::class, 'markAsRead']);
