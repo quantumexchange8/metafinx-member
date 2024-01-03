@@ -110,8 +110,8 @@ const categories = ref({
                         <button
                             class="px-4 py-2.5 text-sm font-semibold text-gray-900 border border-gray-200 focus:outline-none w-full sm:w-44"
                             :class="{
-                                'rounded-l-xl': category.type === 'standard',
-                                'rounded-r-xl': category.type === 'ebmi',
+                                'rounded-l-xl rounded-r-xl': category.type === 'standard' || category.type === 'ebmi',
+                                'rounded-full': isSingleButton,
                                 'hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600': true,
                                 'bg-transparent dark:bg-[#38425080] dark:text-white': selected
                             }"
