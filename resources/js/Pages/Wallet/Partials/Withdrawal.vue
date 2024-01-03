@@ -15,7 +15,6 @@ import BaseListbox from "@/Components/BaseListbox.vue";
 
 const props = defineProps({
     wallet_sel: Array,
-    wallets: Array,
     withdrawalFee: Object,
 })
 const withdrawalModal = ref(false);
@@ -51,7 +50,7 @@ const submit = () => {
 };
 
 const fullWithdraw = () => {
-    const selectedWallet = props.wallets.find(wallet => wallet.id === form.wallet_id);
+    const selectedWallet = props.wallet_sel.find(wallet_sel => wallet_sel.value === form.wallet_id);
     if (!form.wallet_id) {
         form.errors.wallet_id = "Please select a wallet before pressing Full Amount";
         return;

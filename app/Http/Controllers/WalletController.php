@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Exports\DepositExport;
 use App\Exports\WithdrawalExport;
+use App\Models\Coin;
+use App\Models\CoinPrice;
+use App\Models\ConversionRate;
 use App\Models\Payment;
 use App\Models\SettingWithdrawalFee;
 use App\Models\Wallet;
@@ -27,13 +30,20 @@ class WalletController extends Controller
             return [
                 'value' => $wallet->id,
                 'label' => $wallet->name,
+                'balance' => $wallet->balance,
             ];
         });
 
         $wallet_address = SettingWalletAddress::inRandomOrder()->first();
 
+        $coins = Coin::with('setting_coin')->where('user_id', \Auth::id())->get();
+        $coin_price = CoinPrice::whereDate('price_date', today())->first();
+        $conversion_rate = ConversionRate::latest()->first();
+
         return Inertia::render('Wallet/Wallet', [
-            'wallets' => $wallets->get(),
+            'coins' => $coins,
+            'coin_price' => $coin_price,
+            'conversion_rate' => $conversion_rate,
             'totalBalance' => $totalBalance->sum('balance'),
             'wallet_sel' => $wallet_sel,
             'random_address' => $wallet_address,

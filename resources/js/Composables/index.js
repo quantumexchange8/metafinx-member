@@ -125,9 +125,28 @@ export function transactionFormat() {
         return `${day}/${month}/${year}`;
     }
 
+    function formatTime(time) {
+        // Create a default date (January 1, 2000)
+        const defaultDate = new Date('2024-01-01T' + time);
+
+        // Extract hours, minutes, and seconds
+        const hours = defaultDate.getHours();
+        const minutes = defaultDate.getMinutes();
+
+        // Determine AM/PM
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+
+        // Convert hours to 12-hour format
+        const formattedHours = hours % 12 || 12;
+
+        // Format the time in 12-hour format with AM/PM
+        return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    }
+
     return {
         formatDateTime,
         formatDate,
+        formatTime,
         getStatusClass,
         formatAmount,
         formatType,

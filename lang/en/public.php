@@ -168,6 +168,10 @@ return [
         "withdrawl_amount_placeholder" => "Min. amount",
         "search_placeholder" => "Search",
         "date_picker_placeholder" => "Select dates",
+        "pay" => "Pay",
+        "receive" => "Receive",
+        "market_time" => "Market Time",
+        "conversion_rate" => "Conversion Rate",
     ],
     "affiliate" => [
         "affiliate" => "Affiliate",

@@ -10,14 +10,47 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import Withdrawal from "@/Pages/Wallet/Partials/Withdrawal.vue";
 import Wallet from "@/Components/Wallet.vue"
 import MUSDWallet from "@/Components/MUSDWallet.vue";
+import {DuplicateIcon} from "@heroicons/vue/outline";
+import Tooltip from "@/Components/Tooltip.vue";
+import Input from "@/Components/Input.vue";
+import Action from "@/Pages/Wallet/Partials/Action.vue";
 
 const props = defineProps({
-    wallets: Object,
+    coins: Object,
+    coin_price: Object,
+    conversion_rate: Object,
     totalBalance: String,
     wallet_sel: Object,
     random_address: Object,
     withdrawalFee: Object,
 })
+
+const tooltipContent = ref('Copy');
+
+function copyTestingCode () {
+    let walletAddressCopy = document.querySelector('#cryptoWalletAddress')
+    walletAddressCopy.setAttribute('type', 'text');
+    walletAddressCopy.select();
+
+    try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+            tooltipContent.value = 'Copied!';
+            setTimeout(() => {
+                tooltipContent.value = 'Copy'; // Reset tooltip content to 'Copy' after 2 seconds
+            }, 1000);
+        } else {
+            tooltipContent.value = 'Try Again Later!';
+        }
+
+    } catch (err) {
+        alert('Oops, unable to copy');
+    }
+
+    /* unselect the range */
+    walletAddressCopy.setAttribute('type', 'hidden')
+    window.getSelection().removeAllRanges()
+}
 
 </script>
 
@@ -49,7 +82,6 @@ const props = defineProps({
                     />
                     <Withdrawal
                         :wallet_sel="wallet_sel"
-                        :wallets="props.wallets"
                         :withdrawalFee="props.withdrawalFee"
                     />
                 </div>
@@ -64,26 +96,26 @@ const props = defineProps({
         </h3>
         <div class="flex flex-nowrap md:hidden gap-3 overflow-x-auto md:overflow-visible w-full">
             <div
-                v-for="wallet in props.wallets"
+                v-for="coin in props.coins"
                 class="flex-1 rounded-[20px] shadow-md"
                 :class="{
-                    'bg-gradient-to-bl from-pink-400 to-pink-600': wallet.name === 'Internal Wallet',
-                    'bg-gradient-to-bl from-warning-300 to-warning-500': wallet.name === 'MUSD Wallet',
+                    'bg-gradient-to-bl from-pink-400 to-pink-600': coin.name === 'Internal Wallet',
+                    'bg-gradient-to-bl from-warning-300 to-warning-500': coin.name === 'MUSD Wallet',
                 }"
             >
                 <div class="p-5 flex justify-between items-center w-80">
                     <div class="space-y-2">
                         <div class="text-base font-semibold dark:text-white">
-                            {{ wallet.name }}
+                            {{ coin.name }}
                         </div>
                         <div class="text-xl font-semibold dark:text-white">
-                            $ {{ wallet.balance }}
+                            $ {{ coin.balance }}
                         </div>
                     </div>
-                    <div v-if="wallet.name === 'Internal Wallet'">
+                    <div v-if="coin.name === 'Internal Wallet'">
                         <Wallet class="w-24 h-24"/>
                     </div>
-                    <div v-if="wallet.name === 'MUSD Wallet'">
+                    <div v-if="coin.name === 'MUSD Wallet'">
                         <MUSDWallet class="w-24 h-24"/>
                     </div>
                 </div>
@@ -101,26 +133,40 @@ const props = defineProps({
                 </h3>
 
                 <div
-                    v-for="wallet in props.wallets"
-                    class="p-5 flex justify-between items-center rounded-[20px] shadow-md w-full"
-                    :class="{
-                        'bg-gradient-to-bl from-pink-400 to-pink-600': wallet.name === 'Internal Wallet',
-                        'bg-gradient-to-bl from-warning-300 to-warning-500': wallet.name === 'MUSD Wallet',
-                    }"
+                    v-for="coin in coins"
+                    class="flex flex-col overflow-hidden rounded-[20px]"
                 >
-                    <div class="space-y-2">
-                        <div class="text-base font-semibold dark:text-white">
-                            {{ wallet.name }}
+                    <div class="flex justify-between pt-5 pb-2.5 px-4 shadow-md bg-gradient-to-bl from-error-400 to-error-600">
+                        <div class="space-y-2">
+                            <div class="text-base font-semibold dark:text-white">
+                                {{ coin.setting_coin.name }}
+                            </div>
+                            <div class="text-xl font-semibold dark:text-white">
+                                {{ coin.unit }} XLC
+                            </div>
+                            <div class="text-sm font-normal dark:text-white">
+                                ≈ MYR {{ coin.unit * coin.price }}
+                            </div>
                         </div>
-                        <div class="text-xl font-semibold dark:text-white">
-                            $ {{ wallet.balance }}
+                        <div>
+                            <img src="/images/icons/icon-no-color.png" alt="" class="w-32 h-24">
                         </div>
                     </div>
-                    <div v-if="wallet.name === 'Internal Wallet'">
-                        <Wallet class="w-24 h-24"/>
-                    </div>
-                    <div v-else>
-                        <img src="/images/icons/icon-no-color.png" alt="" class="w-32 h-24">
+                    <div class="inline-flex justify-between items-center gap-3 self-stretch bg-gray-700 pt-3 pb-2 px-4">
+                        <Action
+                            :coin="coin"
+                            :coin_price="coin_price"
+                            :conversion_rate="conversion_rate"
+                        />
+                        <div>
+                            <div class="inline-flex justify-center w-full items-center gap-2 text-center text-gray-500 dark:text-gray-400 break-all">
+                                <span class="text-xs">{{ coin.address }}</span>
+                                <input type="hidden" id="cryptoWalletAddress" :value="coin.address">
+                                <Tooltip :content="tooltipContent" placement="top">
+                                    <DuplicateIcon aria-hidden="true" :class="['w-4 h-4 text-gray-500 dark:text-gray-400']" @click.stop.prevent="copyTestingCode" style="cursor: pointer" />
+                                </Tooltip>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

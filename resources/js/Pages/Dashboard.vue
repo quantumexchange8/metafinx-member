@@ -37,37 +37,39 @@ const { formatDateTime, formatAmount } = transactionFormat();
             BANNER
         </div> -->
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 mb-8">
-            <div
-                v-for="wallet in props.wallets"
-                class="flex justify-between rounded-xl"
-                :class="{
+        <Link :href="route('wallet.details')">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 mb-8">
+                <div
+                    v-for="wallet in props.wallets"
+                    class="flex justify-between rounded-xl"
+                    :class="{
                     'bg-gradient-to-b from-pink-400 to-pink-600': wallet.type === 'internal_wallet',
                     'bg-gradient-to-b from-warning-300 to-warning-500': wallet.type === 'musd_wallet',
                 }"
-            >
-                <div class="p-5 flex flex-col justify-between">
-                    <div>
-                        <p class="text-white text-base font-semibold">
-                            {{ wallet.name }}
-                        </p>
-                        <p class="text-white text-[28px] font-semibold">
-                            $ {{ wallet.balance }}
+                >
+                    <div class="p-5 flex flex-col justify-between">
+                        <div>
+                            <p class="text-white text-base font-semibold">
+                                {{ wallet.name }}
+                            </p>
+                            <p class="text-white text-[28px] font-semibold">
+                                $ {{ wallet.balance }}
+                            </p>
+                        </div>
+                        <p class="text-xs text-white font-normal">
+                            {{$t('public.dashboard.latest_updated')}} {{ formatDateTime(wallet.updated_at) }}
                         </p>
                     </div>
-                    <p class="text-xs text-white font-normal">
-                        {{$t('public.dashboard.latest_updated')}} {{ formatDateTime(wallet.updated_at) }}
-                    </p>
-                </div>
-                <div>
-                    <Wallet v-if="wallet.type === 'internal_wallet'" />
-                    <MUSDWallet
-                        v-if="wallet.type === 'musd_wallet'"
-                        class="rounded-xl"
-                    />
+                    <div>
+                        <Wallet v-if="wallet.type === 'internal_wallet'" />
+                        <MUSDWallet
+                            v-if="wallet.type === 'musd_wallet'"
+                            class="rounded-xl"
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
+        </Link>
 
         <div class="flex flex-nowrap md:grid md:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible my-8">
             <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
