@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Coin;
 use App\Models\SettingCountry;
 use App\Models\User;
 use App\Models\Wallet;
@@ -169,14 +170,23 @@ class RegisteredUserController extends Controller
 
         Wallet::create([
             'user_id' => $user->id,
-            'name' => 'Internal Wallet'
+            'name' => 'Internal Wallet',
+            'type' => 'internal_wallet',
         ]);
 
         Wallet::create([
             'user_id' => $user->id,
-            'name' => 'MUSD Wallet'
+            'name' => 'MUSD Wallet',
+            'type' => 'musd_wallet',
         ]);
 
+        $coin = Coin::create([
+            'user_id' => $user->id,
+            'setting_coin_id' => 1,
+        ]);
+    
+        $coin->setCoinAddress();
+    
         $user->setReferralId();
 
         $this->processImage($request, $user);

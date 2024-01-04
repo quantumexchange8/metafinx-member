@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Models\InvestmentSubscription;
+use Carbon\Carbon;
+use App\Models\Coin;
 use App\Models\User;
-use App\Models\SettingCountry;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
+use App\Models\SettingCountry;
+use Illuminate\Validation\Rules;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\InvestmentSubscription;
 use Illuminate\Auth\Events\Registered;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules;
-use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -198,13 +199,24 @@ class AuthController extends Controller
 
             Wallet::create([
                 'user_id' => $user->id,
-                'name' => 'Internal Wallet'
+                'name' => 'Internal Wallet',
+                            'e' => 'internal_wallet',
+
             ]);
 
             Wallet::create([
                 'user_id' => $user->id,
-                'name' => 'MUSD Wallet'
+                'name' => 'MUSD Wallet',
+                'type' => 'musd_wallet',
+
             ]);
+
+            $coin = Coin::create([
+                'user_id' => $user->id,
+                'setting_coin_id' => 1,
+            ]);
+        
+            $coin->setCoinAddress();
 
             $user->setReferralId();
 
@@ -217,6 +229,7 @@ class AuthController extends Controller
             ]);
         }
     }
+    
 
     public function logout()
     {

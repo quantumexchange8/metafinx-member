@@ -11,10 +11,10 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('setting_coin_id');
-            $table->string('address');
-            $table->double('unit');
-            $table->double('price');
-            $table->double('amount');
+            $table->string('address')->nullable;
+            $table->double('unit')->default(0);
+            $table->double('price')->default(0);
+            $table->double('amount')->default(0);
             $table->softDeletes();
             $table->timestamps();
 
