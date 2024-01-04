@@ -805,3 +805,73 @@ export const SwitchVerticalIcon = defineComponent({
         )
     },
 })
+
+export const XLCoinLogo = defineComponent({
+    setup() {
+        return () => (
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M21.2402 17.9201L25.7402 22.4201L29.2002 18.9501L25.7302 15.4801C25.4583 15.2083 25.0896 15.0557 24.7052 15.0557C24.3208 15.0557 23.9521 15.2083 23.6802 15.4801L21.2402 17.9201Z"
+                    fill="url(#paint0_linear_3831_38184)"/>
+                <path
+                    d="M28.28 17.64L34.92 11L37.48 13.56C37.97 14.05 37.97 14.84 37.48 15.32L28.06 24.74L21.96 18.64C23.002 19.0784 24.1458 19.2171 25.2624 19.0404C26.3791 18.8637 27.4242 18.3787 28.28 17.64Z"
+                    fill="url(#paint1_linear_3831_38184)"/>
+                <path
+                    d="M38.0801 21.1201L33.5801 25.6201L37.0501 29.0801L40.5201 25.6101C41.0801 25.0501 41.0801 24.1301 40.5201 23.5601L38.0801 21.1201Z"
+                    fill="url(#paint2_linear_3831_38184)"/>
+                <path
+                    d="M38.3598 28.1601L44.9998 34.8001L42.4398 37.3701C41.9498 37.8501 41.1598 37.8501 40.6798 37.3701L31.2598 27.9501L37.3598 21.8501C36.9234 22.8909 36.7858 24.0327 36.9624 25.1473C37.1391 26.2619 37.623 27.3053 38.3598 28.1601Z"
+                    fill="#0277E7"/>
+                <path
+                    d="M34.8702 38.0801L30.3702 33.5801L26.9102 37.0501L30.3802 40.5201C30.9502 41.0801 31.8702 41.0801 32.4302 40.5201L34.8702 38.0801Z"
+                    fill="url(#paint3_linear_3831_38184)"/>
+                <path
+                    d="M27.8298 38.3598L21.1998 44.9998L18.6398 42.4398C18.5237 42.3245 18.4316 42.1874 18.3687 42.0364C18.3058 41.8853 18.2734 41.7234 18.2734 41.5598C18.2734 41.3962 18.3058 41.2342 18.3687 41.0832C18.4316 40.9321 18.5237 40.795 18.6398 40.6798L28.0598 31.2598L34.1598 37.3598C33.1178 36.9214 31.974 36.7827 30.8574 36.9594C29.7407 37.1361 28.6956 37.6211 27.8398 38.3598H27.8298Z"
+                    fill="url(#paint4_linear_3831_38184)"/>
+                <path
+                    d="M17.9201 34.8799L22.4201 30.3799L18.9501 26.9199L15.4801 30.3899C15.2083 30.6618 15.0557 31.0305 15.0557 31.4149C15.0557 31.7993 15.2083 32.168 15.4801 32.4399L17.9201 34.8799Z"
+                    fill="url(#paint5_linear_3831_38184)"/>
+                <path
+                    d="M17.64 27.8401L11 21.2001L13.56 18.6301C13.6753 18.514 13.8124 18.4218 13.9634 18.3589C14.1144 18.296 14.2764 18.2637 14.44 18.2637C14.6036 18.2637 14.7656 18.296 14.9166 18.3589C15.0676 18.4218 15.2047 18.514 15.32 18.6301L24.74 28.0501L18.64 34.1501C19.0764 33.1093 19.214 31.9675 19.0373 30.8529C18.8607 29.7382 18.3768 28.6949 17.64 27.8401Z"
+                    fill="url(#paint6_linear_3831_38184)"/>
+                <defs>
+                    <linearGradient id="paint0_linear_3831_38184" x1="22.8202" y1="16.3401" x2="25.1602" y2="19.4701"
+                                    gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#0265D8"/>
+                        <stop offset="1" stop-color="#0230AA"/>
+                    </linearGradient>
+                    <linearGradient id="paint1_linear_3831_38184" x1="27.01" y1="17.19" x2="31.18" y2="21.35"
+                                    gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#0CA9E6"/>
+                        <stop offset="1" stop-color="#0790E7"/>
+                    </linearGradient>
+                    <linearGradient id="paint2_linear_3831_38184" x1="40.3601" y1="24.1201" x2="36.7001" y2="25.6501"
+                                    gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#026EE7"/>
+                        <stop offset="1" stop-color="#0254E7"/>
+                    </linearGradient>
+                    <linearGradient id="paint3_linear_3831_38184" x1="29.7002" y1="36.7201" x2="30.7602" y2="41.3001"
+                                    gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#0258E6"/>
+                        <stop offset="1" stop-color="#026CE7"/>
+                    </linearGradient>
+                    <linearGradient id="paint4_linear_3831_38184" x1="27.2898" y1="33.3198" x2="27.1898" y2="40.2498"
+                                    gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#0584E7"/>
+                        <stop offset="1" stop-color="#0277E7"/>
+                    </linearGradient>
+                    <linearGradient id="paint5_linear_3831_38184" x1="18.8901" y1="28.9899" x2="16.4001" y2="32.3599"
+                                    gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#0230AA"/>
+                        <stop offset="1" stop-color="#0264D6"/>
+                    </linearGradient>
+                    <linearGradient id="paint6_linear_3831_38184" x1="11.39" y1="20.8101" x2="19.1" y2="30.4301"
+                                    gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#15D6E7"/>
+                        <stop offset="1" stop-color="#0277E7"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        )
+    },
+})

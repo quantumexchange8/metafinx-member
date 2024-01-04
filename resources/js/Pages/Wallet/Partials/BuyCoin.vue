@@ -5,7 +5,7 @@ import Checkbox from "@/Components/Checkbox.vue";
 import { useForm } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import Input from "@/Components/Input.vue";
-import { InternalUSDWalletIcon, SwitchVerticalIcon } from "@/Components/Icons/outline.jsx";
+import { InternalUSDWalletIcon, SwitchVerticalIcon, XLCoinLogo } from "@/Components/Icons/outline.jsx";
 import { ref, watch } from "vue";
 import { transactionFormat } from "@/Composables/index.js";
 
@@ -45,7 +45,7 @@ const submit = () => {
 
     form.post(route('wallet.buy_coin'), {
         onSuccess: () => {
-            closeModal(); 
+            closeModal();
             form.reset();
         },
     });
@@ -116,8 +116,8 @@ const closeModal = () => {
                     <div class="flex items-center gap-1">
                         <div>{{ $t('public.wallet.receive') }}</div>
                         <div class="inline-flex items-center gap-1">
-                            <div class="bg-gradient-to-t from-pink-300 to-pink-600 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
-                                <InternalUSDWalletIcon class="mt-0.5 ml-0.5"/>
+                            <div class="bg-white dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
+                                <XLCoinLogo class="w-4 h-4"/>
                             </div>
                             <span>XLC Coin</span>
                         </div>
