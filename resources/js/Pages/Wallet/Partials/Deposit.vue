@@ -49,7 +49,6 @@ const submit = () => {
 
 function copyTestingCode () {
     let walletAddressCopy = document.querySelector('#cryptoWalletAddress');
-    console.log(walletAddressCopy);
     walletAddressCopy.setAttribute('type', 'text');
     walletAddressCopy.select();
 
