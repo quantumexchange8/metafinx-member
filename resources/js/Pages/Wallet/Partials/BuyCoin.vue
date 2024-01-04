@@ -96,6 +96,7 @@ const closeModal = () => {
                         id="amount"
                         type="number"
                         min="0"
+                        :max="props.wallet_sel[0].balance"
                         placeholder="$ 0.00"
                         class="block w-full"
                         :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"

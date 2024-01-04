@@ -152,6 +152,14 @@ class WalletController extends Controller
             'amount' => $total_amount,
         ]);
         
+        $wallet = Wallet::findOrFail($request->wallet_id);
+
+        if ($wallet->balance < $request->amount) {
+            return redirect()->back()->with('title', trans('public.insufficient_balance'))->with('warning', trans('public.insufficient_balance_warning'));
+        }
+        
+        $wallet->decrement('balance', $request->amount);
+
         return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.coin_purchase_success_message'));
     }
 
