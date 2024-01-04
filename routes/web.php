@@ -73,6 +73,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/getTransaction/{type}', [WalletController::class, 'getTransaction'])->name('wallet.getTransaction');
         Route::post('/deposit', [PaymentController::class, 'deposit'])->name('wallet.deposit');
         Route::post('/withdrawal', [PaymentController::class, 'withdrawal'])->name('wallet.withdrawal');
+        Route::post('/buy_coin', [WalletController::class, 'buyCoin'])->name('wallet.buy_coin');
     });
 
     Route::prefix('earn')->group(function () {

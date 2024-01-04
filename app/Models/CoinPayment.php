@@ -17,6 +17,7 @@ class CoinPayment extends Model
         'unit',
         'price',
         'amount',
+        'conversion_rate',
         'type',
         'status',
         'remarks'

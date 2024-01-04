@@ -10,6 +10,7 @@ const props = defineProps({
     coin: Object,
     coin_price: Object,
     conversion_rate: Object,
+    wallet_sel: Object,
 })
 
 const coinModal = ref(false);
@@ -67,6 +68,8 @@ const closeModal = () => {
                 :coin="coin"
                 :coin_price="coin_price"
                 :conversion_rate="conversion_rate"
+                :wallet_sel="wallet_sel"
+                @update:coinModal="coinModal = $event"
             />
         </template>
         <template v-if="modalComponent === 'View Market'">

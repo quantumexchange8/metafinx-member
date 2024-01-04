@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\DepositExport;
-use App\Exports\WithdrawalExport;
-use App\Models\Coin;
-use App\Models\CoinPrice;
-use App\Models\ConversionRate;
-use App\Models\Payment;
-use App\Models\SettingWithdrawalFee;
-use App\Models\Wallet;
-use App\Models\SettingWalletAddress;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Coin;
 use Inertia\Inertia;
+use App\Models\Wallet;
+use App\Models\Payment;
+use App\Models\CoinPrice;
+use App\Models\CoinPayment;
+use Illuminate\Http\Request;
+use App\Exports\DepositExport;
+use App\Models\ConversionRate;
+use App\Exports\WithdrawalExport;
+use Illuminate\Support\Facades\DB;
+use App\Models\SettingWalletAddress;
+use App\Models\SettingWithdrawalFee;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\RunningNumberService;
 use function Symfony\Component\Translation\t;
+use App\Http\Requests\BuyCoinRequest;
+
 
 class WalletController extends Controller
 {
@@ -113,4 +117,42 @@ class WalletController extends Controller
 
         return response()->json([$type => $results]);
     }
+
+    public function buyCoin(BuyCoinRequest $request)
+    {
+        $user = \Auth::user();
+
+        $validatedData = $request->validate([
+            'terms' => 'required|accepted',
+            'unit' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0',
+        ]);
+
+        $transaction_id = RunningNumberService::getID('transaction');
+        $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $request->setting_coin_id)->first();
+        $total_unit = $coin->unit + $request->unit;
+        $total_amount = $coin->amount + $request->amount;
+
+        CoinPayment::create([
+            'user_id' => $user->id,
+            'wallet_id' => $request->wallet_id,
+            'setting_coin_id' => $request->setting_coin_id,
+            'transaction_id' => $transaction_id,
+            'unit' => $request->unit,
+            'price' => $request->price,
+            'amount' => $request->amount,
+            'conversion_rate' => $request->conversion_rate,
+            'type' => 'buy_coin',
+            'status' => 'success',
+        ]);
+
+        $coin->update([
+            'unit' => $total_unit,
+            'price' => $request->price,
+            'amount' => $total_amount,
+        ]);
+        
+        return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.coin_purchase_success_message'));
+    }
+
 }

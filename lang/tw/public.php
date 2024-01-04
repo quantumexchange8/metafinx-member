@@ -1,5 +1,6 @@
 <?php
 return [
+    "coin_purchase_success_message" => "购币成功。",
     "handler_title" => "頁面已過期",
     "handler_warning" => "請稍後再試。",
     "insufficient_balance" => "餘額不足",
@@ -28,6 +29,10 @@ return [
     "email" => "電子郵件",
     "metafinx_support" => "support@metafinx.com",
     "validation_error" => "哎呀！出了點問題。",
+    "buy_coin"=> [
+        "amount"=> "内部钱包",
+        "unit"=> "XL Coin",
+    ],
     "step_details" => [
         "Your details"=> "您的詳細信息",
         "Make sure the details provided are accurate."=> "請確保提供的詳細信息準確無誤。",
@@ -167,6 +172,10 @@ return [
         "withdrawl_amount_placeholder" => "最低金額",
         "search_placeholder" => "搜索",
         "date_picker_placeholder" => "選擇日期",
+        "pay" => "支付",
+        "receive" => "接收",
+        "market_time" => "市场时间",
+        "conversion_rate" => "汇率",
     ],
     "affiliate" => [
         "affiliate" => "聯盟",
