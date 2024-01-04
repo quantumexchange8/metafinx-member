@@ -1,5 +1,6 @@
 <?php
 return [
+    "coin_purchase_success_message"=> "Coin purchased successfully.",
     "handler_title" => "Page Expired",
     "handler_warning" => "Please try again later.",
     "insufficient_balance" => "Insufficient Balance",
@@ -28,6 +29,10 @@ return [
     "email" => "Email",
     "metafinx_support" => "support@metafinx.com",
     "validation_error" => "Whoops! Something went wrong.",
+    "buy_coin"=> [
+        "amount"=> "Internal Wallet",
+        "unit"=> "XL Coin",
+    ],
     "step_details" => [
         "Your details"=> "Your details",
         "Make sure the details provided are accurate."=> "Make sure the details provided are accurate.",

@@ -157,6 +157,7 @@ function copyTestingCode () {
                             :coin="coin"
                             :coin_price="coin_price"
                             :conversion_rate="conversion_rate"
+                            :wallet_sel="wallet_sel"
                         />
                         <div>
                             <div class="inline-flex justify-center w-full items-center gap-2 text-center text-gray-500 dark:text-gray-400 break-all">

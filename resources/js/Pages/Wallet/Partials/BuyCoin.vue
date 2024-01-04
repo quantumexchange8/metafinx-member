@@ -1,17 +1,21 @@
 <script setup>
 import Label from "@/Components/Label.vue";
-import {useForm} from "@inertiajs/vue3";
+import Button from "@/Components/Button.vue";
+import Checkbox from "@/Components/Checkbox.vue";
+import { useForm } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import Input from "@/Components/Input.vue";
-import {InternalUSDWalletIcon, SwitchVerticalIcon} from "@/Components/Icons/outline.jsx";
-import {ref, watch} from "vue";
-import {transactionFormat} from "@/Composables/index.js";
+import { InternalUSDWalletIcon, SwitchVerticalIcon } from "@/Components/Icons/outline.jsx";
+import { ref, watch } from "vue";
+import { transactionFormat } from "@/Composables/index.js";
 
 const props = defineProps({
     coin: Object,
     coin_price: Object,
     conversion_rate: Object,
+    wallet_sel: Object
 })
+const emit = defineEmits(['update:coinModal']);
 
 const coinAmount = ref();
 const coinUnit = ref();
@@ -23,14 +27,36 @@ const form = useForm({
     wallet_id: '',
     amount: '',
     unit: '',
-    terms: false
+    terms: false,
+    setting_coin_id: '',
+    price: '',
+    conversion_rate: '',
+    address: '',
 })
+
+const submit = () => {
+    form.wallet_id = props.wallet_sel[0].value;
+    form.setting_coin_id = props.coin.setting_coin_id;
+    form.unit = coinUnit.value;
+    form.price = props.coin_price.price;
+    form.amount = coinAmount.value;
+    form.conversion_rate = props.conversion_rate.price;
+    form.address = props.coin.address;
+
+    form.post(route('wallet.buy_coin'), {
+        onSuccess: () => {
+            closeModal(); 
+            form.reset();
+        },
+    });
+};
+
 
 watch(coinAmount, (newAmount) => {
     if (newAmount !== null && !updatingCoinAmount.value) {
         updatingCoinUnit.value = true;
         // Update unit based on form.amount and fix to 8 decimal places
-        coinUnit.value = Number(newAmount * 0.67).toFixed(8);
+        coinUnit.value = Number(newAmount * props.coin_price.price).toFixed(8);
     }
 });
 
@@ -38,10 +64,13 @@ watch(coinUnit, (newUnit) => {
     if (newUnit !== null && !updatingCoinUnit.value) {
         updatingCoinAmount.value = true;
         // Update amount based on form.unit and fix to 2 decimal places
-        coinAmount.value = Number(newUnit / 0.67).toFixed(2);
+        coinAmount.value = Number(newUnit / props.coin_price.price).toFixed(2);
     }
 });
 
+const closeModal = () => {
+    emit('update:coinModal', false);
+}
 </script>
 
 <template>
@@ -106,7 +135,7 @@ watch(coinUnit, (newUnit) => {
                     <InputError :message="form.errors.unit" class="mt-2" />
                 </div>
             </div>
-            <div class="flex flex-col items-start gap-3 self-stretch pt-5 border-t border-gray-400 dark:border-gray-700">
+            <div class="flex flex-col items-start gap-3 self-stretch pt-5 pb-5 border-t border-b border-gray-400 dark:border-gray-700">
                 <div class="flex justify-between items-start self-stretch">
                     <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
                         {{ $t('public.wallet.market_time') }}
@@ -123,7 +152,21 @@ watch(coinUnit, (newUnit) => {
                         {{ conversion_rate.usd + ' USDT = ' + conversion_rate.price + ' MYR' }}
                     </div>
                 </div>
+                <div>
+                    <label>
+                    <div class="flex">
+                        <Checkbox name="remember" v-model:checked="form.terms" />
+                        <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}</span>
+                    </div>
+                    <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
+                    </label>
+                </div>
+            </div>
+            <div class="flex justify-end gap-4">
+                <Button variant="secondary" type="button" class="justify-center" @click.prevent="props.closeModal()">{{ $t('public.cancel') }}</Button>
+                <Button class="justify-center" @click="submit" :disabled="form.processing">{{ $t('public.confirm') }}</Button>
             </div>
         </div>
     </div>
 </template>
+
