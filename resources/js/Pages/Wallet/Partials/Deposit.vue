@@ -36,8 +36,6 @@ const form = useForm({
     terms: false
 })
 
-const minAmount = (20).toFixed(2);
-
 const submit = () => {
     form.post(route('wallet.deposit'), {
         onSuccess: () => {
@@ -125,7 +123,7 @@ function copyTestingCode () {
                             id="amount"
                             type="number"
                             min="0"
-                            :placeholder="$t('public.wallet.deposit_amount_placeholder') + ' $ ' + minAmount"
+                            :placeholder="$t('public.wallet.deposit_amount_placeholder') + ' $ ' + 20"
                             class="block w-full"
                             :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             v-model="form.amount"
