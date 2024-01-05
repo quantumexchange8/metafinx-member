@@ -34,10 +34,10 @@ const closeModal = () => {
         @click="openTransactionModal(deposit)"
     >
         <td class="pl-5 py-3 inline-flex items-center gap-2">
-            <div v-if="deposit.wallet.name === 'Internal Wallet'" class="bg-gradient-to-t from-pink-300 to-pink-600 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
+            <div v-if="deposit.wallet.type === 'internal_wallet'" class="bg-gradient-to-t from-pink-300 to-pink-600 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
                 <InternalUSDWalletIcon class="mt-0.5 ml-0.5"/>
             </div>
-            <div v-else-if="deposit.wallet.name === 'MUSD Wallet'" class="bg-gradient-to-t from-warning-300 to-warning-600 dark:shadow-warning-500 rounded-full w-4 h-4 shrink-0 grow-0">
+            <div v-else-if="deposit.wallet.type === 'musd_wallet'" class="bg-gradient-to-t from-warning-300 to-warning-600 dark:shadow-warning-500 rounded-full w-4 h-4 shrink-0 grow-0">
                 <InternalMUSDWalletIcon class="mt-0.5 ml-0.5"/>
             </div>
             {{ deposit.wallet.name }}

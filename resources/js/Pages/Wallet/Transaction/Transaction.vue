@@ -9,6 +9,11 @@ import Button from "@/Components/Button.vue";
 import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "@headlessui/vue";
 import DepositTable from "@/Pages/Wallet/Transaction/DepositTable.vue";
 import WithdrawalTable from "@/Pages/Wallet/Transaction/WithdrawalTable.vue";
+import CoinPaymentTable from "@/Pages/Wallet/Transaction/CoinPaymentTable.vue";
+
+const props = defineProps({
+    conversion_rate: Object,
+})
 
 const formatter = ref({
     date: 'YYYY-MM-DD',
@@ -131,6 +136,23 @@ const updateTransactionType = (transaction_type) => {
                         {{$t('public.wallet.withdrawal')}}
                     </button>
                 </Tab>
+                <Tab
+                    as="template"
+                    v-slot="{ selected }"
+                >
+                    <button
+                        @click="updateTransactionType('CoinPayment')"
+                        :class="[
+                              'w-full py-2.5 text-sm font-semibold dark:text-gray-400',
+                              'ring-white ring-offset-0 focus:outline-none focus:ring-0',
+                              selected
+                                ? 'dark:text-white border-b-2'
+                                : 'border-b border-gray-400',
+                           ]"
+                    >
+                        {{$t('public.wallet.coin_payment')}}
+                    </button>
+                </Tab>
             </TabList>
             <TabPanels>
                 <TabPanel>
@@ -149,6 +171,17 @@ const updateTransactionType = (transaction_type) => {
                         :isLoading="isLoading"
                         :search="search"
                         :date="date"
+                        @update:loading="isLoading = $event"
+                        @update:refresh="refresh = $event"
+                    />
+                </TabPanel>
+                <TabPanel>
+                    <CoinPaymentTable
+                        :refresh="refresh"
+                        :isLoading="isLoading"
+                        :search="search"
+                        :date="date"
+                        :conversion_rate="conversion_rate"
                         @update:loading="isLoading = $event"
                         @update:refresh="refresh = $event"
                     />

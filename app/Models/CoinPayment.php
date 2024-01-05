@@ -22,4 +22,14 @@ class CoinPayment extends Model
         'status',
         'remarks'
     ];
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function wallet(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Wallet::class, 'wallet_id', 'id');
+    }
 }

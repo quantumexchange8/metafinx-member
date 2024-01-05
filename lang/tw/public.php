@@ -176,6 +176,11 @@ return [
         "receive" => "接收",
         "market_time" => "市场时间",
         "conversion_rate" => "汇率",
+        "coin_payment" => "购买 XLC Coin",
+        "from" => "从",
+        "paid" => "已支付",
+        "unit" => "单位",
+        "price_per_unit" => "每单位价格"
     ],
     "affiliate" => [
         "affiliate" => "聯盟",

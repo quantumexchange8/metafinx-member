@@ -14,6 +14,7 @@ use App\Exports\DepositExport;
 use App\Models\CoinMarketTime;
 use App\Models\ConversionRate;
 use App\Exports\WithdrawalExport;
+use App\Exports\CoinPaymentExport;
 use Illuminate\Support\Facades\DB;
 use App\Models\SettingWalletAddress;
 use App\Models\SettingWithdrawalFee;
@@ -85,40 +86,74 @@ class WalletController extends Controller
     {
         $user = \Auth::user();
 
-        $query = Payment::query()->with(['user', 'wallet'])->where('user_id', $user->id)->where('type', $type);
+        if ($type === 'Deposit' || $type === 'Withdrawal') {
+            $paymentQuery = Payment::query()->with(['user', 'wallet'])
+                ->where('user_id', $user->id)
+                ->where('type', $type);
 
-        if ($request->filled('search')) {
-            $search = '%' . $request->input('search') . '%';
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('wallet', function ($wallet_query) use ($search) {
-                    $wallet_query->where('name', 'like', $search);
-                })
-                    ->orWhere('transaction_id', 'like', $search)
-                    ->orWhere('amount', 'like', $search)
-                    ->orWhere('price', 'like', $search);
-            });
-        }
-
-        if ($request->filled('date')) {
-            $date = $request->input('date');
-            $dateRange = explode(' - ', $date);
-            $start_date = Carbon::createFromFormat('Y-m-d', $dateRange[0])->startOfDay();
-            $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
-
-            $query->whereBetween('created_at', [$start_date, $end_date]);
-        }
-
-        if ($request->has('export')) {
-            if ($type == 'Deposit') {
-                return Excel::download(new DepositExport($query), Carbon::now() . '-' . $type . '-report.xlsx');
-            } elseif ($type == 'Withdrawal') {
-                return Excel::download(new WithdrawalExport($query), Carbon::now() . '-' . $type . '-report.xlsx');
+            if ($request->filled('search')) {
+                $search = '%' . $request->input('search') . '%';
+                $paymentQuery->where(function ($q) use ($search) {
+                    $q->whereHas('wallet', function ($walletQuery) use ($search) {
+                        $walletQuery->where('name', 'like', $search);
+                    })
+                        ->orWhere('transaction_id', 'like', $search)
+                        ->orWhere('amount', 'like', $search)
+                        ->orWhere('price', 'like', $search);
+                });
             }
+
+            if ($request->filled('date')) {
+                $date = $request->input('date');
+                $dateRange = explode(' - ', $date);
+                $start_date = Carbon::createFromFormat('Y-m-d', $dateRange[0])->startOfDay();
+                $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
+
+                $paymentQuery->whereBetween('created_at', [$start_date, $end_date]);
+            }
+
+            if ($request->has('export')) {
+                if ($type === 'Deposit') {
+                    return Excel::download(new DepositExport($paymentQuery), Carbon::now() . '-' . $type . '-report.xlsx');
+                } elseif ($type === 'Withdrawal') {
+                    return Excel::download(new WithdrawalExport($paymentQuery), Carbon::now() . '-' . $type . '-report.xlsx');
+                }
+            }
+
+            $paymentResults = $paymentQuery->latest()->paginate(10);
+
+            return response()->json([$type => $paymentResults]);
+
+        } elseif ($type === 'CoinPayment') {
+            $coinPaymentQuery = CoinPayment::query()->with(['user', 'wallet'])->where('user_id', $user->id);
+
+            if ($request->filled('search')) {
+                $search = '%' . $request->input('search') . '%';
+                $coinPaymentQuery->where(function ($q) use ($search) {
+                    $q->where('transaction_id', 'like', $search)
+                        ->orWhere('amount', 'like', $search)
+                        ->orWhere('price', 'like', $search)
+                        ->orWhere('unit', 'like', $search);
+                });
+            }
+
+            if ($request->filled('date')) {
+                $date = $request->input('date');
+                $dateRange = explode(' - ', $date);
+                $start_date = Carbon::createFromFormat('Y-m-d', $dateRange[0])->startOfDay();
+                $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
+
+                $coinPaymentQuery->whereBetween('created_at', [$start_date, $end_date]);
+            }
+
+            if ($request->has('export')) {
+                return Excel::download(new CoinPaymentExport($coinPaymentQuery), Carbon::now() . '-' . $type . '-report.xlsx');
+            }
+
+            $coinPaymentResults = $coinPaymentQuery->latest()->paginate(10);
+
+            return response()->json([$type => $coinPaymentResults]);
         }
-
-        $results = $query->latest()->paginate(10);
-
-        return response()->json([$type => $results]);
     }
 
     public function buyCoin(BuyCoinRequest $request)
@@ -146,7 +181,7 @@ class WalletController extends Controller
             'amount' => $request->amount,
             'conversion_rate' => $request->conversion_rate,
             'type' => 'buy_coin',
-            'status' => 'success',
+            'status' => 'Success',
         ]);
 
         $coin->update([

@@ -177,6 +177,11 @@ return [
         "receive" => "Receive",
         "market_time" => "Market Time",
         "conversion_rate" => "Conversion Rate",
+        "coin_payment" => "Buy XLC Coin",
+        "from" => "From",
+        "paid" => "Paid",
+        "unit" => "Unit",
+        "price_per_unit" => "Price per Unit"
     ],
     "affiliate" => [
         "affiliate" => "Affiliate",
