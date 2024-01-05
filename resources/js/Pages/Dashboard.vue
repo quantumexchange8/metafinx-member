@@ -53,7 +53,7 @@ const { formatDateTime, formatAmount } = transactionFormat();
                                 {{ wallet.name }}
                             </p>
                             <p class="text-white text-[28px] font-semibold">
-                                $ {{ wallet.balance }}
+                                $ {{ formatAmount(wallet.balance) }}
                             </p>
                         </div>
                         <p class="text-xs text-white font-normal">

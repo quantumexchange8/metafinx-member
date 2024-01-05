@@ -165,7 +165,7 @@ function copyTestingCode () {
                                 {{ coin.setting_coin.name }}
                             </div>
                             <div class="text-xl font-semibold dark:text-white">
-                                {{ coin.unit }} XLC
+                                {{ formatAmount(coin.unit) }} XLC
                             </div>
                             <div class="text-sm font-normal dark:text-white">
                                 ≈ MYR {{ formatAmount(coin.unit * coin.price) }}

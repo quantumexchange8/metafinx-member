@@ -1,5 +1,6 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import {transactionFormat} from "@/Composables/index.js";
 
 const liveCryptoPrices = [
     { value: 'btcusdt', name: 'Bitcoin', coin: 'BTC', img: '/assets/crypto/bitcoin.png' },
@@ -17,6 +18,7 @@ const liveCryptoPrices = [
 const cryptoPrices = ref({});
 const cryptoPricesChanges = ref({});
 const isLoading = ref(true);
+const { formatAmount } = transactionFormat();
 
 const websocketConnections = {}; // Store WebSocket connections
 let connectedCount = 0; // Counter for connected WebSockets
@@ -94,7 +96,7 @@ onMounted(() => {
                 <td class="p-2 w-1/4">
                     <div v-if="isLoading" class="animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-500 w-32 mb-2.5"></div>
                     <div v-else>
-                        ${{ cryptoPrices[crypto.name] }}
+                        ${{ formatAmount(cryptoPrices[crypto.name]) }}
                     </div>
                 </td>
                 <td class="p-2 w-1/4 text-end">

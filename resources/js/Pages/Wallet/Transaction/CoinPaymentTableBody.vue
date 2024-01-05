@@ -11,7 +11,7 @@ const props = defineProps({
 
 const transactionModal = ref(false);
 const selectedDeposit = ref();
-const { formatDateTime } = transactionFormat();
+const { formatDateTime, formatAmount } = transactionFormat();
 
 const openTransactionModal = (deposit) => {
     selectedDeposit.value = deposit;
@@ -50,7 +50,7 @@ const closeModal = () => {
             {{ formatDateTime(coin_payment.created_at) }}
         </td>
         <td class="py-3">
-            $ {{ coin_payment.amount }}
+            $ {{ formatAmount(coin_payment.amount) }}
         </td>
         <td class="py-3">
             {{ coin_payment.unit }}
@@ -82,11 +82,11 @@ const closeModal = () => {
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.paid')}}</span>
-                <span class="text-black dark:text-white py-2">$ {{ selectedDeposit.amount }}</span>
+                <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedDeposit.amount) }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.unit')}}</span>
-                <span class="text-black dark:text-white py-2">{{ selectedDeposit.unit }}</span>
+                <span class="text-black dark:text-white py-2">{{ formatAmount(selectedDeposit.unit) }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.price_per_unit')}}</span>

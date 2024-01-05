@@ -10,7 +10,7 @@ const props = defineProps({
 
 const transactionModal = ref(false);
 const selectedDeposit = ref();
-const { formatDateTime } = transactionFormat();
+const { formatDateTime, formatAmount } = transactionFormat();
 
 const openTransactionModal = (deposit) => {
     selectedDeposit.value = deposit;
@@ -49,7 +49,7 @@ const closeModal = () => {
             {{ formatDateTime(deposit.created_at) }}
         </td>
         <td class="py-3">
-            $ {{ deposit.amount }}
+            $ {{ formatAmount(deposit.amount) }}
         </td>
         <td class="py-3 text-center">
             <span v-if="deposit.status === 'Success'" class="flex w-2 h-2 bg-green-500 dark:bg-success-500 mx-auto rounded-full"></span>
@@ -79,7 +79,7 @@ const closeModal = () => {
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.amount')}}</span>
-                <span class="text-black dark:text-white py-2">$ {{ selectedDeposit.amount }}</span>
+                <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedDeposit.amount) }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>
