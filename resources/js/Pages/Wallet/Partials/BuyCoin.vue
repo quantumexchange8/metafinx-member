@@ -56,8 +56,9 @@ const submit = () => {
 watch(coinAmount, (newAmount) => {
     if (newAmount !== null && !updatingCoinAmount.value) {
         updatingCoinUnit.value = true;
+        let amont = newAmount * props.conversion_rate.price
         // Update unit based on form.amount and fix to 8 decimal places
-        coinUnit.value = Number(newAmount * props.coin_price.price).toFixed(8);
+        coinUnit.value = Number(amont * props.coin_price.price).toFixed(8);
     }
     updatingCoinAmount.value = false; // Reset flag after update
 });
@@ -65,8 +66,9 @@ watch(coinAmount, (newAmount) => {
 watch(coinUnit, (newUnit) => {
     if (newUnit !== null && !updatingCoinUnit.value) {
         updatingCoinAmount.value = true;
+        let unit = newUnit / props.coin_price.price
         // Update amount based on form.unit and fix to 2 decimal places
-        coinAmount.value = Number(newUnit / props.coin_price.price).toFixed(2);
+        coinAmount.value = Number(unit / props.conversion_rate.price).toFixed(2);
     }
     updatingCoinUnit.value = false; // Reset flag after update
 });
