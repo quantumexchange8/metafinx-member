@@ -26,10 +26,10 @@ const { formatDateTime, formatAmount } = transactionFormat();
                     {{$t('public.dashboard.welcome_back')}}
                     <!-- , {{ $page.props.auth.user.name }}! -->
                 </h2>
-<!--                <Deposit-->
-<!--                    :wallet_sel="wallet_sel"-->
-<!--                    :random_address="random_address"-->
-<!--                />-->
+                <Deposit
+                    :wallet_sel="wallet_sel"
+                    :random_address="random_address"
+                />
             </div>
         </template>
 
