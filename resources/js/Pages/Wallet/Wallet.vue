@@ -25,6 +25,7 @@ const props = defineProps({
     wallet_sel: Object,
     random_address: Object,
     withdrawalFee: Object,
+    coin_market_time: Object,
 })
 
 const tooltipContent = ref('Copy');
@@ -178,6 +179,7 @@ function copyTestingCode () {
                             :coin_price="coin_price"
                             :conversion_rate="conversion_rate"
                             :wallet_sel="wallet_sel"
+                            :coin_market_time="coin_market_time"
                         />
                         <div>
                             <div class="inline-flex justify-center w-full items-center gap-2 text-center text-gray-500 dark:text-gray-400 break-all">

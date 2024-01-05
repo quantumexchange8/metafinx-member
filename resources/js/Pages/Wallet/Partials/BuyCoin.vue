@@ -13,7 +13,8 @@ const props = defineProps({
     coin: Object,
     coin_price: Object,
     conversion_rate: Object,
-    wallet_sel: Object
+    wallet_sel: Object,
+    coin_market_time: Object,
 })
 const emit = defineEmits(['update:coinModal']);
 
@@ -58,6 +59,7 @@ watch(coinAmount, (newAmount) => {
         // Update unit based on form.amount and fix to 8 decimal places
         coinUnit.value = Number(newAmount * props.coin_price.price).toFixed(8);
     }
+    updatingCoinAmount.value = false; // Reset flag after update
 });
 
 watch(coinUnit, (newUnit) => {
@@ -66,11 +68,18 @@ watch(coinUnit, (newUnit) => {
         // Update amount based on form.unit and fix to 2 decimal places
         coinAmount.value = Number(newUnit / props.coin_price.price).toFixed(2);
     }
+    updatingCoinUnit.value = false; // Reset flag after update
 });
 
 const closeModal = () => {
     emit('update:coinModal', false);
 }
+
+const fullWithdraw = () => {
+    form.amount = props.wallet_sel[0].balance || 0;
+    coinAmount.value = form.amount;
+    coinUnit.value = (form.amount * props.coin_price.price).toFixed(8);
+};
 </script>
 
 <template>
@@ -102,6 +111,7 @@ const closeModal = () => {
                         :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         v-model="coinAmount"
                     />
+                    <Button variant="gray" size="sm" class="absolute end-2 justify-center mt-1 mr-5" @click="fullWithdraw" >{{$t('public.wallet.full_amount')}}</Button>
                     <InputError :message="form.errors.amount" class="mt-2" />
                 </div>
             </div>
@@ -142,7 +152,7 @@ const closeModal = () => {
                         {{ $t('public.wallet.market_time') }}
                     </div>
                     <div class="text-sm text-gray-900 dark:text-white">
-                        {{ formatTime(coin_price.open_time) + ' - ' + formatTime(coin_price.close_time) + ' daily' }}
+                        {{ formatTime(coin_market_time.open_time) + ' - ' + formatTime(coin_market_time.close_time) + ' ' + coin_market_time.frequency_type }}
                     </div>
                 </div>
                 <div class="flex justify-between items-start self-stretch">

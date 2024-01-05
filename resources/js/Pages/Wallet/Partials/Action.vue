@@ -11,6 +11,7 @@ const props = defineProps({
     coin_price: Object,
     conversion_rate: Object,
     wallet_sel: Object,
+    coin_market_time: Object,
 })
 
 const coinModal = ref(false);
@@ -69,6 +70,7 @@ const closeModal = () => {
                 :coin_price="coin_price"
                 :conversion_rate="conversion_rate"
                 :wallet_sel="wallet_sel"
+                :coin_market_time="coin_market_time"
                 @update:coinModal="coinModal = $event"
             />
         </template>

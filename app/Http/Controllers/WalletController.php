@@ -11,15 +11,16 @@ use App\Models\CoinPrice;
 use App\Models\CoinPayment;
 use Illuminate\Http\Request;
 use App\Exports\DepositExport;
+use App\Models\CoinMarketTime;
 use App\Models\ConversionRate;
 use App\Exports\WithdrawalExport;
 use Illuminate\Support\Facades\DB;
 use App\Models\SettingWalletAddress;
 use App\Models\SettingWithdrawalFee;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\BuyCoinRequest;
 use App\Services\RunningNumberService;
 use function Symfony\Component\Translation\t;
-use App\Http\Requests\BuyCoinRequest;
 
 
 class WalletController extends Controller
@@ -43,11 +44,13 @@ class WalletController extends Controller
         $coins = Coin::with('setting_coin')->where('user_id', \Auth::id())->get();
         $coin_price = CoinPrice::whereDate('price_date', today())->first();
         $conversion_rate = ConversionRate::latest()->first();
+        $coin_market_time = CoinMarketTime::whereIn('setting_coin_id', $coins->pluck('setting_coin_id'))->latest()->first();
 
         return Inertia::render('Wallet/Wallet', [
             'coins' => $coins,
             'coin_price' => $coin_price,
             'conversion_rate' => $conversion_rate,
+            'coin_market_time' => $coin_market_time,
             'totalBalance' => $totalBalance->sum('balance'),
             'wallet_sel' => $wallet_sel,
             'random_address' => $wallet_address,
