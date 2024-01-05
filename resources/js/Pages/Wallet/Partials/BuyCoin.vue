@@ -12,6 +12,7 @@ import { transactionFormat } from "@/Composables/index.js";
 const props = defineProps({
     coin: Object,
     coin_price: Object,
+    setting_coin: Object,
     conversion_rate: Object,
     wallet_sel: Object,
     coin_market_time: Object,
@@ -29,7 +30,7 @@ const form = useForm({
     amount: '',
     unit: '',
     terms: false,
-    setting_coin_id: '',
+    setting_coin_id: props.setting_coin.id,
     price: '',
     conversion_rate: '',
     address: '',
@@ -37,7 +38,6 @@ const form = useForm({
 
 const submit = () => {
     form.wallet_id = props.wallet_sel[0].value;
-    form.setting_coin_id = props.coin.setting_coin_id;
     form.unit = coinUnit.value;
     form.price = props.coin_price.price;
     form.amount = coinAmount.value;
@@ -129,7 +129,7 @@ const fullWithdraw = () => {
                             <div class="bg-white dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
                                 <XLCoinLogo class="w-4 h-4"/>
                             </div>
-                            <span>XLC Coin</span>
+                            <span>{{ setting_coin.name }}</span>
                         </div>
                     </div>
                 </Label>

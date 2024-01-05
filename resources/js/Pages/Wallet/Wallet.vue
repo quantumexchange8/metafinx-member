@@ -25,6 +25,8 @@ const props = defineProps({
     wallet_sel: Object,
     random_address: Object,
     withdrawalFee: Object,
+    setting_coin: Object,
+    coin_price_yesterday: Object,
     coin_market_time: Object,
 })
 
@@ -142,7 +144,7 @@ function copyTestingCode () {
 <!--        </div>-->
 
         <div class="p-5 my-5 mb-28 bg-white overflow-hidden md:overflow-visible rounded-xl shadow-md dark:bg-gray-700">
-            <Transaction 
+            <Transaction
                 :conversion_rate="conversion_rate"
             />
         </div>
@@ -181,6 +183,8 @@ function copyTestingCode () {
                             :coin_price="coin_price"
                             :conversion_rate="conversion_rate"
                             :wallet_sel="wallet_sel"
+                            :setting_coin="setting_coin"
+                            :coin_price_yesterday="coin_price_yesterday"
                             :coin_market_time="coin_market_time"
                         />
                         <div>

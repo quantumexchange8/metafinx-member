@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SettingCoin;
 use Carbon\Carbon;
 use App\Models\Coin;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use App\Models\Wallet;
 use App\Models\Payment;
@@ -45,6 +47,7 @@ class WalletController extends Controller
         $coins = Coin::with('setting_coin')->where('user_id', \Auth::id())->get();
         $coin_price = CoinPrice::whereDate('price_date', today())->first();
         $conversion_rate = ConversionRate::latest()->first();
+        $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first();
         $coin_market_time = CoinMarketTime::whereIn('setting_coin_id', $coins->pluck('setting_coin_id'))->latest()->first();
 
         return Inertia::render('Wallet/Wallet', [
@@ -56,6 +59,8 @@ class WalletController extends Controller
             'wallet_sel' => $wallet_sel,
             'random_address' => $wallet_address,
             'withdrawalFee' => SettingWithdrawalFee::latest()->first(),
+            'setting_coin' => SettingCoin::where('symbol', 'XLC/MYR')->first(),
+            'coin_price_yesterday' => $coin_price_yesterday,
         ]);
     }
 
@@ -156,20 +161,95 @@ class WalletController extends Controller
         }
     }
 
+    public function getCoinChart(Request $request)
+    {
+        $coinPrices = CoinPrice::query()
+            ->when($request->filled('month'), function ($query) use ($request) {
+                $monthsAgo = now()->subMonths($request->input('month'));
+                $query->where('price_date', '>=', $monthsAgo);
+            })
+            ->whereDate('price_date', '<=', now())
+            ->select(
+                DB::raw('DAY(price_date) as day'),
+                DB::raw('SUM(price) as price')
+            )
+            ->groupBy('day')
+            ->get();
+
+        $coin_price = CoinPrice::whereDate('price_date', today())->first()->price;
+        $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first()->price;
+
+        $year = Carbon::now()->year;
+
+        // Initialize the chart data structure
+        $labels = [];
+
+        if ($request->month == 1) {
+            // If $request->month is 1, display the current month in the labels
+            $daysInMonth = cal_days_in_month(CAL_GREGORIAN, Carbon::now()->month, $year);
+            $month = Carbon::now()->month;
+        } else {
+            $month = Carbon::now()->month;
+            // If $request->month is greater than 1, display the specified month in the labels
+            $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        }
+
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $date = \DateTime::createFromFormat('j-n-Y', "$day-$month-$year");
+            $labels[] = $date->format('j M');
+        }
+
+
+        $chartData = [
+            'labels' => $labels,
+            'datasets' => [],
+        ];
+
+        $borderColor = '#12b76a66';
+        if ($coin_price > $coin_price_yesterday) {
+            $borderColor = '#12B76A';
+        } elseif ($coin_price < $coin_price_yesterday) {
+            $borderColor = '#F04438';
+        }
+
+        // Loop through each unique type and create a dataset
+        $dataset = [
+            'data' => array_map(function ($label) use ($coinPrices) {
+                // Extract day and month from the label (assuming the label is in 'd M' format)
+                $parts = explode(' ', $label);
+                $day = $parts[0];
+
+                // Find the corresponding price in $coinPrices
+                $priceData = $coinPrices->firstWhere('day', "$day");
+
+                return $priceData ? $priceData->price : null;
+            }, $chartData['labels']),
+            'borderColor' => $borderColor,
+            'borderWidth' => 2,
+            'pointStyle' => false,
+            'fill' => true
+        ];
+
+        $chartData['datasets'][] = $dataset;
+
+        return response()->json($chartData);
+    }
+
     public function buyCoin(BuyCoinRequest $request)
     {
         $user = \Auth::user();
-
-        $validatedData = $request->validate([
-            'terms' => 'required|accepted',
-            'unit' => 'required|numeric|min:0',
-            'amount' => 'required|numeric|min:0',
-        ]);
 
         $transaction_id = RunningNumberService::getID('transaction');
         $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $request->setting_coin_id)->first();
         $total_unit = $coin->unit + $request->unit;
         $total_amount = $coin->amount + $request->amount;
+
+        $wallet = Wallet::find($request->wallet_id);
+        if ($wallet->balance < $request->amount) {
+            throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance')]);
+        }
+
+        $wallet->decrement('balance', $request->amount);
 
         CoinPayment::create([
             'user_id' => $user->id,
@@ -189,16 +269,111 @@ class WalletController extends Controller
             'price' => $request->price,
             'amount' => $total_amount,
         ]);
-        
-        $wallet = Wallet::findOrFail($request->wallet_id);
-
-        if ($wallet->balance < $request->amount) {
-            return redirect()->back()->with('title', trans('public.insufficient_balance'))->with('warning', trans('public.insufficient_balance_warning'));
-        }
-        
-        $wallet->decrement('balance', $request->amount);
 
         return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.coin_purchase_success_message'));
     }
+
+//    protected function chart_range()
+//    {
+//        $coinPrices = CoinPrice::query()
+//            ->when($request->filled('month'), function ($query) use ($request) {
+//                $monthsAgo = now()->subMonths($request->input('month'));
+//                $query->where('price_date', '>=', $monthsAgo);
+//            })
+//            ->whereDate('price_date', '<=', now())
+//            ->select(
+//                DB::raw('DAY(price_date) as day'),
+//                DB::raw('SUM(price) as price')
+//            )
+//            ->groupBy('day')
+//            ->get();
+//
+//        $monthCoinPrices = CoinPrice::query()
+//            ->when($request->filled('month'), function ($query) use ($request) {
+//                $monthsAgo = now()->subMonths($request->input('month'));
+//                $query->where('price_date', '>=', $monthsAgo);
+//            })
+//            ->whereDate('price_date', '<=', now())
+//            ->select(
+//                DB::raw('MONTH(price_date) as month'),
+//                DB::raw('SUM(price) as price')
+//            )
+//            ->groupBy('month')
+//            ->get();
+//
+//        $coin_price = CoinPrice::whereDate('price_date', today())->first()->price;
+//        $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first()->price;
+//
+//        $year = Carbon::now()->year;
+//
+//        // Initialize the chart data structure
+//        $labels = [];
+//
+//        if ($request->filled('month') && $request->input('month') == 1) {
+//            $month = Carbon::now()->month;
+//            // If $request->month is 1, display the current month in days
+//            $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+//
+//            for ($day = 1; $day <= $daysInMonth; $day++) {
+//                $date = \DateTime::createFromFormat('j-n-Y', "$day-$month-$year");
+//                $labels[] = $date->format('j M');
+//            }
+//        } else {
+//            // If $request->month is greater than 1, display the specified month in months
+//            $shortMonthNames = [];
+//            for ($month = 1; $month <= 12; $month++) {
+//                $shortMonthNames[] = date('M', mktime(0, 0, 0, $month, 1));
+//            }
+//            $labels = $shortMonthNames;
+//        }
+//
+//        $chartData = [
+//            'labels' => $labels,
+//            'datasets' => [],
+//        ];
+//
+//        $borderColor = '#12b76a66';
+//        if ($coin_price > $coin_price_yesterday) {
+//            $borderColor = '#12B76A';
+//        } elseif ($coin_price < $coin_price_yesterday) {
+//            $borderColor = '#F04438';
+//        }
+//
+//        // Loop through each unique type and create a dataset
+//        $dataset = [
+//            'data' => array_map(function ($label) use ($coinPrices) {
+//                // Extract day and month from the label (assuming the label is in 'd M' format)
+//                $parts = explode(' ', $label);
+//                $day = $parts[0];
+//
+//                // Find the corresponding price in $coinPrices
+//                $priceData = $coinPrices->firstWhere('day', "$day");
+//
+//                return $priceData ? $priceData->price : null;
+//            }, $chartData['labels']),
+//            'borderColor' => $borderColor,
+//            'borderWidth' => 2,
+//            'pointStyle' => false,
+//            'fill' => true
+//        ];
+//
+//        $datasetMonth = [
+//            'data' => array_map(function ($month) use ($monthCoinPrices) {
+//                return $monthCoinPrices->firstWhere('month', $month)->price ?? null;
+//            }, range(1, 12)), // Use month numbers 1-12
+//            'borderColor' => $borderColor,
+//            'borderWidth' => 2,
+//            'pointStyle' => false,
+//            'fill' => true
+//        ];
+//
+//        if ($request->filled('month') && $request->input('month') == 1) {
+//            $chartData['datasets'][] = $dataset;
+//        } else {
+//            $chartData['datasets'][] = $datasetMonth;
+//        }
+//
+//        return response()->json($chartData);
+//    }
 
 }
