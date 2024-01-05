@@ -37,8 +37,6 @@ const form = useForm({
     payment_charges:  transactionFee.value
 })
 
-const maxAmount = (50).toFixed(2);
-
 const submit = () => {
     form.amount = calculatedBalance.value;
     form.post(route('wallet.withdrawal'), {
@@ -114,7 +112,7 @@ const calculatedBalance = computed(() => {
                             id="amount"
                             type="number"
                             min="50"
-                            :placeholder="$t('public.wallet.withdrawl_amount_placeholder') + ' $ ' + maxAmount"
+                            :placeholder="$t('public.wallet.withdrawl_amount_placeholder') + ' $ ' + '50'"
                             class="block w-full"
                             :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             v-model="form.amount"
