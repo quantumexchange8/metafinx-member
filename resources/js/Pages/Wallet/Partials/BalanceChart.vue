@@ -6,35 +6,7 @@ const date = ref('');
 let totalSum = 0;
 const chartData = ref({
     labels: [],
-    datasets: [
-        {
-            data: [],
-            backgroundColor: ['#FF2D55', '#4d5761'],
-            hoverOffset: 4,
-            borderWidth: 0,
-            label: '',
-            borderColor: 'transparent',
-            weight: 1,
-        },
-        {
-            data: [],
-            backgroundColor: ['#4d5761', '#4d5761'], // Transparent colors for spacing
-            hoverOffset: 0,
-            borderWidth: 0,
-            label: '',
-            borderColor: 'transparent',
-            weight: 1,
-        },
-        {
-            data: [],
-            backgroundColor: ['#FDB022', '#4d5761'],
-            hoverOffset: 4,
-            borderWidth: 0,
-            label: '',
-            borderColor: 'transparent',
-            weight: 1,
-        },
-    ],
+    datasets: [],
 });
 let chartInstance = null;
 
@@ -43,24 +15,17 @@ const fetchData = async () => {
         const ctx = document.getElementById('planChart');
 
         const response = await axios.get('/wallet/getWalletBalance', { params: { date: date.value } });
-        const { labels, datasetData } = response.data;
+        const { labels, datasets } = response.data;
 
-        chartData.value.labels = ['Wallet Balance'];
-
-        // Calculate the total sum of datasetData
-        totalSum = datasetData.reduce((acc, value) => acc + parseFloat(value), 0);
-
-        // Calculate the remaining part for both charts
-        const remainingPartChart1 = totalSum - datasetData[0]; // For the first chart
-        const remainingPartChart2 = totalSum - datasetData[1]; // For the second chart
-
-        chartData.value.datasets[0].data = [datasetData[0], remainingPartChart1];
-        chartData.value.datasets[0].label = labels[0];
-        chartData.value.datasets[2].data = [datasetData[1], remainingPartChart2];
-        chartData.value.datasets[2].label = labels[1];
-
-        // Hide legend for the transparent ring
-        chartData.value.datasets[1].labels = [];
+        chartData.value.labels = labels;
+        chartData.value.datasets = datasets;
+        datasets.forEach(dataset => {
+            // Assuming each data array has only one element (as shown in your example)
+            if (dataset.data && dataset.data.length > 0) {
+                totalSum += parseFloat(dataset.data[0]); // Convert to a numeric value
+            }
+        });
+        totalSum = totalSum.toLocaleString();
 
         if (chartInstance) {
             chartInstance.destroy();
@@ -72,34 +37,32 @@ const fetchData = async () => {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '80%',
+                cutout: '70%',
+                borderRadius: 9999,
                 plugins: {
                     tooltip: {
                         enabled: true, // Enable tooltips by default
                         callbacks: {
                             label: function (context) {
                                 // Check if it's the first part of the second chart or the second part of the first chart and return an empty string to disable tooltip
-                                if ((context.datasetIndex === 0 && context.dataIndex === 1) ||
-                                    (context.datasetIndex === 2 && context.dataIndex === 1)) {
-                                    return '';
+                                if (context.dataIndex === 1) {
+                                    return chartData.value.labels;
                                 }
-                                // Otherwise, return the label for tooltip display
-                                return chartData.value.label;
                             }
                         }
                     },
                     legend: {
-                        position: 'right',
+                        position: 'bottom',
                         display: true,
                         labels: {
                             font: {
                                 family: 'Inter, sans',
-                                size: 14,
-                                weight: 'bold',
+                                size: 12,
+                                weight: 'normal',
                             },
                             usePointStyle: true,
                             pointStyle: 'circle',
-                            boxHeight: 8,
+                            boxHeight: 6,
                             // Customizing legend colors
                             generateLabels: function (chart) {
                                 const data = chart.data;
@@ -126,6 +89,34 @@ const fetchData = async () => {
             },
             plugins: [
                 {
+                    beforeDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        ctx.save();
+
+                        const datasets = chart.data.datasets;
+
+                        datasets.forEach((dataset, datasetIndex) => {
+                            const meta = chart.getDatasetMeta(datasetIndex);
+                            const xCoor = meta.data[0].x;
+                            const yCoor = meta.data[0].y;
+                            const innerRadius = meta.data[0].innerRadius;
+                            const outerRadius = meta.data[0].outerRadius;
+                            const width = outerRadius - innerRadius - 4
+                            const spacing = 4; // Adjust the spacing value as needed
+                            const angle = Math.PI / 180;
+
+                            ctx.beginPath();
+                            ctx.lineWidth = width;
+                            ctx.strokeStyle = '#4D5761';
+
+                            // Adjust the radius to add spacing between strokes
+                            const adjustedOuterRadius = outerRadius - width / 2 - datasetIndex * spacing;
+                            ctx.arc(xCoor, yCoor, adjustedOuterRadius, 0, angle * 360, false);
+                            ctx.stroke();
+                        });
+
+                        ctx.restore();
+                    },
                     afterDraw: (chart) => {
                         const ctx = chart.ctx;
                         const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
@@ -135,8 +126,8 @@ const fetchData = async () => {
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         ctx.fillStyle = '#ffffff';
-                        ctx.font = '24px Inter';
-                        ctx.fillText(`$${totalSum}`, centerX, centerY);
+                        ctx.font = 'semibold 16px Inter';
+                        ctx.fillText(`$ ${totalSum}`, centerX, centerY);
                         ctx.restore();
                     },
                 },

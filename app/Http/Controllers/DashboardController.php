@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coin;
+use App\Models\CoinMarketTime;
+use App\Models\CoinPrice;
+use App\Models\ConversionRate;
 use App\Models\Earning;
 use App\Models\InvestmentSubscription;
+use App\Models\SettingCoin;
 use App\Models\SettingWalletAddress;
 use App\Models\Wallet;
 use Carbon\Carbon;
@@ -33,8 +38,13 @@ class DashboardController extends Controller
             return [
                 'value' => $wallet->id,
                 'label' => $wallet->name,
+                'balance' => $wallet->balance,
             ];
         });
+        $coin = Coin::with('setting_coin')->where('user_id', \Auth::id())->first();
+        $coin_price = CoinPrice::whereDate('price_date', today())->first();
+        $conversion_rate = ConversionRate::latest()->first();
+        $coin_market_time = CoinMarketTime::where('setting_coin_id', $coin->setting_coin_id)->latest()->first();
 
         $wallet_address = SettingWalletAddress::inRandomOrder()->first();
 
@@ -43,6 +53,11 @@ class DashboardController extends Controller
             'referralEarnings' => $referralEarnings,
             'wallet_sel' => $wallet_sel,
             'random_address' => $wallet_address,
+            'coin' => $coin,
+            'coin_price' => $coin_price,
+            'setting_coin' => SettingCoin::where('symbol', 'XLC/MYR')->first(),
+            'conversion_rate' => $conversion_rate,
+            'coin_market_time' => $coin_market_time,
         ]);
     }
 

@@ -14,7 +14,7 @@ const props = defineProps({
     coin_price: Object,
     setting_coin: Object,
     conversion_rate: Object,
-    wallet_sel: Object,
+    wallet_sel: Array,
     coin_market_time: Object,
 })
 const emit = defineEmits(['update:coinModal']);
@@ -80,7 +80,6 @@ const closeModal = () => {
 const fullWithdraw = () => {
     form.amount = props.wallet_sel[0].balance || 0;
     coinAmount.value = form.amount;
-    coinUnit.value = (form.amount * props.coin_price.price).toFixed(8);
 };
 </script>
 
@@ -176,8 +175,21 @@ const fullWithdraw = () => {
                 </div>
             </div>
             <div class="flex justify-end gap-4">
-                <Button variant="secondary" type="button" class="justify-center" @click.prevent="props.closeModal()">{{ $t('public.cancel') }}</Button>
-                <Button class="justify-center" @click="submit" :disabled="form.processing">{{ $t('public.confirm') }}</Button>
+                <Button
+                    variant="secondary"
+                    type="button"
+                    class="justify-center"
+                    @click.prevent="closeModal"
+                >
+                    {{ $t('public.cancel') }}
+                </Button>
+                <Button
+                    class="justify-center"
+                    @click="submit"
+                    :disabled="form.processing"
+                >
+                    {{ $t('public.confirm') }}
+                </Button>
             </div>
         </div>
     </div>

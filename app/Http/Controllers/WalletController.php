@@ -66,7 +66,7 @@ class WalletController extends Controller
 
     public function getWalletBalance(Request $request)
     {
-        $selectedPlans = Wallet::query()
+        $wallets = Wallet::query()
             ->where('user_id', \Auth::id())
             ->when($request->filled('date'), function ($query) use ($request) {
                 $date = $request->input('date');
@@ -75,16 +75,32 @@ class WalletController extends Controller
                 $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
                 $query->whereBetween('created_at', [$start_date, $end_date]);
             })
-            ->select('id', 'name', 'balance')
+            ->select('id', 'name', 'type', 'balance')
             ->get();
 
-        $labels = $selectedPlans->pluck('name');
-        $datasetData = $selectedPlans->pluck('balance');
+        $chartData = [
+            'labels' => $wallets->pluck('name'),
+            'datasets' => [],
+        ];
 
-        return response()->json([
-            'labels' => $labels,
-            'datasetData' => $datasetData,
-        ]);
+        $backgroundColors = ['internal_wallet' => '#FF2D55', 'musd_wallet' => '#F79009'];
+
+        foreach ($wallets as $wallet) {
+            $dataset = [
+                'label' => $wallet->name,
+                'data' => [$wallet->balance],
+                'backgroundColor' => $backgroundColors[$wallet->type],
+                'borderColor' => '#384250',
+                'borderWidth' => 4,
+                'circumference' => [
+                    $wallet->balance / $wallets->sum('balance') * 360
+                ]
+            ];
+
+            $chartData['datasets'][] = $dataset;
+        }
+
+        return response()->json($chartData);
     }
 
     public function getTransaction(Request $request, $type)

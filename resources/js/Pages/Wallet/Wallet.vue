@@ -22,7 +22,7 @@ const props = defineProps({
     coin_price: Object,
     conversion_rate: Object,
     totalBalance: String,
-    wallet_sel: Object,
+    wallet_sel: Array,
     random_address: Object,
     withdrawalFee: Object,
     setting_coin: Object,

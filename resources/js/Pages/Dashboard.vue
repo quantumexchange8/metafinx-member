@@ -8,14 +8,37 @@ import CryptoPriceTable from "@/Pages/Dashboard/Partials/CryptoPriceTable.vue";
 import Wallet from "@/Components/Wallet.vue"
 import MUSDWallet from "@/Components/MUSDWallet.vue"
 import Deposit from "@/Pages/Wallet/Partials/Deposit.vue";
+import BuyCoin from "@/Pages/Wallet/Partials/BuyCoin.vue";
+import {CoinIcon} from "@/Components/Icons/outline.jsx";
+import ViewMarket from "@/Pages/Wallet/Partials/ViewMarket.vue";
+import Modal from "@/Components/Modal.vue";
+import {ref} from "vue";
 
 const props = defineProps({
     referralEarnings: [String, Number],
     wallets: Object,
     random_address: Object,
-    wallet_sel: Object,
+    wallet_sel: Array,
+    coin: Object,
+    setting_coin: Object,
+    coin_price: Object,
+    conversion_rate: Object,
+    coin_market_time: Object,
 })
 const { formatDateTime, formatAmount } = transactionFormat();
+
+const coinModal = ref(false);
+const modalComponent = ref(null);
+
+const openCoinModal = () => {
+    coinModal.value = true;
+    console.log(props.wallet_sel)
+}
+
+const closeModal = () => {
+    coinModal.value = false
+    modalComponent.value = null;
+}
 </script>
 
 <template>
@@ -26,10 +49,21 @@ const { formatDateTime, formatAmount } = transactionFormat();
                     {{$t('public.dashboard.welcome_back')}}
                     <!-- , {{ $page.props.auth.user.name }}! -->
                 </h2>
-<!--                <Deposit-->
-<!--                    :wallet_sel="wallet_sel"-->
-<!--                    :random_address="random_address"-->
-<!--                />-->
+                <div class="flex items-start gap-3">
+                    <Button
+                        class="justify-center gap-2"
+                        variant="gray"
+                        @click="openCoinModal"
+                    >
+                        <CoinIcon aria-hidden="true" class="w-5 h-5" />
+                        <span class="uppercase">Buy {{ coin.setting_coin.name }}</span>
+                    </Button>
+                    <Deposit
+                        :wallet_sel="wallet_sel"
+                        :random_address="random_address"
+                    />
+                </div>
+
             </div>
         </template>
 
@@ -101,6 +135,18 @@ const { formatDateTime, formatAmount } = transactionFormat();
         <div class="p-5 my-8 mb-28 bg-white overflow-hidden md:overflow-visible rounded-xl border border-gray-200 dark:border-transparent shadow dark:bg-gray-700">
             <CryptoPriceTable />
         </div>
+
+        <Modal :show="coinModal" title="Buy Coin" @close="closeModal" max-width="2xl">
+            <BuyCoin
+                :coin="coin"
+                :coin_price="coin_price"
+                :setting_coin="setting_coin"
+                :conversion_rate="conversion_rate"
+                :wallet_sel="wallet_sel"
+                :coin_market_time="coin_market_time"
+                @update:coinModal="coinModal = $event"
+            />
+        </Modal>
 
     </AuthenticatedLayout>
 </template>

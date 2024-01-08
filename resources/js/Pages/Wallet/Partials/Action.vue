@@ -12,7 +12,7 @@ const props = defineProps({
     coin: Object,
     coin_price: Object,
     conversion_rate: Object,
-    wallet_sel: Object,
+    wallet_sel: Array,
     setting_coin: Object,
     coin_price_yesterday: Object,
     coin_market_time: Object,
