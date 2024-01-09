@@ -1,13 +1,12 @@
 <script setup>
-import {ref, watch} from "vue";
-import DepositTableBody from "@/Pages/Wallet/Transaction/DepositTableBody.vue";
+import {ref, watch, watchEffect} from "vue";
 import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/outline";
 import {TailwindPagination} from "laravel-vue-pagination";
-import {InternalMUSDWalletIcon, InternalUSDWalletIcon} from "@/Components/Icons/outline.jsx";
 import {transactionFormat} from "@/Composables/index.js";
 import debounce from "lodash/debounce.js";
 import Loading from "@/Components/Loading.vue";
 import Modal from "@/Components/Modal.vue";
+import {usePage} from "@inertiajs/vue3";
 
 const props = defineProps({
     walletId: Number,
@@ -99,6 +98,13 @@ watch(() => props.refresh, (newVal) => {
         emit('update:refresh', false);
     }
 });
+
+watchEffect(() => {
+    if (usePage().props.title !== null) {
+        getResults();
+    }
+});
+
 </script>
 
 <template>
@@ -153,7 +159,7 @@ watch(() => props.refresh, (newVal) => {
            </td>
             <td class="p-3">
                 <div :class="[
-                        {'text-success-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'Deposit' || transaction.transaction_type === 'monthly_return' || transaction.transaction_type === 'monthly_return' || transaction.transaction_type === 'referral_earnings' || transaction.transaction_type === 'affiliate_earnings' || transaction.transaction_type === 'dividend_earnings'},
+                        {'text-success-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'Deposit' || transaction.transaction_type === 'Withdrawal' || transaction.transaction_type === 'monthly_return' || transaction.transaction_type === 'monthly_return' || transaction.transaction_type === 'referral_earnings' || transaction.transaction_type === 'affiliate_earnings' || transaction.transaction_type === 'dividend_earnings'},
                         {'text-error-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'BuyCoin' || transaction.transaction_type === 'Investment' },
                         {'text-gray-900 dark:text-white': transaction.transaction_status === 'Rejected' && transaction.transaction_type === 'Deposit' ||transaction.transaction_type === 'Withdrawal' },
                     ]"
@@ -210,10 +216,10 @@ watch(() => props.refresh, (newVal) => {
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>
                 <span class="text-black dark:text-white py-2">{{ selectedTransaction.transaction_status }}</span>
             </div>
-<!--            <div class="grid grid-cols-3 items-center">-->
-<!--                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.reject_reason')}}</span>-->
-<!--                <span class="text-black dark:text-white py-2">{{ selectedTransaction.remarks ?? '-' }}</span>-->
-<!--            </div>-->
+            <div v-if="selectedTransaction.transaction_type === 'Deposit' || selectedTransaction.transaction_type === 'Withdrawal'" class="grid grid-cols-3 items-center">
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.reject_reason')}}</span>
+                <span class="text-black dark:text-white py-2">{{ selectedTransaction.transaction_remark ?? '-' }}</span>
+            </div>
         </div>
     </Modal>
 </template>

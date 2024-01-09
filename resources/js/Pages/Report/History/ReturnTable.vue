@@ -132,12 +132,6 @@ const currentLocale = ref(usePage().props.locale);
                 <td class="py-3 text-center">
                     $ {{ formatAmount(earn.after_amount) }}
                 </td>
-                <td class="py-3 text-center">
-                    <span v-if="earn.status === 'Success'" class="flex w-2 h-2 bg-green-500 dark:bg-success-500 mx-auto rounded-full"></span>
-                    <span v-else-if="earn.status === 'Pending'" class="flex w-2 h-2 bg-red-500 dark:bg-warning-500 mx-auto rounded-full"></span>
-                    <span v-else-if="earn.status === 'Processing'" class="flex w-2 h-2 bg-red-500 dark:bg-[#007AFF] mx-auto rounded-full"></span>
-                    <span v-else-if="earn.status === 'Rejected'" class="flex w-2 h-2 bg-red-500 dark:bg-error-500 mx-auto rounded-full"></span>
-                </td>
             </tr>
             </tbody>
         </table>

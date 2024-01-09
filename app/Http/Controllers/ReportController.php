@@ -105,7 +105,7 @@ class ReportController extends Controller
         $user = \Auth::user();
 
         $query = Earning::query()
-            ->with('downline:id,name,email')
+            ->with(['downline:id,name,email', 'wallet:id,name,type'])
             ->where('upline_id', $user->id);
 
         if ($request->filled('search')) {

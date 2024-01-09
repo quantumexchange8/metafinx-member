@@ -5,6 +5,7 @@ import {ref, watch} from "vue";
 import debounce from "lodash/debounce.js";
 import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/outline";
 import {transactionFormat} from "@/Composables/index.js";
+import {InternalUSDWalletIcon, InternalMUSDWalletIcon} from "@/Components/Icons/outline.jsx";
 
 const props = defineProps({
     search: String,
@@ -127,6 +128,9 @@ const paginationActiveClass = [
                     {{$t('public.report.category')}}
                 </th>
                 <th scope="col" class="py-3">
+                    {{$t('public.wallet.wallet')}}
+                </th>
+                <th scope="col" class="py-3">
                     {{$t('public.report.amount')}}
                 </th>
             </tr>
@@ -158,6 +162,17 @@ const paginationActiveClass = [
                 </td>
                 <td class="py-2">
                     {{ formatCategory(earning.type) }}
+                </td>
+                <td class="py-2">
+                    <div class="inline-flex items-center gap-2">
+                        <div v-if="earning.wallet.type === 'internal_wallet'" class="bg-gradient-to-t from-pink-300 to-pink-600 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
+                            <InternalUSDWalletIcon class="mt-0.5 ml-0.5"/>
+                        </div>
+                        <div v-else-if="earning.wallet.type === 'musd_wallet'" class="bg-gradient-to-t from-warning-300 to-warning-600 dark:shadow-warning-500 rounded-full w-4 h-4 shrink-0 grow-0">
+                            <InternalMUSDWalletIcon class="mt-0.5 ml-0.5"/>
+                        </div>
+                        {{ earning.wallet.name }}
+                    </div>
                 </td>
                 <td class="py-2">
                     $ {{ formatAmount(earning.after_amount) }}

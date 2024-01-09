@@ -32,6 +32,11 @@ class Earning extends Model
         return $this->belongsTo(User::class, 'downline_id', 'id');
     }
 
+    public function wallet(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Wallet::class, 'upline_wallet_id', 'id');
+    }
+
     public function subscriptionPlan(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(InvestmentSubscription::class, 'investment_subscription_id', 'id');

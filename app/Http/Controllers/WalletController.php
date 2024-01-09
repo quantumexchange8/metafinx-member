@@ -192,6 +192,7 @@ class WalletController extends Controller
                 'payments.amount as transaction_amount',
                 'payments.transaction_id as transaction_id',
                 'payments.status as transaction_status',
+                'payments.remarks as transaction_remark',
                 'payments.created_at as transaction_date'
             )
             ->leftJoin('payments', 'users.id', '=', 'payments.user_id')
@@ -206,6 +207,7 @@ class WalletController extends Controller
                 'earnings.after_amount as transaction_amount',
                 'earnings.percentage as transaction_id',
                 'earnings.status as transaction_status',
+                'earnings.remarks as transaction_remark',
                 'earnings.roi_release_date as transaction_date'
             )
             ->leftJoin('earnings', 'users.id', '=', 'earnings.upline_id')
@@ -220,6 +222,7 @@ class WalletController extends Controller
                 'investment_subscriptions.amount as transaction_amount',
                 'investment_subscriptions.subscription_id as transaction_id',
                 'investment_subscriptions.status as transaction_status',
+                'investment_subscriptions.remark as transaction_remark',
                 'investment_subscriptions.created_at as transaction_date'
             )
             ->leftJoin('investment_subscriptions', 'users.id', '=', 'investment_subscriptions.user_id')
@@ -234,6 +237,7 @@ class WalletController extends Controller
                 'coin_payments.amount as transaction_amount',
                 'coin_payments.transaction_id as transaction_id',
                 'coin_payments.status as transaction_status',
+                'coin_payments.remarks as transaction_remark',
                 'coin_payments.created_at as transaction_date'
             )
             ->leftJoin('coin_payments', 'users.id', '=', 'coin_payments.user_id')
