@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Earning;
+use App\Models\InvestmentSubscription;
 use App\Models\SettingCoin;
+use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Coin;
 use Illuminate\Validation\ValidationException;
@@ -177,6 +180,108 @@ class WalletController extends Controller
         }
     }
 
+    public function getWalletHistory(Request $request, $wallet_id)
+    {
+        $user = \Auth::user();
+
+        // Payments
+        $payments = DB::table('users')
+            ->select(
+                'payments.id as payment_id',
+                'payments.type as transaction_type',
+                'payments.amount as transaction_amount',
+                'payments.transaction_id as transaction_id',
+                'payments.status as transaction_status',
+                'payments.created_at as transaction_date'
+            )
+            ->leftJoin('payments', 'users.id', '=', 'payments.user_id')
+            ->where('users.id', $user->id)
+            ->where('payments.wallet_id', $wallet_id);
+
+        // Earnings
+        $earnings = DB::table('users')
+            ->select(
+                'earnings.id as earning_id',
+                'earnings.type as transaction_type',
+                'earnings.after_amount as transaction_amount',
+                'earnings.percentage as transaction_id',
+                'earnings.status as transaction_status',
+                'earnings.roi_release_date as transaction_date'
+            )
+            ->leftJoin('earnings', 'users.id', '=', 'earnings.upline_id')
+            ->where('users.id', $user->id)
+            ->where('earnings.upline_wallet_id', $wallet_id);
+
+        // Subscriptions
+        $subscriptions = DB::table('users')
+            ->select(
+                'investment_subscriptions.id as subscription_id',
+                'investment_subscriptions.type as transaction_type',
+                'investment_subscriptions.amount as transaction_amount',
+                'investment_subscriptions.subscription_id as transaction_id',
+                'investment_subscriptions.status as transaction_status',
+                'investment_subscriptions.created_at as transaction_date'
+            )
+            ->leftJoin('investment_subscriptions', 'users.id', '=', 'investment_subscriptions.user_id')
+            ->where('users.id', $user->id)
+            ->where('investment_subscriptions.wallet_id', $wallet_id);
+
+        // Buy coins
+        $buy_coins = DB::table('users')
+            ->select(
+                'coin_payments.id as coin_payment_id',
+                'coin_payments.type as transaction_type',
+                'coin_payments.amount as transaction_amount',
+                'coin_payments.transaction_id as transaction_id',
+                'coin_payments.status as transaction_status',
+                'coin_payments.created_at as transaction_date'
+            )
+            ->leftJoin('coin_payments', 'users.id', '=', 'coin_payments.user_id')
+            ->where('users.id', $user->id)
+            ->where('coin_payments.wallet_id', $wallet_id);
+
+        // Search condition
+        if ($request->filled('search')) {
+            $search = '%' . $request->input('search') . '%';
+
+            $payments->where('payments.transaction_id', 'like', $search);
+            $earnings->where('earnings.type', 'like', $search);
+            $subscriptions->where('investment_subscriptions.subscription_id', 'like', $search);
+            $buy_coins->where('coin_payments.transaction_id', 'like', $search);
+        }
+
+        // Check for the date condition
+        if ($request->filled('date')) {
+            $date = $request->input('date');
+            $dateRange = explode(' - ', $date);
+            $start_date = Carbon::createFromFormat('Y-m-d', $dateRange[0])->startOfDay();
+            $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
+
+            // Apply date range condition to each query
+            $payments->whereBetween('payments.created_at', [$start_date, $end_date]);
+            $earnings->whereBetween('earnings.roi_release_date', [$start_date, $end_date]);
+            $subscriptions->whereBetween('investment_subscriptions.created_at', [$start_date, $end_date]);
+            $buy_coins->whereBetween('coin_payments.created_at', [$start_date, $end_date]);
+        }
+
+        // Check for the type condition
+        if ($request->filled('type')) {
+            $type = $request->input('type');
+            $payments->where('payments.type', $type);
+            $earnings->where('earnings.type', $type);
+            $subscriptions->where('investment_subscriptions.type', $type);
+            $buy_coins->where('coin_payments.type', $type);
+        }
+
+        // Union the results
+        $combinedResults = $payments->union($earnings)->union($subscriptions)->union($buy_coins);
+
+        // Apply orderBy
+        $combinedResults = $combinedResults->orderByDesc('transaction_date')->paginate(10);
+
+        return response()->json($combinedResults);
+    }
+
     public function getCoinChart(Request $request)
     {
         $coinPrices = CoinPrice::query()
@@ -276,7 +381,7 @@ class WalletController extends Controller
             'price' => $request->price,
             'amount' => $request->amount,
             'conversion_rate' => $request->conversion_rate,
-            'type' => 'buy_coin',
+            'type' => 'BuyCoin',
             'status' => 'Success',
         ]);
 

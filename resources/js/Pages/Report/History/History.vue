@@ -85,6 +85,7 @@ const updateTransactionType = (transaction_type) => {
                         :refresh="refresh"
                         :isLoading="isLoading"
                         :search="search"
+                        :type="type"
                         :date="date"
                         :exportStatus="exportStatus"
                         @update:loading="isLoading = $event"

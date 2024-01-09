@@ -90,8 +90,13 @@ export function transactionFormat() {
     }
 
     const formatType = (type) => {
-        const formattedType = type.replace(/([a-z])([A-Z])/g, '$1 $2');
-        return formattedType.charAt(0).toUpperCase() + formattedType.slice(1);
+        // Convert camelCase to snake_case
+        const snakeCaseType = type.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
+
+        // Replace underscores with spaces and capitalize each word
+        return snakeCaseType.replace(/_/g, ' ').replace(/\w\S*/g, (word) => {
+            return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
+        });
     };
 
     const formatCategory = (category) => {

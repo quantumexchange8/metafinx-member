@@ -7,15 +7,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('coin_adjustments', function (Blueprint $table) {
+        Schema::create('asset_adjustments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('coin_id');
-            $table->unsignedBigInteger('setting_coin_id');
+            $table->unsignedBigInteger('wallet_id')->nullable();
+            $table->unsignedBigInteger('coin_id')->nullable();
+            $table->unsignedBigInteger('setting_coin_id')->nullable();
             $table->string('type');
-            $table->float('old_unit');
-            $table->float('unit');
-            $table->float('new_unit')->nullable();
+            $table->double('old_amount');
+            $table->double('amount');
+            $table->double('new_amount')->nullable();
             $table->text('description');
             $table->unsignedBigInteger('handle_by');
             $table->softDeletes();
@@ -24,6 +25,10 @@ return new class extends Migration {
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
+                ->onUpdate('cascade');
+            $table->foreign('wallet_id')
+                ->references('id')
+                ->on('wallets')
                 ->onUpdate('cascade');
             $table->foreign('coin_id')
                 ->references('id')
@@ -42,6 +47,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('coin_adjustments');
+        Schema::dropIfExists('asset_adjustments');
     }
 };

@@ -2,7 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import Button from "@/Components/Button.vue";
 import History from "@/Pages/Report/History/History.vue";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import Input from "@/Components/Input.vue";
 import VueTailwindDatepicker from "vue-tailwind-datepicker";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
@@ -16,6 +16,7 @@ const props = defineProps({
     totalWithdrawal: Number,
     totalInvestment: Number,
     totalBalance: Number,
+    investmentPlans: Object,
 })
 
 const formatter = ref({
@@ -29,18 +30,21 @@ const reportType = ref('Return (Personal)');
 const exportStatus = ref(false);
 const { formatAmount } = transactionFormat();
 
-const returnFilter = [
-    {value:1, label:"Monthly Return"},
-    {value:2, label:"Ticket Bonus"},
-    {value:3, label:"Dividend"},
-];
+const returnFilter = computed(() => {
+    // Use map to generate an array based on the investmentPlans prop
+    return props.investmentPlans.map((investmentPlan) => ({
+        value: investmentPlan.id.toString(),
+        label: investmentPlan.name,
+    }));
+});
+
 const earnFilter = [
     {value: '', label:"All"},
     {value: 'referral_earnings', label:"Referral Earning"},
     {value: 'affiliate_earnings', label:"Affiliate Earning"},
     {value: 'dividend_earnings', label:"Dividend Earning"},
-
 ];
+
 const investFilter = [
     {value: '', label:"All"},
     {value: 'CoolingPeriod', label:"Cooling Period"},
@@ -55,6 +59,12 @@ const historyType = (type) => {
 
 const exportReport = () => {
     exportStatus.value = true;
+}
+
+const clearFilter = () => {
+    search.value = ''
+    type.value = null
+    date.value = ''
 }
 
 </script>
@@ -88,8 +98,8 @@ const exportReport = () => {
             </div>
         </template>
 
-        <div class="grid grid-cols-1 md:grid-cols-11 gap-3">
-            <div class="md:col-span-4 mt-1">
+        <div class="flex gap-3">
+            <div class="w-full">
                 <InputIconWrapper>
                     <template #icon>
                         <SearchIcon aria-hidden="true" class="w-5 h-5" />
@@ -97,11 +107,10 @@ const exportReport = () => {
                     <Input withIcon id="search" type="text" class="w-full block dark:border-transparent" :placeholder="$t('public.report.search_placeholder')" v-model="search" />
                 </InputIconWrapper>
             </div>
-            <div class="md:col-span-2">
+            <div class="w-full">
                 <BaseListbox
                     v-if="reportType === 'Return (Personal)'"
                     v-model="type"
-                    class="bg-white dark:bg-gray-600"
                     :options="returnFilter"
                     :placeholder="$t('public.report.filters_placeholder')"
                 />
@@ -118,14 +127,23 @@ const exportReport = () => {
                     :placeholder="$t('public.report.filters_placeholder')"
                 />
             </div>
-            <div class="md:col-span-3 mt-1">
+            <div class="w-full">
                 <vue-tailwind-datepicker
-                :placeholder="$t('public.report.date_picker_placeholder')"
+                    :placeholder="$t('public.report.date_picker_placeholder')"
                     :formatter="formatter"
                     separator=" - "
                     v-model="date"
                     input-classes="py-2.5 border-gray-400 w-full rounded-lg text-sm placeholder:text-base dark:placeholder:text-gray-400 focus:border-gray-400 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:border-gray-600 dark:bg-gray-600 dark:text-white"
                 />
+            </div>
+            <div>
+                <Button
+                    type="button"
+                    variant="secondary"
+                    @click="clearFilter"
+                >
+                    Clear
+                </Button>
             </div>
         </div>
 

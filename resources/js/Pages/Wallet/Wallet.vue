@@ -16,6 +16,7 @@ import Input from "@/Components/Input.vue";
 import Action from "@/Pages/Wallet/Partials/Action.vue";
 import {XLCoinLogo} from "@/Components/Icons/outline.jsx";
 import {transactionFormat} from "@/Composables/index.js";
+import TransactionHistory from "@/Pages/Wallet/Transaction/TransactionHistory.vue";
 
 const props = defineProps({
     coins: Object,
@@ -144,7 +145,7 @@ function copyTestingCode () {
 <!--        </div>-->
 
         <div class="p-5 my-5 mb-28 bg-white overflow-hidden md:overflow-visible rounded-xl shadow-md dark:bg-gray-700">
-            <Transaction
+            <TransactionHistory
                 :conversion_rate="conversion_rate"
             />
         </div>

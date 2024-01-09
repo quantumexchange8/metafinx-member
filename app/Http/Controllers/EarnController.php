@@ -114,6 +114,7 @@ class EarnController extends Controller
         $investments = InvestmentSubscription::query()
             ->with('investment_plan:id,name,roi_per_annum,investment_period,type')
             ->where('user_id', $user->id)
+            ->whereIn('status', ['CoolingPeriod', 'OnGoingPeriod'])
             ->get();
 
         $locale = app()->getLocale(); // Get the current locale

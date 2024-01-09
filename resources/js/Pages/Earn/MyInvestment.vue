@@ -20,21 +20,27 @@ const closeModal = () => {
     tncModal.value = false
 }
 
-function calculateWidthPercentage(created_at, period) {
+const calculateWidthPercentage = (created_at, period) => {
     const startDate = new Date(created_at);
     const endDate = new Date(startDate);
     endDate.setMonth(startDate.getMonth() + period);
 
     const currentDate = new Date();
 
-    // Calculate remaining days
-    const remainingMilliseconds = currentDate - startDate;
-    const remainingDays = Math.ceil(remainingMilliseconds / (1000 * 60 * 60 * 24));
-    const widthResult = Math.max(0, Math.min(100, (remainingDays / 365) * 100));
-    const remainingMonth = Math.floor(remainingDays / 30);
+    // Calculate elapsed days from startDate to currentDate
+    const elapsedMilliseconds = currentDate - startDate;
+    const elapsedDays = Math.ceil(elapsedMilliseconds / (1000 * 60 * 60 * 24));
+
+    // Calculate total days from startDate to endDate
+    const totalMilliseconds = endDate - startDate;
+    const totalDays = Math.ceil(totalMilliseconds / (1000 * 60 * 60 * 24));
+
+    // Calculate widthResult based on the progress
+    const widthResult = Math.max(0, Math.min(100, (elapsedDays / totalDays) * 100));
+    const remainingMonth = Math.floor((totalDays - elapsedDays) / 30);
 
     return { widthResult, remainingMonth };
-}
+};
 </script>
 
 <template>

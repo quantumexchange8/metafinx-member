@@ -70,6 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('wallet')->group(function () {
         Route::get('/details', [WalletController::class, 'details'])->name('wallet.details');
         Route::get('/getWalletBalance', [WalletController::class, 'getWalletBalance'])->name('wallet.getWalletBalance');
+        Route::get('/getWalletHistory/{id}', [WalletController::class, 'getWalletHistory'])->name('wallet.getWalletHistory');
         Route::get('/getTransaction/{type}', [WalletController::class, 'getTransaction'])->name('wallet.getTransaction');
         Route::get('/getCoinChart', [WalletController::class, 'getCoinChart'])->name('getCoinChart');
         Route::post('/deposit', [PaymentController::class, 'deposit'])->name('wallet.deposit');
@@ -90,6 +91,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
      Route::prefix('report')->group(function () {
          Route::get('/finance_history', [ReportController::class, 'detail'])->name('report.finance_history');
+         Route::get('/getReturnRecord', [ReportController::class, 'getReturnRecord'])->name('report.getReturnRecord');
          Route::get('/getEarningRecord', [ReportController::class, 'getEarningRecord'])->name('report.getEarningRecord');
          Route::get('/getInvestmentRecord', [ReportController::class, 'getInvestmentRecord'])->name('report.getInvestmentRecord');
 

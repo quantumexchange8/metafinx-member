@@ -166,7 +166,10 @@ const paginationActiveClass = [
                     $ {{ formatAmount(investment.amount) }}
                 </td>
                 <td class="py-3 uppercase">
-                    {{ formatType(investment.status) }}
+                    <span class="uppercase dark:text-error-500 font-semibold" v-if="investment.status === 'Terminated'">{{ formatType(investment.status) }}</span>
+                    <span class="uppercase dark:text-blue-500 font-semibold" v-if="investment.status === 'CoolingPeriod'">{{ formatType(investment.status) }}</span>
+                    <span class="uppercase dark:text-warning-500 font-semibold" v-if="investment.status === 'OnGoingPeriod'">{{ formatType(investment.status) }}</span>
+                    <span class="uppercase dark:text-success-500 font-semibold" v-if="investment.status === 'MaturityPeriod'">{{ formatType(investment.status) }}</span>
                 </td>
             </tr>
             </tbody>

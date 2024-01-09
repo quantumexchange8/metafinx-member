@@ -146,4 +146,19 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail, JWTSubj
             $this->loadDescendants($descendant, $descendants);
         }
     }
+
+    public function earnings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Earning::class, 'upline_id', 'id');
+    }
+
+    public function subscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(InvestmentSubscription::class, 'user_id', 'id');
+    }
+
+    public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Payment::class, 'user_id', 'id');
+    }
 }

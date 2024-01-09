@@ -39,6 +39,7 @@ class HandleInertiaRequests extends Middleware
             'auth.user.notifications' => fn() => $request->user() ? $request->user()->notifications : null,
             'auth.user.readNotifications' => fn() => $request->user() ? $request->user()->readNotifications : null,
             'auth.user.unreadNotifications' => fn() => $request->user() ? $request->user()->unreadNotifications : null,
+            'auth.user.wallets' => fn() => $request->user() ? $request->user()->wallets : null,
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
