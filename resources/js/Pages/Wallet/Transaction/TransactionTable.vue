@@ -195,7 +195,8 @@ watch(() => props.refresh, (newVal) => {
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_id')}}</span>
-                <span class="text-black dark:text-white py-2">{{ selectedTransaction.transaction_id }}</span>
+                <span class="text-black dark:text-white py-2" v-if="['monthly_return', 'referral_earnings', 'affiliate_earnings', 'dividend_earnings'].includes(selectedTransaction.transaction_type)">-</span>
+                <span class="text-black dark:text-white py-2" v-else>{{ selectedTransaction.transaction_id }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.date_time')}}</span>
