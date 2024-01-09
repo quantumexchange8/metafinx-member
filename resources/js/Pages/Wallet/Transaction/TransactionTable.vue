@@ -7,6 +7,7 @@ import {InternalMUSDWalletIcon, InternalUSDWalletIcon} from "@/Components/Icons/
 import {transactionFormat} from "@/Composables/index.js";
 import debounce from "lodash/debounce.js";
 import Loading from "@/Components/Loading.vue";
+import Modal from "@/Components/Modal.vue";
 
 const props = defineProps({
     walletId: Number,
@@ -21,6 +22,18 @@ const transactionLoading = ref(props.isLoading);
 const refreshTransaction = ref(props.refresh);
 const transactions = ref({data: []})
 const currentPage = ref(1);
+const transactionModal = ref(false);
+const selectedTransaction = ref();
+
+const openTransactionModal = (deposit) => {
+    selectedTransaction.value = deposit;
+    transactionModal.value = true;
+}
+
+const closeModal = () => {
+    transactionModal.value = false
+}
+
 const emit = defineEmits(['update:loading', 'update:refresh']);
 const { formatDateTime, formatAmount, formatType } = transactionFormat();
 
@@ -121,6 +134,7 @@ watch(() => props.refresh, (newVal) => {
         <tr
             v-for="transaction in transactions.data"
             class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 hover:cursor-pointer dark:hover:bg-gray-600"
+            @click="openTransactionModal(transaction)"
         >
            <td class="p-3">
                {{ formatDateTime(transaction.transaction_date) }}
@@ -172,4 +186,33 @@ watch(() => props.refresh, (newVal) => {
             </template>
         </TailwindPagination>
     </div>
+
+    <Modal :show="transactionModal" :title="$t('public.wallet.transaction_details')" @close="closeModal">
+        <div v-if="selectedTransaction">
+            <div class="grid grid-cols-3 items-center">
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_type')}}</span>
+                <span class="text-black dark:text-white py-2">{{ formatType(selectedTransaction.transaction_type) }}</span>
+            </div>
+            <div class="grid grid-cols-3 items-center">
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_id')}}</span>
+                <span class="text-black dark:text-white py-2">{{ selectedTransaction.transaction_id }}</span>
+            </div>
+            <div class="grid grid-cols-3 items-center">
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.date_time')}}</span>
+                <span class="text-black dark:text-white py-2">{{ formatDateTime(selectedTransaction.transaction_date) }}</span>
+            </div>
+            <div class="grid grid-cols-3 items-center">
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.amount')}}</span>
+                <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedTransaction.transaction_amount) }}</span>
+            </div>
+            <div class="grid grid-cols-3 items-center">
+                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>
+                <span class="text-black dark:text-white py-2">{{ selectedTransaction.transaction_status }}</span>
+            </div>
+<!--            <div class="grid grid-cols-3 items-center">-->
+<!--                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.reject_reason')}}</span>-->
+<!--                <span class="text-black dark:text-white py-2">{{ selectedTransaction.remarks ?? '-' }}</span>-->
+<!--            </div>-->
+        </div>
+    </Modal>
 </template>
