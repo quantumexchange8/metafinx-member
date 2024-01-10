@@ -40,7 +40,7 @@ getResults();
 </script>
 
 <template>
-    <div class="flex pt-2 gap-3 md:gap-10">
+    <div class="flex py-8 gap-3 md:gap-10">
         <div class="inline-flex items-center gap-3">
             <LVL1Icon class="h-12" />
             <div class="font-semibold text-sm">
@@ -60,7 +60,7 @@ getResults();
             </div>
         </div>
     </div>
-    <div class="pt-8">
+    <div>
         <InputIconWrapper>
             <template #icon>
                 <SearchIcon aria-hidden="true" class="w-5 h-5" />

@@ -8,6 +8,7 @@ import {ref} from "vue";
 import toast from "@/Composables/toast.js";
 import ReferralTree from "@/Pages/Affiliate/ReferralTree.vue";
 import {transactionFormat} from "@/Composables/index.js";
+import AffiliateNetwork from "@/Pages/Affiliate/AffiliateNetwork.vue";
 
 const props = defineProps({
     referredCounts: Number,
@@ -72,7 +73,7 @@ function copyReferralCodeLink() {
             </p>
         </template>
 
-        <ReferralTree />
+        <AffiliateNetwork />
 
         <div class="flex flex-col space-y-6 pt-8 pb-12 mb-16 md:hidden">
             <h3 class="text-xl font-semibold leading-tight">
