@@ -16,7 +16,10 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="relative overflow-hidden bg-gray-900 bg-[radial-gradient(#333d4b_2px,transparent_1px)] [background-size:64px_64px]">
+    <div class="text-base font-normal text-gray-600 dark:text-gray-400 mb-2">
+        Note: You can only add distributor with existing MetafinX accounts that currently have no associated legs.
+    </div>
+    <div class="relative overflow-hidden bg-gray-900 bg-[radial-gradient(#333d4b_2px,transparent_1px)] [background-size:52px_52px]">
         <div ref="binaryTree" class="flex flex-col justify-center items-center">
             <div class="container mx-auto text-center pt-24">
                 <div class="items-center justify-center flex">

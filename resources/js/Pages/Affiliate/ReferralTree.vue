@@ -2,7 +2,6 @@
 import ReferralChild from "@/Pages/Affiliate/ReferralChild.vue";
 import {ref, watch} from "vue";
 import debounce from "lodash/debounce.js";
-import {LVL1Icon, LVL2Icon, LVL3Icon, LVL4Icon} from "@/Components/Icons/outline.jsx"
 import Input from "@/Components/Input.vue";
 import {SearchIcon} from "@heroicons/vue/outline";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
@@ -40,26 +39,6 @@ getResults();
 </script>
 
 <template>
-    <div class="flex py-8 gap-3 md:gap-10">
-        <div class="inline-flex items-center gap-3">
-            <LVL1Icon class="h-12" />
-            <div class="font-semibold text-sm">
-                {{$t('public.affiliate.lvl_1')}}
-            </div>
-        </div>
-        <div class="inline-flex items-center gap-3">
-            <LVL2Icon class="h-12" />
-            <div class="font-semibold text-sm">
-                {{$t('public.affiliate.lvl_2')}}
-            </div>
-        </div>
-        <div class="inline-flex items-center gap-3">
-            <LVL3Icon class="h-12" />
-            <div class="font-semibold text-sm">
-                {{$t('public.affiliate.lvl_3')}}
-            </div>
-        </div>
-    </div>
     <div>
         <InputIconWrapper>
             <template #icon>

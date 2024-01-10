@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import ReferralTree from "@/Pages/Affiliate/ReferralTree.vue";
 import GenealogyTree from "@/Pages/Affiliate/GenealogyTree/GenealogyTree.vue";
+import {LVL1Icon, LVL2Icon, LVL3Icon} from "@/Components/Icons/outline.jsx";
 
 const categories = ref([
     {
@@ -42,7 +43,26 @@ const categories = ref([
                         </button>
                     </Tab>
                 </TabList>
-
+                <div class="flex py-8 gap-3 md:gap-10">
+                    <div class="inline-flex items-center gap-3">
+                        <LVL1Icon class="h-12" />
+                        <div class="font-semibold text-sm">
+                            {{$t('public.affiliate.lvl_1')}}
+                        </div>
+                    </div>
+                    <div class="inline-flex items-center gap-3">
+                        <LVL2Icon class="h-12" />
+                        <div class="font-semibold text-sm">
+                            {{$t('public.affiliate.lvl_2')}}
+                        </div>
+                    </div>
+                    <div class="inline-flex items-center gap-3">
+                        <LVL3Icon class="h-12" />
+                        <div class="font-semibold text-sm">
+                            {{$t('public.affiliate.lvl_3')}}
+                        </div>
+                    </div>
+                </div>
                 <TabPanels class="mt-2">
                     <TabPanel>
                         <ReferralTree />
