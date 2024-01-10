@@ -161,17 +161,6 @@ class WalletController extends Controller
             ->where('user_id', $user->id)
             ->get();
 
-        $setting_coins = SettingCoin::select('id', 'name', 'symbol')->get();
-        $coins = Coin::where('user_id', $user->id)->select('id', 'address', 'unit', 'price', 'amount')->get();        
-        $coin_prices = CoinPrice::whereDate('price_date', '<=', now()->endOfDay())->select('id', 'setting_coin_id', 'updated_by', 'price', 'price_date')->get();
-        $conversion_rate = ConversionRate::latest()->first();
-        $coinMarketTime = CoinMarketTime::latest()->select('id', 'setting_coin_id', 'open_time', 'close_time', 'frequency_type')->get();
-    
-        $coinMarketData = [
-            'coin_prices' => $coin_prices,
-            '$conversion_rate' => $conversion_rate,
-            'coin_market_time' => $coinMarketTime,
-        ];
 
         $locale = app()->getLocale(); // Get the current locale
 
@@ -191,9 +180,6 @@ class WalletController extends Controller
             'transactions' => $transactions,
             'earnings' => $earnings,
             'subscriptions' => $investmentSubscriptions,
-            'setting_coin' => $setting_coins,
-            'coin' => $coins,
-            'coin_market' => $coinMarketData,
         ]);
     }
 
@@ -254,4 +240,44 @@ class WalletController extends Controller
             'read_at' => $read
         ]);
     }
+
+    public function setting_coin()
+    {
+        $setting_coins = SettingCoin::select('id', 'name', 'symbol')->get();
+
+        return response()->json([
+            'setting_coin' => $setting_coins,
+        ]);
+    }
+
+    public function user_coins()
+    {
+        $user = \Auth::user();
+
+        $coins = Coin::where('user_id', $user->id)->select('id', 'address', 'unit', 'price', 'amount')->get();    
+
+        return response()->json([
+            'coin' => $coins,
+        ]);
+
+    }
+
+    public function coinMarket()
+    {
+        $coin_prices = CoinPrice::whereDate('price_date', '<=', now()->endOfDay())->select('id', 'setting_coin_id', 'updated_by', 'price', 'price_date')->get();
+        $conversion_rate = ConversionRate::latest()->first();
+        $coinMarketTime = CoinMarketTime::latest()->select('id', 'setting_coin_id', 'open_time', 'close_time', 'frequency_type')->get();
+    
+        $coinMarketData = [
+            'coin_prices' => $coin_prices,
+            '$conversion_rate' => $conversion_rate,
+            'coin_market_time' => $coinMarketTime,
+        ];
+
+        return response()->json([
+            'coin_market' => $coinMarketData,
+        ]);
+
+    }
+
 }
