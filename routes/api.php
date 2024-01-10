@@ -39,9 +39,15 @@ Route::middleware(['api', 'auth:api'])->group(function () {
      */
     Route::post('deposit', [WalletController::class, 'deposit']);
     Route::post('withdrawal', [WalletController::class, 'withdrawal']);
+    Route::post('buy_coin', [WalletController::class, 'buy_coin']);
+
 
     Route::get('transaction_history', [WalletController::class, 'transaction_history']);
     Route::get('setting_wallet_address', [WalletController::class, 'setting_wallet_address']);
+    Route::get('setting_coin', [WalletController::class, 'setting_coin']);
+    Route::get('user_coins', [WalletController::class, 'user_coins']);
+    Route::get('coinMarket', [WalletController::class, 'coinMarket']);
+
 
     Route::get('notifications', [WalletController::class, 'notifications']);
     Route::post('read_notification', [WalletController::class, 'read_notification']);
