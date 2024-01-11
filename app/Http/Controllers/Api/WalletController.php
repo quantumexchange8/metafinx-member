@@ -8,6 +8,7 @@ use App\Models\Wallet;
 use App\Models\Earning;
 use App\Models\Payment;
 use App\Models\CoinPrice;
+use App\Models\CoinPayment;
 use App\Models\SettingCoin;
 use Illuminate\Http\Request;
 use App\Models\CoinMarketTime;
@@ -160,7 +161,7 @@ class WalletController extends Controller
             ->with('investment_plan:id,name,roi_per_annum,investment_period')
             ->where('user_id', $user->id)
             ->get();
-
+        $buy_coin_history = CoinPayment::where('user_id', $user->id)->get();
 
         $locale = app()->getLocale(); // Get the current locale
 
@@ -180,6 +181,7 @@ class WalletController extends Controller
             'transactions' => $transactions,
             'earnings' => $earnings,
             'subscriptions' => $investmentSubscriptions,
+            'buy_coin_history' => $buy_coin_history,
         ]);
     }
 
@@ -270,7 +272,7 @@ class WalletController extends Controller
     
         $coinMarketData = [
             'coin_prices' => $coin_prices,
-            '$conversion_rate' => $conversion_rate,
+            'conversion_rate' => $conversion_rate,
             'coin_market_time' => $coinMarketTime,
         ];
 
@@ -280,4 +282,68 @@ class WalletController extends Controller
 
     }
 
+    public function buy_coin(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'amount' => ['required', 'numeric'],
+            'unit' => ['required', 'numeric'],
+            // 'terms' => ['accepted']
+        ])->setAttributeNames([
+                    'amount' => 'Amount',
+                    'unit' => 'Unit',
+                    // 'terms' => 'Terms and Conditions'
+                ]);
+
+        if (!$validator->passes()) {
+            return response()->json([
+                'status' => 'fail',
+                'error' => $validator->errors()->toArray()
+            ]);
+        } else {
+
+            $user = \Auth::user();
+
+            $transaction_id = RunningNumberService::getID('transaction');
+            $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $request->setting_coin_id)->first();
+            $total_unit = $coin->unit + $request->unit;
+            $total_amount = $coin->amount + $request->amount;
+
+            $wallet = Wallet::find($request->wallet_id)->first();
+            
+            if ($wallet->balance < $request->amount) {
+                return response()->json([
+                    'status' => 'fail',
+                    'message' => 'Insufficient Balance'
+                ]);            
+            }
+
+            $wallet->decrement('balance', $request->amount);
+
+            $CoinPayment = CoinPayment::create([
+                'user_id' => $user->id,
+                'wallet_id' => $request->wallet_id,
+                'setting_coin_id' => $request->setting_coin_id,
+                'transaction_id' => $transaction_id,
+                'unit' => $request->unit,
+                'price' => $request->price,
+                'amount' => $request->amount,
+                'conversion_rate' => $request->conversion_rate,
+                'type' => 'BuyCoin',
+                'status' => 'Success',
+            ]);
+
+            $coin->update([
+                'unit' => $total_unit,
+                'price' => $request->price,
+                'amount' => $total_amount,
+            ]);
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'The coin has been purchased successfully.',
+                'transaction_detail' => $CoinPayment,
+                'coin' => $coin,
+            ]);
+        }
+    }
 }
