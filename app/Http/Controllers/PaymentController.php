@@ -71,7 +71,8 @@ class PaymentController extends Controller
             'wallet_id' => $request->wallet_id,
             'transaction_id' => $transaction_id,
             'type' => 'Withdrawal',
-            'amount' => $amount,
+            'amount' => $amount_with_fee,
+            'payment_amount' =>  $amount,
             'payment_charges' => $request->payment_charges,
             'to_wallet_address' => $request->wallet_address,
             'status' => 'Processing'
@@ -84,7 +85,7 @@ class PaymentController extends Controller
             "transactionID" => $payment->transaction_id,
             "address" => $payment->to_wallet_address,
             "currency" => 'TRC20',
-            "amount" => $payment->amount,
+            "amount" => $payment->$amount_with_fee,
             "payment_charges" => $payment->payment_charges,
         ];
 

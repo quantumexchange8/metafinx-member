@@ -52,6 +52,7 @@ class WalletController extends Controller
         $conversion_rate = ConversionRate::latest()->first();
         $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first();
         $coin_market_time = CoinMarketTime::whereIn('setting_coin_id', $coins->pluck('setting_coin_id'))->latest()->first();
+        $coin_payment = CoinPayment::where('user_id', \Auth::id())->get();
 
         return Inertia::render('Wallet/Wallet', [
             'coins' => $coins,
@@ -64,6 +65,7 @@ class WalletController extends Controller
             'withdrawalFee' => SettingWithdrawalFee::latest()->first(),
             'setting_coin' => SettingCoin::where('symbol', 'XLC/MYR')->first(),
             'coin_price_yesterday' => $coin_price_yesterday,
+            'coin_payment' => $coin_payment,
         ]);
     }
 
@@ -501,4 +503,31 @@ class WalletController extends Controller
 //        return response()->json($chartData);
 //    }
 
+    public function getCoinPaymentHistory(Request $request)
+    {
+        $user = \Auth::user();
+
+        $buy_coin_history = CoinPayment::where('user_id', $user->id);
+
+        if ($request->filled('search')) {
+            $search = '%' . $request->input('search') . '%';
+
+            $buy_coin_history->where(function ($query) use ($search) {
+                $query->where('transaction_id', 'like', $search);
+            });
+        }
+
+        if ($request->filled('date')) {
+            $date = $request->input('date');
+            $dateRange = explode(' - ', $date);
+            $start_date = Carbon::createFromFormat('Y-m-d', $dateRange[0])->startOfDay();
+            $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
+
+            $buy_coin_history->whereBetween('created_at', [$start_date, $end_date]);
+        }
+
+        $buy_coin_history = $buy_coin_history->latest()->paginate(10);
+
+        return response()->json($buy_coin_history);
+    }
 }

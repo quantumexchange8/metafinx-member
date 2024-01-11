@@ -72,6 +72,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/getWalletBalance', [WalletController::class, 'getWalletBalance'])->name('wallet.getWalletBalance');
         Route::get('/getWalletHistory/{id}', [WalletController::class, 'getWalletHistory'])->name('wallet.getWalletHistory');
         Route::get('/getTransaction/{type}', [WalletController::class, 'getTransaction'])->name('wallet.getTransaction');
+        Route::get('/getCoinPaymentHistory', [WalletController::class, 'getCoinPaymentHistory'])->name('wallet.getCoinPaymentHistory');
         Route::get('/getCoinChart', [WalletController::class, 'getCoinChart'])->name('getCoinChart');
         Route::post('/deposit', [PaymentController::class, 'deposit'])->name('wallet.deposit');
         Route::post('/withdrawal', [PaymentController::class, 'withdrawal'])->name('wallet.withdrawal');

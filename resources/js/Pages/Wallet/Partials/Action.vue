@@ -3,10 +3,11 @@ import Button from "@/Components/Button.vue";
 import Tooltip from "@/Components/Tooltip.vue";
 import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
-import {CoinIcon, LineChartIcon} from "@/Components/Icons/outline.jsx"
+import {CoinIcon, LineChartIcon, HistoryIcon} from "@/Components/Icons/outline.jsx"
 import BuyCoin from "@/Pages/Wallet/Partials/BuyCoin.vue";
 import CoinChart from "@/Pages/Wallet/Partials/CoinChart.vue";
 import ViewMarket from "@/Pages/Wallet/Partials/ViewMarket.vue";
+import ViewTransaction from "@/Pages/Wallet/Partials/ViewTransaction.vue";
 
 const props = defineProps({
     coin: Object,
@@ -16,6 +17,7 @@ const props = defineProps({
     setting_coin: Object,
     coin_price_yesterday: Object,
     coin_market_time: Object,
+    coin_payment: Object,
 })
 
 const coinModal = ref(false);
@@ -28,6 +30,9 @@ const openMemberModal = (componentType) => {
     }
     else if (componentType === 'view_market') {
         modalComponent.value = 'View Market';
+    } 
+    else if (componentType === 'view_transaction') {
+        modalComponent.value = 'View Transaction';
     }
 }
 
@@ -64,6 +69,18 @@ const closeModal = () => {
                 <span class="sr-only">View market</span>
             </Button>
         </Tooltip>
+        <Tooltip content="View transactions" placement="bottom">
+            <Button
+                type="button"
+                class="flex justify-center w-8 h-8 relative focus:outline-none"
+                variant="gray"
+                @click="openMemberModal('view_transaction')"
+                pill
+            >
+                <HistoryIcon aria-hidden="true" class="w-4 h-4 absolute" />
+                <span class="sr-only">View transactions</span>
+            </Button>
+        </Tooltip>
     </div>
 
 
@@ -84,6 +101,11 @@ const closeModal = () => {
                 :setting_coin="setting_coin"
                 :coin_price="coin_price"
                 :coin_price_yesterday="coin_price_yesterday"
+            />
+        </template>
+        <template v-if="modalComponent === 'View Transaction'">
+            <ViewTransaction 
+                :coin_payment="coin_payment"
             />
         </template>
     </Modal>

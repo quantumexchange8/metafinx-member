@@ -112,8 +112,8 @@ class WalletController extends Controller
                 ]);
             }
             $withdrawal_fee = SettingWithdrawalFee::latest()->first();
-            $amount_with_fee = $amount + $withdrawal_fee->amount;
-            $wallet->balance -= $amount_with_fee;
+            $payment_amount = $amount - $withdrawal_fee->amount;
+            $wallet->balance -= $amount;
             $wallet->save();
 
             $transaction_id = RunningNumberService::getID('transaction');
@@ -124,6 +124,7 @@ class WalletController extends Controller
                 'transaction_id' => $transaction_id,
                 'type' => 'Withdrawal',
                 'amount' => $amount,
+                'payment_amount' => $payment_amount,
                 'payment_charges' => $request->payment_charges,
                 'to_wallet_address' => $request->wallet_address,
                 'status' => 'Processing'
