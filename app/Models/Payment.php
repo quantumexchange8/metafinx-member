@@ -17,6 +17,7 @@ class Payment extends Model
         'amount',
         'price',
         'payment_charges',
+        'payment_amount',
         'to_wallet_address',
         'type',
         'status',
