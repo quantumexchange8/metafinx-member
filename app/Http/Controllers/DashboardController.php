@@ -45,6 +45,7 @@ class DashboardController extends Controller
         $coin_price = CoinPrice::whereDate('price_date', today())->first();
         $conversion_rate = ConversionRate::latest()->first();
         $coin_market_time = CoinMarketTime::where('setting_coin_id', $coin->setting_coin_id)->latest()->first();
+        $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first();
 
         $wallet_address = SettingWalletAddress::inRandomOrder()->first();
 
@@ -58,6 +59,7 @@ class DashboardController extends Controller
             'setting_coin' => SettingCoin::where('symbol', 'XLC/MYR')->first(),
             'conversion_rate' => $conversion_rate,
             'coin_market_time' => $coin_market_time,
+            'coin_price_yesterday' => $coin_price_yesterday,
         ]);
     }
 

@@ -1,6 +1,36 @@
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 import {transactionFormat} from "@/Composables/index.js";
+import {XLCoinLogo} from "@/Components/Icons/outline.jsx";
+
+const props = defineProps({
+    setting_coin: Object,
+    coin_price: Object,
+    coin_price_yesterday: Object,
+})
+
+const getAmountClass = computed(() => {
+    if (props.coin_price_yesterday.price < props.coin_price.price) {
+        return 'text-success-500';
+    } else if (props.coin_price_yesterday.price > props.coin_price.price) {
+        return 'text-error-500';
+    }
+    return '';
+});
+
+const getAmountPrefix = computed(() => {
+    if (props.coin_price_yesterday.price < props.coin_price.price) {
+        return '+';
+    } else if (props.coin_price_yesterday.price > props.coin_price.price) {
+        return '-';
+    }
+    return '';
+});
+
+const priceDiffPercentage = computed(() => {
+    return (props.coin_price.price / props.coin_price_yesterday.price).toFixed(2);
+});
+
 
 const liveCryptoPrices = [
     { value: 'btcusdt', name: 'Bitcoin', coin: 'BTC', img: '/assets/crypto/bitcoin.png' },
@@ -14,6 +44,8 @@ const liveCryptoPrices = [
     { value: 'dogeusdt', name: 'Dogecoin', coin: 'DOGE', img: '/assets/crypto/dogecoin.png' },
     { value: 'trxusdt', name: 'TRON', coin: 'TRX', img: '/assets/crypto/tron.png' },
 ];
+
+const coinPriceYesterdayRef = ref(props.coin_price_yesterday);
 
 const cryptoPrices = ref({});
 const cryptoPricesChanges = ref({});
@@ -112,6 +144,31 @@ onMounted(() => {
                         </div>
                     </div>
                 </td>
+            </tr>
+            <tr class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600">
+                <td class="py-3 inline-flex items-center gap-3">
+                    <div class="bg-white rounded-full grow-0 shrink-0">
+                        <XLCoinLogo class="w-6 h-6" />
+                    </div>
+                    <div>
+                        <span class="dark:text-white text-sm">{{ setting_coin.symbol }}</span> <span class="dark:text-gray-400">{{ setting_coin.name }}</span>
+                    </div>
+                </td>
+                <td class="p-2 w-1/4">
+                    <div v-if="isLoading" class="animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-500 w-32 mb-2.5"></div>
+                    <div v-else>
+                        ${{ coin_price.price }}
+                    </div>
+                </td>
+                <td class="p-2 w-1/4 text-end">
+                    <div v-if="isLoading" class="animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-500 w-32 mb-2.5"></div>
+                    <div v-else>
+                         <div :class="getAmountClass">
+                            {{ getAmountPrefix }}{{ priceDiffPercentage }} %
+                        </div>
+                    </div>
+                </td>
+
             </tr>
             </tbody>
         </table>

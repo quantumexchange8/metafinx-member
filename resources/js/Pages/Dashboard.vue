@@ -24,6 +24,7 @@ const props = defineProps({
     coin_price: Object,
     conversion_rate: Object,
     coin_market_time: Object,
+    coin_price_yesterday: Object,
 })
 const { formatDateTime, formatAmount } = transactionFormat();
 
@@ -105,7 +106,7 @@ const closeModal = () => {
             </div>
         </Link>
 
-        <div class="flex flex-nowrap md:grid md:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible my-8">
+        <div class="flex flex-nowrap md:grid md:grid-cols-6 gap-3 overflow-x-auto md:overflow-visible my-8">
             <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
                     <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.monthly_return')}}</p>
@@ -130,10 +131,26 @@ const closeModal = () => {
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
                 </div>
             </div>
+            <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+                <div class="px-5 py-2.5 flex flex-col justify-between">
+                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.sponsor_bonus')}}</p>
+                    <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
+                </div>
+            </div>
+            <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+                <div class="px-5 py-2.5 flex flex-col justify-between">
+                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.pairing_bonus')}}</p>
+                    <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
+                </div>
+            </div>
         </div>
 
         <div class="p-5 my-8 mb-28 bg-white overflow-hidden md:overflow-visible rounded-xl border border-gray-200 dark:border-transparent shadow dark:bg-gray-700">
-            <CryptoPriceTable />
+            <CryptoPriceTable 
+                :coin_price="coin_price"
+                :setting_coin="setting_coin"
+                :coin_price_yesterday="coin_price_yesterday"
+            />
         </div>
 
         <Modal :show="coinModal" title="Buy Coin" @close="closeModal" max-width="2xl">

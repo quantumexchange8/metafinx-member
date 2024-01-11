@@ -73,6 +73,8 @@ return [
         "affiliate_earning" => "聯盟收益",
         "dividend_earning" => "股息收益",
         "musd_wallet" => "Musd錢包",
+        "sponsor_bonus" => "赞助奖金",
+        "pairing_bonus" => "配对奖金",
     ],
     "crypto_price_table" => [
         "cryptocurrency_market_price" => "加密貨幣市場價格",

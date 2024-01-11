@@ -73,6 +73,8 @@ return [
         "affiliate_earning" => "Affiliate Earning",
         "dividend_earning" => "Dividend Earning",
         "musd_wallet" => "Musd Wallet",
+        "sponsor_bonus" => "Sponsor Bonus",
+        "pairing_bonus" => "Pairing Bonus",
     ],
     "crypto_price_table" => [
         "cryptocurrency_market_price" => "Cryptocurrency Market Price",
