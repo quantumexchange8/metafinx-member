@@ -122,13 +122,6 @@ const fetchData = async () => {
                         zoom: {
                             enabled: false,                                      // enable zooming
                         },
-                        callbacks: {
-                            beforeZoom: () => function(start, end) {                  // called before zoom, return false to prevent zoom
-                                return true;
-                            },
-                            afterZoom: () => function(start, end) {                   // called after zoom
-                            }
-                        }
                     }
                 }
             }
