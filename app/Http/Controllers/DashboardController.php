@@ -56,7 +56,7 @@ class DashboardController extends Controller
             'random_address' => $wallet_address,
             'coin' => $coin,
             'coin_price' => $coin_price,
-            'setting_coin' => SettingCoin::where('symbol', 'XLC/MYR')->first(),
+            'setting_coin' => SettingCoin::where('symbol', 'MXT/USD')->first(),
             'conversion_rate' => $conversion_rate,
             'coin_market_time' => $coin_market_time,
             'coin_price_yesterday' => $coin_price_yesterday,

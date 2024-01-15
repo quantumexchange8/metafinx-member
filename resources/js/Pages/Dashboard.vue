@@ -146,7 +146,7 @@ const closeModal = () => {
         </div>
 
         <div class="p-5 my-8 mb-28 bg-white overflow-hidden md:overflow-visible rounded-xl border border-gray-200 dark:border-transparent shadow dark:bg-gray-700">
-            <CryptoPriceTable 
+            <CryptoPriceTable
                 :coin_price="coin_price"
                 :setting_coin="setting_coin"
                 :coin_price_yesterday="coin_price_yesterday"
