@@ -1,6 +1,6 @@
 <script setup>
 import Button from "@/Components/Button.vue";
-import {DepositIcon, Wallet} from "@/Components/Icons/outline.jsx";
+import {DepositIcon, InternalUSDWalletIcon} from "@/Components/Icons/outline.jsx";
 import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 import QrcodeVue from 'qrcode.vue';
@@ -84,7 +84,7 @@ function copyTestingCode () {
     <Modal :show="depositModal" :title="$t('public.wallet.deposit')" @close="closeModal">
         <div class="space-y-2">
             <div class="hidden md:inline-flex items-center justify-center gap-2 w-full">
-                <span class="rounded-full w-12 h-12 grow-0 shrink-0 bg-pink-600"><Wallet class="w-10 h-10 mt-1 ml-1" /></span>
+                <span class="rounded-full w-12 h-12 grow-0 shrink-0 bg-gradient-to-b from-pink-400 to-pink-500"><InternalUSDWalletIcon class="w-10 h-10 mt-1 ml-1" /></span>
                 <h3 class="text-xl font-semibold dark:text-white">{{$t('public.wallet.internal_wallet')}}</h3>
             </div>
             <div class="hidden md:flex justify-center">

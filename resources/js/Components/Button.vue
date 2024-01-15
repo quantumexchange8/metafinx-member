@@ -78,7 +78,7 @@ const classes = computed(() => [
     ...baseClasses,
     iconOnly
         ? {
-                'p-1.5': size == 'sm',
+                'p-1': size == 'sm',
                 'p-2': size == 'base',
                 'p-3': size == 'lg',
             }

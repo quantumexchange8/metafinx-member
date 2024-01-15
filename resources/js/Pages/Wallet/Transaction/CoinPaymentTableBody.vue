@@ -35,7 +35,7 @@ const closeModal = () => {
         @click="openTransactionModal(coin_payment)"
     >
         <td class="pl-5 py-3 inline-flex items-center gap-2">
-            <div v-if="coin_payment.wallet.type === 'internal_wallet'" class="bg-gradient-to-t from-pink-300 to-pink-600 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
+            <div v-if="coin_payment.wallet.type === 'internal_wallet'" class="bg-gradient-to-b from-pink-400 to-pink-500 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
                 <InternalUSDWalletIcon class="mt-0.5 ml-0.5"/>
             </div>
             <div v-else-if="coin_payment.wallet.type === 'musd_wallet'" class="bg-gradient-to-t from-warning-300 to-warning-600 dark:shadow-warning-500 rounded-full w-4 h-4 shrink-0 grow-0">

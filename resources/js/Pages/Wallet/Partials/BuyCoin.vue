@@ -94,7 +94,7 @@ const fullWithdraw = () => {
                     <div class="flex items-center gap-1">
                         <div>{{ $t('public.wallet.pay') }}</div>
                         <div class="inline-flex items-center gap-1">
-                            <div class="bg-gradient-to-t from-pink-300 to-pink-600 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
+                            <div class="bg-gradient-to-b from-pink-400 to-pink-500 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
                                 <InternalUSDWalletIcon class="mt-0.5 ml-0.5"/>
                             </div>
                             <span>Internal Wallet</span>

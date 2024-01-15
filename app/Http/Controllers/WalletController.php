@@ -63,7 +63,7 @@ class WalletController extends Controller
             'wallet_sel' => $wallet_sel,
             'random_address' => $wallet_address,
             'withdrawalFee' => SettingWithdrawalFee::latest()->first(),
-            'setting_coin' => SettingCoin::where('symbol', 'XLC/MYR')->first(),
+            'setting_coin' => SettingCoin::where('symbol', 'MXT/USD')->first(),
             'coin_price_yesterday' => $coin_price_yesterday,
             'coin_payment' => $coin_payment,
         ]);

@@ -886,3 +886,46 @@ export const XLCoinLogo = defineComponent({
         )
     },
 })
+
+export const ZoomInIcon = defineComponent({
+    setup() {
+        return () => (
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M14 14L11.1 11.1M7.33333 5.33333V9.33333M5.33333 7.33333H9.33333M12.6667 7.33333C12.6667 10.2789 10.2789 12.6667 7.33333 12.6667C4.38781 12.6667 2 10.2789 2 7.33333C2 4.38781 4.38781 2 7.33333 2C10.2789 2 12.6667 4.38781 12.6667 7.33333Z"
+                    stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        )
+    },
+})
+
+export const ZoomOutIcon = defineComponent({
+    setup() {
+        return () => (
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M14 14L11.1 11.1M5.33333 7.33333H9.33333M12.6667 7.33333C12.6667 10.2789 10.2789 12.6667 7.33333 12.6667C4.38781 12.6667 2 10.2789 2 7.33333C2 4.38781 4.38781 2 7.33333 2C10.2789 2 12.6667 4.38781 12.6667 7.33333Z"
+                    stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        )
+    },
+})
+
+export const Target02Icon = defineComponent({
+    setup() {
+        return () => (
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_4669_44992)">
+                    <path
+                        d="M14.6663 7.99967H11.9997M3.99967 7.99967H1.33301M7.99967 3.99967V1.33301M7.99967 14.6663V11.9997M13.333 7.99967C13.333 10.9452 10.9452 13.333 7.99967 13.333C5.05416 13.333 2.66634 10.9452 2.66634 7.99967C2.66634 5.05416 5.05416 2.66634 7.99967 2.66634C10.9452 2.66634 13.333 5.05416 13.333 7.99967Z"
+                        stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+                <defs>
+                    <clipPath id="clip0_4669_44992">
+                        <rect width="16" height="16" fill="white"/>
+                    </clipPath>
+                </defs>
+            </svg>
+        )
+    },
+})
