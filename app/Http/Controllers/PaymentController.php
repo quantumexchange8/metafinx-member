@@ -71,7 +71,7 @@ class PaymentController extends Controller
         $transaction = Transaction::create([
             'category' => 'wallet',
             'user_id' => $user->id,
-            'wallet_id' => $request->wallet_id,
+            'from_wallet_id' => $request->wallet_id,
             'transaction_number' => $transaction_id,
             'transaction_type' => 'Withdrawal',
             'amount' => $amount,
@@ -124,17 +124,20 @@ class PaymentController extends Controller
                 'status' => $result['status'],
                 'remarks' => $result['remarks']
             ]);
-            $wallet = Wallet::find($transaction->wallet_id);
             if ($transaction->status =='Success') {
                 if ($transaction->transaction_type == 'Deposit') {
+                    $wallet = Wallet::find($transaction->to_wallet_id);
+
                     $wallet->update([
                         'balance' => $wallet->balance + $transaction->transaction_amount
                     ]);
                 }
             } else {
                 if ($transaction->transaction_type == 'Withdrawal') {
+                    $wallet = Wallet::find($transaction->from_wallet_id);
+
                     $wallet->update([
-                        'balance' => $wallet->balance + $transaction->transaction_amount
+                        'balance' => $wallet->balance + $transaction->amount
                     ]);
                 }
 
