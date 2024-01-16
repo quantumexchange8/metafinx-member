@@ -817,6 +817,20 @@ export const SwitchVerticalIcon = defineComponent({
     },
 })
 
+export const SwitchHorizontalIcon = defineComponent({
+    setup() {
+        return () => (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.66634 10.8333L3.33301 14.1667L6.66634 17.5" fill="white"/>
+                <path d="M13.333 2.5L16.6663 5.83333L13.333 9.16667" fill="white"/>
+                <path
+                    d="M16.6663 14.1667H3.33301M3.33301 14.1667L6.66634 10.8333M3.33301 14.1667L6.66634 17.5M3.33301 5.83333H16.6663M16.6663 5.83333L13.333 2.5M16.6663 5.83333L13.333 9.16667"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        )
+    },
+})
+
 export const XLCoinLogo = defineComponent({
     setup() {
         return () => (
@@ -925,6 +939,17 @@ export const Target02Icon = defineComponent({
                         <rect width="16" height="16" fill="white"/>
                     </clipPath>
                 </defs>
+            </svg>
+        )
+    },
+})
+
+export const ArrowRight = defineComponent({
+    setup() {
+        return () => (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.1665 9.99984H15.8332M15.8332 9.99984L9.99984 4.1665M15.8332 9.99984L9.99984 15.8332"
+                      stroke="currentColor" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         )
     },

@@ -14,7 +14,7 @@ import Tooltip from "@/Components/Tooltip.vue";
 import BaseListbox from "@/Components/BaseListbox.vue";
 
 const props = defineProps({
-    wallet_sel: Array,
+    depositWalletSel: Array,
     random_address: Object
 })
 const depositModal = ref(false);
@@ -78,13 +78,13 @@ function copyTestingCode () {
         @click="openDepositModal"
     >
         <DepositIcon aria-hidden="true" class="w-5 h-5" />
-        <span class="uppercase">{{$t('public.wallet.deposit')}}</span>
+        <span class="uppercase text-sm font-semibold">{{$t('public.wallet.deposit')}}</span>
     </Button>
 
     <Modal :show="depositModal" :title="$t('public.wallet.deposit')" @close="closeModal">
         <div class="space-y-2">
             <div class="hidden md:inline-flex items-center justify-center gap-2 w-full">
-                <span class="rounded-full w-12 h-12 grow-0 shrink-0 bg-gradient-to-b from-pink-400 to-pink-500"><InternalUSDWalletIcon class="w-10 h-10 mt-1 ml-1" /></span>
+                <span class="rounded-full w-8 h-8 grow-0 shrink-0 bg-gradient-to-b from-pink-400 to-pink-500"><InternalUSDWalletIcon class="w-6 h-6 mt-1 ml-1" /></span>
                 <h3 class="text-xl font-semibold dark:text-white">{{$t('public.wallet.internal_wallet')}}</h3>
             </div>
             <div class="hidden md:flex justify-center">
@@ -110,7 +110,7 @@ function copyTestingCode () {
                     <div class="flex flex-col w-full">
                         <BaseListbox
                             v-model="form.wallet_id"
-                            :options="props.wallet_sel"
+                            :options="props.depositWalletSel"
                             :error="form.errors.wallet_id"
                         />
                     </div>

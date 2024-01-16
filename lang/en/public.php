@@ -142,6 +142,7 @@ return [
         "your_assets" => "Your Assets",
         "deposit" => "Deposit",
         "internal_wallet" => "Internal Wallet",
+        "internal_transfer" => "Internal Transfer",
         "scan_QR" => "Scan QR code to deposit",
         "select_wallet" => "Select Wallet",
         "amount" => "Amount",

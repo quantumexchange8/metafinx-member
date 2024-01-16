@@ -7,6 +7,7 @@ use App\Http\Requests\WithdrawalRequest;
 use App\Models\Payment;
 use App\Models\PaymentStatus;
 use App\Models\SettingWithdrawalFee;
+use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Services\RunningNumberService;
 use Http;
@@ -20,16 +21,17 @@ class PaymentController extends Controller
         $user = \Auth::user();
         $transaction_id = RunningNumberService::getID('transaction');
 
-        $payment = Payment::create([
+        $transaction = Transaction::create([
+            'category' => 'wallet',
             'user_id' => $user->id,
-            'wallet_id' => $request->wallet_id,
-            'transaction_id' => $transaction_id,
+            'to_wallet_id' => $request->wallet_id,
+            'transaction_number' => $transaction_id,
             'txn_hash' => $request->txn_hash,
-            'type' => 'Deposit',
+            'transaction_type' => 'Deposit',
             'amount' => $request->amount,
-            'payment_charges' => $request->payment_charges,
+            'transaction_charges' => 0,
+            'transaction_amount' => $request->amount,
             'to_wallet_address' => $request->to_wallet_address,
-            'price' => $request->amount,
             'status' => 'Pending'
         ]);
 
@@ -37,11 +39,11 @@ class PaymentController extends Controller
         $hashedToken = md5('metafinx@support.com' . $payout['apiKey']);
         $params = [
             "token" => $hashedToken,
-            "transactionID" => $payment->transaction_id,
-            "address" => $payment->to_wallet_address,
+            "transactionID" => $transaction->transaction_number,
+            "address" => $transaction->to_wallet_address,
             "currency" => 'TRC20',
-            "amount" => $payment->amount,
-            "TxID" => $payment->txn_hash,
+            "amount" => $transaction->transaction_amount,
+            "TxID" => $transaction->txn_hash,
         ];
 
         $url = $payout['base_url'] . '/receiveDeposit';
@@ -60,20 +62,21 @@ class PaymentController extends Controller
             throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
         }
         $withdrawal_fee = SettingWithdrawalFee::latest()->first();
-        $amount_with_fee = $amount + $withdrawal_fee->amount;
-        $wallet->balance -= $amount_with_fee;
+        $final_amount = $amount - $withdrawal_fee->amount;
+        $wallet->balance -= $amount;
         $wallet->save();
 
         $transaction_id = RunningNumberService::getID('transaction');
 
-        $payment = Payment::create([
+        $transaction = Transaction::create([
+            'category' => 'wallet',
             'user_id' => $user->id,
             'wallet_id' => $request->wallet_id,
-            'transaction_id' => $transaction_id,
-            'type' => 'Withdrawal',
-            'amount' => $amount_with_fee,
-            'payment_amount' =>  $amount,
-            'payment_charges' => $request->payment_charges,
+            'transaction_number' => $transaction_id,
+            'transaction_type' => 'Withdrawal',
+            'amount' => $amount,
+            'transaction_amount' =>  $final_amount,
+            'transaction_charges' => $request->payment_charges,
             'to_wallet_address' => $request->wallet_address,
             'status' => 'Processing'
         ]);
@@ -82,11 +85,11 @@ class PaymentController extends Controller
         $hashedToken = md5('metafinx@support.com' . $payout['apiKey']);
         $params = [
             "token" => $hashedToken,
-            "transactionID" => $payment->transaction_id,
-            "address" => $payment->to_wallet_address,
+            "transactionID" => $transaction->transaction_number,
+            "address" => $transaction->to_wallet_address,
             "currency" => 'TRC20',
-            "amount" => $payment->$amount_with_fee,
-            "payment_charges" => $payment->payment_charges,
+            "amount" => $transaction->transaction_amount,
+            "payment_charges" => $transaction->transaction_charges,
         ];
 
         $url = $payout['base_url'] . '/receiveWithdrawal';
@@ -109,34 +112,34 @@ class PaymentController extends Controller
             "remarks" => $data["remarks"],
         ];
 
-        $payment = Payment::query()
-            ->where('transaction_id', $result['transactionID'])
+        $transaction = Transaction::query()
+            ->where('transaction_number', $result['transactionID'])
             ->first();
 
-        $dataToHash = md5($payment->transaction_id . $payment->to_wallet_address);
+        $dataToHash = md5($transaction->transaction_number . $transaction->to_wallet_address);
 
         if ($result['token'] === $dataToHash) {
             //proceed approval
-            $payment->update([
+            $transaction->update([
                 'status' => $result['status'],
                 'remarks' => $result['remarks']
             ]);
-            $wallet = Wallet::find($payment->wallet_id);
-            if ($payment->status =='Success') {
-                if ($payment->type == 'Deposit') {
+            $wallet = Wallet::find($transaction->wallet_id);
+            if ($transaction->status =='Success') {
+                if ($transaction->transaction_type == 'Deposit') {
                     $wallet->update([
-                        'balance' => $wallet->balance + $payment->amount
+                        'balance' => $wallet->balance + $transaction->transaction_amount
                     ]);
                 }
             } else {
-                if ($payment->type == 'Withdrawal') {
+                if ($transaction->transaction_type == 'Withdrawal') {
                     $wallet->update([
-                        'balance' => $wallet->balance + $payment->amount
+                        'balance' => $wallet->balance + $transaction->transaction_amount
                     ]);
                 }
 
                 PaymentStatus::create([
-                    'message' => 'Payment with ID ' . $payment->id . ', STATUS is ' . $payment->status
+                    'message' => 'Payment with ID ' . $transaction->id . ', STATUS is ' . $transaction->status
                 ]);
             }
         }

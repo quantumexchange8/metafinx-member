@@ -22,13 +22,13 @@ class Coin extends Model
     {
         return $this->belongsTo(SettingCoin::class, 'setting_coin_id', 'id');
     }
-    
+
     public function setCoinAddress(): void
     {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        $randomString = 'XLCx';
-        
-        $length = 10 - strlen($randomString); // Remaining length after 'XLCx'
+        $randomString = 'MXTx';
+
+        $length = 10 - strlen($randomString); // Remaining length after 'MXTx'
 
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, strlen($characters) - 1)];

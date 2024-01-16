@@ -38,7 +38,6 @@ const form = useForm({
 })
 
 const submit = () => {
-    form.amount = calculatedBalance.value;
     form.post(route('wallet.withdrawal'), {
         onSuccess: () => {
             closeModal();
@@ -57,7 +56,7 @@ const fullWithdraw = () => {
         form.errors.wallet_id = '';
         form.amount = selectedWallet.balance || 0;
     }
-};
+}
 
 const calculatedBalance = computed(() => {
     const calculated = form.amount - transactionFee.value;
@@ -72,7 +71,7 @@ const calculatedBalance = computed(() => {
         @click="openWithdrawalModal"
     >
         <WithdrawalIcon aria-hidden="true" class="w-5 h-5" />
-        <span class="uppercase">{{$t('public.wallet.withdrawal')}}</span>
+        <span class="uppercase text-sm font-semibold">{{$t('public.wallet.withdrawal')}}</span>
     </Button>
 
     <Modal :show="withdrawalModal" :title="$t('public.wallet.withdrawal')" @close="closeModal">
@@ -117,7 +116,15 @@ const calculatedBalance = computed(() => {
                             :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                             v-model="form.amount"
                         />
-                        <Button variant="gray" size="sm" class="absolute  top-1/2 transform -translate-y-1/2 end-3" @click.stop="fullWithdraw" @click.prevent="openWithdrawalModal">{{$t('public.wallet.full_amount')}}</Button>
+                        <Button
+                            type="button"
+                            variant="gray"
+                            size="sm"
+                            class="absolute top-1/2 transform -translate-y-1/2 end-3"
+                            @click="fullWithdraw"
+                        >
+                            {{$t('public.wallet.full_amount')}}
+                        </Button>
                         <InputError :message="form.errors.amount" class="mt-2" />
                     </div>
                 </div>

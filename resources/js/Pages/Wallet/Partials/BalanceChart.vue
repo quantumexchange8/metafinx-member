@@ -147,7 +147,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="w-full md:h-[200px]">
+    <div class="w-[300px] md:h-[200px]">
         <canvas id="planChart"></canvas>
     </div>
 </template>

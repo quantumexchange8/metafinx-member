@@ -36,8 +36,17 @@ class WalletController extends Controller
         $wallets = Wallet::where('user_id', \Auth::id());
 
         $totalBalance = clone $wallets;
+        $deposit_wallets = clone $wallets;
 
-        $wallet_sel = $wallets->where('type', 'internal_wallet')->get()->map(function ($wallet) {
+        $wallet_sel = $wallets->get()->map(function ($wallet) {
+            return [
+                'value' => $wallet->id,
+                'label' => $wallet->name,
+                'balance' => $wallet->balance,
+            ];
+        });
+
+        $depositWalletSel = $deposit_wallets->where('type', 'internal_wallet')->get()->map(function ($wallet) {
             return [
                 'value' => $wallet->id,
                 'label' => $wallet->name,
@@ -55,12 +64,14 @@ class WalletController extends Controller
         $coin_payment = CoinPayment::where('user_id', \Auth::id())->get();
 
         return Inertia::render('Wallet/Wallet', [
+            'wallets' => $wallets->get(),
             'coins' => $coins,
             'coin_price' => $coin_price,
             'conversion_rate' => $conversion_rate,
             'coin_market_time' => $coin_market_time,
             'totalBalance' => $totalBalance->sum('balance'),
             'wallet_sel' => $wallet_sel,
+            'depositWalletSel' => $depositWalletSel,
             'random_address' => $wallet_address,
             'withdrawalFee' => SettingWithdrawalFee::latest()->first(),
             'setting_coin' => SettingCoin::where('symbol', 'MXT/USD')->first(),
@@ -98,7 +109,7 @@ class WalletController extends Controller
                 'borderColor' => '#384250',
                 'borderWidth' => 4,
                 'circumference' => [
-                    $wallet->balance / $wallets->sum('balance') * 360
+                    $wallet->balance != 0 ? $wallet->balance / $wallets->sum('balance') * 360 : 0
                 ]
             ];
 
@@ -361,6 +372,11 @@ class WalletController extends Controller
 
         return response()->json($chartData);
     }
+
+//    public function internalTransfer(Request $request)
+//    {
+//
+//    }
 
     public function buyCoin(BuyCoinRequest $request)
     {

@@ -125,7 +125,7 @@ const clearFilter = () => {
         <div>
             <Button
                 type="button"
-                variant="secondary"
+                variant="secondary-700"
                 @click="clearFilter"
             >
                 Clear
