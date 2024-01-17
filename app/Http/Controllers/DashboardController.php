@@ -8,6 +8,7 @@ use App\Models\CoinPrice;
 use App\Models\ConversionRate;
 use App\Models\Earning;
 use App\Models\InvestmentSubscription;
+use App\Models\Setting;
 use App\Models\SettingCoin;
 use App\Models\SettingWalletAddress;
 use App\Models\Wallet;
@@ -60,6 +61,7 @@ class DashboardController extends Controller
             'conversion_rate' => $conversion_rate,
             'coin_market_time' => $coin_market_time,
             'coin_price_yesterday' => $coin_price_yesterday,
+            'gasFee' => Setting::where('slug', 'gas-fee')->latest()->first(),
         ]);
     }
 

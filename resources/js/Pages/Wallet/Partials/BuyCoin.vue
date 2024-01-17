@@ -78,11 +78,6 @@ const closeModal = () => {
     emit('update:coinModal', false);
 }
 
-const fullAmount = () => {
-    form.amount = props.wallet_sel[0].balance || 0;
-    coinAmount.value = form.amount;
-};
-
 const priceDiffPercentage = computed(() => {
     return (props.coin_price.price / props.coin_price_yesterday.price).toFixed(2)
 })
@@ -157,15 +152,6 @@ const getAmountPrefix = computed(() => {
                         :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         v-model="coinAmount"
                     />
-                    <Button
-                        type="button"
-                        variant="gray"
-                        size="sm"
-                        class="absolute end-2 justify-center mt-1 mr-5"
-                        @click="fullAmount"
-                    >
-                        {{$t('public.wallet.full_amount')}}
-                    </Button>
                     <InputError :message="form.errors.amount" class="mt-2" />
                     <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
                         Current balance: $ {{ props.wallet_sel[0].balance }}

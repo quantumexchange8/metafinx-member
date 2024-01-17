@@ -29,29 +29,20 @@ const closeModal = () => {
     depositModal.value = false
 }
 
-const plans = [
-    {
-        label: props.wallets[0].name + ' to ' + props.wallets[1].name,
-        value: 'InternalWalletToMUSDWallet',
-        wallet: props.wallets[0].id,
-        name: props.wallets[0].name,
-        balance: props.wallets[0].balance,
-    },
-    {
-        label: props.wallets[1].name + ' to ' + props.wallets[0].name,
-        value: 'MUSDWalletToInternalWallet',
-        wallet: props.wallets[1].id,
-        name: props.wallets[1].name,
-        balance: props.wallets[1].balance,
-    },
-]
+const plans = props.wallets.map((wallet, index) => ({
+    label: `${wallet.name} to ${props.wallets[1 - index].name}`,
+    value: index === 0 ? 'InternalWalletToMUSDWallet' : 'MUSDWalletToInternalWallet',
+    wallet: wallet.id,
+    name: wallet.name,
+    balance: wallet.balance,
+}));
 
 const selected = ref(plans[0])
 const form = useForm({
-    wallet_id: '',
+    from_wallet_id: '',
+    to_wallet_id: '',
     amount: '',
-    txn_hash: '',
-    type: '',
+    remarks: '',
     terms: false
 })
 
@@ -62,9 +53,20 @@ watch(selected, (newVal) => {
 })
 
 const submit = () => {
-    form.type = selected.value.label
+    form.from_wallet_id = selected.value.wallet;
+    // Find the other wallet based on the selected plan
+    const otherWallet = plans.find(plan => plan.value !== selected.value.value);
 
-    form.post(route('wallet.deposit'), {
+    if (otherWallet) {
+        form.to_wallet_id = otherWallet.wallet;
+    } else {
+        // Handle the case where the other wallet is not found (optional)
+        console.error('Error: Other wallet not found');
+        return;
+    }
+    form.remarks = selected.value.label
+
+    form.post(route('wallet.internalTransfer'), {
         onSuccess: () => {
             closeModal();
             form.reset();
@@ -156,6 +158,7 @@ const fullAmount = () => {
                         </div>
                     </RadioGroupOption>
                 </div>
+                <InputError :message="form.errors.from_wallet_id" class="mt-2" />
             </RadioGroup>
 
             <div class="flex flex-col sm:flex-row gap-4 mt-5">
@@ -179,10 +182,10 @@ const fullAmount = () => {
                     >
                         {{ $t('public.wallet.full_amount') }}
                     </Button>
+                    <InputError :message="form.errors.amount" class="mt-2" />
                     <div class="text-sm font-normal text-gray-600 dark:text-gray-400 mt-1">
                         {{ selected.name }} balance: $ {{ selected.balance }}
                     </div>
-                    <InputError :message="form.errors.amount" class="mt-2" />
                 </div>
             </div>
 

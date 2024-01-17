@@ -216,7 +216,7 @@ watchEffect(() => {
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>
                 <span class="text-black col-span-2 dark:text-white py-2">{{ selectedTransaction.transaction_status }}</span>
             </div>
-            <div v-if="selectedTransaction.transaction_type === 'Deposit' || selectedTransaction.transaction_type === 'Withdrawal'" class="grid grid-cols-3 items-center">
+            <div v-if="selectedTransaction.transaction_type === 'Deposit' || selectedTransaction.transaction_type === 'Withdrawal' || selectedTransaction.transaction_type === 'InternalTransfer'" class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Remarks</span>
                 <span class="text-black col-span-2 dark:text-white py-2">{{ selectedTransaction.transaction_remark ?? '-' }}</span>
             </div>

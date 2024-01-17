@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InternalTransferRequest;
 use App\Models\Earning;
 use App\Models\InvestmentSubscription;
 use App\Models\Setting;
@@ -340,10 +341,47 @@ class WalletController extends Controller
         return response()->json($chartData);
     }
 
-//    public function internalTransfer(Request $request)
-//    {
-//
-//    }
+    public function internalTransfer(InternalTransferRequest $request)
+    {
+        $user = \Auth::user();
+        $from_wallet = Wallet::find($request->from_wallet_id);
+        $to_wallet = Wallet::find($request->to_wallet_id);
+
+        if ($from_wallet->id == $to_wallet->id) {
+            throw ValidationException::withMessages(['from_wallet_id' => 'Wallet cannot be the same']);
+        }
+
+        if ($from_wallet->balance < $request->amount) {
+            throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance')]);
+        }
+
+        $transaction_number = RunningNumberService::getID('transaction');
+
+        $transaction = Transaction::create([
+            'category' => 'wallet',
+            'user_id' => $user->id,
+            'transaction_type' => 'InternalTransfer',
+            'from_wallet_id' => $from_wallet->id,
+            'to_wallet_id' => $to_wallet->id,
+            'transaction_number' => $transaction_number,
+            'amount' => $request->amount,
+            'transaction_charges' => 0,
+            'transaction_amount' => $request->amount,
+            'status' => 'Success',
+            'remarks' => $request->remarks,
+        ]);
+
+        // Update the wallet balance
+        $from_wallet->update([
+            'balance' => $from_wallet->balance - $transaction->transaction_amount,
+        ]);
+
+        $to_wallet->update([
+            'balance' => $to_wallet->balance + $transaction->transaction_amount,
+        ]);
+
+        return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.success_internal_transfer'));
+    }
 
     public function buyCoin(BuyCoinRequest $request)
     {

@@ -13,6 +13,7 @@ import {CoinIcon} from "@/Components/Icons/outline.jsx";
 import ViewMarket from "@/Pages/Wallet/Partials/ViewMarket.vue";
 import Modal from "@/Components/Modal.vue";
 import {ref} from "vue";
+import Action from "@/Pages/Wallet/Partials/Action.vue";
 
 const props = defineProps({
     referralEarnings: [String, Number],
@@ -25,6 +26,7 @@ const props = defineProps({
     conversion_rate: Object,
     coin_market_time: Object,
     coin_price_yesterday: Object,
+    gasFee: Object,
 })
 const { formatDateTime, formatAmount } = transactionFormat();
 
@@ -33,7 +35,6 @@ const modalComponent = ref(null);
 
 const openCoinModal = () => {
     coinModal.value = true;
-    console.log(props.wallet_sel)
 }
 
 const closeModal = () => {
@@ -52,7 +53,7 @@ const closeModal = () => {
                 </h2>
                 <div class="flex items-start gap-3">
                     <Button
-                        class="justify-center gap-2"
+                        class="justify-center text-sm gap-2"
                         variant="gray"
                         @click="openCoinModal"
                     >
@@ -60,11 +61,10 @@ const closeModal = () => {
                         <span class="uppercase">Buy {{ coin.setting_coin.name }}</span>
                     </Button>
                     <Deposit
-                        :wallet_sel="wallet_sel"
+                        :depositWalletSel="wallet_sel"
                         :random_address="random_address"
                     />
                 </div>
-
             </div>
         </template>
 
@@ -157,9 +157,11 @@ const closeModal = () => {
             <BuyCoin
                 :coin="coin"
                 :coin_price="coin_price"
-                :setting_coin="setting_coin"
+                :gasFee="gasFee"
                 :conversion_rate="conversion_rate"
                 :wallet_sel="wallet_sel"
+                :setting_coin="setting_coin"
+                :coin_price_yesterday="coin_price_yesterday"
                 :coin_market_time="coin_market_time"
                 @update:coinModal="coinModal = $event"
             />
