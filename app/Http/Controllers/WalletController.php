@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Earning;
 use App\Models\InvestmentSubscription;
+use App\Models\Setting;
 use App\Models\SettingCoin;
+use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Coin;
@@ -73,7 +75,8 @@ class WalletController extends Controller
             'wallet_sel' => $wallet_sel,
             'depositWalletSel' => $depositWalletSel,
             'random_address' => $wallet_address,
-            'withdrawalFee' => SettingWithdrawalFee::latest()->first(),
+            'withdrawalFee' => Setting::where('slug', 'withdrawal-fee')->latest()->first(),
+            'gasFee' => Setting::where('slug', 'gas-fee')->latest()->first(),
             'setting_coin' => SettingCoin::where('symbol', 'MXT/USD')->first(),
             'coin_price_yesterday' => $coin_price_yesterday,
             'coin_payment' => $coin_payment,
@@ -197,21 +200,6 @@ class WalletController extends Controller
     {
         $user = \Auth::user();
 
-        // Payments
-        $payments = DB::table('users')
-            ->select(
-                'payments.id as payment_id',
-                'payments.type as transaction_type',
-                'payments.amount as transaction_amount',
-                'payments.transaction_id as transaction_id',
-                'payments.status as transaction_status',
-                'payments.remarks as transaction_remark',
-                'payments.created_at as transaction_date'
-            )
-            ->leftJoin('payments', 'users.id', '=', 'payments.user_id')
-            ->where('users.id', $user->id)
-            ->where('payments.wallet_id', $wallet_id);
-
         // Earnings
         $earnings = DB::table('users')
             ->select(
@@ -227,44 +215,27 @@ class WalletController extends Controller
             ->where('users.id', $user->id)
             ->where('earnings.upline_wallet_id', $wallet_id);
 
-        // Subscriptions
-        $subscriptions = DB::table('users')
+        $transactions = DB::table('users')
             ->select(
-                'investment_subscriptions.id as subscription_id',
-                'investment_subscriptions.type as transaction_type',
-                'investment_subscriptions.amount as transaction_amount',
-                'investment_subscriptions.subscription_id as transaction_id',
-                'investment_subscriptions.status as transaction_status',
-                'investment_subscriptions.remark as transaction_remark',
-                'investment_subscriptions.created_at as transaction_date'
+                'transactions.id as transaction_id',
+                'transactions.transaction_type as transaction_type',
+                'transactions.transaction_amount as transaction_amount',
+                'transactions.transaction_number as transaction_id',
+                'transactions.status as transaction_status',
+                'transactions.remarks as transaction_remark',
+                'transactions.created_at as transaction_date'
             )
-            ->leftJoin('investment_subscriptions', 'users.id', '=', 'investment_subscriptions.user_id')
+            ->leftJoin('transactions', 'users.id', '=', 'transactions.user_id')
             ->where('users.id', $user->id)
-            ->where('investment_subscriptions.wallet_id', $wallet_id);
-
-        // Buy coins
-        $buy_coins = DB::table('users')
-            ->select(
-                'coin_payments.id as coin_payment_id',
-                'coin_payments.type as transaction_type',
-                'coin_payments.amount as transaction_amount',
-                'coin_payments.transaction_id as transaction_id',
-                'coin_payments.status as transaction_status',
-                'coin_payments.remarks as transaction_remark',
-                'coin_payments.created_at as transaction_date'
-            )
-            ->leftJoin('coin_payments', 'users.id', '=', 'coin_payments.user_id')
-            ->where('users.id', $user->id)
-            ->where('coin_payments.wallet_id', $wallet_id);
+            ->where('transactions.to_wallet_id', $wallet_id)
+            ->orWhere('transactions.from_wallet_id', $wallet_id);
 
         // Search condition
         if ($request->filled('search')) {
             $search = '%' . $request->input('search') . '%';
 
-            $payments->where('payments.transaction_id', 'like', $search);
             $earnings->where('earnings.type', 'like', $search);
-            $subscriptions->where('investment_subscriptions.subscription_id', 'like', $search);
-            $buy_coins->where('coin_payments.transaction_id', 'like', $search);
+            $transactions->where('transactions.transaction_number', 'like', $search);
         }
 
         // Check for the date condition
@@ -275,23 +246,19 @@ class WalletController extends Controller
             $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
 
             // Apply date range condition to each query
-            $payments->whereBetween('payments.created_at', [$start_date, $end_date]);
             $earnings->whereBetween('earnings.roi_release_date', [$start_date, $end_date]);
-            $subscriptions->whereBetween('investment_subscriptions.created_at', [$start_date, $end_date]);
-            $buy_coins->whereBetween('coin_payments.created_at', [$start_date, $end_date]);
+            $transactions->whereBetween('transactions.created_at', [$start_date, $end_date]);
         }
 
         // Check for the type condition
         if ($request->filled('type')) {
             $type = $request->input('type');
-            $payments->where('payments.type', $type);
             $earnings->where('earnings.type', $type);
-            $subscriptions->where('investment_subscriptions.type', $type);
-            $buy_coins->where('coin_payments.type', $type);
+            $transactions->where('transactions.transaction_type', $type);
         }
 
         // Union the results
-        $combinedResults = $payments->union($earnings)->union($subscriptions)->union($buy_coins);
+        $combinedResults = $earnings->union($transactions);
 
         // Apply orderBy
         $combinedResults = $combinedResults->orderByDesc('transaction_date')->paginate(10);
@@ -385,31 +352,37 @@ class WalletController extends Controller
         $transaction_id = RunningNumberService::getID('transaction');
         $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $request->setting_coin_id)->first();
         $total_unit = $coin->unit + $request->unit;
-        $total_amount = $coin->amount + $request->amount;
 
         $wallet = Wallet::find($request->wallet_id);
-        if ($wallet->balance < $request->amount) {
-            throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance')]);
+        if ($wallet->balance < $request->transaction_amount) {
+            throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance') . ', PAYABLE AMOUNT: $' . $request->transaction_amount ]);
         }
 
-        $wallet->decrement('balance', $request->amount);
+        $wallet->decrement('balance', $request->transaction_amount);
 
-        CoinPayment::create([
+        $transaction = Transaction::create([
+            'category' => 'asset',
             'user_id' => $user->id,
-            'wallet_id' => $request->wallet_id,
-            'setting_coin_id' => $request->setting_coin_id,
-            'transaction_id' => $transaction_id,
+            'transaction_type' => 'BuyCoin',
+            'from_wallet_id' => $request->wallet_id,
+            'to_coin_id' => $request->coin_id,
+            'transaction_number' => $transaction_id,
             'unit' => $request->unit,
-            'price' => $request->price,
+            'price_per_unit' => $request->price,
             'amount' => $request->amount,
-            'conversion_rate' => $request->conversion_rate,
-            'type' => 'BuyCoin',
+            'transaction_charges' => $request->gas_fee,
+            'transaction_amount' => $request->transaction_amount,
             'status' => 'Success',
         ]);
 
         $coin->update([
             'unit' => $total_unit,
-            'price' => $request->price,
+            'price' => $transaction->price_per_unit,
+        ]);
+
+        $total_amount = $coin->unit / $coin->price;
+
+        $coin->update([
             'amount' => $total_amount,
         ]);
 
@@ -523,7 +496,9 @@ class WalletController extends Controller
     {
         $user = \Auth::user();
 
-        $buy_coin_history = CoinPayment::where('user_id', $user->id);
+        $buy_coin_history = Transaction::query()
+            ->where('user_id', $user->id)
+            ->where('category', 'asset');
 
         if ($request->filled('search')) {
             $search = '%' . $request->input('search') . '%';

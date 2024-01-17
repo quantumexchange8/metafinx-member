@@ -79,9 +79,9 @@ const submit = () => {
                         {{ plan.roi_per_annum }} p.a.
                     </div>
                 </div>
-                <div class="flex flex-col gap-2 dark:text-gray-300">
-                    <div v-for="item in plan.descriptions" class="mb-3">
-                        <div class="inline-flex items-center gap-2 text-xs">
+                <div class="flex flex-col gap-2 dark:text-gray-300 space-y-3">
+                    <div v-for="item in plan.descriptions">
+                        <div class="flex items-center gap-2 text-xs">
                             <checkIcon />
                             {{ item.description }}
                         </div>

@@ -12,6 +12,7 @@ class InvestmentSubscription extends Model
     protected $fillable = [
         'user_id',
         'subscription_id',
+        'transaction_id',
         'investment_plan_id',
         'wallet_id',
         'amount',

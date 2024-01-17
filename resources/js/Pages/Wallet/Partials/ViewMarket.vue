@@ -60,10 +60,8 @@ const getButtonVariant = (value) => {
 <template>
     <div class="flex flex-col items-center gap-2">
         <div class="flex flex-col items-center gap-1">
-            <div class="bg-white rounded-full grow-0 shrink-0">
-                <XLCoinLogo
-                    class="w-10 h-10"
-                />
+            <div class="bg-white w-10 h-10 rounded-full grow-0 shrink-0">
+
             </div>
             <div class="text-sm font-semibold text-gray-900 dark:text-white">
                 {{ setting_coin.name }}
@@ -74,7 +72,7 @@ const getButtonVariant = (value) => {
         </div>
         <div class="flex flex-col items-center">
             <div class="text-[28px] font-semibold text-gray-900 dark:text-white">
-                MYR {{ coin_price.price }}
+                $ {{ coin_price.price }}
             </div>
             <div
                 class="text-xs"

@@ -12,12 +12,14 @@ import {useForm} from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import Tooltip from "@/Components/Tooltip.vue";
 import BaseListbox from "@/Components/BaseListbox.vue";
+import {transactionFormat} from "@/Composables/index.js";
 
 const props = defineProps({
     wallet_sel: Array,
     withdrawalFee: Object,
 })
 const withdrawalModal = ref(false);
+const { formatAmount } = transactionFormat();
 
 const openWithdrawalModal = () => {
     withdrawalModal.value = true
@@ -27,7 +29,7 @@ const closeModal = () => {
     withdrawalModal.value = false
 }
 
-const transactionFee = computed(() => props.withdrawalFee.amount);
+const transactionFee = computed(() => props.withdrawalFee.value);
 
 const form = useForm({
     wallet_id: '',
@@ -131,11 +133,11 @@ const calculatedBalance = computed(() => {
                 <div class="mt-6 border-t dark:border-gray-700"></div>
                     <div class="flex items-center justify-between mt-5">
                         <span class="text-sm dark:text-gray-400 font-Inter">{{$t('public.wallet.transaction_fee')}}</span>
-                        <span class="text-sm dark:text-white">$ {{ transactionFee }}</span>
+                        <span class="text-sm dark:text-white">$ {{ formatAmount(transactionFee) }}</span>
                     </div>
                     <div class="flex items-center justify-between mt-2">
                         <span class="text-sm dark:text-gray-400 font-Inter">{{$t('public.wallet.balance_received')}}</span>
-                        <span class="text-sm dark:text-white">$ {{ (calculatedBalance).toFixed(2) }}</span>
+                        <span class="text-sm dark:text-white">$ {{ formatAmount(calculatedBalance) }}</span>
                     </div>
                 <div class="mt-6 pb-6 border-b dark:border-gray-700">
                     <label>

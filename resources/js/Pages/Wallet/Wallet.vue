@@ -24,6 +24,7 @@ const props = defineProps({
     depositWalletSel: Array,
     random_address: Object,
     withdrawalFee: Object,
+    gasFee: Object,
     setting_coin: Object,
     coin_price_yesterday: Object,
     coin_market_time: Object,
@@ -172,7 +173,7 @@ function copyTestingCode () {
                                 {{ coin.unit.toFixed(8) }} {{ coin.setting_coin.name }}
                             </div>
                             <div class="text-sm font-normal dark:text-white">
-                                ≈ $ {{ formatAmount(coin.unit * coin_price.price) }}
+                                ≈ $ {{ formatAmount(coin.unit / coin_price.price) }}
                             </div>
                         </div>
                     </div>
@@ -180,6 +181,7 @@ function copyTestingCode () {
                         <Action
                             :coin="coin"
                             :coin_price="coin_price"
+                            :gasFee="gasFee"
                             :conversion_rate="conversion_rate"
                             :wallet_sel="wallet_sel"
                             :setting_coin="setting_coin"

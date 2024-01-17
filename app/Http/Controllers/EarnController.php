@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\InvestmentSubscriptionRequest;
 use App\Models\InvestmentPlan;
 use App\Models\InvestmentSubscription;
+use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Services\RunningNumberService;
 use Illuminate\Validation\ValidationException;
@@ -84,9 +85,22 @@ class EarnController extends Controller
 
         $subscription_id = RunningNumberService::getID('investment');
 
+        $transaction = Transaction::create([
+            'category' => 'wallet',
+            'user_id' => $user->id,
+            'transaction_type' => 'Investment',
+            'from_wallet_id' => $request->wallet_id,
+            'transaction_number' => $subscription_id,
+            'amount' => $amount,
+            'transaction_charges' => 0,
+            'transaction_amount' => $amount,
+            'status' => 'Success',
+        ]);
+
         $investmentSubscription = InvestmentSubscription::create([
             'user_id' => $user->id,
             'wallet_id' => $request->wallet_id,
+            'transaction_id' => $transaction->id,
             'investment_plan_id' => $investment_plan->id,
             'subscription_id' => $subscription_id,
             'amount' => $amount,

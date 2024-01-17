@@ -6,16 +6,18 @@ import { useForm } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import Input from "@/Components/Input.vue";
 import { InternalUSDWalletIcon, SwitchVerticalIcon, XLCoinLogo } from "@/Components/Icons/outline.jsx";
-import { ref, watch } from "vue";
+import {computed, ref, watch} from "vue";
 import { transactionFormat } from "@/Composables/index.js";
 
 const props = defineProps({
     coin: Object,
     coin_price: Object,
+    gasFee: Object,
     setting_coin: Object,
     conversion_rate: Object,
     wallet_sel: Array,
     coin_market_time: Object,
+    coin_price_yesterday: Object,
 })
 const emit = defineEmits(['update:coinModal']);
 
@@ -24,16 +26,18 @@ const coinUnit = ref();
 const updatingCoinAmount = ref(false);
 const updatingCoinUnit = ref(false);
 const { formatTime } = transactionFormat();
+const transactionFee = ref();
+const payableAmount = ref();
 
 const form = useForm({
     wallet_id: '',
     amount: '',
+    gas_fee: '',
+    transaction_amount: '',
     unit: '',
     terms: false,
     setting_coin_id: props.setting_coin.id,
     price: '',
-    conversion_rate: '',
-    address: '',
 })
 
 const submit = () => {
@@ -41,8 +45,8 @@ const submit = () => {
     form.unit = coinUnit.value;
     form.price = props.coin_price.price;
     form.amount = coinAmount.value;
-    form.conversion_rate = props.conversion_rate.price;
-    form.address = props.coin.address;
+    form.gas_fee = transactionFee.value;
+    form.transaction_amount = payableAmount.value;
 
     form.post(route('wallet.buy_coin'), {
         onSuccess: () => {
@@ -52,13 +56,12 @@ const submit = () => {
     });
 };
 
-
 watch(coinAmount, (newAmount) => {
     if (newAmount !== null && !updatingCoinAmount.value) {
         updatingCoinUnit.value = true;
-        let amont = newAmount * props.conversion_rate.price
-        // Update unit based on form.amount and fix to 8 decimal places
-        coinUnit.value = Number(amont * props.coin_price.price).toFixed(8);
+        coinUnit.value = Number(newAmount * props.coin_price.price).toFixed(8);
+        transactionFee.value = (newAmount * props.gasFee.value/100).toFixed(2)
+        payableAmount.value = (parseFloat(newAmount) + parseFloat(transactionFee.value)).toFixed(2);
     }
     updatingCoinAmount.value = false; // Reset flag after update
 });
@@ -66,9 +69,7 @@ watch(coinAmount, (newAmount) => {
 watch(coinUnit, (newUnit) => {
     if (newUnit !== null && !updatingCoinUnit.value) {
         updatingCoinAmount.value = true;
-        let unit = newUnit / props.coin_price.price
-        // Update amount based on form.unit and fix to 2 decimal places
-        coinAmount.value = Number(unit / props.conversion_rate.price).toFixed(2);
+        coinAmount.value = Number(newUnit / props.coin_price.price).toFixed(2);
     }
     updatingCoinUnit.value = false; // Reset flag after update
 });
@@ -77,14 +78,58 @@ const closeModal = () => {
     emit('update:coinModal', false);
 }
 
-const fullWithdraw = () => {
+const fullAmount = () => {
     form.amount = props.wallet_sel[0].balance || 0;
     coinAmount.value = form.amount;
 };
+
+const priceDiffPercentage = computed(() => {
+    return (props.coin_price.price / props.coin_price_yesterday.price).toFixed(2)
+})
+
+const getAmountClass = computed(() => {
+    if (props.coin_price_yesterday.price < props.coin_price.price) {
+        return 'text-success-500';
+    } else if (props.coin_price_yesterday.price > props.coin_price.price) {
+        return 'text-error-500';
+    }
+    return '';
+});
+
+const getAmountPrefix = computed(() => {
+    if (props.coin_price_yesterday.price < props.coin_price.price) {
+        return '+';
+    } else if (props.coin_price_yesterday.price > props.coin_price.price) {
+        return '-';
+    }
+    return '';
+});
 </script>
 
 <template>
     <div class="flex flex-col gap-8 mt-3">
+        <div class="flex flex-col items-center gap-2 self-stretch p-3 rounded-lg bg-gray-300 dark:bg-gray-700">
+            <div class="flex flex-col items-center gap-0.5">
+                <div class="rounded-full w-10 h-10 grow-0 shrink-0 bg-gray-100"></div>
+                <div class="text-sm font-semibold text-gray-900 dark:text-white">
+                    {{ setting_coin.name }}
+                </div>
+                <div class="text-xs font-normal text-gray-600 dark:text-gray-400">
+                    {{ setting_coin.symbol }}
+                </div>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="text-[28px] font-semibold text-gray-900 dark:text-white">
+                    $ {{ coin_price.price }}
+                </div>
+                <div
+                    class="text-xs font-medium"
+                    :class="getAmountClass"
+                >
+                    {{ getAmountPrefix }}{{ priceDiffPercentage }} % today
+                </div>
+            </div>
+        </div>
         <div class="flex flex-col gap-5">
             <div class="flex flex-col sm:flex-row gap-1 space-y-2 sm:space-y-0 items-start self-stretch">
                 <Label
@@ -112,8 +157,19 @@ const fullWithdraw = () => {
                         :class="form.errors.amount ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         v-model="coinAmount"
                     />
-                    <Button variant="gray" size="sm" class="absolute end-2 justify-center mt-1 mr-5" @click="fullWithdraw" >{{$t('public.wallet.full_amount')}}</Button>
+                    <Button
+                        type="button"
+                        variant="gray"
+                        size="sm"
+                        class="absolute end-2 justify-center mt-1 mr-5"
+                        @click="fullAmount"
+                    >
+                        {{$t('public.wallet.full_amount')}}
+                    </Button>
                     <InputError :message="form.errors.amount" class="mt-2" />
+                    <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        Current balance: $ {{ props.wallet_sel[0].balance }}
+                    </div>
                 </div>
             </div>
             <div class="flex justify-center">
@@ -128,7 +184,6 @@ const fullWithdraw = () => {
                         <div>{{ $t('public.wallet.receive') }}</div>
                         <div class="inline-flex items-center gap-1">
                             <div class="bg-white dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
-                                <XLCoinLogo class="w-4 h-4"/>
                             </div>
                             <span>{{ setting_coin.name }}</span>
                         </div>
@@ -150,21 +205,21 @@ const fullWithdraw = () => {
             <div class="flex flex-col items-start gap-3 self-stretch pt-5 pb-5 border-t border-b border-gray-400 dark:border-gray-700">
                 <div class="flex justify-between items-start self-stretch">
                     <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
-                        {{ $t('public.wallet.market_time') }}
+                        Gas Fee (1%)
                     </div>
                     <div class="text-sm text-gray-900 dark:text-white">
-                        {{ formatTime(coin_market_time.open_time) + ' - ' + formatTime(coin_market_time.close_time) + ' ' + coin_market_time.frequency_type }}
+                        $ {{ transactionFee ?? '0.00' }}
                     </div>
                 </div>
                 <div class="flex justify-between items-start self-stretch">
                     <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
-                        {{ $t('public.wallet.conversion_rate') }}
+                        Payable Amount
                     </div>
                     <div class="text-sm text-gray-900 dark:text-white">
-                        {{ conversion_rate.usd + ' USDT = ' + conversion_rate.price + ' MYR' }}
+                        $ {{ payableAmount ?? '0.00' }}
                     </div>
                 </div>
-                <div>
+                <div class="mt-6">
                     <label>
                     <div class="flex">
                         <Checkbox name="remember" v-model:checked="form.terms" />

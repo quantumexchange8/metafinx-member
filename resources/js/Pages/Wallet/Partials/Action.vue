@@ -12,6 +12,7 @@ import ViewTransaction from "@/Pages/Wallet/Partials/ViewTransaction.vue";
 const props = defineProps({
     coin: Object,
     coin_price: Object,
+    gasFee: Object,
     conversion_rate: Object,
     wallet_sel: Array,
     setting_coin: Object,
@@ -30,7 +31,7 @@ const openMemberModal = (componentType) => {
     }
     else if (componentType === 'view_market') {
         modalComponent.value = 'View Market';
-    } 
+    }
     else if (componentType === 'view_transaction') {
         modalComponent.value = 'View Transaction';
     }
@@ -89,10 +90,12 @@ const closeModal = () => {
             <BuyCoin
                 :coin="coin"
                 :coin_price="coin_price"
+                :gasFee="gasFee"
                 :setting_coin="setting_coin"
                 :conversion_rate="conversion_rate"
                 :wallet_sel="wallet_sel"
                 :coin_market_time="coin_market_time"
+                :coin_price_yesterday="coin_price_yesterday"
                 @update:coinModal="coinModal = $event"
             />
         </template>
@@ -104,7 +107,7 @@ const closeModal = () => {
             />
         </template>
         <template v-if="modalComponent === 'View Transaction'">
-            <ViewTransaction 
+            <ViewTransaction
                 :coin_payment="coin_payment"
             />
         </template>
