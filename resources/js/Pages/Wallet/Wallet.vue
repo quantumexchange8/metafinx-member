@@ -121,7 +121,7 @@ function copyTestingCode () {
                             {{ coin.unit }} {{ coin.setting_coin.name }}
                         </div>
                         <div class="text-sm font-normal dark:text-white">
-                            ≈ $ {{ formatAmount(coin.unit * coin_price.price) }}
+                            ≈ $ {{ formatAmount(coin.unit * props.coin_price.price) }}
                         </div>
                     </div>
                 </div>
@@ -173,7 +173,7 @@ function copyTestingCode () {
                                 {{ coin.unit.toFixed(8) }} {{ coin.setting_coin.name }}
                             </div>
                             <div class="text-sm font-normal dark:text-white">
-                                ≈ $ {{ formatAmount(coin.unit / coin_price.price) }}
+                                ≈ $ {{ formatAmount(coin.unit / props.coin_price.price) }}
                             </div>
                         </div>
                     </div>

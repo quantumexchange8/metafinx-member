@@ -28,4 +28,30 @@ class Transaction extends Model
         'status',
         'remarks',
     ];
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function fromWallet(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Wallet::class, 'from_wallet_id', 'id');
+    }
+
+    public function toWallet(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Wallet::class, 'to_wallet_id', 'id');
+    }
+
+    public function fromCoin(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Coin::class, 'from_coin_id', 'id');
+    }
+
+    public function toCoin(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Coin::class, 'to_coin_id', 'id');
+    }
+
 }

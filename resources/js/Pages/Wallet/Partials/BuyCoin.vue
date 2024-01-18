@@ -31,6 +31,7 @@ const payableAmount = ref();
 
 const form = useForm({
     wallet_id: '',
+    coin_id: '',
     amount: '',
     gas_fee: '',
     transaction_amount: '',
@@ -42,6 +43,7 @@ const form = useForm({
 
 const submit = () => {
     form.wallet_id = props.wallet_sel[0].value;
+    form.coin_id = props.coin.id
     form.unit = coinUnit.value;
     form.price = props.coin_price.price;
     form.amount = coinAmount.value;
