@@ -89,6 +89,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('affiliate')->group(function () {
         Route::get('/referral_view', [AffiliateController::class, 'referral_view'])->name('affiliate.referral_view');
         Route::get('/getTreeData', [AffiliateController::class, 'getTreeData'])->name('affiliate.getTreeData');
+        Route::get('/my_group', [AffiliateController::class, 'group'])->name('affiliate.group');
+        Route::get('/getReferralTableData', [AffiliateController::class, 'getReferralTableData'])->name('affiliate.getReferralTableData');
     });
 
      Route::prefix('report')->group(function () {

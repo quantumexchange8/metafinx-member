@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import Input from "@/Components/Input.vue";
 import Button from "@/Components/Button.vue";
 import {ShareIcon, DuplicateIcon} from "@heroicons/vue/outline";
+import { TableIcon } from '@/Components/Icons/outline'
 import Tooltip from "@/Components/Tooltip.vue";
 import {ref} from "vue";
 import toast from "@/Composables/toast.js";
@@ -64,13 +65,36 @@ function copyReferralCodeLink() {
     <AuthenticatedLayout :title="$t('public.affiliate.affiliate')">
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <h2 class="text-2xl font-semibold leading-tight">
-                    {{$t('public.affiliate.affiliate')}}
-                </h2>
+                <div>
+                    <h2 class="text-2xl font-semibold leading-tight">
+                        {{$t('public.affiliate.affiliate')}}
+                    </h2>
+                    <p class="text-base font-normal dark:text-gray-400">
+                        {{$t('public.affiliate.proproganda')}}
+                    </p>
+                </div>
+
+                <div>
+                    <Button
+                        external
+                        type="button"
+                        variant="warning"
+                        class="items-center gap-2 max-w-xs"
+                        v-slot="{ iconSizeClasses }"
+                        :href="route('affiliate.group')"
+                        :referredCounts="referredCounts"
+                        :totalReferralEarning="totalReferralEarning"
+                    >
+                        <div class="inline-flex items-center">
+                            <TableIcon
+                                aria-hidden="true"
+                                class="mr-2"
+                            />
+                            <span>{{$t('public.affiliate.my_group')}}</span>
+                        </div>
+                    </Button>
+                </div>
             </div>
-            <p class="text-base font-normal dark:text-gray-400">
-                {{$t('public.affiliate.proproganda')}}
-            </p>
         </template>
 
         <AffiliateNetwork />
