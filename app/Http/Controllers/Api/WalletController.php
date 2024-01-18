@@ -191,40 +191,6 @@ class WalletController extends Controller
         ]);
     }
 
-    // public function transaction_history()
-    // {
-    //     $user = \Auth::user();
-
-    //     $transactions = Payment::with('wallet:id,user_id,name,balance')->where('user_id', $user->id)->get();
-    //     $earnings = Earning::where('upline_id', $user->id)->select('id', 'upline_id', 'after_amount', 'type', 'created_at')->get();
-    //     $investments = InvestmentSubscription::query()
-    //         ->with('investment_plan:id,name,roi_per_annum,investment_period')
-    //         ->where('user_id', $user->id)
-    //         ->get();
-    //     $buy_coin_history = CoinPayment::where('user_id', $user->id)->get();
-
-    //     $locale = app()->getLocale(); // Get the current locale
-
-    //     $investmentSubscriptions = $investments->map(function ($investmentSubscription) use ($locale) {
-    //         return [
-    //             'id' => $investmentSubscription->id,
-    //             'plan_name' => [
-    //                 'name' => $investmentSubscription->investment_plan->getTranslation('name', 'en'),
-    //             ],
-    //             'subscription_id' => $investmentSubscription->subscription_id,
-    //             'amount' => $investmentSubscription->amount,
-    //             'created_at' => $investmentSubscription->created_at,
-    //         ];
-    //     });
-
-    //     return response()->json([
-    //         'transactions' => $transactions,
-    //         'earnings' => $earnings,
-    //         'subscriptions' => $investmentSubscriptions,
-    //         'buy_coin_history' => $buy_coin_history,
-    //     ]);
-    // }
-
     public function setting_wallet_address()
     {
         $wallet_address = SettingWalletAddress::all();
