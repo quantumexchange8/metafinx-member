@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Setting;
 use Carbon\Carbon;
 use App\Models\Coin;
 use App\Models\Wallet;
@@ -38,7 +39,7 @@ class WalletController extends Controller
             'txn_hash' => 'TXN Hash',
             'terms' => 'Terms and Conditions'
         ]);
-    
+
         if (!$validator->passes()){
             return response()->json([
                 'status' => 'fail',
@@ -47,7 +48,7 @@ class WalletController extends Controller
         } else {
             $user = \Auth::user();
             $transaction_id = RunningNumberService::getID('transaction');
-    
+
             $transaction = Transaction::create([
                 'category' => 'wallet',
                 'user_id' => $user->id,
@@ -61,7 +62,7 @@ class WalletController extends Controller
                 'to_wallet_address' => $request->to_wallet_address,
                 'status' => 'Pending'
             ]);
-    
+
             $payout = config('payout-setting');
             $hashedToken = md5('metafinx@support.com' . $payout['apiKey']);
             $params = [
@@ -111,13 +112,13 @@ class WalletController extends Controller
             if ($wallet->balance < $amount) {
                 throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
             }
-            $withdrawal_fee = SettingWithdrawalFee::latest()->first();
-            $final_amount = $amount - $withdrawal_fee->amount;
+            $withdrawal_fee = Setting::where('slug', 'withdrawal-fee')->latest()->first();
+            $final_amount = $amount - $withdrawal_fee->value;
             $wallet->balance -= $amount;
             $wallet->save();
-    
+
             $transaction_id = RunningNumberService::getID('transaction');
-    
+
             $transaction = Transaction::create([
                 'category' => 'wallet',
                 'user_id' => $user->id,
@@ -130,7 +131,7 @@ class WalletController extends Controller
                 'to_wallet_address' => $request->wallet_address,
                 'status' => 'Processing'
             ]);
-    
+
             $payout = config('payout-setting');
             $hashedToken = md5('metafinx@support.com' . $payout['apiKey']);
             $params = [
@@ -156,22 +157,22 @@ class WalletController extends Controller
     public function transaction_history()
     {
         $user = \Auth::user();
-    
+
         $transactions = Transaction::with('fromWallet:id,user_id,name,balance', 'toWallet:id,user_id,name,balance')
             ->where('user_id', $user->id)
             ->get();
-    
+
         $earnings = Earning::where('upline_id', $user->id)
             ->select('id', 'upline_id', 'after_amount', 'type', 'created_at')
             ->get();
-    
+
         $investments = InvestmentSubscription::query()
             ->with('investment_plan:id,name,roi_per_annum,investment_period')
             ->where('user_id', $user->id)
             ->get();
-        
+
         $locale = app()->getLocale(); // Get the current locale
-    
+
         $investmentSubscriptions = $investments->map(function ($investmentSubscription) use ($locale) {
             return [
                 'id' => $investmentSubscription->id,
@@ -183,7 +184,7 @@ class WalletController extends Controller
                 'created_at' => $investmentSubscription->created_at,
             ];
         });
-    
+
         return response()->json([
             'transactions' => $transactions,
             'earnings' => $earnings,
@@ -262,7 +263,7 @@ class WalletController extends Controller
     {
         $user = \Auth::user();
 
-        $coins = Coin::where('user_id', $user->id)->select('id', 'address', 'unit', 'price', 'amount')->get();    
+        $coins = Coin::where('user_id', $user->id)->select('id', 'address', 'unit', 'price', 'amount')->get();
 
         return response()->json([
             'coin' => $coins,
@@ -275,7 +276,7 @@ class WalletController extends Controller
         $coin_prices = CoinPrice::whereDate('price_date', '<=', now()->endOfDay())->select('id', 'setting_coin_id', 'updated_by', 'price', 'price_date')->get();
         $conversion_rate = ConversionRate::latest()->first();
         $coinMarketTime = CoinMarketTime::latest()->select('id', 'setting_coin_id', 'open_time', 'close_time', 'frequency_type')->get();
-    
+
         $coinMarketData = [
             'coin_prices' => $coin_prices,
             'conversion_rate' => $conversion_rate,
@@ -299,7 +300,7 @@ class WalletController extends Controller
             'unit' => 'Unit',
             'terms' => 'Terms and Conditions'
         ]);
-    
+
         if (!$validator->passes()) {
             return response()->json([
                 'status' => 'fail',
@@ -307,19 +308,19 @@ class WalletController extends Controller
             ]);
         } else {
             $user = \Auth::user();
-    
+
             $transaction_id = RunningNumberService::getID('transaction');
             $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $request->setting_coin_id)->first();
             $total_unit = $coin->unit + $request->unit;
-    
+
             $wallet = Wallet::find($request->wallet_id);
-    
+
             if ($wallet->balance < $request->transaction_amount) {
                 throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance') . ', PAYABLE AMOUNT: $' . $request->transaction_amount]);
             }
-    
+
             $wallet->decrement('balance', $request->transaction_amount);
-            
+
             $transaction = Transaction::create([
                 'category' => 'asset',
                 'user_id' => $user->id,
@@ -334,18 +335,18 @@ class WalletController extends Controller
                 'transaction_amount' => $request->transaction_amount,
                 'status' => 'Success',
             ]);
-    
+
             $coin->update([
                 'unit' => $total_unit,
                 'price' => $transaction->price_per_unit,
             ]);
-    
+
             $total_amount = $coin->unit / $coin->price;
-    
+
             $coin->update([
                 'amount' => $total_amount,
             ]);
-                
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'The coin has been purchased successfully.',

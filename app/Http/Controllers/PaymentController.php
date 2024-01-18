@@ -6,6 +6,7 @@ use App\Http\Requests\DepositRequest;
 use App\Http\Requests\WithdrawalRequest;
 use App\Models\Payment;
 use App\Models\PaymentStatus;
+use App\Models\Setting;
 use App\Models\SettingWithdrawalFee;
 use App\Models\Transaction;
 use App\Models\Wallet;
@@ -61,8 +62,8 @@ class PaymentController extends Controller
         if ($wallet->balance < $amount) {
             throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
         }
-        $withdrawal_fee = SettingWithdrawalFee::latest()->first();
-        $final_amount = $amount - $withdrawal_fee->amount;
+        $withdrawal_fee = Setting::where('slug', 'withdrawal-fee')->latest()->first();
+        $final_amount = $amount - $withdrawal_fee->value;
         $wallet->balance -= $amount;
         $wallet->save();
 
