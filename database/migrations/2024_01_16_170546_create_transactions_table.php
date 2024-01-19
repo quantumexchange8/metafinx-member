@@ -24,8 +24,11 @@ return new class extends Migration {
             $table->decimal('amount')->nullable();
             $table->decimal('transaction_charges')->nullable();
             $table->decimal('transaction_amount')->nullable();
+            $table->decimal('new_wallet_amount', 11,2)->nullable();
+            $table->double('new_coin_amount')->nullable();
             $table->string('status')->nullable();
             $table->text('remarks')->nullable();
+            $table->unsignedBigInteger('handle_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
 
@@ -48,6 +51,10 @@ return new class extends Migration {
             $table->foreign('to_coin_id')
                 ->references('id')
                 ->on('coins')
+                ->onUpdate('cascade');
+            $table->foreign('handle_by')
+                ->references('id')
+                ->on('users')
                 ->onUpdate('cascade');
         });
     }

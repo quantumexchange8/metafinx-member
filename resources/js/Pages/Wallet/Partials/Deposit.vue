@@ -83,7 +83,7 @@ function copyTestingCode () {
 
     <Modal :show="depositModal" :title="$t('public.wallet.deposit')" @close="closeModal">
         <div class="space-y-2">
-            <div class="hidden md:inline-flex items-center justify-center gap-2 w-full">
+            <div class="flex items-center justify-center gap-2 w-full">
                 <span class="rounded-full w-8 h-8 grow-0 shrink-0 bg-gradient-to-b from-pink-400 to-pink-500"><InternalUSDWalletIcon class="w-6 h-6 mt-1 ml-1" /></span>
                 <h3 class="text-xl font-semibold dark:text-white">{{$t('public.wallet.internal_wallet')}}</h3>
             </div>
