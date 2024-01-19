@@ -87,7 +87,7 @@ function copyTestingCode () {
                 <span class="rounded-full w-8 h-8 grow-0 shrink-0 bg-gradient-to-b from-pink-400 to-pink-500"><InternalUSDWalletIcon class="w-6 h-6 mt-1 ml-1" /></span>
                 <h3 class="text-xl font-semibold dark:text-white">{{$t('public.wallet.internal_wallet')}}</h3>
             </div>
-            <div class="hidden md:flex justify-center">
+            <div class="flex justify-center">
                 <div class="space-y-2">
                     <p class="text-base text-center dark:text-gray-400">
                         {{$t('public.wallet.scan_QR')}}
