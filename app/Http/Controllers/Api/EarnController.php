@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Wallet;
+use App\Models\Earning;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\InvestmentPlan;
@@ -173,5 +174,42 @@ class EarnController extends Controller
                 'transaction' => $transaction,
             ]);
         }
+    }
+
+    public function earning_history()
+    {
+        $user = \Auth::user();
+
+        $earnings = Earning::where('upline_id', $user->id)
+            ->select('id', 'upline_id', 'after_amount', 'type', 'created_at')
+            ->get();
+
+        return response()->json(['earnings' => $earnings]);
+    }
+
+    public function subscription_history()
+    {
+        $user = \Auth::user();
+
+        $locale = app()->getLocale(); // Get the current locale
+
+        $investments = InvestmentSubscription::query()
+            ->with('investment_plan:id,name,roi_per_annum,investment_period')
+            ->where('user_id', $user->id)
+            ->get();
+
+        $investmentSubscriptions = $investments->map(function ($investmentSubscription) use ($locale) {
+            return [
+                'id' => $investmentSubscription->id,
+                'plan_name' => [
+                    'name' => $investmentSubscription->investment_plan->getTranslation('name', 'en'),
+                ],
+                'subscription_id' => $investmentSubscription->subscription_id,
+                'amount' => $investmentSubscription->amount,
+                'created_at' => $investmentSubscription->created_at,
+            ];
+        });
+
+        return response()->json(['subscriptions' => $investmentSubscriptions]);
     }
 }

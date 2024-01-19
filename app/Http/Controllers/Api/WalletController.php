@@ -23,6 +23,7 @@ use App\Http\Requests\DepositRequest;
 use App\Models\InvestmentSubscription;
 use App\Services\RunningNumberService;
 use Illuminate\Validation\ValidationException;
+use PhpOffice\PhpSpreadsheet\Calculation\Category;
 
 class WalletController extends Controller
 {
@@ -154,44 +155,6 @@ class WalletController extends Controller
         }
     }
 
-    public function transaction_history()
-    {
-        $user = \Auth::user();
-
-        $transactions = Transaction::with('fromWallet:id,user_id,name,balance', 'toWallet:id,user_id,name,balance')
-            ->where('user_id', $user->id)
-            ->get();
-
-        $earnings = Earning::where('upline_id', $user->id)
-            ->select('id', 'upline_id', 'after_amount', 'type', 'created_at')
-            ->get();
-
-        $investments = InvestmentSubscription::query()
-            ->with('investment_plan:id,name,roi_per_annum,investment_period')
-            ->where('user_id', $user->id)
-            ->get();
-
-        $locale = app()->getLocale(); // Get the current locale
-
-        $investmentSubscriptions = $investments->map(function ($investmentSubscription) use ($locale) {
-            return [
-                'id' => $investmentSubscription->id,
-                'plan_name' => [
-                    'name' => $investmentSubscription->investment_plan->getTranslation('name', 'en'),
-                ],
-                'subscription_id' => $investmentSubscription->subscription_id,
-                'amount' => $investmentSubscription->amount,
-                'created_at' => $investmentSubscription->created_at,
-            ];
-        });
-
-        return response()->json([
-            'transactions' => $transactions,
-            'earnings' => $earnings,
-            'subscriptions' => $investmentSubscriptions,
-        ]);
-    }
-
     public function setting_wallet_address()
     {
         $wallet_address = SettingWalletAddress::all();
@@ -264,11 +227,30 @@ class WalletController extends Controller
         $user = \Auth::user();
 
         $coins = Coin::where('user_id', $user->id)->select('id', 'address', 'unit', 'price', 'amount')->get();
+        $coin_price = CoinPrice::whereDate('price_date', today())->first();
+        $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first();
 
+        $coins = $coins->map(function ($coin) use ($coin_price, $coin_price_yesterday) {
+            $priceDiffPercentage = 0;
+            if ($coin_price_yesterday && $coin_price_yesterday->price != 0) {
+                $priceDiffPercentage = number_format($coin_price->price / $coin_price_yesterday->price, 2);
+            }
+    
+            $amountPrefix = '';
+            if ($coin_price_yesterday && $coin_price_yesterday->price > $coin_price->price) {
+                $amountPrefix = '-';
+            } else {
+                $amountPrefix = '';
+            }
+    
+            $coin->price_diff_percentage = $amountPrefix . $priceDiffPercentage;
+    
+            return $coin;
+        });
+        
         return response()->json([
             'coin' => $coins,
         ]);
-
     }
 
     public function coinMarket()
@@ -354,5 +336,27 @@ class WalletController extends Controller
                 'coin' => $coin,
             ]);
         }
+    }
+
+    public function wallet_history()
+    {
+        $user = \Auth::user();
+
+        $wallets = Transaction::with('fromWallet:id,user_id,name,balance', 'toWallet:id,user_id,name,balance')
+            ->where('user_id', $user->id)->where('category', 'wallet')
+            ->get();
+
+        return response()->json(['wallets' => $wallets]);
+    }
+
+    public function asset_history()
+    {
+        $user = \Auth::user();
+
+        $assets = Transaction::with('fromWallet:id,user_id,name,balance', 'toWallet:id,user_id,name,balance')
+            ->where('user_id', $user->id)->where('category', 'asset')
+            ->get();
+
+        return response()->json(['assets' => $assets]);
     }
 }

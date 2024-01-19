@@ -42,7 +42,8 @@ Route::middleware(['api', 'auth:api'])->group(function () {
     Route::post('buy_coin', [WalletController::class, 'buy_coin']);
 
 
-    Route::get('transaction_history', [WalletController::class, 'transaction_history']);
+    Route::get('wallet_history', [WalletController::class, 'wallet_history']);
+    Route::get('asset_history', [WalletController::class, 'asset_history']);
     Route::get('setting_wallet_address', [WalletController::class, 'setting_wallet_address']);
     Route::get('setting_coin', [WalletController::class, 'setting_coin']);
     Route::get('user_coins', [WalletController::class, 'user_coins']);
@@ -66,6 +67,9 @@ Route::middleware(['api', 'auth:api'])->group(function () {
      */
     Route::get('investment_plans', [EarnController::class, 'investment_plans']);
     Route::get('my_investments', [EarnController::class, 'my_investments']);
+    Route::get('earning_history', [EarnController::class, 'earning_history']);
+    Route::get('subscription_history', [EarnController::class, 'subscription_history']);
+    
     Route::post('subscribe', [EarnController::class, 'subscribe']);
 
     /**
