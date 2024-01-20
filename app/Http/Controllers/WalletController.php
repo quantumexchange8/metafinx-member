@@ -388,7 +388,8 @@ class WalletController extends Controller
         $user = \Auth::user();
 
         $transaction_id = RunningNumberService::getID('transaction');
-        $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $request->setting_coin_id)->first();
+        $setting_coin = SettingCoin::find($request->setting_coin_id);
+        $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();
         $total_unit = $coin->unit + $request->unit;
 
         $wallet = Wallet::find($request->wallet_id);
@@ -416,6 +417,14 @@ class WalletController extends Controller
         $coin->update([
             'unit' => $total_unit,
             'price' => $transaction->price_per_unit,
+        ]);
+
+        $accumulate_supply = $setting_coin->accumulate_supply + $transaction->unit;
+        $accumulate_capped = $setting_coin->accumulate_capped + ($accumulate_supply * 2);
+
+        $setting_coin->update([
+            'accumulate_supply' => $accumulate_supply,
+            'accumulate_capped' => $accumulate_capped,
         ]);
 
         $total_amount = $coin->unit / $coin->price;

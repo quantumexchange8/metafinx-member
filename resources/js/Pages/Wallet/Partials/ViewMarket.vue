@@ -1,22 +1,22 @@
 <script setup>
 import CoinChart from "@/Pages/Wallet/Partials/CoinChart.vue";
-import {XLCoinLogo} from "@/Components/Icons/outline.jsx";
 import {computed, ref} from "vue";
 import Button from "@/Components/Button.vue";
+import {transactionFormat} from "@/Composables/index.js";
 
 const props = defineProps({
     setting_coin: Object,
     coin_price: Object,
     coin_price_yesterday: Object,
 })
-
+const { formatAmount } = transactionFormat();
 const getAmountClass = computed(() => {
     if (props.coin_price_yesterday.price < props.coin_price.price) {
         return 'text-success-500';
     } else if (props.coin_price_yesterday.price > props.coin_price.price) {
         return 'text-error-500';
     }
-    return '';
+    return 'text-gray-600 dark:text-gray-400';
 });
 
 const getAmountPrefix = computed(() => {
@@ -29,8 +29,9 @@ const getAmountPrefix = computed(() => {
 });
 
 const priceDiffPercentage = computed(() => {
-    return (props.coin_price.price / props.coin_price_yesterday.price).toFixed(2)
-})
+    const rawPercentage = props.coin_price.price / props.coin_price_yesterday.price;
+    return rawPercentage === 1 ? 0 : rawPercentage.toFixed(2);
+});
 
 const periods = [
     {value: 1, label: '1M'},
@@ -78,7 +79,7 @@ const getButtonVariant = (value) => {
                 class="text-xs"
                 :class="getAmountClass"
             >
-                {{ getAmountPrefix }}{{ priceDiffPercentage }} % today
+                {{ getAmountPrefix }}{{ formatAmount(priceDiffPercentage) }} % today
             </div>
         </div>
     </div>

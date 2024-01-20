@@ -49,10 +49,11 @@ const closeModal = () => {
         <Tooltip content="Buy coin" placement="bottom">
             <Button
                 type="button"
-                class="flex justify-center w-8 h-8 relative focus:outline-none"
+                class="flex justify-center w-6 h-6 relative focus:outline-none"
                 variant="gray"
                 @click="openMemberModal('buy_coin')"
                 pill
+                size="sm"
             >
                 <CoinIcon aria-hidden="true" class="w-4 h-4 absolute" />
                 <span class="sr-only">Buy coin</span>
@@ -61,10 +62,11 @@ const closeModal = () => {
         <Tooltip content="View market" placement="bottom">
             <Button
                 type="button"
-                class="flex justify-center w-8 h-8 relative focus:outline-none"
+                class="flex justify-center w-6 h-6 relative focus:outline-none"
                 variant="gray"
                 @click="openMemberModal('view_market')"
                 pill
+                size="sm"
             >
                 <LineChartIcon aria-hidden="true" class="w-4 h-4 absolute" />
                 <span class="sr-only">View market</span>
@@ -73,10 +75,11 @@ const closeModal = () => {
         <Tooltip content="View transactions" placement="bottom">
             <Button
                 type="button"
-                class="flex justify-center w-8 h-8 relative focus:outline-none"
+                class="flex justify-center w-6 h-6 relative focus:outline-none"
                 variant="gray"
                 @click="openMemberModal('view_transaction')"
                 pill
+                size="sm"
             >
                 <HistoryIcon aria-hidden="true" class="w-4 h-4 absolute" />
                 <span class="sr-only">View transactions</span>

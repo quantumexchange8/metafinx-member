@@ -3,6 +3,7 @@ import {checkCircle, alertTriangle} from '@/Components/Icons/outline'
 import Button from "@/Components/Button.vue";
 import {computed} from "vue";
 import {XIcon} from "@heroicons/vue/outline";
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
     intent: {
@@ -13,6 +14,10 @@ const props = defineProps({
         default: 'success'
     },
     title: String,
+    alertButton: {
+        type: String,
+        default: 'OK'
+    },
     show: {
         type: Boolean,
         default: false
@@ -30,7 +35,9 @@ const iconComponent = computed(() => {
 })
 
 function dismiss() {
-    if (props.onDismiss) {
+    if (props.alertButton === 'Internal Wallet') {
+        router.visit('/wallet/details');
+    } else if (props.onDismiss) {
         props.onDismiss();
     }
 }
@@ -82,13 +89,22 @@ function dismiss() {
                                 <slot />
                             </div>
                         </div>
-                        <div class="px-2">
+                        <div class="px-2 flex flex-col items-start gap-3 items-stretch">
                             <Button
                                 type="button"
                                 class="w-full flex justify-center"
                                 @click="dismiss"
                             >
-                                OK
+                                {{ alertButton ?? 'OK' }}
+                            </Button>
+                            <Button
+                                v-if="alertButton"
+                                type="button"
+                                class="w-full flex justify-center"
+                                variant="transparent"
+                                @click="dismiss"
+                            >
+                                Later
                             </Button>
                         </div>
                     </div>

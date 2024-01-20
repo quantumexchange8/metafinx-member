@@ -88,8 +88,12 @@ export function transactionFormat() {
         }
     }
 
-    function formatAmount(amount) {
-        return parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    function formatAmount(amount, decimalPlaces = 2) {
+        const formattedAmount = parseFloat(amount).toFixed(decimalPlaces);
+        const integerPart = formattedAmount.split('.')[0];
+        const decimalPart = formattedAmount.split('.')[1];
+        const integerWithCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return decimalPlaces > 0 ? `${integerWithCommas}.${decimalPart}` : integerWithCommas;
     }
 
     const formatType = (type) => {

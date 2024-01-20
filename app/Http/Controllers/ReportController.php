@@ -64,6 +64,7 @@ class ReportController extends Controller
 
         $query = Earning::query()
             ->with('subscriptionPlan.investment_plan')
+            ->where('upline_id', $user->id)
             ->where('type', 'monthly_return');
 
         if ($request->filled('search')) {

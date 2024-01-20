@@ -18,6 +18,7 @@ const showAlert = ref(false);
 const intent = ref(null);
 const alertTitle = ref('');
 const alertMessage = ref(null);
+const alertButton = ref(null);
 
 let removeFinishEventListener = Inertia.on("finish", () => {
     if (page.props.success) {
@@ -25,11 +26,13 @@ let removeFinishEventListener = Inertia.on("finish", () => {
         intent.value = 'success'
         alertTitle.value = page.props.title
         alertMessage.value = page.props.success
+        alertButton.value = page.props.alertButton
     } else if (page.props.warning) {
         showAlert.value = true
         intent.value = 'warning'
         alertTitle.value = page.props.title
         alertMessage.value = page.props.warning
+        alertButton.value = page.props.alertButton
     }
 });
 
@@ -72,6 +75,7 @@ onUnmounted(() => removeFinishEventListener());
                     :on-dismiss="() => showAlert = false"
                     :title="alertTitle"
                     :intent="intent"
+                    :alertButton="alertButton"
                 >
                     {{ alertMessage }}
                 </Alert>

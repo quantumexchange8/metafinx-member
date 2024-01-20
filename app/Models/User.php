@@ -161,4 +161,9 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail, JWTSubj
     {
         return $this->hasMany(Payment::class, 'user_id', 'id');
     }
+
+    public function coins(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Coin::class, 'user_id', 'id');
+    }
 }

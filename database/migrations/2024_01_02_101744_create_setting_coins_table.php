@@ -11,6 +11,9 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('symbol');
+            $table->double('total_supply')->default(0);
+            $table->double('accumulate_supply')->default(0);
+            $table->double('accumulate_capped')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

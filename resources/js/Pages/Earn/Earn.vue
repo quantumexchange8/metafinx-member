@@ -9,57 +9,10 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 const props = defineProps({
     investmentPlans: Object,
     wallet_sel: Array,
+    coin_price: Object,
+    musd_wallet: Object,
 })
-const categories = ref({
-    Recent: [
-        {
-            id: 1,
-            title: 'Does drinking coffee make you smarter?',
-            date: '5h ago',
-            commentCount: 5,
-            shareCount: 2,
-        },
-        {
-            id: 2,
-            title: "So you've bought coffee... now what?",
-            date: '2h ago',
-            commentCount: 3,
-            shareCount: 2,
-        },
-    ],
-    Popular: [
-        {
-            id: 1,
-            title: 'Is tech making coffee better or worse?',
-            date: 'Jan 7',
-            commentCount: 29,
-            shareCount: 16,
-        },
-        {
-            id: 2,
-            title: 'The most innovative things happening in coffee',
-            date: 'Mar 19',
-            commentCount: 24,
-            shareCount: 12,
-        },
-    ],
-    Trending: [
-        {
-            id: 1,
-            title: 'Ask Me Anything: 10 answers to your questions about coffee',
-            date: '2d ago',
-            commentCount: 9,
-            shareCount: 5,
-        },
-        {
-            id: 2,
-            title: "The worst advice we've ever heard about coffee",
-            date: '4d ago',
-            commentCount: 1,
-            shareCount: 2,
-        },
-    ],
-})
+
 </script>
 
 <template>
@@ -102,7 +55,7 @@ const categories = ref({
             <TabGroup>
                 <TabList class="flex dark:bg-transparent w-full">
                     <Tab
-                        v-for="category in props.investmentPlans"
+                        v-for="(category, index) in props.investmentPlans"
                         as="template"
                         :key="category.id"
                         v-slot="{ selected }"
@@ -110,7 +63,8 @@ const categories = ref({
                         <button
                             class="px-4 py-2.5 text-sm font-semibold text-gray-900 border border-gray-200 focus:outline-none w-full sm:w-44"
                             :class="{
-                                'rounded-l-xl rounded-r-xl': category.type === 'standard' || category.type === 'ebmi',
+                                'rounded-l-xl': category.type === 'standard',
+                                'rounded-r-xl': category.type === 'stacking',
                                 'hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600': true,
                                 'bg-transparent dark:bg-[#38425080] dark:text-white': selected
                             }"
@@ -135,7 +89,10 @@ const categories = ref({
                                     <div class="font-semibold">
                                         {{ plan.name }}
                                     </div>
-                                    <div class="font-semibold text-[32px]">
+                                    <div v-if="plan.type === 'stacking'" class="font-semibold text-[32px]">
+                                        {{ plan.commision_multiplier * 100 }}% <span class="text-base">profit share</span>
+                                    </div>
+                                    <div v-else class="font-semibold text-[32px]">
                                         {{ plan.roi_per_annum }} p.a.
                                     </div>
                                 </div>
@@ -149,6 +106,8 @@ const categories = ref({
                                     <Subscribe
                                         :plan="plan"
                                         :wallet_sel="wallet_sel"
+                                        :coin_price="coin_price"
+                                        :musd_wallet="musd_wallet"
                                     />
                                 </div>
                             </div>

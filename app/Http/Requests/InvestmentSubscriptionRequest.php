@@ -9,8 +9,8 @@ class InvestmentSubscriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'wallet_id' => ['required'],
-            'amount' => ['required', 'numeric', 'integer'],
+            'wallet_id' => ['sometimes', 'required'],
+            'amount' => ['required', 'numeric'],
             'unit_number' => ['sometimes', 'required'],
             'housing_price' => ['sometimes', 'required', 'numeric', 'integer'],
             'terms' => ['accepted'],

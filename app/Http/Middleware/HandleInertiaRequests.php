@@ -40,6 +40,8 @@ class HandleInertiaRequests extends Middleware
             'auth.user.readNotifications' => fn() => $request->user() ? $request->user()->readNotifications : null,
             'auth.user.unreadNotifications' => fn() => $request->user() ? $request->user()->unreadNotifications : null,
             'auth.user.wallets' => fn() => $request->user() ? $request->user()->wallets : null,
+            'auth.user.coins' => fn() => $request->user() ? $request->user()->coins : null,
+            'auth.user.coins.setting_coin' => fn() => $request->user() ? $request->user()->coins->setting_coin : null,
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
@@ -49,6 +51,7 @@ class HandleInertiaRequests extends Middleware
             'title' => session('title'),
             'success' => session('success'),
             'warning' => session('warning'),
+            'alertButton' => session('alertButton'),
             'toast' => session('toast'),
         ];
     }

@@ -6,10 +6,12 @@ import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 
 const props = defineProps({
-    investments: Object
+    investments: Object,
+    coinStackings: Object,
+    setting_coin: Object,
 })
 
-const { formatDate, formatType } = transactionFormat();
+const { formatDate, formatType, formatAmount } = transactionFormat();
 const tncModal = ref(false);
 
 const openTncModal = () => {
@@ -56,8 +58,13 @@ const calculateWidthPercentage = (created_at, period) => {
             </p>
         </template>
 
+        <div class="flex pb-3 items-start gap-2.5 self-stretch border-b border-gray-300 dark:border-gray-700 mb-8">
+            <div class="text-base font-semibold">
+                Standard
+            </div>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div v-for="investment in props.investments" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]">
+            <div v-for="investment in investments" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]">
                 <div class="flex justify-between">
                     <div class="text-xs">
                         <span v-if="investment.type === 'standard'">{{ investment.plan_name.name }} &#x2022; $ {{ investment.amount }}</span>
@@ -90,7 +97,7 @@ const calculateWidthPercentage = (created_at, period) => {
                 </div>
                 <div class="flex justify-between mb-1">
                     <div class="dark:text-gray-400 text-xs">
-                        {{$t('public.earn.situation')}}
+                        {{$t('public.report.status')}}
                     </div>
                     <div class="dark:text-white text-xs">
                         <span class="uppercase dark:text-error-500 font-semibold" v-if="investment.status === 'Terminated'">{{ formatType(investment.status) }}</span>
@@ -138,6 +145,87 @@ const calculateWidthPercentage = (created_at, period) => {
         </div>
 
         <div v-if="investments.length === 0" class="flex flex-col items-center justify-center my-8">
+            <img src="/assets/no_data.png" class="w-1/2" alt="">
+            <div class="dark:text-gray-400 mt-3">
+                {{$t('public.no_data')}}
+            </div>
+        </div>
+
+        <div class="flex pb-3 items-start gap-2.5 self-stretch border-b border-gray-300 dark:border-gray-700 my-8">
+            <div class="text-base font-semibold">
+                {{ setting_coin.name }} Stacking
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div v-for="stacking in coinStackings" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]">
+                <div class="flex justify-between">
+                    <div class="text-xs">
+                        <span>{{ stacking.plan_name.name }} &#x2022; {{ formatAmount(stacking.amount, 0) }} {{ setting_coin.name }}</span>
+                    </div>
+                    <div class="dark:text-gray-400 text-xs">
+                        <span class="uppercase">{{$t('public.earn.since')}} {{ formatDate(stacking.created_at) }}</span>
+                    </div>
+                </div>
+                <div class="relative my-3">
+                    <div class="mb-1 flex h-2.5 overflow-hidden rounded-full bg-gray-100 text-xs">
+                        <div
+                            :style="{ width: `${calculateWidthPercentage(stacking.created_at, stacking.investment_period).widthResult}%` }"
+                            class="rounded-full bg-gradient-to-r from-warning-400 to-pink-500 transition-all duration-500 ease-out"
+                        >
+                        </div>
+                    </div>
+                    <div class="mb-2 flex items-center justify-between text-xs">
+                        <div class="dark:text-gray-400">
+                            1
+                        </div>
+                        <div class="dark:text-gray-400">
+                            {{ stacking.investment_period/4 }}
+                        </div>
+                        <div class="dark:text-gray-400">
+                            {{ stacking.investment_period/2 }}
+                        </div>
+                        <div class="dark:text-gray-400">{{ stacking.investment_period }}</div>
+                    </div>
+                </div>
+                <div class="flex justify-between mb-1">
+                    <div class="dark:text-gray-400 text-xs">
+                        {{$t('public.earn.next_roi')}}
+                    </div>
+                    <div class="dark:text-white text-xs">
+                        <span class="uppercase">{{ formatDate(stacking.next_roi_date) }}</span>
+                    </div>
+                </div>
+                <div class="flex justify-between mb-1">
+                    <div class="dark:text-gray-400 text-xs">
+                        {{$t('public.earn.valid')}}
+                    </div>
+                    <div class="dark:text-white text-xs">
+                        <span class="uppercase">{{ formatDate(stacking.expired_date) }}</span>
+                    </div>
+                </div>
+                <div class="flex justify-between mb-1">
+                    <div class="dark:text-gray-400 text-xs">
+                        {{$t('public.earn.id_number')}}
+                    </div>
+                    <div class="dark:text-white text-xs">
+                        <span class="uppercase">{{ stacking.subscription_id }}</span>
+                    </div>
+                </div>
+                <div class="flex justify-between mb-1">
+                    <div class="dark:text-gray-400 text-xs">
+                        {{$t('public.earn.total_earning')}}
+                    </div>
+                    <div class="dark:text-white text-xs">
+                        <span class="uppercase">{{ formatAmount(stacking.total_earning, 4) }} {{ setting_coin.name }}</span>
+                    </div>
+                </div>
+                <div class="mt-4 text-xs">
+                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">Learn more.</span>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="coinStackings.length === 0" class="flex flex-col items-center justify-center my-8">
             <img src="/assets/no_data.png" class="w-1/2" alt="">
             <div class="dark:text-gray-400 mt-3">
                 {{$t('public.no_data')}}

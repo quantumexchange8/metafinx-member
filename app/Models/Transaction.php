@@ -23,10 +23,13 @@ class Transaction extends Model
         'amount',
         'transaction_charges',
         'transaction_amount',
+        'new_wallet_amount',
+        'new_coin_amount',
         'unit',
         'price_per_unit',
         'status',
         'remarks',
+        'handle_by',
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
