@@ -4,7 +4,7 @@ import Sidebar from '@/Components/Sidebar/Sidebar.vue'
 import Navbar from '@/Components/Navbar.vue'
 import { sidebarState } from '@/Composables'
 import Alert from "@/Components/Alert.vue";
-import {onUnmounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {usePage} from "@inertiajs/vue3";
 import ToastList from "@/Components/ToastList.vue";
@@ -19,6 +19,10 @@ const intent = ref(null);
 const alertTitle = ref('');
 const alertMessage = ref(null);
 const alertButton = ref(null);
+
+onMounted(() => {
+    document.documentElement.classList.add('dark');
+})
 
 let removeFinishEventListener = Inertia.on("finish", () => {
     if (page.props.success) {
