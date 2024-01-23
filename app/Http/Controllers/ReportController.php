@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\DepositExport;
-use App\Exports\EarningReportExport;
-use App\Exports\InvestmentReportExport;
-use App\Exports\WithdrawalExport;
-use App\Models\Earning;
-use App\Models\InvestmentPlan;
-use App\Models\InvestmentSubscription;
-use App\Models\Payment;
-use App\Models\Wallet;
-use App\Models\SettingWalletAddress;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Wallet;
+use App\Models\Earning;
+use App\Models\Payment;
+use Illuminate\Http\Request;
+use App\Exports\DepositExport;
+use App\Models\InvestmentPlan;
+use App\Exports\WithdrawalExport;
+use App\Exports\ReturnReportExport;
+use App\Exports\EarningReportExport;
+use App\Models\SettingWalletAddress;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\InvestmentSubscription;
+use App\Exports\InvestmentReportExport;
 use function Symfony\Component\Translation\t;
 
 class ReportController extends Controller
@@ -93,7 +94,7 @@ class ReportController extends Controller
         }
 
         if ($request->has('exportStatus')) {
-            return Excel::download(new EarningReportExport($query), Carbon::now() . '-earning-report.xlsx');
+            return Excel::download(new ReturnReportExport($query), Carbon::now() . '-return-report.xlsx');
         }
 
         $results = $query->latest()->paginate(10);

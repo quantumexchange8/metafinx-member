@@ -31,7 +31,7 @@ return [
     "validation_error" => "Whoops! Something went wrong.",
     "buy_coin"=> [
         "amount"=> "Internal Wallet",
-        "unit"=> "XL Coin",
+        "unit"=> "MXT Coin",
     ],
     "step_details" => [
         "Your details"=> "Your details",
@@ -75,6 +75,7 @@ return [
         "musd_wallet" => "Musd Wallet",
         "sponsor_bonus" => "Sponsor Bonus",
         "pairing_bonus" => "Pairing Bonus",
+        "profit_sharing" => "Profit Sharing",
     ],
     "crypto_price_table" => [
         "cryptocurrency_market_price" => "Cryptocurrency Market Price",

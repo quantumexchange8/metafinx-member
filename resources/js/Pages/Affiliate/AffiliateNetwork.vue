@@ -13,7 +13,7 @@ const categories = ref([
     },
     {
         id: 2,
-        name: "XL Coin Binary Network",
+        name: "MXT Coin Binary Network",
         type: 'binary',
     },
 ])

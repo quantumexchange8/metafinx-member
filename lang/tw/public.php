@@ -31,7 +31,7 @@ return [
     "validation_error" => "糟糕！出现错误。",
     "buy_coin" => [
         "amount" => "内部钱包",
-        "unit" => "XL Coin",
+        "unit" => "MXT Coin",
     ],
     "step_details" => [
         "Your details" => "您的详细信息",
@@ -75,6 +75,7 @@ return [
         "musd_wallet" => "Musd钱包",
         "sponsor_bonus" => "赞助奖金",
         "pairing_bonus" => "配对奖金",
+        "profit_sharing" => "利润分享",
     ],
     "crypto_price_table" => [
         "cryptocurrency_market_price" => "加密货币市场价格",

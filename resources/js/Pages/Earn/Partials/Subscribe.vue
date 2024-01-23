@@ -112,8 +112,8 @@ const handleButtonClick = () => {
                     <div class="font-semibold dark:text-white">
                         {{ plan.name }}
                     </div>
-                    <div v-if="plan.type === 'stacking'" class="font-semibold text-[32px]">
-                        {{ plan.commision_multiplier * 100 }}% <span class="text-base">profit share</span>
+                    <div v-if="plan.type === 'stacking'" class="font-semibold text-[32px] text-center">
+                        {{ plan.commision_multiplier * 100 }}% <span class="flex text-base">profit share</span>
                     </div>
                     <div v-else class="font-semibold text-[32px]">
                         {{ plan.roi_per_annum }} p.a.
@@ -240,7 +240,7 @@ const handleButtonClick = () => {
                             Current Price
                         </div>
                         <div class="text-sm text-gray-900 dark:text-white">
-                            $ {{ coin_price.price ?? '0.00' }}
+                            $&nbsp;{{ coin_price.price ?? '0.00' }}
                         </div>
                     </div>
                     <div class="flex justify-between items-start self-stretch">
@@ -248,7 +248,7 @@ const handleButtonClick = () => {
                             Linked Price
                         </div>
                         <div class="text-sm text-gray-900 dark:text-white">
-                            $ {{ linkedPrice ?? '0.00' }}
+                            $&nbsp;{{ linkedPrice ?? '0.00' }}
                         </div>
                     </div>
                     <div class="flex justify-between items-start self-stretch">
@@ -256,7 +256,7 @@ const handleButtonClick = () => {
                             10% Stacking Fee (deducted from MUSD Wallet)
                         </div>
                         <div class="text-sm text-gray-900 dark:text-white">
-                            $ {{ stackingFee ?? '0.00' }}
+                            $&nbsp;{{ stackingFee ?? '0.00' }}
                         </div>
                     </div>
                 </div>
