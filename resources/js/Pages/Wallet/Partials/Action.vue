@@ -3,8 +3,9 @@ import Button from "@/Components/Button.vue";
 import Tooltip from "@/Components/Tooltip.vue";
 import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
-import {CoinIcon, LineChartIcon, HistoryIcon} from "@/Components/Icons/outline.jsx"
+import {CoinIcon, SwapCoinIcon, LineChartIcon, HistoryIcon} from "@/Components/Icons/outline.jsx"
 import BuyCoin from "@/Pages/Wallet/Partials/BuyCoin.vue";
+import SwapCoin from "@/Pages/Wallet/Partials/SwapCoin.vue";
 import CoinChart from "@/Pages/Wallet/Partials/CoinChart.vue";
 import ViewMarket from "@/Pages/Wallet/Partials/ViewMarket.vue";
 import ViewTransaction from "@/Pages/Wallet/Partials/ViewTransaction.vue";
@@ -29,6 +30,9 @@ const openMemberModal = (componentType) => {
     if (componentType === 'buy_coin') {
         modalComponent.value = 'Buy Coin';
     }
+    else if (componentType === 'swap_coin') {
+        modalComponent.value = 'Swap Coin';
+    }
     else if (componentType === 'view_market') {
         modalComponent.value = 'View Market';
     }
@@ -38,7 +42,7 @@ const openMemberModal = (componentType) => {
 }
 
 const closeModal = () => {
-    coinModal.value = false
+    coinModal.value = false;
     modalComponent.value = null;
 }
 
@@ -57,6 +61,19 @@ const closeModal = () => {
             >
                 <CoinIcon aria-hidden="true" class="w-4 h-4 absolute" />
                 <span class="sr-only">Buy coin</span>
+            </Button>
+        </Tooltip>
+        <Tooltip content="Swap coin" placement="bottom">
+            <Button
+                type="button"
+                class="flex justify-center w-6 h-6 relative focus:outline-none"
+                variant="gray"
+                @click="openMemberModal('swap_coin')"
+                pill
+                size="sm"
+            >
+                <SwapCoinIcon aria-hidden="true" class="w-4 h-4 absolute" />
+                <span class="sr-only">Swap coin</span>
             </Button>
         </Tooltip>
         <Tooltip content="View market" placement="bottom">
@@ -102,6 +119,19 @@ const closeModal = () => {
                 @update:coinModal="coinModal = $event"
             />
         </template>
+        <template v-if="modalComponent === 'Swap Coin'">
+            <SwapCoin
+                :coin="coin"
+                :coin_price="coin_price"
+                :gasFee="gasFee"
+                :setting_coin="setting_coin"
+                :conversion_rate="conversion_rate"
+                :wallet_sel="wallet_sel"
+                :coin_market_time="coin_market_time"
+                :coin_price_yesterday="coin_price_yesterday"
+                @update:coinModal="coinModal = $event"
+            />
+        </template>
         <template v-if="modalComponent === 'View Market'">
             <ViewMarket
                 :setting_coin="setting_coin"
@@ -112,6 +142,8 @@ const closeModal = () => {
         <template v-if="modalComponent === 'View Transaction'">
             <ViewTransaction
                 :coin_payment="coin_payment"
+                :gasFee="gasFee"
+                :setting_coin="setting_coin"
             />
         </template>
     </Modal>

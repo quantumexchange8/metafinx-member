@@ -57,4 +57,9 @@ class Transaction extends Model
         return $this->belongsTo(Coin::class, 'to_coin_id', 'id');
     }
 
+    public function coinStacking(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(CoinStacking::class, 'user_id', 'user_id')->select(['user_id', 'investment_plan_id']);
+    }
+
 }

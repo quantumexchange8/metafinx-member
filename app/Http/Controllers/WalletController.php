@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\InternalTransferRequest;
-use App\Models\Earning;
-use App\Models\InvestmentSubscription;
-use App\Models\Setting;
-use App\Models\SettingCoin;
-use App\Models\Transaction;
-use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Coin;
-use Illuminate\Validation\ValidationException;
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Wallet;
+use App\Models\Earning;
 use App\Models\Payment;
+use App\Models\Setting;
 use App\Models\CoinPrice;
 use App\Models\CoinPayment;
+use App\Models\SettingCoin;
+use App\Models\Transaction;
+use App\Models\CoinStacking;
 use Illuminate\Http\Request;
 use App\Exports\DepositExport;
 use App\Models\CoinMarketTime;
@@ -28,8 +26,12 @@ use App\Models\SettingWalletAddress;
 use App\Models\SettingWithdrawalFee;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\BuyCoinRequest;
+use App\Http\Requests\SwapCoinRequest;
+use App\Models\InvestmentSubscription;
 use App\Services\RunningNumberService;
 use function Symfony\Component\Translation\t;
+use App\Http\Requests\InternalTransferRequest;
+use Illuminate\Validation\ValidationException;
 
 
 class WalletController extends Controller
@@ -346,6 +348,9 @@ class WalletController extends Controller
         $user = \Auth::user();
         $from_wallet = Wallet::find($request->from_wallet_id);
         $to_wallet = Wallet::find($request->to_wallet_id);
+        $setting_coin = SettingCoin::find($request->setting_coin_id);
+        $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();
+        $wallet = Wallet::find($request->wallet_id);
 
         if ($from_wallet->id == $to_wallet->id) {
             throw ValidationException::withMessages(['from_wallet_id' => 'Wallet cannot be the same']);
@@ -369,6 +374,8 @@ class WalletController extends Controller
             'transaction_amount' => $request->amount,
             'status' => 'Success',
             'remarks' => $request->remarks,
+            'new_wallet_amount' => $wallet->balance,
+            'new_coin_amount' => $coin->unit,
         ]);
 
         // Update the wallet balance
@@ -412,6 +419,8 @@ class WalletController extends Controller
             'transaction_charges' => $request->gas_fee,
             'transaction_amount' => $request->transaction_amount,
             'status' => 'Success',
+            'new_wallet_amount' => $wallet->balance,
+            'new_coin_amount' => $coin->unit,
         ]);
 
         $coin->update([
@@ -544,6 +553,7 @@ class WalletController extends Controller
         $user = \Auth::user();
 
         $buy_coin_history = Transaction::query()
+            ->with('fromWallet:id,name', 'toWallet:id,name','coinStacking.investment_plan:id,name')
             ->where('user_id', $user->id)
             ->where('category', 'asset');
 
@@ -568,4 +578,61 @@ class WalletController extends Controller
 
         return response()->json($buy_coin_history);
     }
+
+    public function swapCoin(BuyCoinRequest $request)
+    {
+        $user = \Auth::user();
+        $transaction_id = RunningNumberService::getID('transaction');
+        $setting_coin = SettingCoin::find($request->setting_coin_id);
+        $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();
+        $total_unit = $coin->unit - $request->unit;
+
+        $wallet = Wallet::find($request->wallet_id);
+
+        if ($coin->unit < $request->unit) {
+            throw ValidationException::withMessages(['unit' => trans('public.insufficient_unit') . ', AVAILABLE UNIT: ' . $coin->unit . ' ' . $setting_coin->name ]);
+            
+        }
+
+        $wallet->increment('balance', $request->transaction_amount);
+
+        $transaction = Transaction::create([
+            'category' => 'asset',
+            'user_id' => $user->id,
+            'transaction_type' => 'SwapCoin',
+            'to_wallet_id' => $request->wallet_id,
+            'from_coin_id' => $request->coin_id,
+            'transaction_number' => $transaction_id,
+            'unit' => $request->unit,
+            'price_per_unit' => $request->price,
+            'amount' => $request->amount,
+            'transaction_charges' => $request->gas_fee,
+            'transaction_amount' => $request->transaction_amount,
+            'status' => 'Success',
+            'new_wallet_amount' => $wallet->balance,
+            'new_coin_amount' => $coin->unit,
+        ]);
+
+        $coin->update([
+            'unit' => $total_unit,
+            'price' => $transaction->price_per_unit,
+        ]);
+
+        $accumulate_supply = $setting_coin->accumulate_supply - $transaction->unit;
+        $accumulate_capped = $setting_coin->accumulate_capped - ($accumulate_supply * 2);
+
+        $setting_coin->update([
+            'accumulate_supply' => $accumulate_supply,
+            'accumulate_capped' => $accumulate_capped,
+        ]);
+
+        $total_amount = $coin->unit / $coin->price;
+
+        $coin->update([
+            'amount' => $total_amount,
+        ]);
+
+        return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.swap_coin_success_message'));
+    }
+
 }

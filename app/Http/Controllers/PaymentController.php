@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DepositRequest;
-use App\Http\Requests\WithdrawalRequest;
-use App\Models\Payment;
-use App\Models\PaymentStatus;
-use App\Models\Setting;
-use App\Models\SettingWithdrawalFee;
-use App\Models\Transaction;
-use App\Models\Wallet;
-use App\Services\RunningNumberService;
 use Http;
+use App\Models\Coin;
+use App\Models\Wallet;
+use App\Models\Payment;
+use App\Models\Setting;
+use App\Models\SettingCoin;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\PaymentStatus;
+use App\Models\SettingWithdrawalFee;
+use App\Http\Requests\DepositRequest;
+use App\Services\RunningNumberService;
+use App\Http\Requests\WithdrawalRequest;
 use Illuminate\Validation\ValidationException;
 
 class PaymentController extends Controller
@@ -20,6 +22,9 @@ class PaymentController extends Controller
     public function deposit(DepositRequest $request)
     {
         $user = \Auth::user();
+        $setting_coin = SettingCoin::find($request->setting_coin_id);
+        $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();
+        $wallet = Wallet::find($request->wallet_id);
         $transaction_id = RunningNumberService::getID('transaction');
 
         $transaction = Transaction::create([
@@ -33,7 +38,9 @@ class PaymentController extends Controller
             'transaction_charges' => 0,
             'transaction_amount' => $request->amount,
             'to_wallet_address' => $request->to_wallet_address,
-            'status' => 'Pending'
+            'status' => 'Pending',
+            'new_wallet_amount' => $wallet->balance,
+            'new_coin_amount' => $coin->unit,
         ]);
 
         $payout = config('payout-setting');
@@ -58,6 +65,8 @@ class PaymentController extends Controller
     {
         $user = \Auth::user();
         $amount = floatval($request->amount);
+        $setting_coin = SettingCoin::find($request->setting_coin_id);
+        $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();
         $wallet = Wallet::find($request->wallet_id);
         if ($wallet->balance < $amount) {
             throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
@@ -79,7 +88,9 @@ class PaymentController extends Controller
             'transaction_amount' =>  $final_amount,
             'transaction_charges' => $request->payment_charges,
             'to_wallet_address' => $request->wallet_address,
-            'status' => 'Processing'
+            'status' => 'Processing',
+            'new_wallet_amount' => $wallet->balance,
+            'new_coin_amount' => $coin->unit,
         ]);
 
         $payout = config('payout-setting');

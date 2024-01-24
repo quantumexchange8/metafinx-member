@@ -78,6 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/withdrawal', [PaymentController::class, 'withdrawal'])->name('wallet.withdrawal');
         Route::post('/internal_transfer', [WalletController::class, 'internalTransfer'])->name('wallet.internalTransfer');
         Route::post('/buy_coin', [WalletController::class, 'buyCoin'])->name('wallet.buy_coin');
+        Route::post('/swap_coin', [WalletController::class, 'swapCoin'])->name('wallet.swap_coin');
     });
 
     Route::prefix('earn')->group(function () {

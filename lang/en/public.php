@@ -1,9 +1,16 @@
 <?php
 return [
+    "payable" => "Payable",
+    "stacking_fee" => "Stacking Fee (10%)",
+    "received" => "Received",
+    "linked_price" => "Linked Price",
+    "gas_fee" => "Gas Fee",
+    "swap_coin_success_message" => "Swap Coin successfully",
     "coin_purchase_success_message"=> "Coin purchased successfully.",
     "handler_title" => "Page Expired",
     "handler_warning" => "Please try again later.",
     "insufficient_balance" => "Insufficient Balance",
+    "insufficient_unit" => "Insufficient Unit",
     "insufficient_balance_warning" => "The selected wallet does not have enough balance to subscribe the investment plan. Please try again.",
     "subscribed" => "Subscribed!",
     "subscribed_success" => "The selected investment plan has been subscribed successfully.",
@@ -185,7 +192,8 @@ return [
         "from" => "From",
         "paid" => "Paid",
         "unit" => "Unit",
-        "price_per_unit" => "Price per Unit"
+        "price_per_unit" => "Price per Unit",
+        "clear" => "Clear",
     ],
     "affiliate" => [
         "affiliate" => "Affiliate",

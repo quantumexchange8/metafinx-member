@@ -197,30 +197,30 @@ watchEffect(() => {
 
     <Modal :show="transactionModal" :title="$t('public.wallet.transaction_details')" @close="closeModal">
         <div v-if="selectedTransaction">
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_type')}}</span>
-                <span class="text-black col-span-2 dark:text-white py-2">{{ formatType(selectedTransaction.transaction_type) }}</span>
+            <div class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_type')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ formatType(selectedTransaction.transaction_type) }}</span>
             </div>
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_id')}}</span>
-                <span class="text-black col-span-2 dark:text-white py-2" v-if="['monthly_return', 'referral_earnings', 'affiliate_earnings', 'dividend_earnings'].includes(selectedTransaction.transaction_type)">-</span>
-                <span class="text-black col-span-2 dark:text-white py-2" v-else>{{ selectedTransaction.transaction_id }}</span>
+            <div class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_id')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2" v-if="['monthly_return', 'referral_earnings', 'affiliate_earnings', 'dividend_earnings'].includes(selectedTransaction.transaction_type)">-</span>
+                <span class="text-black col-span-3 dark:text-white py-2" v-else>{{ selectedTransaction.transaction_id }}</span>
             </div>
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.date_time')}}</span>
-                <span class="text-black col-span-2 dark:text-white py-2">{{ formatDateTime(selectedTransaction.transaction_date) }}</span>
+            <div class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.date_time')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ formatDateTime(selectedTransaction.transaction_date) }}</span>
             </div>
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.amount')}}</span>
-                <span class="text-black col-span-2 dark:text-white py-2">$ {{ formatAmount(selectedTransaction.transaction_amount) }}</span>
+            <div class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.amount')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">$ {{ formatAmount(selectedTransaction.transaction_amount) }}</span>
             </div>
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>
-                <span class="text-black col-span-2 dark:text-white py-2">{{ selectedTransaction.transaction_status }}</span>
+            <div class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ selectedTransaction.transaction_status }}</span>
             </div>
-            <div v-if="selectedTransaction.transaction_type === 'Deposit' || selectedTransaction.transaction_type === 'Withdrawal' || selectedTransaction.transaction_type === 'InternalTransfer'" class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Remarks</span>
-                <span class="text-black col-span-2 dark:text-white py-2">{{ selectedTransaction.transaction_remark ?? '-' }}</span>
+            <div v-if="selectedTransaction.transaction_type === 'Deposit' || selectedTransaction.transaction_type === 'Withdrawal' || selectedTransaction.transaction_type === 'InternalTransfer'" class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">Remarks</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ selectedTransaction.transaction_remark ?? '-' }}</span>
             </div>
         </div>
     </Modal>
