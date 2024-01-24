@@ -25,6 +25,7 @@ const props = defineProps({
     random_address: Object,
     withdrawalFee: Object,
     gasFee: Object,
+    stackingFee: Object,
     setting_coin: Object,
     coin_price_yesterday: Object,
     coin_market_time: Object,
@@ -130,6 +131,7 @@ function copyTestingCode () {
                         :coin="coin"
                         :coin_price="coin_price"
                         :gasFee="gasFee"
+                        :stackingFee="stackingFee"
                         :conversion_rate="conversion_rate"
                         :wallet_sel="wallet_sel"
                         :setting_coin="setting_coin"
@@ -183,6 +185,7 @@ function copyTestingCode () {
                             :coin="coin"
                             :coin_price="coin_price"
                             :gasFee="gasFee"
+                            :stackingFee="stackingFee"
                             :conversion_rate="conversion_rate"
                             :wallet_sel="wallet_sel"
                             :setting_coin="setting_coin"

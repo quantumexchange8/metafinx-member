@@ -15,6 +15,7 @@ import {usePage} from "@inertiajs/vue3";
 const props = defineProps({
   coin_payment: Object,
   gasFee: Object,
+  stackingFee: Object,
   setting_coin: Object,
 });
 
@@ -247,7 +248,7 @@ const walletName = ref(page.props.auth.user.wallets[1]);
             </div>
             <div class="grid grid-cols-5 items-center">
                 <span v-if="selectedTransaction.transaction_type === 'BuyCoin' || selectedTransaction.transaction_type === 'SwapCoin'" class="col-span-2 text-sm font-semibold dark:text-gray-400">{{ $t('public.gas_fee') }} ({{ gasFee.value }}%)</span>
-                <span v-if="selectedTransaction.transaction_type === 'Stacking'" class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.stacking_fee')}}</span>
+                <span v-if="selectedTransaction.transaction_type === 'Stacking'" class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.stacking_fee')}} ({{ stackingFee.value }}%)</span>
                 <span v-if="selectedTransaction.transaction_type === 'BuyCoin' || selectedTransaction.transaction_type === 'SwapCoin'" class="text-black col-span-3 dark:text-white py-2">$ {{ selectedTransaction.transaction_charges }}</span>
                 <span v-if="selectedTransaction.transaction_type === 'Stacking'" class="text-black col-span-3 dark:text-white py-2">$ {{ (selectedTransaction.transaction_charges) }} ({{ walletName.name }})</span>
             </div>

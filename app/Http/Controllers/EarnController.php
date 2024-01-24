@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\InvestmentSubscriptionRequest;
 use App\Models\Coin;
+use Inertia\Inertia;
+use App\Models\Wallet;
+use App\Models\Setting;
 use App\Models\CoinPrice;
-use App\Models\CoinStacking;
-use App\Models\InvestmentPlan;
-use App\Models\InvestmentSubscription;
 use App\Models\SettingCoin;
 use App\Models\Transaction;
-use App\Models\Wallet;
-use App\Services\RunningNumberService;
+use App\Models\CoinStacking;
 use Illuminate\Http\Request;
+use App\Models\InvestmentPlan;
+use App\Models\InvestmentSubscription;
+use App\Services\RunningNumberService;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
+use App\Http\Requests\InvestmentSubscriptionRequest;
 
 class EarnController extends Controller
 {
@@ -63,6 +64,7 @@ class EarnController extends Controller
             'wallet_sel' => $wallet_sel,
             'coin_price' => CoinPrice::whereDate('price_date', today())->first(),
             'musd_wallet' => Wallet::where('user_id', \Auth::id())->where('type', 'musd_wallet')->first(),
+            'stackingFee' => Setting::where('slug', 'stacking-fee')->latest()->first(),
         ]);
     }
 

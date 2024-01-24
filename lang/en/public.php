@@ -1,8 +1,11 @@
 <?php
 return [
+    "current_amount" => "Current amount",
+    "stacking_pay" => "deducted from MUSD Wallet",
+    "stacking_fee" => "Stacking Fee",
     "payable" => "Payable",
-    "stacking_fee" => "Stacking Fee (10%)",
     "received" => "Received",
+    "current_price" => "Current Price",
     "linked_price" => "Linked Price",
     "gas_fee" => "Gas Fee",
     "swap_coin_success_message" => "Swap Coin successfully",

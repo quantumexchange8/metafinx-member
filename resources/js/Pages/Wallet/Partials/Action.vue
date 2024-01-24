@@ -14,6 +14,7 @@ const props = defineProps({
     coin: Object,
     coin_price: Object,
     gasFee: Object,
+    stackingFee: Object,
     conversion_rate: Object,
     wallet_sel: Array,
     setting_coin: Object,
@@ -143,6 +144,7 @@ const closeModal = () => {
             <ViewTransaction
                 :coin_payment="coin_payment"
                 :gasFee="gasFee"
+                :stackingFee="stackingFee"
                 :setting_coin="setting_coin"
             />
         </template>

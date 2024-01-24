@@ -11,6 +11,7 @@ const props = defineProps({
     wallet_sel: Array,
     coin_price: Object,
     musd_wallet: Object,
+    stackingFee: Object,
 })
 
 </script>
@@ -108,6 +109,7 @@ const props = defineProps({
                                         :wallet_sel="wallet_sel"
                                         :coin_price="coin_price"
                                         :musd_wallet="musd_wallet"
+                                        :stackingFee="stackingFee"
                                     />
                                 </div>
                             </div>

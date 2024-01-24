@@ -80,6 +80,7 @@ class WalletController extends Controller
             'random_address' => $wallet_address,
             'withdrawalFee' => Setting::where('slug', 'withdrawal-fee')->latest()->first(),
             'gasFee' => Setting::where('slug', 'gas-fee')->latest()->first(),
+            'stackingFee' => Setting::where('slug', 'stacking-fee')->latest()->first(),
             'setting_coin' => SettingCoin::where('symbol', 'MXT/USD')->first(),
             'coin_price_yesterday' => $coin_price_yesterday,
             'coin_payment' => $coin_payment,
