@@ -54,6 +54,10 @@ class EarnController extends Controller
                             ];
                         }),
                         'type' => $investmentPlan->type,
+                        'media' => [
+                            'stacking' => optional($investmentPlan->getMedia('stacking_plan')->first())->getUrl(),
+                            'standard' => optional($investmentPlan->getMedia('standard_plan')->first())->getUrl(),
+                        ],
                     ];
                 }),
             ];

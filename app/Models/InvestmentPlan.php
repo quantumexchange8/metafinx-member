@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class InvestmentPlan extends Model
+
+class InvestmentPlan extends Model implements HasMedia
 {
-    use SoftDeletes, HasTranslations;
+    use SoftDeletes, HasTranslations, InteractsWithMedia;
 
     public $translatable = ['name'];
 
