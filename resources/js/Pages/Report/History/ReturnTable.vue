@@ -24,7 +24,7 @@ const currentPage = ref(1);
 const refreshReturns = ref(props.refresh);
 const returnsLoading = ref(props.isLoading);
 const emit = defineEmits(['update:loading', 'update:refresh', 'update:export']);
-const { formatDateTime, formatAmount, formatCategory } = transactionFormat();
+const { formatDateTime, formatAmount, formatType } = transactionFormat();
 
 watch(
     [() => props.search, () => props.type, () => props.date],
@@ -149,7 +149,7 @@ const currentLocale = ref(usePage().props.locale);
                         {{ earn.subscription_plan.investment_plan.name[currentLocale] }} - <span class="text-gray-600 dark:text-gray-400">{{ earn.subscription_plan.subscription_id }}</span>
                     </td>
                     <td class="py-3 text-center">
-                        {{ formatCategory(earn.type) }}
+                        {{ formatType(earn.type) }}
                     </td>
                     <td class="py-3 text-center">
                         $ {{ formatAmount(earn.after_amount) }}

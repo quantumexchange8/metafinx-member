@@ -40,9 +40,10 @@ const returnFilter = computed(() => {
 
 const earnFilter = [
     {value: '', label:"All"},
-    {value: 'referral_earnings', label:"Referral Earning"},
-    {value: 'affiliate_earnings', label:"Affiliate Earning"},
-    {value: 'dividend_earnings', label:"Dividend Earning"},
+    {value: 'ReferralEarning', label:"Referral Earning"},
+    {value: 'AffiliateEarning', label:"Affiliate Earning"},
+    {value: 'DividendEarning', label:"Dividend Earning"},
+    {value: 'AffiliateDividendEarning', label:"Affiliate Dividend Earning"},
 ];
 
 const investFilter = [

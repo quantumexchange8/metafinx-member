@@ -24,7 +24,7 @@ const currentPage = ref(1);
 const refreshEarning = ref(props.refresh);
 const depositLoading = ref(props.isLoading);
 const emit = defineEmits(['update:loading', 'update:refresh', 'update:export']);
-const { formatDateTime, formatAmount, formatCategory } = transactionFormat();
+const { formatDateTime, formatAmount, formatType } = transactionFormat();
 
 watch(
     [() => props.search, () => props.type, () => props.date],
@@ -154,7 +154,7 @@ const paginationActiveClass = [
                         </div>
                     </td>
                     <td class="py-2">
-                        {{ formatCategory(earning.type) }}
+                        {{ formatType(earning.type) }}
                     </td>
                     <td class="py-2">
                         <div class="inline-flex items-center gap-2">

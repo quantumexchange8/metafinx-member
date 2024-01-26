@@ -155,12 +155,12 @@ watchEffect(() => {
                 </div>
             </td>
             <td class="p-3">
-                <span v-if="['monthly_return', 'referral_earnings', 'affiliate_earnings', 'dividend_earnings'].includes(transaction.transaction_type)">-</span>
+                <span v-if="['MonthlyReturn', 'ReferralEarning', 'AffiliateEarning', 'DividendEarning', 'AffiliateDividendEarning'].includes(transaction.transaction_type)">-</span>
                 <span v-else>{{ transaction.transaction_id }}</span>
             </td>
                 <td class="p-3">
                     <div :class="[
-                            {'text-success-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'Deposit' || transaction.transaction_type === 'Withdrawal' || transaction.transaction_type === 'monthly_return' || transaction.transaction_type === 'monthly_return' || transaction.transaction_type === 'referral_earnings' || transaction.transaction_type === 'affiliate_earnings' || transaction.transaction_type === 'dividend_earnings'},
+                            {'text-success-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'Deposit' || transaction.transaction_type === 'Withdrawal' || transaction.transaction_type === 'MonthlyReturn' || transaction.transaction_type === 'ReferralEarning' || transaction.transaction_type === 'AffiliateEarning' || transaction.transaction_type === 'DividendEarning' || transaction.transaction_type === 'AffiliateDividendEarning'},
                             {'text-error-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'BuyCoin' || transaction.transaction_type === 'Investment' },
                             {'text-gray-900 dark:text-white': transaction.transaction_status === 'Rejected' && transaction.transaction_type === 'Deposit' ||transaction.transaction_type === 'Withdrawal' },
                         ]"
@@ -203,7 +203,7 @@ watchEffect(() => {
             </div>
             <div class="grid grid-cols-5 items-center">
                 <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_id')}}</span>
-                <span class="text-black col-span-3 dark:text-white py-2" v-if="['monthly_return', 'referral_earnings', 'affiliate_earnings', 'dividend_earnings'].includes(selectedTransaction.transaction_type)">-</span>
+                <span class="text-black col-span-3 dark:text-white py-2" v-if="['MonthlyReturn', 'ReferralEarning', 'AffiliateEarning', 'DividendEarning', 'AffiliateDividendEarning'].includes(selectedTransaction.transaction_type)">-</span>
                 <span class="text-black col-span-3 dark:text-white py-2" v-else>{{ selectedTransaction.transaction_id }}</span>
             </div>
             <div class="grid grid-cols-5 items-center">

@@ -70,10 +70,11 @@ const typeFilter = [
     {value: 'Deposit', label:"Deposit"},
     {value: 'Withdrawal', label:"Withdrawal"},
     {value: 'Investment', label:"Investment"},
-    {value: 'monthly_return', label:"Monthly Return"},
-    {value: 'referral_earnings', label:"Referral Earning"},
-    {value: 'affiliate_earnings', label:"Affiliate Earning"},
-    {value: 'dividend_earnings', label:"Dividend Earning"},
+    {value: 'MonthlyReturn', label:"Monthly Return"},
+    {value: 'ReferralEarning', label:"Referral Earning"},
+    {value: 'AffiliateEarning', label:"Affiliate Earning"},
+    {value: 'DividendEarning', label:"Dividend Earning"},
+    {value: 'AffiliateDividendEarning', label:"Affiliate Dividend Earning"},
 ];
 
 const clearFilter = () => {
