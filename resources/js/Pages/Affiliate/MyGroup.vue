@@ -27,12 +27,12 @@ const exportStatus = ref(false);
 const categories = ref([
     {
         id: 1,
-        name: 'Group Network Affiliates',
+        name: 'Group Network',
         type: 'affiliate',
     },
     {
         id: 2,
-        name: "XL Coin Binary Network",
+        name: "MXT Coin Binary Network",
         type: 'binary',
     },
 ])

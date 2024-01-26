@@ -73,7 +73,7 @@ function copyTestingCode () {
 
 <template>
     <Button
-        class="justify-center gap-2"
+        class="flex-grow justify-center gap-2"
         variant="primary"
         @click="openDepositModal"
     >

@@ -1,9 +1,19 @@
 <?php
 return [
+    "current_amount" => "Current amount",
+    "stacking_pay" => "deducted from MUSD Wallet",
+    "stacking_fee" => "Stacking Fee",
+    "payable" => "Payable",
+    "received" => "Received",
+    "current_price" => "Current Price",
+    "linked_price" => "Linked Price",
+    "gas_fee" => "Gas Fee",
+    "swap_coin_success_message" => "Swap Coin successfully",
     "coin_purchase_success_message"=> "Coin purchased successfully.",
     "handler_title" => "Page Expired",
     "handler_warning" => "Please try again later.",
     "insufficient_balance" => "Insufficient Balance",
+    "insufficient_unit" => "Insufficient Unit",
     "insufficient_balance_warning" => "The selected wallet does not have enough balance to subscribe the investment plan. Please try again.",
     "subscribed" => "Subscribed!",
     "subscribed_success" => "The selected investment plan has been subscribed successfully.",
@@ -31,7 +41,7 @@ return [
     "validation_error" => "Whoops! Something went wrong.",
     "buy_coin"=> [
         "amount"=> "Internal Wallet",
-        "unit"=> "XL Coin",
+        "unit"=> "MXT Coin",
     ],
     "step_details" => [
         "Your details"=> "Your details",
@@ -75,6 +85,7 @@ return [
         "musd_wallet" => "Musd Wallet",
         "sponsor_bonus" => "Sponsor Bonus",
         "pairing_bonus" => "Pairing Bonus",
+        "profit_sharing" => "Profit Sharing",
     ],
     "crypto_price_table" => [
         "cryptocurrency_market_price" => "Cryptocurrency Market Price",
@@ -184,7 +195,8 @@ return [
         "from" => "From",
         "paid" => "Paid",
         "unit" => "Unit",
-        "price_per_unit" => "Price per Unit"
+        "price_per_unit" => "Price per Unit",
+        "clear" => "Clear",
     ],
     "affiliate" => [
         "affiliate" => "Affiliate",

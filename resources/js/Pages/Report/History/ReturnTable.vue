@@ -1,10 +1,9 @@
 <script setup>
 import Loading from "@/Components/Loading.vue";
 import {TailwindPagination} from "laravel-vue-pagination";
-import {computed, ref, watch} from "vue";
+import {ref, watch} from "vue";
 import debounce from "lodash/debounce.js";
 import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/outline";
-import {InternalUSDWalletIcon} from "@/Components/Icons/outline.jsx";
 import {transactionFormat} from "@/Composables/index.js";
 import {usePage} from "@inertiajs/vue3";
 
@@ -14,6 +13,7 @@ const props = defineProps({
     date: String,
     refresh: Boolean,
     isLoading: Boolean,
+    exportStatus: Boolean,
 })
 const formatter = ref({
     date: 'YYYY-MM-DD',
@@ -23,8 +23,8 @@ const returns = ref({data: []});
 const currentPage = ref(1);
 const refreshReturns = ref(props.refresh);
 const returnsLoading = ref(props.isLoading);
-const emit = defineEmits(['update:loading', 'update:refresh']);
-const { formatDateTime, formatAmount, formatCategory } = transactionFormat();
+const emit = defineEmits(['update:loading', 'update:refresh', 'update:export']);
+const { formatDateTime, formatAmount, formatType } = transactionFormat();
 
 watch(
     [() => props.search, () => props.type, () => props.date],
@@ -51,9 +51,7 @@ const getResults = async (page = 1, search = '',  type= '', date = '') => {
         }
 
         const response = await axios.get(url);
-
         returns.value = response.data;
-
     } catch (error) {
         console.error(error);
     } finally {
@@ -81,6 +79,29 @@ watch(() => props.refresh, (newVal) => {
     }
 });
 
+watch(() => props.exportStatus, (newVal) => {
+    refreshReturns.value = newVal;
+    if (newVal) {
+        let url = `/report/getReturnRecord?exportStatus=yes`;
+
+        if (props.date) {
+            url += `&date=${props.date}`;
+        }
+
+        if (props.type) {
+            url += `&type=${props.type}`;
+        }
+
+        if (props.search) {
+            url += `&search=${props.search}`;
+        }
+
+        window.location.href = url;
+        emit('update:export', false);
+    }
+});
+
+
 const paginationClass = [
     'bg-transparent border-0 dark:text-gray-400 dark:enabled:hover:text-white'
 ];
@@ -98,48 +119,50 @@ const currentLocale = ref(usePage().props.locale);
         <div v-if="returnsLoading" class="w-full flex justify-center my-8">
             <Loading />
         </div>
-        <table v-else class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
-            <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
-            <tr>
-                <th scope="col" class="py-3 w-1/4">
-                    {{$t('public.report.date')}}
-                </th>
-                <th scope="col" class="py-3 w-1/4 text-center">
-                    {{$t('public.report.plan')}}
-                </th>
-                <th scope="col" class="py-3 w-1/4 text-center">
-                    {{$t('public.report.category')}}
-                </th>
-                <th scope="col" class="py-3 w-1/4 text-center">
-                    {{$t('public.report.amount')}}
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-                v-for="earn in returns.data"
-                class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 dark:hover:bg-gray-600"
-            >
-                <td class="py-3">
-                    {{ formatDateTime(earn.roi_release_date) }}
-                </td>
-                <td class="py-3 text-center">
-                    {{ earn.subscription_plan.investment_plan.name[currentLocale] }} - <span class="text-gray-600 dark:text-gray-400">{{ earn.subscription_plan.subscription_id }}</span>
-                </td>
-                <td class="py-3 text-center">
-                    {{ formatCategory(earn.type) }}
-                </td>
-                <td class="py-3 text-center">
-                    $ {{ formatAmount(earn.after_amount) }}
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div v-else class="overflow-x-auto">
+            <table class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
+                <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
+                <tr>
+                    <th scope="col" class="py-3 w-1/4">
+                        {{$t('public.report.date')}}
+                    </th>
+                    <th scope="col" class="py-3 w-1/4 text-center">
+                        {{$t('public.report.plan')}}
+                    </th>
+                    <th scope="col" class="py-3 w-1/4 text-center">
+                        {{$t('public.report.category')}}
+                    </th>
+                    <th scope="col" class="py-3 w-1/4 text-center">
+                        {{$t('public.report.amount')}}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                    v-for="earn in returns.data"
+                    class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 dark:hover:bg-gray-600"
+                >
+                    <td class="py-3">
+                        {{ formatDateTime(earn.roi_release_date) }}
+                    </td>
+                    <td class="py-3 text-center">
+                        {{ earn.subscription_plan.investment_plan.name[currentLocale] }} - <span class="text-gray-600 dark:text-gray-400">{{ earn.subscription_plan.subscription_id }}</span>
+                    </td>
+                    <td class="py-3 text-center">
+                        {{ formatType(earn.type) }}
+                    </td>
+                    <td class="py-3 text-center">
+                        $ {{ formatAmount(earn.after_amount) }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <div v-if="returns.data.length === 0 && !returnsLoading" class="flex flex-col dark:text-gray-400 mt-3 items-center">
             <img src="/assets/no_data.png" class="w-60" alt="">
             {{$t('public.no_data')}}
         </div>
-        <div class="flex justify-center mt-4 " v-if="!returnsLoading">
+        <div class="flex justify-center mt-4" v-if="!returnsLoading">
             <TailwindPagination
                 :item-classes=paginationClass
                 :active-classes=paginationActiveClass
@@ -147,12 +170,12 @@ const currentLocale = ref(usePage().props.locale);
                 :limit=2
                 @pagination-change-page="handlePageChange"
             >
-            <template #prev-nav>
-                <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> {{$t('public.previous')}}</span>
-            </template>
-            <template #next-nav>
-                <span class="flex gap-2">{{$t('public.next')}} <ArrowRightIcon class="w-5 h-5" /></span>
-            </template>
+                <template #prev-nav>
+                    <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> <span class="hidden sm:flex">{{$t('public.previous')}}</span></span>
+                </template>
+                <template #next-nav>
+                    <span class="flex gap-2"><span class="hidden sm:flex">{{$t('public.next')}}</span> <ArrowRightIcon class="w-5 h-5" /></span>
+                </template>
             </TailwindPagination>
         </div>
     </div>

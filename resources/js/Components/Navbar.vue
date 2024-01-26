@@ -25,7 +25,8 @@ import {
     EarnIcon,
     InactiveEarnIcon, InactiveWalletIcon,
     WalletIcon,
-    AffiliateIcon, InactiveAffiliateIcon
+    AffiliateIcon, InactiveAffiliateIcon,
+    ReportIcon, InactiveReportIcon,
 } from '@/Components/Icons/outline'
 import {transactionFormat} from "@/Composables/index.js";
 import Modal from "@/Components/Modal.vue";
@@ -264,7 +265,7 @@ const closeModal = () => {
             <Link :href="route('affiliate.referral_view')">
                 <div class="flex flex-col items-center w-16">
                     <AffiliateIcon
-                        v-if="route().current('affiliate.referral_view')"
+                        v-if="route().current('affiliate.referral_view')  || route().current('affiliate.group')"
                         class="flex-shrink-0 w-6 h-6 mb-1"
                         aria-hidden="true"
                     />
@@ -274,13 +275,35 @@ const closeModal = () => {
                         class="flex-shrink-0 w-6 h-6 mb-1"
                         aria-hidden="true"
                     />
-                    <p :class="route().current('affiliate.referral_view') ? 'text-pink-500' : 'text-white' " class="text-xs">
+                    <p :class="route().current('affiliate.referral_view') || route().current('affiliate.group') ? 'text-pink-500' : 'text-white' " class="text-xs">
                         {{$t('public.navbar.affiliate')}}
                     </p>
                 </div>
 
             </Link>
         </div>
+        <div>
+            <Link :href="route('report.finance_history')">
+                <div class="flex flex-col items-center w-16">
+                    <ReportIcon
+                        v-if="route().current('report.finance_history')"
+                        class="flex-shrink-0 w-6 h-6 mb-1"
+                        aria-hidden="true"
+                    />
+
+                    <InactiveReportIcon
+                        v-else
+                        class="flex-shrink-0 w-6 h-6 mb-1"
+                        aria-hidden="true"
+                    />
+                    <p :class="route().current('report.finance_history') ? 'text-pink-500' : 'text-white' " class="text-xs">
+                        {{$t('public.navbar.report')}}
+                    </p>
+                </div>
+
+            </Link>
+        </div>
+
     </div>
 
     <!-- Notification Modal -->

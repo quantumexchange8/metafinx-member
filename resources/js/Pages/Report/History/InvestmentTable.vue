@@ -114,66 +114,65 @@ const paginationActiveClass = [
         <div v-if="isLoading" class="w-full flex justify-center my-8">
             <Loading />
         </div>
-        <table v-else class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
-            <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
-            <tr>
-                <th scope="col" class="py-3">
-                    {{$t('public.report.transaction_date')}}
-                </th>
-                <th scope="col" class="py-3">
-                    {{$t('public.report.valid_thru')}}
-                </th>
-                <th scope="col" class="py-3">
-                    {{$t('public.report.id_number')}}
-                </th>
-                <th scope="col" class="py-3">
-                    {{$t('public.report.plan')}}
-                </th>
-                <th scope="col" class="py-3">
-                    {{$t('public.report.amount')}}
-                </th>
-                <th scope="col" class="py-3">
-                    {{$t('public.report.status')}}
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-if="investments.data.length === 0" >
-                <th colspan="6" class="py-4 text-lg">
-                    <div class="flex flex-col dark:text-gray-400 mt-3 items-center">
-                        <img src="/assets/no_data.png" class="w-60" alt="">
-                        {{$t('public.no_data')}}
-                    </div>
-                </th>
-            </tr>
-            <tr
-                v-for="investment in investments.data"
-                class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600  dark:hover:bg-gray-600"
-            >
-                <td class="py-3">
-                    {{ formatDateTime(investment.created_at) }}
-                </td>
-                <td class="py-3">
-                    {{ investment.expired_date }}
-                </td>
-                <td class="py-3">
-                    {{ investment.subscription_id }}
-                </td>
-                <td class="py-3">
-                    {{ investment.investment_plan.name['en'] }}
-                </td>
-                <td class="py-3">
-                    $ {{ formatAmount(investment.amount) }}
-                </td>
-                <td class="py-3 uppercase">
-                    <span class="uppercase dark:text-error-500 font-semibold" v-if="investment.status === 'Terminated'">{{ formatType(investment.status) }}</span>
-                    <span class="uppercase dark:text-blue-500 font-semibold" v-if="investment.status === 'CoolingPeriod'">{{ formatType(investment.status) }}</span>
-                    <span class="uppercase dark:text-warning-500 font-semibold" v-if="investment.status === 'OnGoingPeriod'">{{ formatType(investment.status) }}</span>
-                    <span class="uppercase dark:text-success-500 font-semibold" v-if="investment.status === 'MaturityPeriod'">{{ formatType(investment.status) }}</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div v-else class="overflow-x-auto">
+            <table class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
+                <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
+                <tr>
+                    <th scope="col" class="py-3">
+                        {{$t('public.report.transaction_date')}}
+                    </th>
+                    <th scope="col" class="py-3">
+                        {{$t('public.report.valid_thru')}}
+                    </th>
+                    <th scope="col" class="py-3">
+                        {{$t('public.report.id_number')}}
+                    </th>
+                    <th scope="col" class="py-3">
+                        {{$t('public.report.plan')}}
+                    </th>
+                    <th scope="col" class="py-3">
+                        {{$t('public.report.amount')}}
+                    </th>
+                    <th scope="col" class="py-3">
+                        {{$t('public.report.status')}}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                    v-for="investment in investments.data"
+                    class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600  dark:hover:bg-gray-600"
+                >
+                    <td class="py-3">
+                        {{ formatDateTime(investment.created_at) }}
+                    </td>
+                    <td class="py-3">
+                        {{ investment.expired_date }}
+                    </td>
+                    <td class="py-3">
+                        {{ investment.subscription_id }}
+                    </td>
+                    <td class="py-3">
+                        {{ investment.investment_plan.name['en'] }}
+                    </td>
+                    <td class="py-3">
+                        $ {{ formatAmount(investment.amount) }}
+                    </td>
+                    <td class="py-3 uppercase">
+                        <span class="uppercase dark:text-error-500 font-semibold" v-if="investment.status === 'Terminated'">{{ formatType(investment.status) }}</span>
+                        <span class="uppercase dark:text-blue-500 font-semibold" v-if="investment.status === 'CoolingPeriod'">{{ formatType(investment.status) }}</span>
+                        <span class="uppercase dark:text-warning-500 font-semibold" v-if="investment.status === 'OnGoingPeriod'">{{ formatType(investment.status) }}</span>
+                        <span class="uppercase dark:text-success-500 font-semibold" v-if="investment.status === 'MaturityPeriod'">{{ formatType(investment.status) }}</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-if="investments.data.length === 0 && !isLoading" class="flex flex-col dark:text-gray-400 mt-3 items-center">
+            <img src="/assets/no_data.png" class="w-60" alt="">
+            {{$t('public.no_data')}}
+        </div>
+
         <div class="flex justify-center mt-4" v-if="!isLoading">
             <TailwindPagination
                 :item-classes=paginationClass
@@ -183,10 +182,10 @@ const paginationActiveClass = [
                 @pagination-change-page="handlePageChange"
             >
                 <template #prev-nav>
-                    <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> {{$t('public.previous')}}</span>
+                    <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> <span class="hidden sm:flex">{{$t('public.previous')}}</span></span>
                 </template>
                 <template #next-nav>
-                    <span class="flex gap-2">{{$t('public.next')}} <ArrowRightIcon class="w-5 h-5" /></span>
+                    <span class="flex gap-2"><span class="hidden sm:flex">{{$t('public.next')}}</span> <ArrowRightIcon class="w-5 h-5" /></span>
                 </template>
             </TailwindPagination>
         </div>

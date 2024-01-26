@@ -58,12 +58,12 @@ const calculateWidthPercentage = (created_at, period) => {
             </p>
         </template>
 
-        <div class="flex pb-3 items-start gap-2.5 self-stretch border-b border-gray-300 dark:border-gray-700 mb-8">
+        <div class="flex pb-3 items-start gap-2.5 self-stretch border-b  border-gray-300 dark:border-gray-700 mb-8">
             <div class="text-base font-semibold">
                 Standard
             </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 ">
             <div v-for="investment in investments" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]">
                 <div class="flex justify-between">
                     <div class="text-xs">
@@ -156,7 +156,7 @@ const calculateWidthPercentage = (created_at, period) => {
                 {{ setting_coin.name }} Stacking
             </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div v-if="coinStackings.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-28">
             <div v-for="stacking in coinStackings" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]">
                 <div class="flex justify-between">
                     <div class="text-xs">
@@ -225,7 +225,7 @@ const calculateWidthPercentage = (created_at, period) => {
             </div>
         </div>
 
-        <div v-if="coinStackings.length === 0" class="flex flex-col items-center justify-center my-8">
+        <div v-else class="flex flex-col items-center justify-center mt-8 mb-28">
             <img src="/assets/no_data.png" class="w-1/2" alt="">
             <div class="dark:text-gray-400 mt-3">
                 {{$t('public.no_data')}}

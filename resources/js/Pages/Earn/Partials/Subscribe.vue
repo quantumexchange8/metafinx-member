@@ -18,6 +18,7 @@ const props = defineProps({
     wallet_sel: Array,
     coin_price: Object,
     musd_wallet: Object,
+    stackingFee: Object,
 })
 
 const subscribeModal = ref(false);
@@ -59,7 +60,7 @@ watch(housingPrice, (newValue) => {
 
 watch(coinUnit, (newValue) => {
     linkedPrice.value = (newValue * props.coin_price.price).toFixed(2)
-    stackingFee.value = (linkedPrice.value * 0.1).toFixed(2)
+    stackingFee.value = (linkedPrice.value * props.stackingFee.value /100).toFixed(2)
 });
 
 const submit = () => {
@@ -112,8 +113,8 @@ const handleButtonClick = () => {
                     <div class="font-semibold dark:text-white">
                         {{ plan.name }}
                     </div>
-                    <div v-if="plan.type === 'stacking'" class="font-semibold text-[32px]">
-                        {{ plan.commision_multiplier * 100 }}% <span class="text-base">profit share</span>
+                    <div v-if="plan.type === 'stacking'" class="font-semibold text-[32px] text-center">
+                        {{ plan.commision_multiplier * 100 }}% <span class="flex text-base">profit share</span>
                     </div>
                     <div v-else class="font-semibold text-[32px]">
                         {{ plan.roi_per_annum }} p.a.
@@ -230,33 +231,33 @@ const handleButtonClick = () => {
                             </div>
                         </InputIconWrapper>
                         <InputError :message="form.errors.unit" class="mt-2" />
-                        <span class="text-sm text-gray-600 dark:text-gray-400 mt-2">Current amount: {{ formatAmount(coin.unit, 8) }}</span>
+                        <span class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{$t('public.current_amount')}}: {{ formatAmount(coin.unit, 8) }}</span>
                     </div>
                 </div>
 
                 <div class="flex flex-col items-start gap-3 self-stretch pt-5 pb-5 border-t mt-5 border-gray-400 dark:border-gray-700">
                     <div class="flex justify-between items-start self-stretch">
                         <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
-                            Current Price
+                            {{$t('public.current_price')}}
                         </div>
                         <div class="text-sm text-gray-900 dark:text-white">
-                            $ {{ coin_price.price ?? '0.00' }}
+                            $&nbsp;{{ coin_price.price ?? '0.00' }}
                         </div>
                     </div>
                     <div class="flex justify-between items-start self-stretch">
                         <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
-                            Linked Price
+                            {{$t('public.linked_price')}}
                         </div>
                         <div class="text-sm text-gray-900 dark:text-white">
-                            $ {{ linkedPrice ?? '0.00' }}
+                            $&nbsp;{{ linkedPrice ?? '0.00' }}
                         </div>
                     </div>
                     <div class="flex justify-between items-start self-stretch">
                         <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
-                            10% Stacking Fee (deducted from MUSD Wallet)
+                            {{$t('public.stacking_fee')}} ({{ props.stackingFee.value }}%) ({{$t('public.stacking_pay')}})
                         </div>
                         <div class="text-sm text-gray-900 dark:text-white">
-                            $ {{ stackingFee ?? '0.00' }}
+                            $&nbsp;{{ stackingFee ?? '0.00' }}
                         </div>
                     </div>
                 </div>

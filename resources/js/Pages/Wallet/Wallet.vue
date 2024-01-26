@@ -25,6 +25,7 @@ const props = defineProps({
     random_address: Object,
     withdrawalFee: Object,
     gasFee: Object,
+    stackingFee: Object,
     setting_coin: Object,
     coin_price_yesterday: Object,
     coin_market_time: Object,
@@ -129,12 +130,14 @@ function copyTestingCode () {
                     <Action
                         :coin="coin"
                         :coin_price="coin_price"
+                        :gasFee="gasFee"
+                        :stackingFee="stackingFee"
                         :conversion_rate="conversion_rate"
                         :wallet_sel="wallet_sel"
                         :setting_coin="setting_coin"
                         :coin_price_yesterday="coin_price_yesterday"
                         :coin_market_time="coin_market_time"
-                    />
+                        />
                     <div>
                         <div class="inline-flex justify-center w-full items-center gap-2 text-center text-gray-500 dark:text-gray-400 break-all">
                             <span class="text-xs">{{ coin.address }}</span>
@@ -182,6 +185,7 @@ function copyTestingCode () {
                             :coin="coin"
                             :coin_price="coin_price"
                             :gasFee="gasFee"
+                            :stackingFee="stackingFee"
                             :conversion_rate="conversion_rate"
                             :wallet_sel="wallet_sel"
                             :setting_coin="setting_coin"

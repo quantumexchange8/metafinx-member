@@ -48,6 +48,10 @@ class WalletController extends Controller
             ]);
         } else {
             $user = \Auth::user();
+            $wallet = Wallet::find($request->wallet_id);
+            $setting_coin = SettingCoin::find($request->setting_coin_id);
+            $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();    
+
             $transaction_id = RunningNumberService::getID('transaction');
 
             $transaction = Transaction::create([
@@ -61,7 +65,9 @@ class WalletController extends Controller
                 'transaction_charges' => 0,
                 'transaction_amount' => $request->amount,
                 'to_wallet_address' => $request->to_wallet_address,
-                'status' => 'Pending'
+                'status' => 'Pending',
+                'new_wallet_amount' => $wallet->balance,
+                'new_coin_amount' => $coin->unit,
             ]);
 
             $payout = config('payout-setting');
@@ -109,6 +115,8 @@ class WalletController extends Controller
         } else {
             $user = \Auth::user();
             $amount = floatval($request->amount);
+            $setting_coin = SettingCoin::find($request->setting_coin_id);
+            $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();    
             $wallet = Wallet::find($request->from_wallet_id);
             if ($wallet->balance < $amount) {
                 throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
@@ -130,7 +138,9 @@ class WalletController extends Controller
                 'transaction_amount' =>  $final_amount,
                 'transaction_charges' => $request->transaction_charges,
                 'to_wallet_address' => $request->wallet_address,
-                'status' => 'Processing'
+                'status' => 'Processing',
+                'new_wallet_amount' => $wallet->balance,
+                'new_coin_amount' => $coin->unit,
             ]);
 
             $payout = config('payout-setting');
@@ -317,6 +327,8 @@ class WalletController extends Controller
                 'transaction_charges' => $request->gas_fee,
                 'transaction_amount' => $request->transaction_amount,
                 'status' => 'Success',
+                'new_wallet_amount' => $wallet->balance,
+                'new_coin_amount' => $coin->unit,
             ]);
 
             $coin->update([

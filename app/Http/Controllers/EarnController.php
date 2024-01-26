@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\InvestmentSubscriptionRequest;
 use App\Models\Coin;
+use Inertia\Inertia;
+use App\Models\Wallet;
+use App\Models\Setting;
 use App\Models\CoinPrice;
-use App\Models\CoinStacking;
-use App\Models\InvestmentPlan;
-use App\Models\InvestmentSubscription;
 use App\Models\SettingCoin;
 use App\Models\Transaction;
-use App\Models\Wallet;
-use App\Services\RunningNumberService;
+use App\Models\CoinStacking;
 use Illuminate\Http\Request;
+use App\Models\InvestmentPlan;
+use App\Models\InvestmentSubscription;
+use App\Services\RunningNumberService;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
+use App\Http\Requests\InvestmentSubscriptionRequest;
 
 class EarnController extends Controller
 {
@@ -53,6 +54,10 @@ class EarnController extends Controller
                             ];
                         }),
                         'type' => $investmentPlan->type,
+                        'media' => [
+                            'stacking' => optional($investmentPlan->getMedia('stacking_plan')->first())->getUrl(),
+                            'standard' => optional($investmentPlan->getMedia('standard_plan')->first())->getUrl(),
+                        ],
                     ];
                 }),
             ];
@@ -63,6 +68,7 @@ class EarnController extends Controller
             'wallet_sel' => $wallet_sel,
             'coin_price' => CoinPrice::whereDate('price_date', today())->first(),
             'musd_wallet' => Wallet::where('user_id', \Auth::id())->where('type', 'musd_wallet')->first(),
+            'stackingFee' => Setting::where('slug', 'stacking-fee')->latest()->first(),
         ]);
     }
 
@@ -71,6 +77,8 @@ class EarnController extends Controller
         $user = \Auth::user();
         $investment_plan = InvestmentPlan::find($request->investment_plan_id);
         $wallet = Wallet::find($request->wallet_id);
+        $setting_coin = SettingCoin::find($request->setting_coin_id);
+        $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();
         $amount = $request->amount;
 
         switch($investment_plan->type) {
@@ -106,6 +114,8 @@ class EarnController extends Controller
                     'transaction_charges' => 0,
                     'transaction_amount' => $amount,
                     'status' => 'Success',
+                    'new_wallet_amount' => $wallet->balance,
+                    'new_coin_amount' => $coin->unit,        
                 ]);
 
                 $investmentSubscription = InvestmentSubscription::create([
@@ -164,11 +174,14 @@ class EarnController extends Controller
                     'from_coin_id' => $coin->id,
                     'transaction_number' => $transaction_number,
                     'unit' => $unit,
-                    'amount' => 0,
+                    'amount' => $amount,
+                    'price_per_unit' => $request->price,
                     'transaction_charges' => $stacking_fee,
-                    'transaction_amount' => 0,
+                    'transaction_amount' => $amount,
                     'status' => 'Success',
                     'remarks' => $unit . $coin->setting_coin->name . ' Unit + $' . $stacking_fee . ' from MUSD Wallet',
+                    'new_wallet_amount' => $wallet->balance,
+                    'new_coin_amount' => $coin->unit,        
                 ]);
 
                 $wallet_transaction = Transaction::create([
@@ -176,12 +189,14 @@ class EarnController extends Controller
                     'user_id' => $user->id,
                     'transaction_type' => 'StackingFee',
                     'from_wallet_id' => $wallet->id,
-                    'transaction_number' => $transaction_number,
+                    'transaction_number' => RunningNumberService::getID('transaction'),
                     'amount' => $stacking_fee,
                     'transaction_charges' => 0,
                     'transaction_amount' => $stacking_fee,
                     'status' => 'Success',
                     'remarks' => $unit . $coin->setting_coin->name . ' Unit + $' . $stacking_fee . ' from MUSD Wallet',
+                    'new_wallet_amount' => $wallet->balance,
+                    'new_coin_amount' => $coin->unit,        
                 ]);
 
                 $stacking = CoinStacking::create([

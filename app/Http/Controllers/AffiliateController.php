@@ -19,7 +19,7 @@ class AffiliateController extends Controller
     public function referral_view()
     {
         $referredCounts = User::where('upline_id', \Auth::id())->count();
-        $totalReferralEarning = Earning::where('upline_id', \Auth::id())->where('type', 'referral_earnings')->sum('after_amount');
+        $totalReferralEarning = Earning::where('upline_id', \Auth::id())->where('type', 'ReferralEarning')->sum('after_amount');
 
         return Inertia::render('Affiliate/Affiliate', [
             'referredCounts' => $referredCounts,

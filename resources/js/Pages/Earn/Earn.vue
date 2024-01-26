@@ -11,8 +11,8 @@ const props = defineProps({
     wallet_sel: Array,
     coin_price: Object,
     musd_wallet: Object,
+    stackingFee: Object,
 })
-
 </script>
 
 <template>
@@ -85,12 +85,13 @@ const props = defineProps({
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                             <div v-for="plan in investmentTypes.plans" class="p-5 bg-white rounded-xl shadow-md dark:bg-gray-700">
                                 <div class="flex flex-col items-center justify-center gap-2 border-b dark:border-gray-600 pb-5">
-                                    <img class="w-10 h-10 rounded bg-white" src="/assets/icon.png" alt="Medium avatar">
+                                    <img v-if="plan.type === 'standard'" class="w-10 h-10 rounded bg-white" :src="plan.media.standard ?? '/assets/icon.png'" alt="Medium avatar">
+                                    <img v-if="plan.type === 'stacking'" class="w-10 h-10 rounded bg-white" :src="plan.media.stacking ?? '/assets/stacking_default.png'" alt="Medium avatar">
                                     <div class="font-semibold">
                                         {{ plan.name }}
                                     </div>
-                                    <div v-if="plan.type === 'stacking'" class="font-semibold text-[32px]">
-                                        {{ plan.commision_multiplier * 100 }}% <span class="text-base">profit share</span>
+                                    <div v-if="plan.type === 'stacking'" class="font-semibold text-[32px] text-center">
+                                        {{ plan.commision_multiplier * 100 }}% <span class="flex text-base">profit share</span>
                                     </div>
                                     <div v-else class="font-semibold text-[32px]">
                                         {{ plan.roi_per_annum }} p.a.
@@ -108,6 +109,7 @@ const props = defineProps({
                                         :wallet_sel="wallet_sel"
                                         :coin_price="coin_price"
                                         :musd_wallet="musd_wallet"
+                                        :stackingFee="stackingFee"
                                     />
                                 </div>
                             </div>

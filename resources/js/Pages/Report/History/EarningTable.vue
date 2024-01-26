@@ -24,7 +24,7 @@ const currentPage = ref(1);
 const refreshEarning = ref(props.refresh);
 const depositLoading = ref(props.isLoading);
 const emit = defineEmits(['update:loading', 'update:refresh', 'update:export']);
-const { formatDateTime, formatAmount, formatCategory } = transactionFormat();
+const { formatDateTime, formatAmount, formatType } = transactionFormat();
 
 watch(
     [() => props.search, () => props.type, () => props.date],
@@ -115,71 +115,70 @@ const paginationActiveClass = [
         <div v-if="depositLoading" class="w-full flex justify-center my-8">
             <Loading />
         </div>
-        <table v-else class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
-            <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
-            <tr>
-                <th scope="col" class="py-3">
-                    {{$t('public.report.date')}}
-                </th>
-                <th scope="col" class="py-3">
-                    {{$t('public.report.downline_name')}}
-                </th>
-                <th scope="col" class="py-3">
-                    {{$t('public.report.category')}}
-                </th>
-                <th scope="col" class="py-3">
-                    {{$t('public.wallet.wallet')}}
-                </th>
-                <th scope="col" class="py-3">
-                    {{$t('public.report.amount')}}
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-if="earnings.data.length === 0" >
-                <th colspan="4" class="py-4 text-lg">
-                    <div class="flex flex-col dark:text-gray-400 mt-3 items-center">
-                        <img src="/assets/no_data.png" class="w-60" alt="">
-                        {{$t('public.no_data')}}
-                    </div>
-                </th>
-            </tr>
-            <tr
-                v-for="earning in earnings.data"
-                class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 dark:hover:bg-gray-600"
-            >
-                <td class="py-2">
-                    {{ formatDateTime(earning.created_at) }}
-                </td>
-                <td class="py-2">
-                    <div class="inline-flex items-center gap-2">
-                        <img :src="earning.downline.profile_photo_url ? earning.downline.profile_photo_url : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
-                        <div class="grid">
-                            <span>{{ earning.downline.name }}</span>
-                            <span class="dark:text-gray-400">{{ earning.downline.email }}</span>
+        <div v-else class="overflow-x-auto">
+            <table class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
+                <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
+                <tr>
+                    <th scope="col" class="py-3">
+                        {{$t('public.report.date')}}
+                    </th>
+                    <th scope="col" class="py-3">
+                        {{$t('public.report.downline_name')}}
+                    </th>
+                    <th scope="col" class="py-3">
+                        {{$t('public.report.category')}}
+                    </th>
+                    <th scope="col" class="py-3">
+                        {{$t('public.wallet.wallet')}}
+                    </th>
+                    <th scope="col" class="py-3">
+                        {{$t('public.report.amount')}}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                    v-for="earning in earnings.data"
+                    class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 dark:hover:bg-gray-600"
+                >
+                    <td class="py-2">
+                        {{ formatDateTime(earning.created_at) }}
+                    </td>
+                    <td class="py-2">
+                        <div class="inline-flex items-center gap-2">
+                            <img :src="earning.downline.profile_photo_url ? earning.downline.profile_photo_url : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
+                            <div class="grid">
+                                <span>{{ earning.downline.name }}</span>
+                                <span class="dark:text-gray-400">{{ earning.downline.email }}</span>
+                            </div>
                         </div>
-                    </div>
-                </td>
-                <td class="py-2">
-                    {{ formatCategory(earning.type) }}
-                </td>
-                <td class="py-2">
-                    <div class="inline-flex items-center gap-2">
-                        <div v-if="earning.wallet.type === 'internal_wallet'" class="bg-gradient-to-b from-pink-400 to-pink-500 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
-                            <InternalUSDWalletIcon class="mt-0.5 ml-0.5"/>
+                    </td>
+                    <td class="py-2">
+                        {{ formatType(earning.type) }}
+                    </td>
+                    <td class="py-2">
+                        <div class="inline-flex items-center gap-2">
+                            <div v-if="earning.wallet.type === 'internal_wallet'" class="bg-gradient-to-b from-pink-400 to-pink-500 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
+                                <InternalUSDWalletIcon class="mt-0.5 ml-0.5"/>
+                            </div>
+                            <div v-else-if="earning.wallet.type === 'musd_wallet'" class="bg-gradient-to-t from-warning-300 to-warning-600 dark:shadow-warning-500 rounded-full w-4 h-4 shrink-0 grow-0">
+                                <InternalMUSDWalletIcon class="mt-0.5 ml-0.5"/>
+                            </div>
+                            {{ earning.wallet.name }}
                         </div>
-                        <div v-else-if="earning.wallet.type === 'musd_wallet'" class="bg-gradient-to-t from-warning-300 to-warning-600 dark:shadow-warning-500 rounded-full w-4 h-4 shrink-0 grow-0">
-                            <InternalMUSDWalletIcon class="mt-0.5 ml-0.5"/>
-                        </div>
-                        {{ earning.wallet.name }}
-                    </div>
-                </td>
-                <td class="py-2">
-                    $ {{ formatAmount(earning.after_amount) }}
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    </td>
+                    <td class="py-2">
+                        $ {{ formatAmount(earning.after_amount) }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-if="earnings.data.length === 0 && !depositLoading" class="flex flex-col dark:text-gray-400 mt-3 items-center">
+            <img src="/assets/no_data.png" class="w-60" alt="">
+            {{$t('public.no_data')}}
+        </div>
+
         <div class="flex justify-center mt-4" v-if="!depositLoading">
             <TailwindPagination
                 :item-classes=paginationClass
@@ -189,10 +188,10 @@ const paginationActiveClass = [
                 @pagination-change-page="handlePageChange"
             >
                 <template #prev-nav>
-                    <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> {{$t('public.previous')}}</span>
+                    <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> <span class="hidden sm:flex">{{$t('public.previous')}}</span></span>
                 </template>
                 <template #next-nav>
-                    <span class="flex gap-2">{{$t('public.next')}} <ArrowRightIcon class="w-5 h-5" /></span>
+                    <span class="flex gap-2"><span class="hidden sm:flex">{{$t('public.next')}}</span> <ArrowRightIcon class="w-5 h-5" /></span>
                 </template>
             </TailwindPagination>
         </div>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use App\Models\Coin;
 use App\Models\Wallet;
 use App\Models\Earning;
+use App\Models\SettingCoin;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\InvestmentPlan;
@@ -104,6 +106,8 @@ class EarnController extends Controller
             $investment_plan = InvestmentPlan::find($request->investment_plan_id);
             $wallet = Wallet::find($request->wallet_id);
             $amount = $request->amount;
+            $setting_coin = SettingCoin::find($request->setting_coin_id);
+            $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();    
 
             if ($amount % 100 !== 0) {
                 return response()->json([
@@ -144,6 +148,8 @@ class EarnController extends Controller
                 'transaction_charges' => 0,
                 'transaction_amount' => $amount,
                 'status' => 'Success',
+                'new_wallet_amount' => $wallet->balance,
+                'new_coin_amount' => $coin->unit,    
             ]);
     
             $investmentSubscription = InvestmentSubscription::create([

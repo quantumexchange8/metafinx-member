@@ -32,7 +32,7 @@ class DashboardController extends Controller
 
         $referralEarnings = Earning::query()
             ->where('upline_id', \Auth::id())
-            ->where('type', 'referral_earnings')
+            ->where('type', 'ReferralEarning')
             ->sum('after_amount');
 
         $wallet_sel = $walletDeposits->where('type', 'internal_wallet')->get()->map(function ($wallet) {

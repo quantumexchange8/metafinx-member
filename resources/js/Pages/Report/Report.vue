@@ -40,9 +40,10 @@ const returnFilter = computed(() => {
 
 const earnFilter = [
     {value: '', label:"All"},
-    {value: 'referral_earnings', label:"Referral Earning"},
-    {value: 'affiliate_earnings', label:"Affiliate Earning"},
-    {value: 'dividend_earnings', label:"Dividend Earning"},
+    {value: 'ReferralEarning', label:"Referral Earning"},
+    {value: 'AffiliateEarning', label:"Affiliate Earning"},
+    {value: 'DividendEarning', label:"Dividend Earning"},
+    {value: 'AffiliateDividendEarning', label:"Affiliate Dividend Earning"},
 ];
 
 const investFilter = [
@@ -88,7 +89,6 @@ const clearFilter = () => {
                         type="button"
                         class="justify-center w-full md:w-2/3 gap-2 border border-gray-600 text-white text-sm dark:hover:bg-gray-600"
                         variant="transparent"
-                        :disabled="reportType==='Return (Personal)'"
                         @click="exportReport"
                     >
                         <CloudDownloadIcon aria-hidden="true" class="w-5 h-5" />
@@ -98,7 +98,7 @@ const clearFilter = () => {
             </div>
         </template>
 
-        <div class="flex gap-3">
+        <div class="flex flex-wrap gap-3 items-center sm:flex-nowrap">
             <div class="w-full">
                 <InputIconWrapper>
                     <template #icon>
@@ -106,6 +106,15 @@ const clearFilter = () => {
                     </template>
                     <Input withIcon id="search" type="text" class="w-full block dark:border-transparent" :placeholder="$t('public.report.search_placeholder')" v-model="search" />
                 </InputIconWrapper>
+            </div>
+            <div class="w-full">
+                <vue-tailwind-datepicker
+                    :placeholder="$t('public.report.date_picker_placeholder')"
+                    :formatter="formatter"
+                    separator=" - "
+                    v-model="date"
+                    input-classes="py-2.5 border-gray-400 w-full rounded-lg text-sm placeholder:text-base dark:placeholder:text-gray-400 focus:border-gray-400 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:border-gray-600 dark:bg-gray-600 dark:text-white"
+                />
             </div>
             <div class="w-full">
                 <BaseListbox
@@ -127,20 +136,12 @@ const clearFilter = () => {
                     :placeholder="$t('public.report.filters_placeholder')"
                 />
             </div>
-            <div class="w-full">
-                <vue-tailwind-datepicker
-                    :placeholder="$t('public.report.date_picker_placeholder')"
-                    :formatter="formatter"
-                    separator=" - "
-                    v-model="date"
-                    input-classes="py-2.5 border-gray-400 w-full rounded-lg text-sm placeholder:text-base dark:placeholder:text-gray-400 focus:border-gray-400 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:border-gray-600 dark:bg-gray-600 dark:text-white"
-                />
-            </div>
-            <div>
+            <div class="w-full sm:w-auto">
                 <Button
                     type="button"
                     variant="secondary"
                     @click="clearFilter"
+                    class="w-full justify-center"
                 >
                     Clear
                 </Button>

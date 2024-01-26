@@ -139,7 +139,7 @@ const getAmountPrefix = computed(() => {
                             <div class="bg-gradient-to-b from-pink-400 to-pink-500 dark:shadow-pink-500 rounded-full w-4 h-4 shrink-0 grow-0">
                                 <InternalUSDWalletIcon class="mt-0.5 ml-0.5"/>
                             </div>
-                            <span>Internal Wallet</span>
+                            <span>{{props.wallet_sel[0].label}}</span>
                         </div>
                     </div>
                 </Label>
@@ -193,7 +193,7 @@ const getAmountPrefix = computed(() => {
             <div class="flex flex-col items-start gap-3 self-stretch pt-5 pb-5 border-t border-b border-gray-400 dark:border-gray-700">
                 <div class="flex justify-between items-start self-stretch">
                     <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
-                        Gas Fee (1%)
+                        {{ $t('public.gas_fee') }} ({{ gasFee.value }}%)
                     </div>
                     <div class="text-sm text-gray-900 dark:text-white">
                         $ {{ transactionFee ?? '0.00' }}
@@ -201,7 +201,7 @@ const getAmountPrefix = computed(() => {
                 </div>
                 <div class="flex justify-between items-start self-stretch">
                     <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
-                        Payable Amount
+                        {{ $t('public.payable') }} {{ $t('public.wallet.amount') }}
                     </div>
                     <div class="text-sm text-gray-900 dark:text-white">
                         $ {{ payableAmount ?? '0.00' }}

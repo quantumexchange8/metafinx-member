@@ -111,71 +111,73 @@ watchEffect(() => {
     <div v-if="transactionLoading" class="w-full flex justify-center my-8">
         <Loading />
     </div>
-    <table v-else class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
-        <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
-        <tr>
-            <th scope="col" class="p-3">
-                {{$t('public.wallet.date')}}
-            </th>
-            <th scope="col" class="p-3">
-                {{$t('public.wallet.transaction_type')}}
-            </th>
-            <th scope="col" class="p-3">
-                {{$t('public.wallet.transaction_id')}}
-            </th>
-            <th scope="col" class="p-3">
-                {{$t('public.wallet.amount')}}
-            </th>
-            <th scope="col" class="p-3 text-center">
-                {{$t('public.wallet.status')}}
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-if="transactions.data.length === 0">
-            <th colspan="5" class="py-4 text-lg text-center">
-                {{$t('public.wallet.no_history')}}
-            </th>
-        </tr>
-        <tr
-            v-for="transaction in transactions.data"
-            class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 hover:cursor-pointer dark:hover:bg-gray-600"
-            @click="openTransactionModal(transaction)"
-        >
-           <td class="p-3">
-               {{ formatDateTime(transaction.transaction_date) }}
-           </td>
-           <td class="p-3">
-               <div v-if="transaction.transaction_type === 'Investment'">
-                   Investment
-               </div>
-               <div v-else>
-                   {{ formatType(transaction.transaction_type) }}
-               </div>
-           </td>
-           <td class="p-3">
-               <span v-if="['monthly_return', 'referral_earnings', 'affiliate_earnings', 'dividend_earnings'].includes(transaction.transaction_type)">-</span>
-               <span v-else>{{ transaction.transaction_id }}</span>
-           </td>
+    <div v-else class="overflow-x-auto">
+        <table class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
+            <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
+            <tr>
+                <th scope="col" class="p-3">
+                    {{$t('public.wallet.date')}}
+                </th>
+                <th scope="col" class="p-3">
+                    {{$t('public.wallet.transaction_type')}}
+                </th>
+                <th scope="col" class="p-3">
+                    {{$t('public.wallet.transaction_id')}}
+                </th>
+                <th scope="col" class="p-3">
+                    {{$t('public.wallet.amount')}}
+                </th>
+                <th scope="col" class="p-3 text-center">
+                    {{$t('public.wallet.status')}}
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-if="transactions.data.length === 0">
+                <th colspan="5" class="py-4 text-lg text-center">
+                    {{$t('public.wallet.no_history')}}
+                </th>
+            </tr>
+            <tr
+                v-for="transaction in transactions.data"
+                class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 hover:cursor-pointer dark:hover:bg-gray-600"
+                @click="openTransactionModal(transaction)"
+            >
             <td class="p-3">
-                <div :class="[
-                        {'text-success-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'Deposit' || transaction.transaction_type === 'Withdrawal' || transaction.transaction_type === 'monthly_return' || transaction.transaction_type === 'monthly_return' || transaction.transaction_type === 'referral_earnings' || transaction.transaction_type === 'affiliate_earnings' || transaction.transaction_type === 'dividend_earnings'},
-                        {'text-error-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'BuyCoin' || transaction.transaction_type === 'Investment' },
-                        {'text-gray-900 dark:text-white': transaction.transaction_status === 'Rejected' && transaction.transaction_type === 'Deposit' ||transaction.transaction_type === 'Withdrawal' },
-                    ]"
-                >
-                    $ {{ formatAmount(transaction.transaction_amount) }}
+                {{ formatDateTime(transaction.transaction_date) }}
+            </td>
+            <td class="p-3">
+                <div v-if="transaction.transaction_type === 'Investment'">
+                    Investment
+                </div>
+                <div v-else>
+                    {{ formatType(transaction.transaction_type) }}
                 </div>
             </td>
-            <td class="p-3 text-center">
-                <span v-if="transaction.transaction_status === 'Success' || transaction.transaction_type === 'Investment'" class="flex w-2 h-2 bg-green-500 dark:bg-success-500 mx-auto rounded-full"></span>
-                <span v-else-if="transaction.transaction_status === 'Pending'" class="flex w-2 h-2 bg-red-500 dark:bg-warning-500 mx-auto rounded-full"></span>
-                <span v-else-if="transaction.transaction_status === 'Processing'" class="flex w-2 h-2 bg-red-500 dark:bg-[#007AFF] mx-auto rounded-full"></span>
-                <span v-else-if="transaction.transaction_status === 'Rejected'" class="flex w-2 h-2 bg-red-500 dark:bg-error-500 mx-auto rounded-full"></span>
+            <td class="p-3">
+                <span v-if="['MonthlyReturn', 'ReferralEarning', 'AffiliateEarning', 'DividendEarning', 'AffiliateDividendEarning'].includes(transaction.transaction_type)">-</span>
+                <span v-else>{{ transaction.transaction_id }}</span>
             </td>
-        </tr>
-        </tbody>
-    </table>
+                <td class="p-3">
+                    <div :class="[
+                            {'text-success-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'Deposit' || transaction.transaction_type === 'Withdrawal' || transaction.transaction_type === 'MonthlyReturn' || transaction.transaction_type === 'ReferralEarning' || transaction.transaction_type === 'AffiliateEarning' || transaction.transaction_type === 'DividendEarning' || transaction.transaction_type === 'AffiliateDividendEarning'},
+                            {'text-error-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'BuyCoin' || transaction.transaction_type === 'Investment' },
+                            {'text-gray-900 dark:text-white': transaction.transaction_status === 'Rejected' && transaction.transaction_type === 'Deposit' ||transaction.transaction_type === 'Withdrawal' },
+                        ]"
+                    >
+                        $ {{ formatAmount(transaction.transaction_amount) }}
+                    </div>
+                </td>
+                <td class="p-3 text-center">
+                    <span v-if="transaction.transaction_status === 'Success' || transaction.transaction_type === 'Investment'" class="flex w-2 h-2 bg-green-500 dark:bg-success-500 mx-auto rounded-full"></span>
+                    <span v-else-if="transaction.transaction_status === 'Pending'" class="flex w-2 h-2 bg-red-500 dark:bg-warning-500 mx-auto rounded-full"></span>
+                    <span v-else-if="transaction.transaction_status === 'Processing'" class="flex w-2 h-2 bg-red-500 dark:bg-[#007AFF] mx-auto rounded-full"></span>
+                    <span v-else-if="transaction.transaction_status === 'Rejected'" class="flex w-2 h-2 bg-red-500 dark:bg-error-500 mx-auto rounded-full"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <div class="flex justify-center mt-4" v-if="!transactionLoading">
         <TailwindPagination
             :item-classes=paginationClass
@@ -185,40 +187,40 @@ watchEffect(() => {
             @pagination-change-page="handlePageChange"
         >
             <template #prev-nav>
-                <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> {{$t('public.previous')}}</span>
+                <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> <span class="hidden sm:flex">{{$t('public.previous')}}</span></span>
             </template>
             <template #next-nav>
-                <span class="flex gap-2">{{$t('public.next')}} <ArrowRightIcon class="w-5 h-5" /></span>
+                <span class="flex gap-2"><span class="hidden sm:flex">{{$t('public.next')}}</span> <ArrowRightIcon class="w-5 h-5" /></span>
             </template>
         </TailwindPagination>
     </div>
 
     <Modal :show="transactionModal" :title="$t('public.wallet.transaction_details')" @close="closeModal">
         <div v-if="selectedTransaction">
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_type')}}</span>
-                <span class="text-black col-span-2 dark:text-white py-2">{{ formatType(selectedTransaction.transaction_type) }}</span>
+            <div class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_type')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ formatType(selectedTransaction.transaction_type) }}</span>
             </div>
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_id')}}</span>
-                <span class="text-black col-span-2 dark:text-white py-2" v-if="['monthly_return', 'referral_earnings', 'affiliate_earnings', 'dividend_earnings'].includes(selectedTransaction.transaction_type)">-</span>
-                <span class="text-black col-span-2 dark:text-white py-2" v-else>{{ selectedTransaction.transaction_id }}</span>
+            <div class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_id')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2" v-if="['MonthlyReturn', 'ReferralEarning', 'AffiliateEarning', 'DividendEarning', 'AffiliateDividendEarning'].includes(selectedTransaction.transaction_type)">-</span>
+                <span class="text-black col-span-3 dark:text-white py-2" v-else>{{ selectedTransaction.transaction_id }}</span>
             </div>
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.date_time')}}</span>
-                <span class="text-black col-span-2 dark:text-white py-2">{{ formatDateTime(selectedTransaction.transaction_date) }}</span>
+            <div class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.date_time')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ formatDateTime(selectedTransaction.transaction_date) }}</span>
             </div>
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.amount')}}</span>
-                <span class="text-black col-span-2 dark:text-white py-2">$ {{ formatAmount(selectedTransaction.transaction_amount) }}</span>
+            <div class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.amount')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">$ {{ formatAmount(selectedTransaction.transaction_amount) }}</span>
             </div>
-            <div class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>
-                <span class="text-black col-span-2 dark:text-white py-2">{{ selectedTransaction.transaction_status }}</span>
+            <div class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ selectedTransaction.transaction_status }}</span>
             </div>
-            <div v-if="selectedTransaction.transaction_type === 'Deposit' || selectedTransaction.transaction_type === 'Withdrawal' || selectedTransaction.transaction_type === 'InternalTransfer'" class="grid grid-cols-3 items-center">
-                <span class="col-span-1 text-sm font-semibold dark:text-gray-400">Remarks</span>
-                <span class="text-black col-span-2 dark:text-white py-2">{{ selectedTransaction.transaction_remark ?? '-' }}</span>
+            <div v-if="selectedTransaction.transaction_type === 'Deposit' || selectedTransaction.transaction_type === 'Withdrawal' || selectedTransaction.transaction_type === 'InternalTransfer'" class="grid grid-cols-5 items-center">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">Remarks</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ selectedTransaction.transaction_remark ?? '-' }}</span>
             </div>
         </div>
     </Modal>

@@ -122,7 +122,7 @@ const calculatedBalance = computed(() => {
                             type="button"
                             variant="gray"
                             size="sm"
-                            class="absolute top-1/2 transform -translate-y-1/2 end-3"
+                            class="absolute end-3 mt-1"
                             @click="fullWithdraw"
                         >
                             {{$t('public.wallet.full_amount')}}

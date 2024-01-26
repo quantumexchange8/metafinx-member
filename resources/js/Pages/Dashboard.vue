@@ -51,9 +51,9 @@ const closeModal = () => {
                     {{$t('public.dashboard.welcome_back')}}
                     <!-- , {{ $page.props.auth.user.name }}! -->
                 </h2>
-                <div class="flex items-start gap-3">
+                <div class="flex items-end gap-3">
                     <Button
-                        class="justify-center text-sm gap-2"
+                        class="flex-grow justify-center text-sm gap-2"
                         variant="gray"
                         @click="openCoinModal"
                     >
@@ -106,38 +106,44 @@ const closeModal = () => {
             </div>
         </Link>
 
-        <div class="flex flex-nowrap md:grid md:grid-cols-6 gap-3 overflow-x-auto md:overflow-visible my-8">
-            <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+        <div class="flex flex-nowrap align-self-stretch md:grid md:grid-cols-12 md:grid-flow-row-dense gap-3 overflow-x-auto md:overflow-visible my-8">
+            <div class="flex-1 rounded-[10px] md:col-span-3 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
                     <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.monthly_return')}}</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
                 </div>
             </div>
-            <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+            <div class="flex-1 rounded-[10px] md:col-span-3 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
                     <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.referral_earning')}}</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ {{ formatAmount(props.referralEarnings) }}</p>
                 </div>
             </div>
-            <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+            <div class="flex-1 rounded-[10px] md:col-span-3 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
                     <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.affiliate_earning')}}</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
                 </div>
             </div>
-            <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+            <div class="flex-1 rounded-[10px] md:col-span-3 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
                     <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.dividend_earning')}}</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
                 </div>
             </div>
-            <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+            <div class="flex-1 md:col-span-4 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+                <div class="px-5 py-2.5 flex flex-col justify-between">
+                    <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.profit_sharing')}}</p>
+                    <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
+                </div>
+            </div>
+            <div class="flex-1 md:col-span-4 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
                     <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.sponsor_bonus')}}</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>
                 </div>
             </div>
-            <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+            <div class="flex-1 md:col-span-4 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
                 <div class="px-5 py-2.5 flex flex-col justify-between">
                     <p class="text-gray-400 text-xs md:text-sm w-32 md:w-full">{{$t('public.dashboard.pairing_bonus')}}</p>
                     <p class="text-gray-800 dark:text-white text-xl font-semibold">$ 0.00</p>

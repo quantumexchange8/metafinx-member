@@ -70,10 +70,11 @@ const typeFilter = [
     {value: 'Deposit', label:"Deposit"},
     {value: 'Withdrawal', label:"Withdrawal"},
     {value: 'Investment', label:"Investment"},
-    {value: 'monthly_return', label:"Monthly Return"},
-    {value: 'referral_earnings', label:"Referral Earning"},
-    {value: 'affiliate_earnings', label:"Affiliate Earning"},
-    {value: 'dividend_earnings', label:"Dividend Earning"},
+    {value: 'MonthlyReturn', label:"Monthly Return"},
+    {value: 'ReferralEarning', label:"Referral Earning"},
+    {value: 'AffiliateEarning', label:"Affiliate Earning"},
+    {value: 'DividendEarning', label:"Dividend Earning"},
+    {value: 'AffiliateDividendEarning', label:"Affiliate Dividend Earning"},
 ];
 
 const clearFilter = () => {
@@ -84,7 +85,7 @@ const clearFilter = () => {
 </script>
 
 <template>
-    <div class="flex justify-between">
+    <div class="flex justify-between mb-3">
         <h4 class="font-semibold dark:text-white">{{$t('public.wallet.all_transactions')}}</h4>
         <RefreshIcon
             :class="{ 'animate-spin': isLoading }"
@@ -94,8 +95,8 @@ const clearFilter = () => {
         />
     </div>
 
-    <div class="mt-5 flex gap-3 items-center self-stretch">
-        <div class="w-full">
+    <div class="flex flex-wrap gap-3 items-center sm:flex-nowrap">
+      <div class="w-full">
             <InputIconWrapper>
                 <template #icon>
                     <SearchIcon aria-hidden="true" class="w-5 h-5" />
@@ -104,29 +105,28 @@ const clearFilter = () => {
             </InputIconWrapper>
         </div>
         <div class="w-full">
-            <BaseListbox
-                v-model="type"
-                :options="typeFilter"
-                :placeholder="$t('public.report.filters_placeholder')"
-            />
-        </div>
-        <div class="w-full">
             <vue-tailwind-datepicker
                 :placeholder="$t('public.report.date_picker_placeholder')"
                 :formatter="formatter"
                 separator=" - "
-                as-single
-                use-range
-                :shortcuts="false"
                 v-model="date"
                 input-classes="py-2.5 border-gray-400 w-full rounded-lg text-sm placeholder:text-base dark:placeholder:text-gray-400 focus:border-gray-400 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:border-gray-600 dark:bg-gray-600 dark:text-white"
             />
         </div>
-        <div>
+        <div class="w-full">
+            <BaseListbox
+                v-model="type"
+                :options="typeFilter"
+                :placeholder="$t('public.report.filters_placeholder')"
+                class="w-full"
+            />
+        </div>
+        <div class="w-full sm:w-auto">
             <Button
                 type="button"
                 variant="secondary-700"
                 @click="clearFilter"
+                class="w-full justify-center"
             >
                 Clear
             </Button>

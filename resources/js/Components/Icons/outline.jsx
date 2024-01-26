@@ -783,6 +783,23 @@ export const CoinIcon = defineComponent({
     },
 })
 
+export const SwapCoinIcon = defineComponent({
+    setup() {
+        return () => (
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_5188_41066)">
+                    <path d="M3.99967 4.00016L5.33301 2.66683M5.33301 2.66683L3.99967 1.3335M5.33301 2.66683H3.99967C2.52691 2.66683 1.33301 3.86074 1.33301 5.3335M11.9997 12.0002L10.6663 13.3335M10.6663 13.3335L11.9997 14.6668M10.6663 13.3335H11.9997C13.4724 13.3335 14.6663 12.1396 14.6663 10.6668M6.79236 4.3335C7.2364 2.60827 8.8025 1.3335 10.6663 1.3335C12.8755 1.3335 14.6663 3.12436 14.6663 5.3335C14.6663 7.19732 13.3916 8.76341 11.6664 9.20747M9.33301 10.6668C9.33301 12.876 7.54215 14.6668 5.33301 14.6668C3.12387 14.6668 1.33301 12.876 1.33301 10.6668C1.33301 8.45769 3.12387 6.66683 5.33301 6.66683C7.54215 6.66683 9.33301 8.45769 9.33301 10.6668Z" stroke="white" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_5188_41066">
+                        <rect width="16" height="16" fill="white" />
+                    </clipPath>
+                </defs>
+            </svg>
+        )
+    },
+})
+
 export const LineChartIcon = defineComponent({
     setup() {
         return () => (
