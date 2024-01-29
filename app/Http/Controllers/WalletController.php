@@ -61,8 +61,18 @@ class WalletController extends Controller
 
         $wallet_address = SettingWalletAddress::inRandomOrder()->first();
 
-        $coins = Coin::with('setting_coin')->where('user_id', \Auth::id())->get();
-        $coin_price = CoinPrice::whereDate('price_date', today())->first();
+        $coins = Coin::with('setting_coin')->where('user_id', \Auth::id());
+
+        $coinTotalPrice = clone $coins;
+
+        $today = Carbon::today();
+        $coin_price = CoinPrice::whereDate('price_date', $today)->first();
+
+        // If today's coin price is null, try fetching yesterday's coin price
+        if (!$coin_price) {
+            $coin_price = CoinPrice::latest()->first();
+        }
+
         $conversion_rate = ConversionRate::latest()->first();
         $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first();
         $coin_market_time = CoinMarketTime::whereIn('setting_coin_id', $coins->pluck('setting_coin_id'))->latest()->first();
@@ -70,11 +80,11 @@ class WalletController extends Controller
 
         return Inertia::render('Wallet/Wallet', [
             'wallets' => $wallets->get(),
-            'coins' => $coins,
+            'coins' => $coins->get(),
             'coin_price' => $coin_price,
             'conversion_rate' => $conversion_rate,
             'coin_market_time' => $coin_market_time,
-            'totalBalance' => $totalBalance->sum('balance'),
+            'totalBalance' => number_format($totalBalance->sum('balance') + ($coinTotalPrice->sum('unit') / $coin_price->price), 2),
             'wallet_sel' => $wallet_sel,
             'depositWalletSel' => $depositWalletSel,
             'random_address' => $wallet_address,
@@ -89,8 +99,17 @@ class WalletController extends Controller
 
     public function getWalletBalance(Request $request)
     {
+        $user = \Auth::user();
+        $today = Carbon::today();
+        $price_per_unit = CoinPrice::whereDate('price_date', $today)->first();
+
+        // If today's coin price is null, try fetching yesterday's coin price
+        if (!$price_per_unit) {
+            $price_per_unit = CoinPrice::latest()->first();
+        }
+
         $wallets = Wallet::query()
-            ->where('user_id', \Auth::id())
+            ->where('user_id', $user->id)
             ->when($request->filled('date'), function ($query) use ($request) {
                 $date = $request->input('date');
                 $dateRange = explode(' - ', $date);
@@ -101,27 +120,52 @@ class WalletController extends Controller
             ->select('id', 'name', 'type', 'balance')
             ->get();
 
+        $coins = Coin::where('user_id', $user->id)
+            ->with('setting_coin:id,name')
+            ->select('id', 'user_id', 'setting_coin_id', 'unit')
+            ->get();
+
+        $coinData = $coins->map(function ($coin) {
+            return [
+                'name' => $coin->setting_coin->name,
+                'price' => $coin->unit,
+            ];
+        });
+
+        $coinNames = $coinData->pluck('name');
+        $coinPrices = $coinData->pluck('price');
+
         $chartData = [
-            'labels' => $wallets->pluck('name'),
+            'labels' => $wallets->pluck('name')->merge($coinNames),
             'datasets' => [],
         ];
 
-        $backgroundColors = ['internal_wallet' => '#FF2D55', 'musd_wallet' => '#F79009'];
+        $backgroundColors = ['internal_wallet' => '#FF2D55', 'musd_wallet' => '#F79009', 'MXT' => '#007AFF'];
+        $balances = [];
+        $backgroundColor = [];
 
         foreach ($wallets as $wallet) {
-            $dataset = [
-                'label' => $wallet->name,
-                'data' => [$wallet->balance],
-                'backgroundColor' => $backgroundColors[$wallet->type],
-                'borderColor' => '#384250',
-                'borderWidth' => 4,
-                'circumference' => [
-                    $wallet->balance != 0 ? $wallet->balance / $wallets->sum('balance') * 360 : 0
-                ]
-            ];
-
-            $chartData['datasets'][] = $dataset;
+            $balances[] = $wallet->balance;
+            $backgroundColor[] = $backgroundColors[$wallet->type];
         }
+
+        foreach ($coinNames as $coinName) {
+            $backgroundColor[] = $backgroundColors[$coinName];
+        }
+
+        foreach ($coinPrices as $coinPrice) {
+            $balances[] = number_format($coinPrice / $price_per_unit->price, 2, '.', '');
+        }
+
+        $dataset = [
+            'data' => $balances,
+            'backgroundColor' => $backgroundColor,
+            'offset' => 5,
+            'borderColor' => 'transparent'
+        ];
+
+        $chartData['datasets'][] = $dataset;
+
 
         return response()->json($chartData);
     }
@@ -592,7 +636,7 @@ class WalletController extends Controller
 
         if ($coin->unit < $request->unit) {
             throw ValidationException::withMessages(['unit' => trans('public.insufficient_unit') . ', AVAILABLE UNIT: ' . $coin->unit . ' ' . $setting_coin->name ]);
-            
+
         }
 
         $wallet->increment('balance', $request->transaction_amount);
