@@ -114,14 +114,6 @@ const fetchData = async () => {
                             color: '#4D5761',  // crosshair line color
                             width: 1        // crosshair line width
                         },
-                        sync: {
-                            enabled: true,            // enable trace line syncing with other charts
-                            group: 1,                 // chart group
-                            suppressTooltips: false   // suppress tooltips when showing a synced tracer
-                        },
-                        zoom: {
-                            enabled: false,                                      // enable zooming
-                        },
                     }
                 }
             }
