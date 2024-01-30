@@ -86,7 +86,7 @@ function copyTestingCode () {
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
                     <Deposit
-                        :depositWalletSel="depositWalletSel"
+                        :wallet_sel="wallet_sel"
                         :random_address="random_address"
                     />
                     <Withdrawal

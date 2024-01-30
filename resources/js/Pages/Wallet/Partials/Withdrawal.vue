@@ -31,8 +31,10 @@ const closeModal = () => {
 
 const transactionFee = computed(() => props.withdrawalFee.value);
 
+const walletId = props.wallet_sel[0];
+
 const form = useForm({
-    wallet_id: '',
+    wallet_id: walletId.value,
     amount: '',
     wallet_address: '',
     terms: false,

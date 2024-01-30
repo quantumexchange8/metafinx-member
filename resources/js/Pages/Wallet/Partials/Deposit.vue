@@ -14,7 +14,7 @@ import Tooltip from "@/Components/Tooltip.vue";
 import BaseListbox from "@/Components/BaseListbox.vue";
 
 const props = defineProps({
-    depositWalletSel: Array,
+    wallet_sel: Array,
     random_address: Object
 })
 const depositModal = ref(false);
@@ -28,8 +28,10 @@ const closeModal = () => {
     depositModal.value = false
 }
 
+const walletId = props.wallet_sel[0];
+
 const form = useForm({
-    wallet_id: '',
+    wallet_id: walletId.value,
     amount: '',
     to_wallet_address: props.random_address.wallet_address,
     txn_hash: '',
@@ -106,12 +108,13 @@ function copyTestingCode () {
             </div>
             <form class="pt-2">
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" :value="$t('public.wallet.select_wallet')" />
+                    <!-- <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" :value="$t('public.wallet.select_wallet')" /> -->
                     <div class="flex flex-col w-full">
                         <BaseListbox
                             v-model="form.wallet_id"
-                            :options="props.depositWalletSel"
+                            :options="props.wallet_sel"
                             :error="form.errors.wallet_id"
+                            class="hidden"
                         />
                     </div>
                 </div>

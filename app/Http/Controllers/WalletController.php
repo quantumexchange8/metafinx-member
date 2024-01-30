@@ -43,15 +43,15 @@ class WalletController extends Controller
         $totalBalance = clone $wallets;
         $deposit_wallets = clone $wallets;
 
-        $wallet_sel = $wallets->get()->map(function ($wallet) {
-            return [
-                'value' => $wallet->id,
-                'label' => $wallet->name,
-                'balance' => $wallet->balance,
-            ];
-        });
+        // $wallet_sel = $wallets->get()->map(function ($wallet) {
+        //     return [
+        //         'value' => $wallet->id,
+        //         'label' => $wallet->name,
+        //         'balance' => $wallet->balance,
+        //     ];
+        // });
 
-        $depositWalletSel = $deposit_wallets->where('type', 'internal_wallet')->get()->map(function ($wallet) {
+        $wallet_sel = $deposit_wallets->where('type', 'internal_wallet')->get()->map(function ($wallet) {
             return [
                 'value' => $wallet->id,
                 'label' => $wallet->name,
@@ -86,7 +86,7 @@ class WalletController extends Controller
             'coin_market_time' => $coin_market_time,
             'totalBalance' => number_format($totalBalance->sum('balance') + ($coinTotalPrice->sum('unit') / $coin_price->price), 2),
             'wallet_sel' => $wallet_sel,
-            'depositWalletSel' => $depositWalletSel,
+            // 'depositWalletSel' => $depositWalletSel,
             'random_address' => $wallet_address,
             'withdrawalFee' => Setting::where('slug', 'withdrawal-fee')->latest()->first(),
             'gasFee' => Setting::where('slug', 'gas-fee')->latest()->first(),

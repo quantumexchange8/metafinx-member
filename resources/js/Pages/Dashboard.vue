@@ -64,7 +64,7 @@ const closeModal = () => {
                         <span class="uppercase">Buy {{ coin.setting_coin.name }}</span>
                     </Button>
                     <Deposit
-                        :depositWalletSel="wallet_sel"
+                        :wallet_sel="wallet_sel"
                         :random_address="random_address"
                     />
                 </div>
