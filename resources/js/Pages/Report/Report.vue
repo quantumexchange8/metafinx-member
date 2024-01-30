@@ -12,6 +12,7 @@ import BaseListbox from "@/Components/BaseListbox.vue";
 import {transactionFormat} from "@/Composables/index.js";
 
 const props = defineProps({
+    referralEarnings: [String, Number],
     totalEarning: Number,
     totalWithdrawal: Number,
     totalInvestment: Number,
@@ -40,10 +41,10 @@ const returnFilter = computed(() => {
 
 const earnFilter = [
     {value: '', label:"All"},
-    {value: 'ReferralEarning', label:"Referral Earning"},
-    {value: 'AffiliateEarning', label:"Affiliate Earning"},
-    {value: 'DividendEarning', label:"Dividend Earning"},
-    {value: 'AffiliateDividendEarning', label:"Affiliate Dividend Earning"},
+    {value: 'ReferralEarnings', label:"Referral Earning"},
+    {value: 'AffiliateEarnings', label:"Affiliate Earnings"},
+    {value: 'DividendEarnings', label:"Dividend Earnings"},
+    {value: 'AffiliateDividendEarnings', label:"Affiliate Dividend Earnings"},
 ];
 
 const investFilter = [
@@ -167,47 +168,49 @@ const clearFilter = () => {
 
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
                     <div class="space-y-2">
-                        <div class="text-xs font-medium dark:text-gray-400">
-                            {{$t('public.report.total_earning')}}
-                        </div>
-                        <div class="text-2xl font-semibold dark:text-white">
-                            $ {{ formatAmount(totalEarning) }}
-                        </div>
+                        <div class="text-xs font-medium dark:text-gray-400">{{$t('public.standard_reward')}}</div>
+                        <div class="text-2xl font-semibold dark:text-white">$ 0.00</div>
                     </div>
                 </div>
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
                     <div class="space-y-2">
-                        <div class="text-xs font-medium dark:text-gray-400">
-                            {{$t('public.report.total_withdrawal')}}
-                        </div>
-                        <div class="text-2xl font-semibold dark:text-white">
-                            $ {{ formatAmount(totalWithdrawal) }}
-                        </div>
+                        <div class="text-xs font-medium dark:text-gray-400">{{$t('public.referral_earning')}}</div>
+                        <div class="text-2xl font-semibold dark:text-white">$ {{ formatAmount(props.referralEarnings) }}</div>
                     </div>
                 </div>
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
                     <div class="space-y-2">
-                        <div class="text-xs font-medium dark:text-gray-400">
-                            {{$t('public.report.total_investment')}}
-                        </div>
-                        <div class="text-2xl font-semibold dark:text-white">
-                            $ {{ formatAmount(totalInvestment) }}
-                        </div>
+                        <div class="text-xs font-medium dark:text-gray-400">{{$t('public.affiliate_earning')}}</div>
+                        <div class="text-2xl font-semibold dark:text-white">$ 0.00</div>
                     </div>
                 </div>
                 <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
                     <div class="space-y-2">
-                        <div class="text-xs font-medium dark:text-gray-400">
-                            {{$t('public.report.total_balance')}}
-                        </div>
-                        <div class="text-2xl font-semibold dark:text-white">
-                            $ {{ formatAmount(totalBalance) }}
-                        </div>
+                        <div class="text-xs font-medium dark:text-gray-400">{{$t('public.dividend_earning')}}</div>
+                        <div class="text-2xl font-semibold dark:text-white">$ 0.00</div>
+                    </div>
+                </div>
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                    <div class="space-y-2">
+                        <div class="text-xs font-medium dark:text-gray-400">{{$t('public.staking_reward')}}</div>
+                        <div class="text-2xl font-semibold dark:text-white">$ 0.00</div>
+                    </div>
+                </div>
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                    <div class="space-y-2">
+                        <div class="text-xs font-medium dark:text-gray-400">{{$t('public.sponsor_bonus')}}</div>
+                        <div class="text-2xl font-semibold dark:text-white">$ 0.00</div>
+                    </div>
+                </div>
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                    <div class="space-y-2">
+                        <div class="text-xs font-medium dark:text-gray-400">{{$t('public.pairing_bonus')}}</div>
+                        <div class="text-2xl font-semibold dark:text-white">$ 0.00</div>
                     </div>
                 </div>
             </div>
 
-            <h3 class="md:hidden text-xl font-semibold leading-tight my-5">
+            <!-- <h3 class="md:hidden text-xl font-semibold leading-tight my-5">
                 {{$t('public.report.finance_overview')}}
             </h3>
             <div class="flex flex-col md:hidden gap-3 overflow-x-auto md:overflow-visible">
@@ -251,7 +254,7 @@ const clearFilter = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </template>
     </AuthenticatedLayout>
 </template>

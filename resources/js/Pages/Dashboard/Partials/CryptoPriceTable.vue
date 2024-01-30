@@ -15,7 +15,7 @@ const getAmountClass = computed(() => {
     } else if (props.coin_price_yesterday.price > props.coin_price.price) {
         return 'text-error-500';
     }
-    return '';
+    return 'text-white';
 });
 
 const getAmountPrefix = computed(() => {
@@ -28,7 +28,8 @@ const getAmountPrefix = computed(() => {
 });
 
 const priceDiffPercentage = computed(() => {
-    return (props.coin_price.price / props.coin_price_yesterday.price).toFixed(2);
+    const rawPercentage = props.coin_price.price / props.coin_price_yesterday.price;
+    return rawPercentage === 1 ? 0 : rawPercentage.toFixed(2);
 });
 
 
@@ -164,7 +165,7 @@ onMounted(() => {
                     <div v-if="isLoading" class="animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-500 w-32 mb-2.5"></div>
                     <div v-else>
                          <div :class="getAmountClass">
-                            {{ getAmountPrefix }}{{ priceDiffPercentage }} %
+                            {{ getAmountPrefix }}{{ formatAmount(priceDiffPercentage) }} %
                         </div>
                     </div>
                 </td>

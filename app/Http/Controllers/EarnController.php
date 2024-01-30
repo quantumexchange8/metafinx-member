@@ -77,8 +77,6 @@ class EarnController extends Controller
         $user = \Auth::user();
         $investment_plan = InvestmentPlan::find($request->investment_plan_id);
         $wallet = Wallet::find($request->wallet_id);
-        $setting_coin = SettingCoin::find($request->setting_coin_id);
-        $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();
         $amount = $request->amount;
 
         switch($investment_plan->type) {
@@ -115,7 +113,6 @@ class EarnController extends Controller
                     'transaction_amount' => $amount,
                     'status' => 'Success',
                     'new_wallet_amount' => $wallet->balance,
-                    'new_coin_amount' => $coin->unit,        
                 ]);
 
                 $investmentSubscription = InvestmentSubscription::create([
@@ -140,7 +137,7 @@ class EarnController extends Controller
                 ]);
                 break;
 
-            case('stacking'):
+            case('staking'):
                 $coin = Coin::find($request->from_coin_id);
                 $unit = $request->unit;
                 $stacking_fee = $request->stacking_fee;
@@ -154,7 +151,7 @@ class EarnController extends Controller
                 if ($wallet->balance < $stacking_fee) {
                     return redirect()->back()
                         ->with('title', 'Insufficient MUSD Wallet Balance')
-                        ->with('warning', 'MUSD wallet does not have enough balance to pay the stacking fee. Please increase the wallet balance via internal transfer.')
+                        ->with('warning', 'MUSD wallet does not have enough balance to pay the staking fee. Please increase the wallet balance via internal transfer.')
                         ->with('alertButton', 'Internal Wallet');
                 }
 
@@ -170,7 +167,7 @@ class EarnController extends Controller
                 $asset_transaction = Transaction::create([
                     'category' => 'asset',
                     'user_id' => $user->id,
-                    'transaction_type' => 'Stacking',
+                    'transaction_type' => 'Staking',
                     'from_coin_id' => $coin->id,
                     'transaction_number' => $transaction_number,
                     'unit' => $unit,
@@ -239,14 +236,12 @@ class EarnController extends Controller
         $investments = InvestmentSubscription::query()
             ->with('investment_plan:id,name,roi_per_annum,investment_period,type')
             ->where('user_id', $user->id)
-            ->whereIn('status', ['CoolingPeriod', 'OnGoingPeriod'])
             ->get();
 
         // Get CoinStackings
         $stackings = CoinStacking::query()
             ->with('investment_plan:id,name,investment_period,type')
             ->where('user_id', $user->id)
-            ->where('status', 'OnGoingPeriod')
             ->get();
 
         $locale = app()->getLocale(); // Get the current locale

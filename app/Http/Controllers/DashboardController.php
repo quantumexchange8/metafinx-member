@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Coin;
-use App\Models\CoinMarketTime;
-use App\Models\CoinPrice;
-use App\Models\ConversionRate;
-use App\Models\Earning;
-use App\Models\InvestmentSubscription;
-use App\Models\Setting;
-use App\Models\SettingCoin;
-use App\Models\SettingWalletAddress;
-use App\Models\Wallet;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Models\Coin;
 use Inertia\Inertia;
+use App\Models\Wallet;
+use App\Models\Earning;
+use App\Models\Setting;
+use App\Models\CoinPrice;
+use App\Models\SettingCoin;
+use Illuminate\Http\Request;
+use App\Models\CoinMarketTime;
+use App\Models\CoinStacking;
+use App\Models\ConversionRate;
+use App\Models\SettingWalletAddress;
+use App\Models\InvestmentSubscription;
+use App\Models\Transaction;
 
 class DashboardController extends Controller
 {
@@ -30,11 +32,6 @@ class DashboardController extends Controller
 //        }
         $walletDeposits = clone $wallets;
 
-        $referralEarnings = Earning::query()
-            ->where('upline_id', \Auth::id())
-            ->where('type', 'ReferralEarning')
-            ->sum('after_amount');
-
         $wallet_sel = $walletDeposits->where('type', 'internal_wallet')->get()->map(function ($wallet) {
             return [
                 'value' => $wallet->id,
@@ -42,6 +39,30 @@ class DashboardController extends Controller
                 'balance' => $wallet->balance,
             ];
         });
+
+        $investmentEarning = Earning::where('upline_id', \Auth::id())
+            ->sum('after_amount');
+
+        $stakingEarning = CoinStacking::where('user_id', \Auth::id())
+            ->sum('total_earning');
+        
+        $totalEarning = $investmentEarning + $stakingEarning;
+
+        $totalWithdrawal = Transaction::where('user_id', \Auth::id())
+            ->where('transaction_type', '=', 'Withdrawal')
+            ->where('status', '=', 'Success')
+            ->sum('transaction_amount');
+
+        $standardInvestment = InvestmentSubscription::where('user_id', \Auth::id())
+            ->whereNotIn('status', ['Terminated'])
+            ->sum('amount');
+        
+        $stakingInvestment = CoinStacking::where('user_id', \Auth::id())
+            ->whereNotIn('status', ['Terminated'])
+            ->sum('stacking_price');
+        
+        $totalInvestment = $standardInvestment + $stakingInvestment;
+
         $coin = Coin::with('setting_coin')->where('user_id', \Auth::id())->first();
         $coin_price = CoinPrice::whereDate('price_date', today())->first();
         $conversion_rate = ConversionRate::latest()->first();
@@ -52,7 +73,6 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard', [
             'wallets' => $wallets->get(),
-            'referralEarnings' => $referralEarnings,
             'wallet_sel' => $wallet_sel,
             'random_address' => $wallet_address,
             'coin' => $coin,
@@ -62,6 +82,9 @@ class DashboardController extends Controller
             'coin_market_time' => $coin_market_time,
             'coin_price_yesterday' => $coin_price_yesterday,
             'gasFee' => Setting::where('slug', 'gas-fee')->latest()->first(),
+            'totalEarning' => floatval($totalEarning),
+            'totalWithdrawal' => floatval($totalWithdrawal),
+            'totalInvestment' => floatval($totalInvestment),
         ]);
     }
 

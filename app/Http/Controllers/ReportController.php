@@ -23,16 +23,10 @@ class ReportController extends Controller
 {
     public function detail()
     {
-        $totalEarning = Earning::where('upline_id', \Auth::id())
+        $referralEarnings = Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'ReferralEarnings')
             ->sum('after_amount');
-
-        $totalWithdrawal = Payment::where('user_id', \Auth::id())
-            ->where('type', '=', 'Withdrawal')
-            ->where('status', '=', 'Success')
-            ->sum('amount');
-
-        $totalInvestment = InvestmentSubscription::where('user_id', \Auth::id())
-            ->sum('amount');
 
         $totalBalance = Wallet::where('user_id', \Auth::id())
             ->sum('balance');
@@ -51,11 +45,9 @@ class ReportController extends Controller
         $translatedInvestmentPlans->prepend(['id' => '', 'name' => 'All']);
 
         return Inertia::render('Report/Report', [
-            'totalEarning' => floatval($totalEarning),
-            'totalWithdrawal' => floatval($totalWithdrawal),
-            'totalInvestment' => floatval($totalInvestment),
             'totalBalance' => floatval($totalBalance),
             'investmentPlans' => $translatedInvestmentPlans,
+            'referralEarnings' => $referralEarnings,
         ]);
     }
 
@@ -66,7 +58,7 @@ class ReportController extends Controller
         $query = Earning::query()
             ->with('subscriptionPlan.investment_plan')
             ->where('upline_id', $user->id)
-            ->where('type', 'MonthlyReturn');
+            ->where('type', 'StandardRewards');
 
         if ($request->filled('search')) {
             $search = '%' . $request->input('search') . '%';

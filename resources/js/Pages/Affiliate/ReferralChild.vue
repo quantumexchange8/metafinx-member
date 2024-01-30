@@ -1,11 +1,11 @@
 <script>
 import {PlusCircleIcon, MinusCircleIcon} from "@heroicons/vue/solid";
-import {LVL1Icon, LVL2Icon, LVL3Icon, LVL4Icon} from "@/Components/Icons/outline.jsx";
+import {Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon} from "@/Components/Icons/outline.jsx";
 import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 export default {
     name: 'Tree',
-    components: { PlusCircleIcon, MinusCircleIcon, LVL1Icon, LVL2Icon, LVL3Icon, LVL4Icon, ref, Modal},
+    components: { PlusCircleIcon, MinusCircleIcon, Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon, ref, Modal},
     props: {
         node: Object,
         depth: {
@@ -127,9 +127,10 @@ export default {
                             <div class="flex-col ml-3">
                                 <div class="flex whitespace-nowrap gap-2 text-sm font-semibold items-center">
                                     <div class="whitespace-normal">{{ node.name }}</div>
-                                    <LVL1Icon class="h-5 w-5" v-if="node.rank === 2" />
-                                    <LVL2Icon class="h-5 w-5" v-if="node.rank === 3" />
-                                    <LVL3Icon class="h-5 w-5" v-if="node.rank === 4" />
+                                    <Rank1Icon class="h-5 w-5" v-if="node.rank === 2" />
+                                    <Rank2Icon class="h-5 w-5" v-if="node.rank === 3" />
+                                    <Rank3Icon class="h-5 w-5" v-if="node.rank === 4" />
+                                    <Rank4Icon class="h-5 w-5" v-if="node.rank === 5" />
                                     <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">{{$t('public.affiliate.gen')}} {{ node.level }}</span>
                                 </div>
                                 <div class="text-xs font-normal dark:text-gray-400">
@@ -180,9 +181,10 @@ export default {
                     <div class="flex-col ml-3">
                         <div class="flex gap-2 text-sm font-semibold">
                             {{ selectedAffiliate.name }}
-                            <LVL1Icon class="h-5" v-if="selectedAffiliate.rank === 2" />
-                            <LVL2Icon class="h-5" v-if="selectedAffiliate.rank === 3" />
-                            <LVL3Icon class="h-5" v-if="selectedAffiliate.rank === 4" />
+                            <Rank1Icon class="h-5" v-if="selectedAffiliate.rank === 2" />
+                            <Rank2Icon class="h-5" v-if="selectedAffiliate.rank === 3" />
+                            <Rank3Icon class="h-5" v-if="selectedAffiliate.rank === 4" />
+                            <Rank4Icon class="h-5" v-if="selectedAffiliate.rank === 5" />
                             <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">{{$t('public.affiliate.level')}} {{ selectedAffiliate.level }}</span>
                         </div>
                         <div class="text-xs font-normal dark:text-gray-400">

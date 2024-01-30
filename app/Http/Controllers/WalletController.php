@@ -395,7 +395,6 @@ class WalletController extends Controller
         $to_wallet = Wallet::find($request->to_wallet_id);
         $setting_coin = SettingCoin::find($request->setting_coin_id);
         $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();
-        $wallet = Wallet::find($request->wallet_id);
 
         if ($from_wallet->id == $to_wallet->id) {
             throw ValidationException::withMessages(['from_wallet_id' => 'Wallet cannot be the same']);
@@ -419,7 +418,7 @@ class WalletController extends Controller
             'transaction_amount' => $request->amount,
             'status' => 'Success',
             'remarks' => $request->remarks,
-            'new_wallet_amount' => $wallet->balance,
+            'new_wallet_amount' => $to_wallet->balance,
             'new_coin_amount' => $coin->unit,
         ]);
 

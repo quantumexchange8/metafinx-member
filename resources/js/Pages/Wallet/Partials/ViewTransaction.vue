@@ -220,7 +220,7 @@ const walletName = ref(page.props.auth.user.wallets[1]);
             </div>
             <div class="grid grid-cols-5 items-center">
                 <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_id')}}</span>
-                <span class="text-black col-span-3 dark:text-white py-2" v-if="['MonthlyReturn', 'ReferralEarning', 'AffiliateEarning', 'DividendEarning', 'AffiliateDividendEarning'].includes(selectedTransaction.transaction_type)">-</span>
+                <span class="text-black col-span-3 dark:text-white py-2" v-if="['StandardRewards', 'ReferralEarnings', 'AffiliateEarnings', 'DividendEarnings', 'AffiliateDividendEarnings'].includes(selectedTransaction.transaction_type)">-</span>
                 <span class="text-black col-span-3 dark:text-white py-2" v-else>{{ selectedTransaction.transaction_number }}</span>
             </div>
             <div class="grid grid-cols-5 items-center">

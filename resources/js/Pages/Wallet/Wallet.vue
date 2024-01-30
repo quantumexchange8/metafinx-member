@@ -96,6 +96,7 @@ function copyTestingCode () {
                     <div class="col-span-2">
                         <InternalTransfer
                             :wallets="wallets"
+                            :setting_coin="setting_coin"
                         />
                     </div>
                 </div>

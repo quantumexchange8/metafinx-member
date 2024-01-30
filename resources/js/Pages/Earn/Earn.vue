@@ -51,7 +51,7 @@ const props = defineProps({
             </div>
         </template>
 
-        <div class="w-full mt-2]">
+        <div class="w-full mt-2">
             <TabGroup>
                 <TabList class="flex dark:bg-transparent w-full">
                     <Tab
@@ -64,7 +64,7 @@ const props = defineProps({
                             class="px-4 py-2.5 text-sm font-semibold text-gray-900 border border-gray-200 focus:outline-none w-full sm:w-44"
                             :class="{
                                 'rounded-l-xl': category.type === 'standard',
-                                'rounded-r-xl': category.type === 'stacking',
+                                'rounded-r-xl': category.type === 'staking',
                                 'hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600': true,
                                 'bg-transparent dark:bg-[#38425080] dark:text-white': selected
                             }"
@@ -86,12 +86,12 @@ const props = defineProps({
                             <div v-for="plan in investmentTypes.plans" class="p-5 bg-white rounded-xl shadow-md dark:bg-gray-700">
                                 <div class="flex flex-col items-center justify-center gap-2 border-b dark:border-gray-600 pb-5">
                                     <img v-if="plan.type === 'standard'" class="w-10 h-10 rounded bg-white" :src="plan.media.standard ?? '/assets/icon.png'" alt="Medium avatar">
-                                    <img v-if="plan.type === 'stacking'" class="w-10 h-10 rounded bg-white" :src="plan.media.stacking ?? '/assets/stacking_default.png'" alt="Medium avatar">
+                                    <img v-if="plan.type === 'staking'" class="w-10 h-10 rounded bg-white" :src="plan.media.stacking ?? '/assets/stacking_default.png'" alt="Medium avatar">
                                     <div class="font-semibold">
                                         {{ plan.name }}
                                     </div>
-                                    <div v-if="plan.type === 'stacking'" class="font-semibold text-[32px] text-center">
-                                        {{ plan.commision_multiplier * 100 }}% <span class="flex text-base">profit share</span>
+                                    <div v-if="plan.type === 'staking'" class="font-semibold text-[32px] text-center">
+                                        {{ plan.commision_multiplier * 100 }}% <span class="flex text-base">{{$t('public.staking_reward')}}</span>
                                     </div>
                                     <div v-else class="font-semibold text-[32px]">
                                         {{ plan.roi_per_annum }} p.a.
@@ -125,7 +125,7 @@ const props = defineProps({
             </h3>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
-                    {{$t('public.earn.incoming_monthly_return')}}
+                    {{$t('public.earn.incoming_standard_reward')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
                     $ 0.00
@@ -168,7 +168,7 @@ const props = defineProps({
                 </h3>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
-                    {{$t('public.earn.incoming_monthly_return')}}
+                    {{$t('public.earn.incoming_standard_reward')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
                         $ 0.00

@@ -16,7 +16,8 @@ import {
 } from '@headlessui/vue'
 
 const props = defineProps({
-    wallets: Object
+    wallets: Object,
+    setting_coin: Object,
 })
 const depositModal = ref(false);
 const tooltipContent = ref('Copy');
@@ -43,7 +44,8 @@ const form = useForm({
     to_wallet_id: '',
     amount: '',
     remarks: '',
-    terms: false
+    terms: false,
+    setting_coin_id: props.setting_coin.id,
 })
 
 watch(selected, (newVal) => {
@@ -95,10 +97,10 @@ const fullAmount = () => {
         @click="openDepositModal"
     >
         <SwitchHorizontalIcon aria-hidden="true" class="w-5 h-5" />
-        <span class="uppercase text-sm font-semibold">{{$t('public.wallet.internal_transfer')}}</span>
+        <span class="uppercase text-sm font-semibold">{{$t('public.wallet.swap')}}</span>
     </Button>
 
-    <Modal :show="depositModal" :title="$t('public.wallet.internal_transfer')" @close="closeModal">
+    <Modal :show="depositModal" :title="$t('public.wallet.swap')" @close="closeModal">
         <form class="space-y-8">
             <RadioGroup v-model="selected">
                 <RadioGroupLabel class="sr-only">Server size</RadioGroupLabel>
