@@ -25,7 +25,7 @@ const coinAmount = ref();
 const coinUnit = ref();
 const updatingCoinAmount = ref(false);
 const updatingCoinUnit = ref(false);
-const { formatTime } = transactionFormat();
+const { formatAmount } = transactionFormat();
 const transactionFee = ref();
 const payableAmount = ref();
 
@@ -61,9 +61,9 @@ const submit = () => {
 watch(coinAmount, (newAmount) => {
     if (newAmount !== null && !updatingCoinAmount.value) {
         updatingCoinUnit.value = true;
-        coinUnit.value = Number(newAmount * props.coin_price.price).toFixed(8);
-        transactionFee.value = (newAmount * props.gasFee.value/100).toFixed(2)
-        payableAmount.value = (parseFloat(newAmount) + parseFloat(transactionFee.value)).toFixed(2);
+        transactionFee.value = (newAmount * props.gasFee.value / 100).toFixed(2);
+        coinUnit.value = parseFloat((newAmount - parseFloat(transactionFee.value)) / props.coin_price.price).toFixed(2);
+        payableAmount.value = parseFloat(newAmount).toFixed(2);
     }
     updatingCoinAmount.value = false; // Reset flag after update
 });
@@ -71,7 +71,9 @@ watch(coinAmount, (newAmount) => {
 watch(coinUnit, (newUnit) => {
     if (newUnit !== null && !updatingCoinUnit.value) {
         updatingCoinAmount.value = true;
-        coinAmount.value = Number(newUnit / props.coin_price.price).toFixed(2);
+        transactionFee.value = ((newUnit * props.coin_price.price) * props.gasFee.value / 100).toFixed(2);
+        coinAmount.value = (newUnit * props.coin_price.price + parseFloat(transactionFee.value)).toFixed(2);
+        payableAmount.value = parseFloat(coinAmount.value).toFixed(2);
     }
     updatingCoinUnit.value = false; // Reset flag after update
 });
@@ -81,8 +83,9 @@ const closeModal = () => {
 }
 
 const priceDiffPercentage = computed(() => {
-    return (props.coin_price.price / props.coin_price_yesterday.price).toFixed(2)
-})
+    const rawPercentage = props.coin_price.price / props.coin_price_yesterday.price;
+    return rawPercentage === 1 ? 0 : rawPercentage.toFixed(2);
+});
 
 const getAmountClass = computed(() => {
     if (props.coin_price_yesterday.price < props.coin_price.price) {
@@ -90,7 +93,7 @@ const getAmountClass = computed(() => {
     } else if (props.coin_price_yesterday.price > props.coin_price.price) {
         return 'text-error-500';
     }
-    return '';
+    return 'text-gray-600 dark:text-gray-400';
 });
 
 const getAmountPrefix = computed(() => {
@@ -123,7 +126,7 @@ const getAmountPrefix = computed(() => {
                     class="text-xs font-medium"
                     :class="getAmountClass"
                 >
-                    {{ getAmountPrefix }}{{ priceDiffPercentage }} % today
+                    {{ getAmountPrefix }}{{ formatAmount(priceDiffPercentage) }} % today
                 </div>
             </div>
         </div>
