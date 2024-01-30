@@ -201,7 +201,7 @@ return [
     "affiliate" => [
         "affiliate" => "Affiliate",
         "proproganda" => "You can get rewarded when you invite your friends to join MetafinX.",
-        "referral_program" => "Referral Program",
+        "affiliate_program" => "Affiliate Program",
         "total_referral_earning" => "Total Referral Earning since 01 Jan 2023",
         "total_affiliate_earning" => "Total Affiliate Earning since 01 Jan 2023",
         "referred" => "You’ve successfully referred",

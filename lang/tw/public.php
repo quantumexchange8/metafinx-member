@@ -201,7 +201,7 @@ return [
     "affiliate" => [
         "affiliate" => "推广",
         "proproganda" => "当您邀请朋友加入MetafinX时,您可以获得奖励。",
-        "referral_program" => "推荐计划",
+        "affiliate_program" => "推荐计划",
         "total_referral_earning" => "自2023年1月1日以来的总推荐收入",
         "total_affiliate_earning" => "自2023年1月1日以来的总推广收入",
         "referred" => "您已成功推荐",

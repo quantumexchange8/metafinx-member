@@ -71,8 +71,9 @@ watch(coinAmount, (newAmount) => {
 watch(coinUnit, (newUnit) => {
     if (newUnit !== null && !updatingCoinUnit.value) {
         updatingCoinAmount.value = true;
-        transactionFee.value = ((newUnit * props.coin_price.price) * props.gasFee.value / 100).toFixed(2);
-        coinAmount.value = (newUnit * props.coin_price.price + parseFloat(transactionFee.value)).toFixed(2);
+        let initialCoinAmount = ((props.coin_price.price * 100) * newUnit).toFixed(2);
+        coinAmount.value = (initialCoinAmount / (100 - (props.gasFee.value))).toFixed(2);
+        transactionFee.value = (coinAmount.value * props.gasFee.value / 100).toFixed(2);
         payableAmount.value = parseFloat(coinAmount.value).toFixed(2);
     }
     updatingCoinUnit.value = false; // Reset flag after update
@@ -200,14 +201,6 @@ const getAmountPrefix = computed(() => {
                     </div>
                     <div class="text-sm text-gray-900 dark:text-white">
                         $ {{ transactionFee ?? '0.00' }}
-                    </div>
-                </div>
-                <div class="flex justify-between items-start self-stretch">
-                    <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
-                        {{ $t('public.payable') }} {{ $t('public.wallet.amount') }}
-                    </div>
-                    <div class="text-sm text-gray-900 dark:text-white">
-                        $ {{ payableAmount ?? '0.00' }}
                     </div>
                 </div>
                 <div class="mt-6">
