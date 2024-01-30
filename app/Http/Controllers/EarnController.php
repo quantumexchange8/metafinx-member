@@ -67,6 +67,7 @@ class EarnController extends Controller
             'investmentPlans' => $translatedInvestmentPlans,
             'wallet_sel' => $wallet_sel,
             'coin_price' => CoinPrice::whereDate('price_date', today())->first(),
+            'internal_wallet' => Wallet::where('user_id', \Auth::id())->where('type', 'internal_wallet')->first(),
             'musd_wallet' => Wallet::where('user_id', \Auth::id())->where('type', 'musd_wallet')->first(),
             'stackingFee' => Setting::where('slug', 'stacking-fee')->latest()->first(),
         ]);
@@ -178,7 +179,7 @@ class EarnController extends Controller
                     'status' => 'Success',
                     'remarks' => $unit . $coin->setting_coin->name . ' Unit + $' . $stacking_fee . ' from MUSD Wallet',
                     'new_wallet_amount' => $wallet->balance,
-                    'new_coin_amount' => $coin->unit,        
+                    'new_coin_amount' => $coin->unit,
                 ]);
 
                 $wallet_transaction = Transaction::create([
@@ -193,7 +194,7 @@ class EarnController extends Controller
                     'status' => 'Success',
                     'remarks' => $unit . $coin->setting_coin->name . ' Unit + $' . $stacking_fee . ' from MUSD Wallet',
                     'new_wallet_amount' => $wallet->balance,
-                    'new_coin_amount' => $coin->unit,        
+                    'new_coin_amount' => $coin->unit,
                 ]);
 
                 $stacking = CoinStacking::create([

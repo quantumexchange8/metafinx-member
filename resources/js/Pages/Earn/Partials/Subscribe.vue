@@ -15,8 +15,8 @@ import InputIconWrapper from "@/Components/InputIconWrapper.vue";
 
 const props = defineProps({
     plan: Object,
-    wallet_sel: Array,
     coin_price: Object,
+    internal_wallet: Object,
     musd_wallet: Object,
     stackingFee: Object,
 })
@@ -67,7 +67,7 @@ const submit = () => {
     if (props.plan.type === 'ebmi') {
         form.housing_price = housingPrice.value
         form.amount = amountCalculation.value.toFixed()
-    } else if (props.plan.type === 'stacking') {
+    } else if (props.plan.type === 'staking') {
         form.unit_number = undefined
         form.housing_price = undefined
         form.wallet_id = props.musd_wallet.id
@@ -76,6 +76,7 @@ const submit = () => {
         form.amount = linkedPrice.value
         form.stacking_fee = stackingFee.value
     } else {
+        form.wallet_id = props.internal_wallet.id
         form.unit_number = undefined
         form.housing_price = undefined
     }
@@ -113,7 +114,7 @@ const handleButtonClick = () => {
                     <div class="font-semibold dark:text-white">
                         {{ plan.name }}
                     </div>
-                    <div v-if="plan.type === 'stacking'" class="font-semibold text-[32px] text-center">
+                    <div v-if="plan.type === 'staking'" class="font-semibold text-[32px] text-center">
                         {{ plan.commision_multiplier * 100 }}% <span class="flex text-base">profit share</span>
                     </div>
                     <div v-else class="font-semibold text-[32px]">
@@ -134,18 +135,6 @@ const handleButtonClick = () => {
         <form class="pt-5">
             <!-- standard plan -->
             <template v-if="plan.type === 'standard'">
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" :value="$t('public.earn.wallet_selection')" />
-                    <div class="flex flex-col w-full">
-                        <BaseListbox
-                            v-model="form.wallet_id"
-                            :options="wallet_sel"
-                            :error="form.errors.wallet_id"
-                            :placeholder="$t('public.earn.wallet_selection_placeholder')"
-                        />
-                    </div>
-                </div>
-
                 <div v-if="plan.type === 'ebmi'" class="grid sm:flex gap-4 mt-5">
                     <Label class="text-sm dark:text-white w-1/4" for="unit_number" :value="$t('public.earn.unit_number')" />
                     <div class="flex flex-col w-full">
@@ -200,7 +189,7 @@ const handleButtonClick = () => {
             </template>
 
             <!-- stacking -->
-            <template v-if="plan.type === 'stacking'">
+            <template v-if="plan.type === 'staking'">
                 <div class="grid sm:flex gap-4">
                     <Label class="text-sm dark:text-white w-full sm:w-1/4" for="unit" :value="$t('public.wallet.unit') + ' (' + settingCoin.name + ')'" />
                     <div class="flex flex-col w-full">

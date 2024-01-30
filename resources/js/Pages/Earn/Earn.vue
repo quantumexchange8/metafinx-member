@@ -8,8 +8,8 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const props = defineProps({
     investmentPlans: Object,
-    wallet_sel: Array,
     coin_price: Object,
+    internal_wallet: Object,
     musd_wallet: Object,
     stackingFee: Object,
 })
@@ -106,8 +106,8 @@ const props = defineProps({
                                     </div>
                                     <Subscribe
                                         :plan="plan"
-                                        :wallet_sel="wallet_sel"
                                         :coin_price="coin_price"
+                                        :internal_wallet="internal_wallet"
                                         :musd_wallet="musd_wallet"
                                         :stackingFee="stackingFee"
                                     />
