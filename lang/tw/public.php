@@ -15,7 +15,7 @@ return [
     "staking_rewards" => "质押奖励",
     "current_amount" => "当前金额",
     "staking_pay" => "从 MUSD 钱包扣除",
-    "staking_fee" => "Stacking Fee",
+    "staking_fee" => "堆叠费",
     "payable" => "应付",
     "received" => "已收到",
     "current_price" => "当前价格",
