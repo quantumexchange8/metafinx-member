@@ -21,9 +21,12 @@ class AffiliateController extends Controller
         $referredCounts = User::where('upline_id', \Auth::id())->count();
         $totalReferralEarning = Earning::where('upline_id', \Auth::id())->where('type', 'ReferralEarnings')->sum('after_amount');
 
+        $downline = User::where('upline_id', \Auth::id())->with(['coinStaking'])->get();
+
         return Inertia::render('Affiliate/Affiliate', [
             'referredCounts' => $referredCounts,
             'totalReferralEarning' => floatval($totalReferralEarning),
+            'downline' => $downline,
         ]);
     }
 
@@ -104,7 +107,7 @@ class AffiliateController extends Controller
         $searchTerm = $request->input('search');
 
         if ($searchTerm) {
-            dd('asdasd');
+            // dd('asdasd');
             $searchUser = User::where('name', 'like', '%' . $searchTerm . '%')
                 ->orWhere('email', 'like', '%' . $searchTerm . '%')
                 ->first();

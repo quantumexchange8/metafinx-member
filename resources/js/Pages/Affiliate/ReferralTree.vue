@@ -9,6 +9,7 @@ import panzoom from '@panzoom/panzoom';
 import Tooltip from "@/Components/Tooltip.vue";
 import {ZoomInIcon, ZoomOutIcon, Target02Icon, LVL3Icon} from "@/Components/Icons/outline.jsx";
 import Button from "@/Components/Button.vue";
+import {Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon} from "@/Components/Icons/outline.jsx";
 
 const referralTree = ref(null);
 // Use refs to store functions
@@ -81,6 +82,32 @@ onMounted(() => {
 </script>
 
 <template>
+    <div class="flex py-8 gap-3 md:gap-10">
+        <div class="inline-flex items-center gap-3">
+            <Rank1Icon class="w-8 h-8" />
+            <div class="font-semibold text-sm">
+                {{$t('public.affiliate.lvl_1')}}
+            </div>
+        </div>
+        <div class="inline-flex items-center gap-3">
+            <Rank2Icon class="w-8 h-8" />
+            <div class="font-semibold text-sm">
+                {{$t('public.affiliate.lvl_2')}}
+            </div>
+        </div>
+        <div class="inline-flex items-center gap-3">
+            <Rank3Icon class="w-8 h-8" />
+            <div class="font-semibold text-sm">
+                {{$t('public.affiliate.lvl_3')}}
+            </div>
+        </div>
+        <div class="inline-flex items-center gap-3">
+            <Rank4Icon class="w-8 h-8" />
+            <div class="font-semibold text-sm">
+                {{$t('public.affiliate.lvl_4')}}
+            </div>
+        </div>
+    </div>
     <div>
         <InputIconWrapper>
             <template #icon>

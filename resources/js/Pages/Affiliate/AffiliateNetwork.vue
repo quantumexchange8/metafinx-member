@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import ReferralTree from "@/Pages/Affiliate/ReferralTree.vue";
 import GenealogyTree from "@/Pages/Affiliate/GenealogyTree/GenealogyTree.vue";
-import {Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon} from "@/Components/Icons/outline.jsx";
 
 const categories = ref([
     {
@@ -16,7 +15,11 @@ const categories = ref([
         name: "MXT Coin Binary Network",
         type: 'binary',
     },
-])
+]);
+
+const props = defineProps({
+    downline: Array,
+})
 </script>
 
 <template>
@@ -43,38 +46,14 @@ const categories = ref([
                         </button>
                     </Tab>
                 </TabList>
-                <div class="flex py-8 gap-3 md:gap-10">
-                    <div class="inline-flex items-center gap-3">
-                        <Rank1Icon class="w-8 h-8" />
-                        <div class="font-semibold text-sm">
-                            {{$t('public.affiliate.lvl_1')}}
-                        </div>
-                    </div>
-                    <div class="inline-flex items-center gap-3">
-                        <Rank2Icon class="w-8 h-8" />
-                        <div class="font-semibold text-sm">
-                            {{$t('public.affiliate.lvl_2')}}
-                        </div>
-                    </div>
-                    <div class="inline-flex items-center gap-3">
-                        <Rank3Icon class="w-8 h-8" />
-                        <div class="font-semibold text-sm">
-                            {{$t('public.affiliate.lvl_3')}}
-                        </div>
-                    </div>
-                    <div class="inline-flex items-center gap-3">
-                        <Rank4Icon class="w-8 h-8" />
-                        <div class="font-semibold text-sm">
-                            {{$t('public.affiliate.lvl_4')}}
-                        </div>
-                    </div>
-                </div>
                 <TabPanels class="mt-2">
                     <TabPanel>
                         <ReferralTree />
                     </TabPanel>
                     <TabPanel>
-                        <GenealogyTree />
+                        <GenealogyTree 
+                            :downline="downline"
+                        />
                     </TabPanel>
                 </TabPanels>
             </TabGroup>

@@ -14,7 +14,8 @@ import {usePage} from "@inertiajs/vue3";
 
 const props = defineProps({
     referredCounts: Number,
-    totalReferralEarning: Number
+    totalReferralEarning: Number,
+    downline: Array,
 })
 
 const { formatAmount,formatDate } = transactionFormat();
@@ -99,7 +100,9 @@ function copyReferralCodeLink() {
             </div>
         </template>
 
-        <AffiliateNetwork />
+        <AffiliateNetwork
+            :downline="downline"
+         />
 
         <div class="flex flex-col space-y-6 pt-8 pb-12 mb-16 md:hidden">
             <h3 class="text-xl font-semibold leading-tight">
