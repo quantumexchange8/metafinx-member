@@ -160,7 +160,7 @@ watchEffect(() => {
             </td>
                 <td class="p-3">
                     <div :class="[
-                            {'text-success-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'Deposit' || transaction.transaction_type === 'Withdrawal' || transaction.transaction_type === 'StandardRewards' || transaction.transaction_type === 'ReferralEarning' || transaction.transaction_type === 'AffiliateEarnings' || transaction.transaction_type === 'DividendEarnings' || transaction.transaction_type === 'AffiliateDividendEarnings'},
+                            {'text-success-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'Deposit' || transaction.transaction_type === 'Withdrawal' || transaction.transaction_type === 'StandardRewards' || transaction.transaction_type === 'ReferralEarnings' || transaction.transaction_type === 'AffiliateEarnings' || transaction.transaction_type === 'DividendEarnings' || transaction.transaction_type === 'AffiliateDividendEarnings'},
                             {'text-error-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'BuyCoin' || transaction.transaction_type === 'Investment' },
                             {'text-gray-900 dark:text-white': transaction.transaction_status === 'Rejected' && transaction.transaction_type === 'Deposit' ||transaction.transaction_type === 'Withdrawal' },
                         ]"
