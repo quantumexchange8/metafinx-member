@@ -188,7 +188,7 @@ const handleButtonClick = () => {
                 </div>
             </template>
 
-            <!-- stacking -->
+            <!-- staking -->
             <template v-if="plan.type === 'staking'">
                 <div class="grid sm:flex gap-4">
                     <Label class="text-sm dark:text-white w-full sm:w-1/4" for="unit" :value="$t('public.wallet.unit') + ' (' + settingCoin.name + ')'" />
@@ -243,7 +243,7 @@ const handleButtonClick = () => {
                     </div>
                     <div class="flex justify-between items-start self-stretch">
                         <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
-                            {{$t('public.stacking_fee')}} ({{ props.stackingFee.value }}%) ({{$t('public.stacking_pay')}})
+                            {{$t('public.staking_fee')}} ({{ props.stackingFee.value }}%) ({{$t('public.staking_pay')}})
                         </div>
                         <div class="text-sm text-gray-900 dark:text-white">
                             $&nbsp;{{ stackingFee ?? '0.00' }}

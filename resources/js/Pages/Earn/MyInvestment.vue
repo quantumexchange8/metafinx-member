@@ -48,7 +48,7 @@ const calculateWidthPercentage = (created_at, period, isStaking) => {
     return { widthResult, remainingTime };
 };
 const investmentArray = Object.values(props.investments);
-const coinStackingArray = Object.values(props.coinStackings);
+const coinStakingArray = Object.values(props.coinStackings);
 
 const sortedInvestments = investmentArray.sort((a, b) => {
     const order = {
@@ -61,8 +61,8 @@ const sortedInvestments = investmentArray.sort((a, b) => {
     return order[a.status] - order[b.status];
 });
 
-// Sort coinStackings based on status
-const sortedCoinStackings = coinStackingArray.sort((a, b) => {
+// Sort coinStakings based on status
+const sortedCoinStakings = coinStakingArray.sort((a, b) => {
     const order = {
         "OnGoingPeriod": 1,
         "CoolingPeriod": 2,
@@ -182,23 +182,23 @@ const sortedCoinStackings = coinStackingArray.sort((a, b) => {
 
         <div class="flex pb-3 items-start gap-2.5 self-stretch border-b border-gray-300 dark:border-gray-700 my-8">
             <div class="text-base font-semibold">
-                {{ setting_coin.name }} Stacking
+                {{ setting_coin.name }} Staking
             </div>
         </div>
         <div v-if="coinStackings.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-28">
-            <div v-for="stacking in sortedCoinStackings" :key="stacking.id" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]" :class="{ 'opacity-50': ['MaturityPeriod', 'Terminated'].includes(stacking.status) }">
+            <div v-for="staking in sortedCoinStakings" :key="staking.id" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]" :class="{ 'opacity-50': ['MaturityPeriod', 'Terminated'].includes(staking.status) }">
                 <div class="flex justify-between">
                     <div class="text-xs">
-                        <span>{{ stacking.plan_name.name }} &#x2022; {{ formatAmount(stacking.amount, 0) }} {{ setting_coin.name }} ($&nbsp;{{ stacking.link_price }})</span>
+                        <span>{{ staking.plan_name.name }} &#x2022; {{ formatAmount(staking.amount, 0) }} {{ setting_coin.name }} ($&nbsp;{{ staking.link_price }})</span>
                     </div>
                     <div class="dark:text-gray-400 text-xs">
-                        <span class="uppercase">{{$t('public.earn.since')}} {{ formatDate(stacking.created_at) }}</span>
+                        <span class="uppercase">{{$t('public.earn.since')}} {{ formatDate(staking.created_at) }}</span>
                     </div>
                 </div>
                 <div class="relative my-3">
                     <div class="mb-1 flex h-2.5 overflow-hidden rounded-full bg-gray-100 text-xs">
                         <div
-                        :style="{ width: `${calculateWidthPercentage(stacking.created_at, stacking.investment_period, true).widthResult.toFixed(2)}%` }"
+                        :style="{ width: `${calculateWidthPercentage(staking.created_at, staking.investment_period, true).widthResult.toFixed(2)}%` }"
                             class="rounded-full bg-gradient-to-r from-warning-400 to-pink-500 transition-all duration-500 ease-out"
                         >
                         </div>
@@ -208,12 +208,12 @@ const sortedCoinStackings = coinStackingArray.sort((a, b) => {
                             1
                         </div>
                         <div class="dark:text-gray-400">
-                            {{ (stacking.investment_period/3).toFixed(0) }}
+                            {{ (staking.investment_period/3).toFixed(0) }}
                         </div>
                         <div class="dark:text-gray-400">
-                            {{ (stacking.investment_period/(3/2)).toFixed(0) }}
+                            {{ (staking.investment_period/(3/2)).toFixed(0) }}
                         </div>
-                        <div class="dark:text-gray-400">{{ stacking.investment_period }}</div>
+                        <div class="dark:text-gray-400">{{ staking.investment_period }}</div>
                     </div>
                 </div>
                 <div class="flex justify-between mb-1">
@@ -221,7 +221,7 @@ const sortedCoinStackings = coinStackingArray.sort((a, b) => {
                         {{$t('public.earn.next_roi')}}
                     </div>
                     <div class="dark:text-white text-xs">
-                        <span class="uppercase">{{ formatDate(stacking.next_roi_date) }}</span>
+                        <span class="uppercase">{{ formatDate(staking.next_roi_date) }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between mb-1">
@@ -229,7 +229,7 @@ const sortedCoinStackings = coinStackingArray.sort((a, b) => {
                         {{$t('public.earn.valid')}}
                     </div>
                     <div class="dark:text-white text-xs">
-                        <span class="uppercase">{{ formatDate(stacking.expired_date) }}</span>
+                        <span class="uppercase">{{ formatDate(staking.expired_date) }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between mb-1">
@@ -237,7 +237,7 @@ const sortedCoinStackings = coinStackingArray.sort((a, b) => {
                         {{$t('public.earn.id_number')}}
                     </div>
                     <div class="dark:text-white text-xs">
-                        <span class="uppercase">{{ stacking.subscription_id }}</span>
+                        <span class="uppercase">{{ staking.subscription_id }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between mb-1">
@@ -245,7 +245,7 @@ const sortedCoinStackings = coinStackingArray.sort((a, b) => {
                         {{$t('public.earn.total_reward')}}
                     </div>
                     <div class="dark:text-white text-xs">
-                        <span class="uppercase">{{ formatAmount(stacking.total_earning, 4) }} {{ setting_coin.name }}</span>
+                        <span class="uppercase">{{ formatAmount(staking.total_earning, 4) }} {{ setting_coin.name }}</span>
                     </div>
                 </div>
                 <div class="mt-4 text-xs">
