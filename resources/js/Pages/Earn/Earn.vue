@@ -91,7 +91,7 @@ const props = defineProps({
                                         {{ plan.name }}
                                     </div>
                                     <div v-if="plan.type === 'staking'" class="font-semibold text-[32px] text-center">
-                                        {{ plan.commision_multiplier * 100 }}% <span class="flex text-base">{{$t('public.staking_reward')}}</span>
+                                        {{ plan.commision_multiplier * 100 }}% <span class="flex text-base">{{$t('public.staking_rewards')}}</span>
                                     </div>
                                     <div v-else class="font-semibold text-[32px]">
                                         {{ plan.roi_per_annum }} p.a.
