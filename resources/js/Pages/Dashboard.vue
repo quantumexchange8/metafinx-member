@@ -91,7 +91,7 @@ const closeModal = () => {
                                 {{ wallet.name }}
                             </p>
                             <p class="text-white text-[28px] font-semibold">
-                                $ {{ formatAmount(wallet.balance) }}
+                                $&nbsp;{{ formatAmount(wallet.balance) }}
                             </p>
                         </div>
                         <p class="text-xs text-white font-normal">
@@ -116,7 +116,7 @@ const closeModal = () => {
                             {{ $t('public.report.total_earning') }}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
-                            $ {{ formatAmount(totalEarning) }}
+                            $&nbsp;{{ formatAmount(totalEarning) }}
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@ const closeModal = () => {
                             {{ $t('public.report.total_withdrawal') }}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
-                            $ {{ formatAmount(totalWithdrawal) }}
+                            $&nbsp;{{ formatAmount(totalWithdrawal) }}
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,7 @@ const closeModal = () => {
                             {{ $t('public.report.total_investment') }}
                         </div>
                         <div class="text-2xl font-semibold dark:text-white">
-                            $ {{ formatAmount(totalInvestment) }}
+                            $&nbsp;{{ formatAmount(totalInvestment) }}
                         </div>
                     </div>
                 </div>

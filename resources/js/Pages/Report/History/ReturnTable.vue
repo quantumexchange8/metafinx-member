@@ -152,7 +152,7 @@ const currentLocale = ref(usePage().props.locale);
                         {{ formatType(earn.type) }}
                     </td>
                     <td class="py-3 text-center">
-                        $ {{ formatAmount(earn.after_amount) }}
+                        $&nbsp;{{ formatAmount(earn.after_amount) }}
                     </td>
                 </tr>
                 </tbody>

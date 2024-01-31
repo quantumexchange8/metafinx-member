@@ -107,7 +107,7 @@ const submitForm = () => {
                             Personal
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            $ {{ formatAmount(node.personal_amount) }}
+                            $&nbsp;{{ formatAmount(node.personal_amount) }}
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
@@ -115,7 +115,7 @@ const submitForm = () => {
                             Left
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            $ {{ formatAmount(node.left_amount) }}
+                            $&nbsp;{{ formatAmount(node.left_amount) }}
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
@@ -123,7 +123,7 @@ const submitForm = () => {
                             Right
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            $ {{ formatAmount(node.right_amount) }}
+                            $&nbsp;{{ formatAmount(node.right_amount) }}
                         </div>
                     </div>
                 </div>

@@ -64,7 +64,7 @@ class DashboardController extends Controller
         $totalInvestment = $standardInvestment + $stakingInvestment;
 
         $coin = Coin::with('setting_coin')->where('user_id', \Auth::id())->first();
-        $coin_price = CoinPrice::whereDate('price_date', today())->first();
+        $coin_price = CoinPrice::whereDate('price_date', today())->first() ?? CoinPrice::latest('price_date')->first();
         $conversion_rate = ConversionRate::latest()->first();
         $coin_market_time = CoinMarketTime::where('setting_coin_id', $coin->setting_coin_id)->latest()->first();
         $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first();

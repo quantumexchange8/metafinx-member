@@ -168,7 +168,7 @@ const paginationActiveClass = [
                         </div>
                     </td>
                     <td class="py-2">
-                        $ {{ formatAmount(earning.after_amount) }}
+                        $&nbsp;{{ formatAmount(earning.after_amount) }}
                     </td>
                 </tr>
                 </tbody>

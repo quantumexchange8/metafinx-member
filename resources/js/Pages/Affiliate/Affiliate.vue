@@ -110,7 +110,7 @@ function copyReferralCodeLink() {
                     {{$t('public.affiliate.total_referral_earning')}} {{ formatDate(createdDate) }}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
-                    $ {{ formatAmount(totalReferralEarning) }}
+                    $&nbsp;{{ formatAmount(totalReferralEarning) }}
                 </div>
             </div>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
@@ -118,7 +118,7 @@ function copyReferralCodeLink() {
                     {{$t('public.affiliate.total_affiliate_earning')}} {{ formatDate(createdDate) }}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
-                    $ 0.00
+                    $&nbsp;0.00
                 </div>
             </div>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col items-center justify-center gap-8 pb-12">
@@ -171,7 +171,7 @@ function copyReferralCodeLink() {
                         {{$t('public.affiliate.total_referral_earning')}} {{ formatDate(createdDate) }}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
-                        $ {{ formatAmount(totalReferralEarning) }}
+                        $&nbsp;{{ formatAmount(totalReferralEarning) }}
                     </div>
                 </div>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
@@ -179,7 +179,7 @@ function copyReferralCodeLink() {
                         {{$t('public.affiliate.total_affiliate_earning')}} {{ formatDate(createdDate) }}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
-                        $ 0.00
+                        $&nbsp;0.00
                     </div>
                 </div>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col items-center justify-center gap-8">

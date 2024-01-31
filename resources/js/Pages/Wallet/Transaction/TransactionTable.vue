@@ -165,7 +165,7 @@ watchEffect(() => {
                             {'text-gray-900 dark:text-white': transaction.transaction_status === 'Rejected' && transaction.transaction_type === 'Deposit' ||transaction.transaction_type === 'Withdrawal' },
                         ]"
                     >
-                        $ {{ formatAmount(transaction.transaction_amount) }}
+                        $&nbsp;{{ formatAmount(transaction.transaction_amount) }}
                     </div>
                 </td>
                 <td class="p-3 text-center">
@@ -212,7 +212,7 @@ watchEffect(() => {
             </div>
             <div class="grid grid-cols-5 items-center">
                 <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.amount')}}</span>
-                <span class="text-black col-span-3 dark:text-white py-2">$ {{ formatAmount(selectedTransaction.transaction_amount) }}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">$&nbsp;{{ formatAmount(selectedTransaction.transaction_amount) }}</span>
             </div>
             <div class="grid grid-cols-5 items-center">
                 <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>

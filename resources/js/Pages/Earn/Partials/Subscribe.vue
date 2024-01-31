@@ -164,7 +164,7 @@ const handleButtonClick = () => {
                             v-model="housingPrice"
                         />
                         <InputError :message="form.errors.housing_price" class="mt-2" />
-                        <span class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{$t('public.earn.investment_amount')}} $ {{ amountCalculation }}</span>
+                        <span class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{$t('public.earn.investment_amount')}} $&nbsp;{{ amountCalculation }}</span>
                         <span class="text-xs text-gray-500 mt-2">{{$t('public.earn.investment_amount_rule')}}</span>
                     </div>
                 </div>

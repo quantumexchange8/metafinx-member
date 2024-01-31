@@ -73,7 +73,7 @@ const getButtonVariant = (value) => {
         </div>
         <div class="flex flex-col items-center">
             <div class="text-[28px] font-semibold text-gray-900 dark:text-white">
-                $ {{ coin_price.price }}
+                $&nbsp;{{ coin_price.price }}
             </div>
             <div
                 class="text-xs"

@@ -149,7 +149,7 @@ watchEffect(() => {
     <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
       <div class="px-5 py-2.5 flex flex-col justify-between h-full">
         <p class="flex-grow text-gray-400 text-xs md:text-sm w-32 md:w-full h-full">{{ $t('public.affiliate.total_VAD') }}</p>
-        <p class="text-gray-800 dark:text-white text-xl font-semibold">$ {{ formatAmount(props.validAffiliateDeposit) }}
+        <p class="text-gray-800 dark:text-white text-xl font-semibold">$&nbsp;{{ formatAmount(props.validAffiliateDeposit) }}
         </p>
       </div>
     </div>

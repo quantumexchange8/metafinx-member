@@ -179,7 +179,7 @@ const walletName = ref(page.props.auth.user.wallets[1]);
                         {{ data.transaction_number }}
                     </td>
                     <td class="py-3">
-                        $ {{ formatAmount(data.transaction_amount) }}
+                        $&nbsp;{{ formatAmount(data.transaction_amount) }}
                     </td>
                     <td 
                         class="py-3"
@@ -243,19 +243,19 @@ const walletName = ref(page.props.auth.user.wallets[1]);
             </div>
             <div class="grid grid-cols-5 items-center">
                 <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.linked_price')}}</span>
-                <span class="text-black col-span-3 dark:text-white py-2">$ {{ selectedTransaction.amount }}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">$&nbsp;{{ selectedTransaction.amount }}</span>
 
             </div>
             <div class="grid grid-cols-5 items-center">
                 <span v-if="selectedTransaction.transaction_type === 'BuyCoin' || selectedTransaction.transaction_type === 'SwapCoin'" class="col-span-2 text-sm font-semibold dark:text-gray-400">{{ $t('public.gas_fee') }} ({{ gasFee.value }}%)</span>
                 <span v-if="selectedTransaction.transaction_type === 'Staking'" class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.staking_fee')}} ({{ stackingFee.value }}%)</span>
-                <span v-if="selectedTransaction.transaction_type === 'BuyCoin' || selectedTransaction.transaction_type === 'SwapCoin'" class="text-black col-span-3 dark:text-white py-2">$ {{ selectedTransaction.transaction_charges }}</span>
-                <span v-if="selectedTransaction.transaction_type === 'Staking'" class="text-black col-span-3 dark:text-white py-2">$ {{ (selectedTransaction.transaction_charges) }} ({{ walletName.name }})</span>
+                <span v-if="selectedTransaction.transaction_type === 'BuyCoin' || selectedTransaction.transaction_type === 'SwapCoin'" class="text-black col-span-3 dark:text-white py-2">$&nbsp;{{ selectedTransaction.transaction_charges }}</span>
+                <span v-if="selectedTransaction.transaction_type === 'Staking'" class="text-black col-span-3 dark:text-white py-2">$&nbsp;{{ (selectedTransaction.transaction_charges) }} ({{ walletName.name }})</span>
             </div>
             <div class="grid grid-cols-5 items-center">
                 <span v-if="selectedTransaction.transaction_type === 'BuyCoin'" class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.paid')}}</span>
                 <span v-if="selectedTransaction.transaction_type === 'SwapCoin'" class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.received')}}</span>
-                <span v-if="selectedTransaction.transaction_type === 'BuyCoin' || selectedTransaction.transaction_type === 'SwapCoin'" class="text-black col-span-3 dark:text-white py-2">$ {{ selectedTransaction.transaction_amount }}</span>
+                <span v-if="selectedTransaction.transaction_type === 'BuyCoin' || selectedTransaction.transaction_type === 'SwapCoin'" class="text-black col-span-3 dark:text-white py-2">$&nbsp;{{ selectedTransaction.transaction_amount }}</span>
             </div>
             <div class="grid grid-cols-5 items-center">
                 <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.transaction_status')}}</span>

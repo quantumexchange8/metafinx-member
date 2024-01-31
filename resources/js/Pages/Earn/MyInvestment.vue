@@ -96,8 +96,8 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
             <div v-for="investment in sortedInvestments" :key="investment.id" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]" :class="{ 'opacity-50': ['MaturityPeriod', 'Terminated'].includes(investment.status) }">
                 <div class="flex justify-between">
                     <div class="text-xs">
-                        <span v-if="investment.type === 'standard'">{{ investment.plan_name.name }} &#x2022; $ {{ investment.amount }}</span>
-                        <span v-else>{{ investment.plan_name.name }} {{ (investment.amount/10000).toFixed(2) }} &#x2022; $ {{ investment.amount }}</span>
+                        <span v-if="investment.type === 'standard'">{{ investment.plan_name.name }} &#x2022; $&nbsp;{{ investment.amount }}</span>
+                        <span v-else>{{ investment.plan_name.name }} {{ (investment.amount/10000).toFixed(2) }} &#x2022; $&nbsp;{{ investment.amount }}</span>
                     </div>
                     <div class="dark:text-gray-400 text-xs">
                         <span class="uppercase">{{$t('public.earn.since')}} {{ formatDate(investment.created_at) }}</span>
@@ -164,7 +164,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                         {{$t('public.earn.total_reward')}}
                     </div>
                     <div class="dark:text-white text-xs">
-                        <span class="uppercase">$ {{ investment.total_earning }}</span>
+                        <span class="uppercase">$&nbsp;{{ investment.total_earning }}</span>
                     </div>
                 </div>
                 <div class="mt-4 text-xs">

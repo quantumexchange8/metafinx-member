@@ -99,7 +99,7 @@ watch(coinUnit, (newUnit) => {
                     {{ coin.unit }} {{ coin.setting_coin.name }}
                 </div>
                 <div class="text-sm font-normal dark:text-white">
-                    ≈ $ {{ formatAmount(coin.unit * props.coin_price.price) }}
+                    ≈ $&nbsp;{{ formatAmount(coin.unit * props.coin_price.price) }}
                 </div>
             </div>
         </div>
@@ -165,7 +165,7 @@ watch(coinUnit, (newUnit) => {
                         {{ $t('public.gas_fee') }} ({{ props.gasFee.value }}%)
                     </div>
                     <div class="text-sm text-gray-900 dark:text-white">
-                        $ {{ transactionFee ?? '0.00' }}
+                        $&nbsp;{{ transactionFee ?? '0.00' }}
                     </div>
                 </div>
                 <div class="flex justify-between items-start self-stretch">
@@ -173,7 +173,7 @@ watch(coinUnit, (newUnit) => {
                         {{ $t('public.wallet.amount') }} {{ $t('public.wallet.receive') }}
                     </div>
                     <div class="text-sm text-gray-900 dark:text-white">
-                        $ {{ transactionAmount ?? '0.00' }}
+                        $&nbsp;{{ transactionAmount ?? '0.00' }}
                     </div>
                 </div>
                 <div class="mt-6">

@@ -121,7 +121,7 @@ const getAmountPrefix = computed(() => {
             </div>
             <div class="flex flex-col items-center">
                 <div class="text-[28px] font-semibold text-gray-900 dark:text-white">
-                    $ {{ coin_price.price }}
+                    $&nbsp;{{ coin_price.price }}
                 </div>
                 <div
                     class="text-xs font-medium"
@@ -160,7 +160,7 @@ const getAmountPrefix = computed(() => {
                     />
                     <InputError :message="form.errors.amount" class="mt-2" />
                     <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                        Current balance: $ {{ props.wallet_sel[0].balance }}
+                        Current balance: $&nbsp;{{ props.wallet_sel[0].balance }}
                     </div>
                 </div>
             </div>
@@ -200,7 +200,7 @@ const getAmountPrefix = computed(() => {
                         {{ $t('public.gas_fee') }} ({{ gasFee.value }}%)
                     </div>
                     <div class="text-sm text-gray-900 dark:text-white">
-                        $ {{ transactionFee ?? '0.00' }}
+                        $&nbsp;{{ transactionFee ?? '0.00' }}
                     </div>
                 </div>
                 <div class="mt-6">

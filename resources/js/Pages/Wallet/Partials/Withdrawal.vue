@@ -135,11 +135,11 @@ const calculatedBalance = computed(() => {
                 <div class="mt-6 border-t dark:border-gray-700"></div>
                     <div class="flex items-center justify-between mt-5">
                         <span class="text-sm dark:text-gray-400 font-Inter">{{$t('public.wallet.transaction_fee')}}</span>
-                        <span class="text-sm dark:text-white">$ {{ formatAmount(transactionFee) }}</span>
+                        <span class="text-sm dark:text-white">$&nbsp;{{ formatAmount(transactionFee) }}</span>
                     </div>
                     <div class="flex items-center justify-between mt-2">
                         <span class="text-sm dark:text-gray-400 font-Inter">{{$t('public.wallet.balance_received')}}</span>
-                        <span class="text-sm dark:text-white">$ {{ formatAmount(calculatedBalance) }}</span>
+                        <span class="text-sm dark:text-white">$&nbsp;{{ formatAmount(calculatedBalance) }}</span>
                     </div>
                 <div class="mt-6 pb-6 border-b dark:border-gray-700">
                     <label>

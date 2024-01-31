@@ -150,11 +150,11 @@ export default {
                                 <span class="text-xs font-normal dark:text-gray-400">{{$t('public.affiliate.affiliate')}}</span>
                             </div>
                             <div class="flex flex-col text-center">
-                                <span class="text-sm font-semibold">$ {{ formatAmount(node.self_deposit) }}</span>
+                                <span class="text-sm font-semibold">$&nbsp;{{ formatAmount(node.self_deposit) }}</span>
                                 <span class="text-xs font-normal dark:text-gray-400">{{$t('public.affiliate.valid_self_deposit')}}</span>
                             </div>
                             <div class="flex flex-col text-center">
-                                <span class="text-sm font-semibold">$ {{ formatAmount(node.valid_affiliate_deposit) }}</span>
+                                <span class="text-sm font-semibold">$&nbsp;{{ formatAmount(node.valid_affiliate_deposit) }}</span>
                                 <span class="text-xs font-normal dark:text-gray-400">{{$t('public.affiliate.valid_affiliate_deposit')}}</span>
                             </div>
                         </div>
@@ -202,11 +202,11 @@ export default {
                 </div>
                 <div class="grid grid-cols-3 gap-2 items-center">
                     <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.affiliate.valid_self_deposit')}}</span>
-                    <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedAffiliate.self_deposit) }}</span>
+                    <span class="text-black dark:text-white py-2">$&nbsp;{{ formatAmount(selectedAffiliate.self_deposit) }}</span>
                 </div>
                 <div class="grid grid-cols-3 gap-2 items-center">
                     <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.affiliate.valid_affiliate_deposit')}}</span>
-                    <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedAffiliate.valid_affiliate_deposit) }}</span>
+                    <span class="text-black dark:text-white py-2">$&nbsp;{{ formatAmount(selectedAffiliate.valid_affiliate_deposit) }}</span>
                 </div>
             </div>
         </Modal>

@@ -186,7 +186,7 @@ const fullAmount = () => {
                     </Button>
                     <InputError :message="form.errors.amount" class="mt-2" />
                     <div class="text-sm font-normal text-gray-600 dark:text-gray-400 mt-1">
-                        {{ selected.name }} balance: $ {{ selected.balance }}
+                        {{ selected.name }} balance: $&nbsp;{{ selected.balance }}
                     </div>
                 </div>
             </div>

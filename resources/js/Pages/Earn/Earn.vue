@@ -128,7 +128,7 @@ const props = defineProps({
                     {{$t('public.earn.incoming_standard_reward')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
-                    $ 0.00
+                    $&nbsp;0.00
                 </div>
             </div>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
@@ -136,7 +136,7 @@ const props = defineProps({
                     {{$t('public.earn.incoming_dividend')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
-                    $ 0.00
+                    $&nbsp;0.00
                 </div>
             </div>
             <h3 class="text-xl font-semibold leading-tight pt-4">
@@ -147,7 +147,7 @@ const props = defineProps({
                     {{$t('public.earn.incoming_affiliate_earnings')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
-                    $ 0.00
+                    $&nbsp;0.00
                 </div>
             </div>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
@@ -155,7 +155,7 @@ const props = defineProps({
                     {{$t('public.earn.incoming_dividend_earnings')}}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
-                    $ 0.00
+                    $&nbsp;0.00
                 </div>
             </div>
         </div>
@@ -171,7 +171,7 @@ const props = defineProps({
                     {{$t('public.earn.incoming_standard_reward')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
-                        $ 0.00
+                        $&nbsp;0.00
                     </div>
                 </div>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
@@ -179,7 +179,7 @@ const props = defineProps({
                     {{$t('public.earn.incoming_dividend')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
-                        $ 0.00
+                        $&nbsp;0.00
                     </div>
                 </div>
                 <h3 class="text-xl font-semibold leading-tight pt-4">
@@ -190,7 +190,7 @@ const props = defineProps({
                     {{$t('public.earn.incoming_affiliate_earnings')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
-                        $ 0.00
+                        $&nbsp;0.00
                     </div>
                 </div>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
@@ -198,7 +198,7 @@ const props = defineProps({
                     {{$t('public.earn.incoming_dividend_earnings')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
-                        $ 0.00
+                        $&nbsp;0.00
                     </div>
                 </div>
             </div>

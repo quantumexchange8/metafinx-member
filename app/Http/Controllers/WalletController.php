@@ -329,7 +329,7 @@ class WalletController extends Controller
             ->groupBy('day')
             ->get();
 
-        $coin_price = CoinPrice::whereDate('price_date', today())->first()->price;
+        $coin_price = CoinPrice::whereDate('price_date', today())->first()->price ?? CoinPrice::latest('price_date')->first()->price;
         $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first()->price;
 
         $year = Carbon::now()->year;

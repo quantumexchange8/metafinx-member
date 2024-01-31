@@ -50,7 +50,7 @@ const closeModal = () => {
             {{ formatDateTime(coin_payment.created_at) }}
         </td>
         <td class="py-3">
-            $ {{ formatAmount(coin_payment.amount) }}
+            $&nbsp;{{ formatAmount(coin_payment.amount) }}
         </td>
         <td class="py-3">
             {{ coin_payment.unit }}
@@ -82,7 +82,7 @@ const closeModal = () => {
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.paid')}}</span>
-                <span class="text-black dark:text-white py-2">$ {{ formatAmount(selectedDeposit.amount) }}</span>
+                <span class="text-black dark:text-white py-2">$&nbsp;{{ formatAmount(selectedDeposit.amount) }}</span>
             </div>
             <div class="grid grid-cols-3 items-center">
                 <span class="col-span-1 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.unit')}}</span>
