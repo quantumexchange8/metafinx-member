@@ -5,7 +5,7 @@ import Chart from 'chart.js/auto'
 import CrosshairPlugin from "chartjs-plugin-crosshair";
 
 const props = defineProps({
-    selectedMonth: Number,
+    selectedMonth: [String,Number],
     getAmountPrefix: String
 })
 
