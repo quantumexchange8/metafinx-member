@@ -35,10 +35,10 @@ const tooltipContent = ref('Copy');
 const { formatAmount } = transactionFormat();
 
 function copyTestingCode () {
-    let walletAddressCopy = document.querySelector('#XLCoinAddress')
+    let walletAddressCopy = document.querySelector('#MXTCoinAddress');
     walletAddressCopy.setAttribute('type', 'text');
     walletAddressCopy.select();
-
+    
     try {
         var successful = document.execCommand('copy');
         if (successful) {
@@ -123,7 +123,7 @@ function copyTestingCode () {
                             {{ coin.unit }} {{ coin.setting_coin.name }}
                         </div>
                         <div class="text-sm font-normal dark:text-white">
-                            ≈ $&nbsp;{{ formatAmount(coin.unit * props.coin_price.price) }}
+                            ≈ $ {{ formatAmount(coin.unit * props.coin_price.price) }}
                         </div>
                     </div>
                 </div>
@@ -196,7 +196,7 @@ function copyTestingCode () {
                         <div>
                             <div class="inline-flex justify-center w-full items-center gap-2 text-center text-gray-500 dark:text-gray-400 break-all">
                                 <span class="text-xs">{{ coin.address }}</span>
-                                <input type="hidden" id="XLCoinAddress" :value="coin.address">
+                                <input type="hidden" id="MXTCoinAddress" :value="coin.address">
                                 <Tooltip :content="tooltipContent" placement="top">
                                     <DuplicateIcon aria-hidden="true" :class="['w-4 h-4 text-gray-500 dark:text-gray-400']" @click.stop.prevent="copyTestingCode" style="cursor: pointer" />
                                 </Tooltip>

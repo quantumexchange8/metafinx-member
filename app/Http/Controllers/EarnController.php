@@ -267,6 +267,9 @@ class EarnController extends Controller
             ->where('user_id', $user->id)
             ->get();
 
+        $totalEarning = $stackings->sum('total_earning');
+        $maxCap = $stackings->sum('max_capped_price');
+
         $locale = app()->getLocale(); // Get the current locale
 
         // Map InvestmentSubscriptions
@@ -306,13 +309,16 @@ class EarnController extends Controller
                 'next_roi_date' => $coinStacking->next_roi_date,
                 'expired_date' => $coinStacking->expired_date,
                 'created_at' => $coinStacking->created_at,
+                'max_capped_price' => $coinStacking->max_capped_price,
             ];
         });
 
         return Inertia::render('Earn/MyInvestment', [
             'investments' => $investmentSubscriptions,
             'coinStackings' => $coinStackings,
-            'setting_coin' => SettingCoin::where('symbol', 'MXT/USD')->first()
+            'setting_coin' => SettingCoin::where('symbol', 'MXT/USD')->first(),
+            'maxCap' => $maxCap,
+            'totalEarning' => $totalEarning
         ]);
     }
 }
