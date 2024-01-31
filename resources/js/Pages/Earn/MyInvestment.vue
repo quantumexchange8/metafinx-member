@@ -22,27 +22,56 @@ const closeModal = () => {
     tncModal.value = false
 }
 
-const calculateWidthPercentage = (created_at, period) => {
+const calculateWidthPercentage = (created_at, period, isStaking) => {
     const startDate = new Date(created_at);
     const endDate = new Date(startDate);
-    endDate.setMonth(startDate.getMonth() + period);
+
+    // Adjust the calculation based on the unit of the period
+    if (isStaking) {
+        endDate.setDate(startDate.getDate() + period);
+    } else {
+        endDate.setMonth(startDate.getMonth() + period);
+    }
 
     const currentDate = new Date();
-
-    // Calculate elapsed days from startDate to currentDate
     const elapsedMilliseconds = currentDate - startDate;
     const elapsedDays = Math.ceil(elapsedMilliseconds / (1000 * 60 * 60 * 24));
 
-    // Calculate total days from startDate to endDate
     const totalMilliseconds = endDate - startDate;
     const totalDays = Math.ceil(totalMilliseconds / (1000 * 60 * 60 * 24));
 
-    // Calculate widthResult based on the progress
-    const widthResult = Math.max(0, Math.min(100, (elapsedDays / totalDays) * 100));
-    const remainingMonth = Math.floor((totalDays - elapsedDays) / 30);
+    // Adjust remaining time display based on the unit of the period
+    const remainingTime = isStaking ? Math.ceil(period - elapsedDays) : Math.floor((totalDays - elapsedDays) / 30);
 
-    return { widthResult, remainingMonth };
+    const widthResult = Math.max(0, Math.min(100, (elapsedDays / totalDays) * 100));
+
+    return { widthResult, remainingTime };
 };
+const investmentArray = Object.values(props.investments);
+const coinStackingArray = Object.values(props.coinStackings);
+
+const sortedInvestments = investmentArray.sort((a, b) => {
+    const order = {
+        "OnGoingPeriod": 1,
+        "CoolingPeriod": 2,
+        "MaturityPeriod": 3,
+        "Terminated": 4,
+    };
+
+    return order[a.status] - order[b.status];
+});
+
+// Sort coinStackings based on status
+const sortedCoinStackings = coinStackingArray.sort((a, b) => {
+    const order = {
+        "OnGoingPeriod": 1,
+        "CoolingPeriod": 2,
+        "MaturityPeriod": 3,
+        "Terminated": 4,
+    };
+
+    return order[a.status] - order[b.status];
+});
 </script>
 
 <template>
@@ -64,7 +93,7 @@ const calculateWidthPercentage = (created_at, period) => {
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 ">
-            <div v-for="investment in investments" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]">
+            <div v-for="investment in sortedInvestments" :key="investment.id" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]" :class="{ 'opacity-50': ['MaturityPeriod', 'Terminated'].includes(investment.status) }">
                 <div class="flex justify-between">
                     <div class="text-xs">
                         <span v-if="investment.type === 'standard'">{{ investment.plan_name.name }} &#x2022; $ {{ investment.amount }}</span>
@@ -87,10 +116,10 @@ const calculateWidthPercentage = (created_at, period) => {
                             1
                         </div>
                         <div class="dark:text-gray-400">
-                            {{ investment.investment_period/4 }}
+                            {{ investment.investment_period/3 }}
                         </div>
                         <div class="dark:text-gray-400">
-                            {{ investment.investment_period/2 }}
+                            {{ investment.investment_period/(3/2) }}
                         </div>
                         <div class="dark:text-gray-400">{{ investment.investment_period }}</div>
                     </div>
@@ -132,7 +161,7 @@ const calculateWidthPercentage = (created_at, period) => {
                 </div>
                 <div class="flex justify-between mb-1">
                     <div class="dark:text-gray-400 text-xs">
-                        {{$t('public.earn.total_earning')}}
+                        {{$t('public.earn.total_reward')}}
                     </div>
                     <div class="dark:text-white text-xs">
                         <span class="uppercase">$ {{ investment.total_earning }}</span>
@@ -157,10 +186,10 @@ const calculateWidthPercentage = (created_at, period) => {
             </div>
         </div>
         <div v-if="coinStackings.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-28">
-            <div v-for="stacking in coinStackings" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]">
+            <div v-for="stacking in sortedCoinStackings" :key="stacking.id" class="p-5 bg-white rounded-[20px] border dark:border-gray-600 dark:bg-gray-700 shadow-[0_0_12px_0] dark:shadow-[#9da4ae33]" :class="{ 'opacity-50': ['MaturityPeriod', 'Terminated'].includes(stacking.status) }">
                 <div class="flex justify-between">
                     <div class="text-xs">
-                        <span>{{ stacking.plan_name.name }} &#x2022; {{ formatAmount(stacking.amount, 0) }} {{ setting_coin.name }}</span>
+                        <span>{{ stacking.plan_name.name }} &#x2022; {{ formatAmount(stacking.amount, 0) }} {{ setting_coin.name }} ($&nbsp;{{ stacking.link_price }})</span>
                     </div>
                     <div class="dark:text-gray-400 text-xs">
                         <span class="uppercase">{{$t('public.earn.since')}} {{ formatDate(stacking.created_at) }}</span>
@@ -169,7 +198,7 @@ const calculateWidthPercentage = (created_at, period) => {
                 <div class="relative my-3">
                     <div class="mb-1 flex h-2.5 overflow-hidden rounded-full bg-gray-100 text-xs">
                         <div
-                            :style="{ width: `${calculateWidthPercentage(stacking.created_at, stacking.investment_period).widthResult}%` }"
+                        :style="{ width: `${calculateWidthPercentage(stacking.created_at, stacking.investment_period, true).widthResult.toFixed(2)}%` }"
                             class="rounded-full bg-gradient-to-r from-warning-400 to-pink-500 transition-all duration-500 ease-out"
                         >
                         </div>
@@ -179,10 +208,10 @@ const calculateWidthPercentage = (created_at, period) => {
                             1
                         </div>
                         <div class="dark:text-gray-400">
-                            {{ stacking.investment_period/4 }}
+                            {{ (stacking.investment_period/3).toFixed(0) }}
                         </div>
                         <div class="dark:text-gray-400">
-                            {{ stacking.investment_period/2 }}
+                            {{ (stacking.investment_period/(3/2)).toFixed(0) }}
                         </div>
                         <div class="dark:text-gray-400">{{ stacking.investment_period }}</div>
                     </div>
@@ -213,7 +242,7 @@ const calculateWidthPercentage = (created_at, period) => {
                 </div>
                 <div class="flex justify-between mb-1">
                     <div class="dark:text-gray-400 text-xs">
-                        {{$t('public.earn.total_earning')}}
+                        {{$t('public.earn.total_reward')}}
                     </div>
                     <div class="dark:text-white text-xs">
                         <span class="uppercase">{{ formatAmount(stacking.total_earning, 4) }} {{ setting_coin.name }}</span>

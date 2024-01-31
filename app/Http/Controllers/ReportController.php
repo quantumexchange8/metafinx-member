@@ -23,13 +23,45 @@ class ReportController extends Controller
 {
     public function detail()
     {
-        $referralEarnings = Earning::query()
+        $standardRewards = Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'StandardRewards')
+            ->sum('after_amount');
+
+        $standardReferralEarnings = Earning::query()
             ->where('upline_id', \Auth::id())
             ->where('type', 'ReferralEarnings')
             ->sum('after_amount');
 
-        $totalBalance = Wallet::where('user_id', \Auth::id())
-            ->sum('balance');
+        $affiliateEarnings = Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'AffiliateEarnings')
+            ->sum('after_amount');
+
+        $dividendEarnings = Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'DividendEarnings')
+            ->sum('after_amount');
+
+        $affiliateDividendEarnings = Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'AffiliateDividendEarnings')
+            ->sum('after_amount');
+
+        $stakingRewards = Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'StakingRewards')
+            ->sum('after_amount');
+
+        $stakingReferralEarnings= Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'BinaryReferralEarnings')
+            ->sum('after_amount');
+
+        $pairingEarnings= Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'pairingEarnings')
+            ->sum('after_amount');
 
         $investment_plans = InvestmentPlan::query()
             ->where('status', 'active')
@@ -45,9 +77,15 @@ class ReportController extends Controller
         $translatedInvestmentPlans->prepend(['id' => '', 'name' => 'All']);
 
         return Inertia::render('Report/Report', [
-            'totalBalance' => floatval($totalBalance),
             'investmentPlans' => $translatedInvestmentPlans,
-            'referralEarnings' => $referralEarnings,
+            'standardRewards' => $standardRewards,
+            'standardReferralEarnings' => $standardReferralEarnings,
+            'affiliateEarnings' => $affiliateEarnings,
+            'dividendEarnings' => $dividendEarnings,
+            'affiliateDividendEarnings' => $affiliateDividendEarnings,
+            'stakingRewards' => $stakingRewards,
+            'stakingReferralEarnings' => $stakingReferralEarnings,
+            'pairingEarnings' => $pairingEarnings,
         ]);
     }
 

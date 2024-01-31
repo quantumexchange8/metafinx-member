@@ -10,13 +10,15 @@ import toast from "@/Composables/toast.js";
 import ReferralTree from "@/Pages/Affiliate/ReferralTree.vue";
 import {transactionFormat} from "@/Composables/index.js";
 import AffiliateNetwork from "@/Pages/Affiliate/AffiliateNetwork.vue";
+import {usePage} from "@inertiajs/vue3";
 
 const props = defineProps({
     referredCounts: Number,
     totalReferralEarning: Number
 })
 
-const { formatAmount } = transactionFormat();
+const { formatAmount,formatDate } = transactionFormat();
+const createdDate = usePage().props.auth.user.created_at;
 
 const tooltipContent = ref('Copy');
 function copyReferralCode () {
@@ -101,11 +103,11 @@ function copyReferralCodeLink() {
 
         <div class="flex flex-col space-y-6 pt-8 pb-12 mb-16 md:hidden">
             <h3 class="text-xl font-semibold leading-tight">
-                {{$t('public.affiliate.referral_program')}}
+                {{$t('public.affiliate.affiliate_program')}}
             </h3>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
-                    {{$t('public.affiliate.total_referral_earning')}}
+                    {{$t('public.affiliate.total_referral_earning')}} {{ formatDate(createdDate) }}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
                     $ {{ formatAmount(totalReferralEarning) }}
@@ -113,7 +115,7 @@ function copyReferralCodeLink() {
             </div>
             <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
-                    {{$t('public.affiliate.total_affiliate_earning')}}
+                    {{$t('public.affiliate.total_affiliate_earning')}} {{ formatDate(createdDate) }}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
                     $ 0.00
@@ -162,11 +164,11 @@ function copyReferralCodeLink() {
         <template #asideRight>
             <div class="inset-y-0 p-6 flex flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-l dark:border-gray-700 w-96 fixed right-0">
                 <h3 class="text-xl font-semibold leading-tight">
-                    {{$t('public.affiliate.referral_program')}}
+                    {{$t('public.affiliate.affiliate_program')}}
                 </h3>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
-                        {{$t('public.affiliate.total_referral_earning')}}
+                        {{$t('public.affiliate.total_referral_earning')}} {{ formatDate(createdDate) }}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
                         $ {{ formatAmount(totalReferralEarning) }}
@@ -174,7 +176,7 @@ function copyReferralCodeLink() {
                 </div>
                 <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
-                        {{$t('public.affiliate.total_affiliate_earning')}}
+                        {{$t('public.affiliate.total_affiliate_earning')}} {{ formatDate(createdDate) }}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
                         $ 0.00

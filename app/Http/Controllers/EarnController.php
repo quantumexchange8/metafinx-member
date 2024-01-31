@@ -278,6 +278,7 @@ class EarnController extends Controller
                 'subscription_id' => $coinStacking->subscription_number,
                 'type' => $coinStacking->investment_plan->type,
                 'amount' => $coinStacking->stacking_unit,
+                'link_price' => $coinStacking->stacking_price,
                 'total_earning' => $coinStacking->total_earning,
                 'status' => $coinStacking->status,
                 'next_roi_date' => $coinStacking->next_roi_date,
