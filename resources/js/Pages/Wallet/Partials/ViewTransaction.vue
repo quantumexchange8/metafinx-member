@@ -51,8 +51,8 @@ const { formatDateTime, formatAmount, formatType } = transactionFormat();
 
 watch(
   [() => search.value, () => date.value, () => refresh.value],
-  debounce(([searchValue, dateValue]) => {
-    getResults(1, searchValue, dateValue);
+  debounce(([searchValue, dateValue, refreshValue]) => {
+    getResults(1, searchValue, dateValue, refreshValue);
   }, 300)
 );
 

@@ -237,7 +237,7 @@ class WalletController extends Controller
         $user = \Auth::user();
 
         $coins = Coin::where('user_id', $user->id)->select('id', 'address', 'unit', 'price', 'amount')->get();
-        $coin_price = CoinPrice::whereDate('price_date', today())->first();
+        $coin_price = CoinPrice::whereDate('price_date', today())->first() ?? CoinPrice::latest('price_date')->first();
         $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first();
 
         $coins = $coins->map(function ($coin) use ($coin_price, $coin_price_yesterday) {

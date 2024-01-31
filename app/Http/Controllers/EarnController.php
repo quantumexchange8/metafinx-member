@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Coin;
 use Inertia\Inertia;
 use App\Models\Wallet;
+use App\Models\Earning;
 use App\Models\Setting;
 use App\Models\CoinPrice;
 use App\Models\SettingCoin;
@@ -22,6 +23,26 @@ class EarnController extends Controller
     public function invest_subscription()
     {
         $wallets = Wallet::where('user_id', \Auth::id());
+
+        $stakingRewards = Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'StakingRewards')
+            ->whereYear('created_at', now()->year)
+            ->sum('after_amount');
+        
+        $stakingReferralEarnings = Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'BinaryReferralEarnings')
+            ->whereYear('created_at', now()->year)
+            ->sum('after_amount');
+        
+        $pairingEarnings = Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->where('type', 'pairingEarnings')
+            ->whereYear('created_at', now()->year)
+            ->sum('after_amount');
+    
+        $averageProfit = ($stakingRewards + $stakingReferralEarnings + $pairingEarnings)/3;
 
         $investment_plans = InvestmentPlan::query()
             ->with('descriptions:investment_plan_id,description')
@@ -62,14 +83,15 @@ class EarnController extends Controller
                 }),
             ];
         });
-
+        
         return Inertia::render('Earn/Earn', [
             'investmentPlans' => $translatedInvestmentPlans,
             'wallet_sel' => $wallet_sel,
-            'coin_price' => CoinPrice::whereDate('price_date', today())->first(),
+            'coin_price' => CoinPrice::whereDate('price_date', today())->first() ?? CoinPrice::latest('price_date')->first(),
             'internal_wallet' => Wallet::where('user_id', \Auth::id())->where('type', 'internal_wallet')->first(),
             'musd_wallet' => Wallet::where('user_id', \Auth::id())->where('type', 'musd_wallet')->first(),
             'stackingFee' => Setting::where('slug', 'stacking-fee')->latest()->first(),
+            'averageProfit' => $averageProfit,
         ]);
     }
 

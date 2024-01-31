@@ -1,5 +1,6 @@
 <?php
 return [
+    "average_profit_yearly" => "Average Profit (yearly)",
     "welcome_back" => "Welcome Back",
     "dashboard" => 'Dashboard',
     "latest_updated" => "Latest updated on",

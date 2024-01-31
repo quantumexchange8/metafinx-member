@@ -208,7 +208,7 @@ const submitForm = () => {
                     <div class="text-sm font-medium text-gray-800 dark:text-white w-1/4">
                         Place Under
                     </div>
-                    <div class="flex items-center p-5 rounded-xl bg-gray-300 dark:bg-gray-700 items-center gap-2 self-stretch w-3/4">
+                    <div class="flex items-center p-5 rounded-xl bg-gray-300 dark:bg-gray-700 gap-2 self-stretch w-3/4">
                         <img :src="node.profile_photo ? node.profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
                         <div class="flex flex-col items-start gap-1">
                             <div class="flex items-center gap-2">

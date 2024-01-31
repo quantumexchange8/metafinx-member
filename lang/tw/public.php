@@ -1,5 +1,6 @@
 <?php
 return [
+    "average_profit_yearly" => "平均利润 (年)",
     "welcome_back" => "欢迎回来",
     "dashboard" => '仪表板',
     "latest_updated" => "最新更新于",

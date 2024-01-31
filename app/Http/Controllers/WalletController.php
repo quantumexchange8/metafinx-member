@@ -605,7 +605,10 @@ class WalletController extends Controller
             $search = '%' . $request->input('search') . '%';
 
             $buy_coin_history->where(function ($query) use ($search) {
-                $query->where('transaction_id', 'like', $search);
+                $query->where('transaction_type', 'like', $search)
+                    ->orWhere('transaction_number', 'like', $search)
+                    ->orWhere('unit', 'like', $search)
+                    ->orWhere('transaction_amount', 'like', $search);
             });
         }
 
