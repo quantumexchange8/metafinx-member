@@ -317,74 +317,53 @@ class WalletController extends Controller
     public function getCoinChart(Request $request)
     {
         $coinPrices = CoinPrice::query()
-            ->when($request->filled('month'), function ($query) use ($request) {
-                $monthsAgo = now()->subMonths($request->input('month'));
-                $query->where('price_date', '>=', $monthsAgo);
-            })
-            ->whereDate('price_date', '<=', now())
-            ->select(
-                DB::raw('DAY(price_date) as day'),
-                DB::raw('SUM(price) as price')
-            )
-            ->groupBy('day')
-            ->get();
-
+        ->when($request->filled('month'), function ($query) use ($request) {
+            $monthsAgo = now()->subMonths($request->input('month'));
+            $query->where('price_date', '>=', $monthsAgo);
+        })
+        ->whereDate('price_date', '<=', now())
+        ->select(
+            DB::raw('DATE(price_date) as date'),
+            DB::raw('SUM(price) as price')
+        )
+        ->groupBy('date')
+        ->get();
+            
+        $labels = [];
+        $data = [];
+    
+        foreach ($coinPrices as $priceData) {
+            // Format date as 'j M'
+            $formattedDate = Carbon::parse($priceData->date)->format('j M');
+    
+            $labels[] = $formattedDate;
+            $data[] = $priceData->price;
+        }
         $coin_price = CoinPrice::whereDate('price_date', today())->first()->price ?? CoinPrice::latest('price_date')->first()->price;
         $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first()->price;
-
-        $year = Carbon::now()->year;
-
-        // Initialize the chart data structure
-        $labels = [];
-
-        if ($request->month == 1) {
-            // If $request->month is 1, display the current month in the labels
-            $daysInMonth = cal_days_in_month(CAL_GREGORIAN, Carbon::now()->month, $year);
-            $month = Carbon::now()->month;
-        } else {
-            $month = Carbon::now()->month;
-            // If $request->month is greater than 1, display the specified month in the labels
-            $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        }
-
-        for ($day = 1; $day <= $daysInMonth; $day++) {
-            $date = \DateTime::createFromFormat('j-n-Y', "$day-$month-$year");
-            $labels[] = $date->format('j M');
-        }
-
-
-        $chartData = [
-            'labels' => $labels,
-            'datasets' => [],
-        ];
 
         $borderColor = '#12b76a66';
         if ($coin_price > $coin_price_yesterday) {
             $borderColor = '#12B76A';
         } elseif ($coin_price < $coin_price_yesterday) {
             $borderColor = '#F04438';
+        } else {
+            $borderColor = '#9DA4AE';
         }
 
-        // Loop through each unique type and create a dataset
-        $dataset = [
-            'data' => array_map(function ($label) use ($coinPrices) {
-                // Extract day and month from the label (assuming the label is in 'd M' format)
-                $parts = explode(' ', $label);
-                $day = $parts[0];
-
-                // Find the corresponding price in $coinPrices
-                $priceData = $coinPrices->firstWhere('day', "$day");
-
-                return $priceData ? $priceData->price : null;
-            }, $chartData['labels']),
-            'borderColor' => $borderColor,
-            'borderWidth' => 2,
-            'pointStyle' => false,
-            'fill' => true
+        $chartData = [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'data' => $data,
+                    'borderColor' => $borderColor,
+                    'borderWidth' => 2,
+                    'pointStyle' => false,
+                    'fill' => true,
+                ],
+            ],
         ];
-
-        $chartData['datasets'][] = $dataset;
-
+    
         return response()->json($chartData);
     }
 
@@ -393,8 +372,6 @@ class WalletController extends Controller
         $user = \Auth::user();
         $from_wallet = Wallet::find($request->from_wallet_id);
         $to_wallet = Wallet::find($request->to_wallet_id);
-        $setting_coin = SettingCoin::find($request->setting_coin_id);
-        $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();
 
         if ($from_wallet->id == $to_wallet->id) {
             throw ValidationException::withMessages(['from_wallet_id' => 'Wallet cannot be the same']);
@@ -419,7 +396,6 @@ class WalletController extends Controller
             'status' => 'Success',
             'remarks' => $request->remarks,
             'new_wallet_amount' => $to_wallet->balance,
-            'new_coin_amount' => $coin->unit,
         ]);
 
         // Update the wallet balance
@@ -429,6 +405,10 @@ class WalletController extends Controller
 
         $to_wallet->update([
             'balance' => $to_wallet->balance + $transaction->transaction_amount,
+        ]);
+
+        $transaction->update([
+            'new_wallet_amount' => $to_wallet->balance,
         ]);
 
         return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.success_internal_transfer'));
@@ -657,20 +637,12 @@ class WalletController extends Controller
             'transaction_amount' => $request->transaction_amount,
             'status' => 'Success',
             'new_wallet_amount' => $wallet->balance,
-            'new_coin_amount' => $coin->unit,
+            'new_coin_amount' => $total_unit,
         ]);
 
         $coin->update([
             'unit' => $total_unit,
             'price' => $transaction->price_per_unit,
-        ]);
-
-        $accumulate_supply = $setting_coin->accumulate_supply - $transaction->unit;
-        $accumulate_capped = $setting_coin->accumulate_capped - ($accumulate_supply * 2);
-
-        $setting_coin->update([
-            'accumulate_supply' => $accumulate_supply,
-            'accumulate_capped' => $accumulate_capped,
         ]);
 
         $total_amount = $coin->unit / $coin->price;

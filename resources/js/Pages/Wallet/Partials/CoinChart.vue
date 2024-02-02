@@ -1,20 +1,19 @@
 <script setup>
 import Loading from "@/Components/Loading.vue";
-import {onMounted, ref, watch} from "vue";
-import Chart from 'chart.js/auto'
-import CrosshairPlugin from "chartjs-plugin-crosshair";
+import { onMounted, ref, watch } from "vue";
+import Chart from 'chart.js/auto';
 
 const props = defineProps({
-    selectedMonth: [String,Number],
+    selectedMonth: [String, Number],
     getAmountPrefix: String
-})
+});
 
 const chartData = ref({
     labels: [],
     datasets: [],
 });
-const isLoading = ref(false)
-const month = ref(props.selectedMonth)
+const isLoading = ref(false);
+const month = ref(props.selectedMonth);
 let chartInstance = null;
 
 const fetchData = async () => {
@@ -27,8 +26,8 @@ const fetchData = async () => {
 
         isLoading.value = true;
 
-        const response = await axios.get('/wallet/getCoinChart', {params: {month: month.value}});
-        const {labels, datasets} = response.data;
+        const response = await axios.get('/wallet/getCoinChart', { params: { month: month.value } });
+        const { labels, datasets } = response.data;
         chartData.value.labels = labels;
         chartData.value.datasets = datasets;
         datasets[0].backgroundColor = (context) => {
@@ -42,11 +41,16 @@ const fetchData = async () => {
                 'rgba(240, 68, 56, 0.00)'
             ];
 
+            const bgNeutralColor = [
+                'rgba(157,164,174, 0.2)',
+                'rgba(157,164,174, 0.00)'
+            ];
+
             if (!context.chart.chartArea) {
                 return;
             }
 
-            const { ctx, data, chartArea: {top, bottom} } = context.chart;
+            const { ctx, data, chartArea: { top, bottom } } = context.chart;
             const gradientBg = ctx.createLinearGradient(0, top, 0, bottom);
 
             if (props.getAmountPrefix === '+') {
@@ -55,17 +59,20 @@ const fetchData = async () => {
             } else if (props.getAmountPrefix === '-') {
                 gradientBg.addColorStop(0, bgNegativeColor[0]);
                 gradientBg.addColorStop(1, bgNegativeColor[1]);
+            } else {
+                gradientBg.addColorStop(0, bgNeutralColor[0]);
+                gradientBg.addColorStop(1, bgNeutralColor[1]);
             }
 
             return gradientBg;
         };
-        isLoading.value = false
+
+        isLoading.value = false;
 
         // Create the chart after updating chartData
         chartInstance = new Chart(ctx, {
             type: 'line',
             data: chartData.value,
-            plugins: [CrosshairPlugin],
             options: {
                 interaction: {
                     mode: 'index',
@@ -108,38 +115,48 @@ const fetchData = async () => {
                     },
                     tooltip: {
                         displayColors: false
-                    },
-                    crosshair: {
-                        line: {
-                            color: '#4D5761',  // crosshair line color
-                            width: 1        // crosshair line width
-                        },
                     }
+                },
+                onHover: (event, chartElements) => {
+                if (chartElements.length > 0) {
+                    const hoverX = chartElements[0].element.x;
+                    const { top, bottom } = chartInstance.chartArea;
+                    const ctx = chartInstance.ctx;
+
+                    // Draw a vertical line
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#4D5761'; // White color
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([5, 5]);
+                    ctx.moveTo(hoverX, top);
+                    ctx.lineTo(hoverX, bottom);
+                    ctx.stroke();
+                    ctx.restore();
                 }
+            },
+
             }
         });
     } catch (error) {
         const ctx = document.getElementById('coinChart');
 
-        isLoading.value = false
+        isLoading.value = false;
         console.error('Error fetching chart data:', error);
     }
-}
+};
 
 onMounted(async () => {
     await fetchData(); // Fetch data on mount
 
     // Watch for changes in the date and fetch data when it changes
-
     watch(
-        () => props.selectedMonth, // Expression to watch
+        () => props.selectedMonth,
         (newMonth) => {
-            // This callback will be called when selectedMonth changes.
             month.value = newMonth;
             fetchData();
         }
     );
-
 });
 </script>
 
