@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Setting;
 use Carbon\Carbon;
 use App\Models\Coin;
 use App\Models\Wallet;
 use App\Models\Earning;
 use App\Models\Payment;
+use App\Models\Setting;
 use App\Models\CoinPrice;
 use App\Models\CoinPayment;
 use App\Models\SettingCoin;
@@ -19,9 +19,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\SettingWalletAddress;
 use App\Models\SettingWithdrawalFee;
-use App\Http\Requests\DepositRequest;
-use App\Models\InvestmentSubscription;
 use App\Services\RunningNumberService;
+use App\Http\Requests\InternalTransferRequest;
 use Illuminate\Validation\ValidationException;
 use PhpOffice\PhpSpreadsheet\Calculation\Category;
 
@@ -49,9 +48,6 @@ class WalletController extends Controller
         } else {
             $user = \Auth::user();
             $wallet = Wallet::find($request->wallet_id);
-            $setting_coin = SettingCoin::find($request->setting_coin_id);
-            $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();    
-
             $transaction_id = RunningNumberService::getID('transaction');
 
             $transaction = Transaction::create([
@@ -67,7 +63,6 @@ class WalletController extends Controller
                 'to_wallet_address' => $request->to_wallet_address,
                 'status' => 'Pending',
                 'new_wallet_amount' => $wallet->balance,
-                'new_coin_amount' => $coin->unit,
             ]);
 
             $payout = config('payout-setting');
@@ -115,8 +110,6 @@ class WalletController extends Controller
         } else {
             $user = \Auth::user();
             $amount = floatval($request->amount);
-            $setting_coin = SettingCoin::find($request->setting_coin_id);
-            $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();    
             $wallet = Wallet::find($request->from_wallet_id);
             if ($wallet->balance < $amount) {
                 throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
@@ -140,7 +133,6 @@ class WalletController extends Controller
                 'to_wallet_address' => $request->wallet_address,
                 'status' => 'Processing',
                 'new_wallet_amount' => $wallet->balance,
-                'new_coin_amount' => $coin->unit,
             ]);
 
             $payout = config('payout-setting');
@@ -379,5 +371,193 @@ class WalletController extends Controller
             ->get();
 
         return response()->json(['assets' => $assets]);
+    }
+
+    public function internal_transfer(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'amount' => ['required', 'numeric'],
+            'terms' => ['accepted']
+        ])->setAttributeNames([
+            'amount' => 'Amount',
+            'terms' => 'Terms and Conditions'
+        ]);
+
+        if (!$validator->passes()) {
+            return response()->json([
+                'status' => 'fail',
+                'error' => $validator->errors()->toArray()
+            ]);
+        } else {
+
+            $user = \Auth::user();
+            $from_wallet = Wallet::find($request->from_wallet_id);
+            $to_wallet = Wallet::find($request->to_wallet_id);
+
+            if ($from_wallet->id == $to_wallet->id) {
+                throw ValidationException::withMessages(['from_wallet_id' => 'Wallet cannot be the same']);
+            }
+
+            if ($from_wallet->balance < $request->amount) {
+                throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance')]);
+            }
+
+            $transaction_number = RunningNumberService::getID('transaction');
+
+            $transaction = Transaction::create([
+                'category' => 'wallet',
+                'user_id' => $user->id,
+                'transaction_type' => 'InternalTransfer',
+                'from_wallet_id' => $from_wallet->id,
+                'to_wallet_id' => $to_wallet->id,
+                'transaction_number' => $transaction_number,
+                'amount' => $request->amount,
+                'transaction_charges' => 0,
+                'transaction_amount' => $request->amount,
+                'status' => 'Success',
+                'remarks' => $request->remarks,
+                'new_wallet_amount' => $to_wallet->balance,
+            ]);
+
+            // Update the wallet balance
+            $from_wallet->update([
+                'balance' => $from_wallet->balance - $transaction->transaction_amount,
+            ]);
+
+            $to_wallet->update([
+                'balance' => $to_wallet->balance + $transaction->transaction_amount,
+            ]);
+
+            $transaction->update([
+                'new_wallet_amount' => $to_wallet->balance,
+            ]);    
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'The internal transfer has been successfully performed.',
+                'transaction_detail' => $transaction,
+            ]);
+        }
+    }
+
+    public function getCoinChart(Request $request)
+    {
+        $coinPrices = CoinPrice::query()
+        ->when($request->filled('month'), function ($query) use ($request) {
+            $monthsAgo = now()->subMonths($request->input('month'));
+            $query->where('price_date', '>=', $monthsAgo);
+        })
+        ->whereDate('price_date', '<=', now())
+        ->select(
+            DB::raw('DATE(price_date) as date'),
+            DB::raw('SUM(price) as price')
+        )
+        ->groupBy('date')
+        ->get();
+            
+        $labels = [];
+        $data = [];
+    
+        foreach ($coinPrices as $priceData) {
+            // Format date as 'j M'
+            $formattedDate = Carbon::parse($priceData->date)->format('j M');
+    
+            $labels[] = $formattedDate;
+            $data[] = $priceData->price;
+        }
+        $coin_price = CoinPrice::whereDate('price_date', today())->first()->price ?? CoinPrice::latest('price_date')->first()->price;
+        $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first()->price;
+
+        $borderColor = '#12b76a66';
+        if ($coin_price > $coin_price_yesterday) {
+            $borderColor = '#12B76A';
+        } elseif ($coin_price < $coin_price_yesterday) {
+            $borderColor = '#F04438';
+        } else {
+            $borderColor = '#9DA4AE';
+        }
+
+        $chartData = [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'data' => $data,
+                    'borderColor' => $borderColor,
+                    'borderWidth' => 2,
+                    'pointStyle' => false,
+                    'fill' => true,
+                ],
+            ],
+        ];
+    
+        return response()->json($chartData);
+    }
+    
+    public function swap_coin(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'unit' => ['required', 'numeric'],
+            'terms' => ['accepted']
+        ])->setAttributeNames([
+            'unit' => 'Unit',
+            'terms' => 'Terms and Conditions'
+        ]);
+
+        if (!$validator->passes()) {
+            return response()->json([
+                'status' => 'fail',
+                'error' => $validator->errors()->toArray()
+            ]);
+        } else {
+
+            $user = \Auth::user();
+            $transaction_id = RunningNumberService::getID('transaction');
+            $setting_coin = SettingCoin::find($request->setting_coin_id);
+            $coin = Coin::where('user_id', $user->id)->where('setting_coin_id', $setting_coin->id)->first();
+            $total_unit = $coin->unit - $request->unit;
+
+            $wallet = Wallet::find($request->wallet_id);
+
+            if ($coin->unit < $request->unit) {
+                throw ValidationException::withMessages(['unit' => trans('public.insufficient_unit') . ', AVAILABLE UNIT: ' . $coin->unit . ' ' . $setting_coin->name ]);
+
+            }
+
+            $wallet->increment('balance', $request->transaction_amount);
+
+            $transaction = Transaction::create([
+                'category' => 'asset',
+                'user_id' => $user->id,
+                'transaction_type' => 'SwapCoin',
+                'to_wallet_id' => $request->wallet_id,
+                'from_coin_id' => $request->coin_id,
+                'transaction_number' => $transaction_id,
+                'unit' => $request->unit,
+                'price_per_unit' => $request->price,
+                'amount' => $request->amount,
+                'transaction_charges' => $request->gas_fee,
+                'transaction_amount' => $request->transaction_amount,
+                'status' => 'Success',
+                'new_wallet_amount' => $wallet->balance,
+                'new_coin_amount' => $total_unit,
+            ]);
+
+            $coin->update([
+                'unit' => $total_unit,
+                'price' => $transaction->price_per_unit,
+            ]);
+
+            $total_amount = $coin->unit / $coin->price;
+
+            $coin->update([
+                'amount' => $total_amount,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'The Swap Coin has been successfully performed.',
+                'transaction_detail' => $transaction,
+            ]);
+        }
     }
 }
