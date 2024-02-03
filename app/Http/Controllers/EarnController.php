@@ -29,19 +29,19 @@ class EarnController extends Controller
             ->where('type', 'StakingRewards')
             ->whereYear('created_at', now()->year)
             ->sum('after_amount');
-        
+
         $stakingReferralEarnings = Earning::query()
             ->where('upline_id', \Auth::id())
             ->where('type', 'BinaryReferralEarnings')
             ->whereYear('created_at', now()->year)
             ->sum('after_amount');
-        
+
         $pairingEarnings = Earning::query()
             ->where('upline_id', \Auth::id())
             ->where('type', 'pairingEarnings')
             ->whereYear('created_at', now()->year)
             ->sum('after_amount');
-    
+
         $averageProfit = ($stakingRewards + $stakingReferralEarnings + $pairingEarnings)/3;
 
         $investment_plans = InvestmentPlan::query()
@@ -83,7 +83,7 @@ class EarnController extends Controller
                 }),
             ];
         });
-        
+
         return Inertia::render('Earn/Earn', [
             'investmentPlans' => $translatedInvestmentPlans,
             'wallet_sel' => $wallet_sel,
@@ -234,10 +234,19 @@ class EarnController extends Controller
                 $next_roi_date = $stacking->created_at->addMonth()->startOfMonth();
                 $expired_date = $stacking->created_at->copy()->addDays($investment_plan->investment_period);
 
+                if ($stacking->created_at->lt(now()->setTime(17, 0, 0))) {
+                    // If created_at is before today at 5 PM
+                    $autoAssignDate = now()->addDay()->startOfDay();
+                } else {
+                    // If created_at is at or after today at 5 PM
+                    $autoAssignDate = now()->addDays(2)->startOfDay();
+                }
+
                 $stacking->update([
                     'next_roi_date' => $next_roi_date,
                     'expired_date' => $expired_date,
-                    'max_capped_price' => $stacking->stacking_price * 3
+                    'max_capped_price' => $stacking->stacking_price * 3,
+                    'auto_assign_at' => $autoAssignDate
                 ]);
 
                 break;

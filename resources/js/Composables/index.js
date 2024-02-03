@@ -137,13 +137,13 @@ export function transactionFormat() {
         return `${day}/${month}/${year}`;
     }
 
-    function formatTime(time) {
-        // Create a default date (January 1, 2000)
-        const defaultDate = new Date('2024-01-01T' + time);
+    function formatTime(created_at) {
+        // Convert timestamp to Date object
+        const time = new Date(created_at);
 
         // Extract hours, minutes, and seconds
-        const hours = defaultDate.getHours();
-        const minutes = defaultDate.getMinutes();
+        const hours = time.getHours();
+        const minutes = time.getMinutes();
 
         // Determine AM/PM
         const ampm = hours >= 12 ? 'PM' : 'AM';

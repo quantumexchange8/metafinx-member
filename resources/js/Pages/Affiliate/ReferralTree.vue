@@ -7,9 +7,16 @@ import {SearchIcon} from "@heroicons/vue/outline";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
 import panzoom from '@panzoom/panzoom';
 import Tooltip from "@/Components/Tooltip.vue";
-import {ZoomInIcon, ZoomOutIcon, Target02Icon, LVL3Icon} from "@/Components/Icons/outline.jsx";
+import {
+    ZoomInIcon,
+    ZoomOutIcon,
+    Target02Icon,
+    LVL3Icon,
+    Rank1Icon,
+    Rank4Icon,
+    Rank2Icon, Rank3Icon
+} from "@/Components/Icons/outline.jsx";
 import Button from "@/Components/Button.vue";
-import {Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon} from "@/Components/Icons/outline.jsx";
 
 const referralTree = ref(null);
 // Use refs to store functions

@@ -15,8 +15,27 @@ class CoinMultiLevel extends Model
         'upline_id',
         'hierarchy_list',
         'position',
+        'coin_stacking_id',
         'coin_stacking_amount',
     ];
+
+    public function getLastChild($position)
+    {
+        // Retrieve the direct left child
+        $directChild = $this->direct_child($position)->first();
+
+        // Check if direct left child exists
+        $child = $directChild->children()->where('position', $position)->latest()->first();
+
+        return CoinMultiLevel::where('hierarchy_list', 'LIKE', '%' . $child->hierarchy_list . '%')
+            ->with('user:id,name,email')
+            ->whereHas('upline', function ($query) use ($position) {
+                $query->where('position', $position);
+            })
+            ->where('position', $position)
+            ->orderBy('id', 'desc') // Assuming 'id' is the primary key
+            ->first();
+    }
 
     public function getChildrenIds(): array
     {
@@ -44,5 +63,10 @@ class CoinMultiLevel extends Model
     public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CoinMultiLevel::class, 'upline_id', 'id');
+    }
+
+    public function direct_child($position): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(CoinMultiLevel::class, 'upline_id', 'id')->where('position', $position);
     }
 }

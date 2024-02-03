@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CoinMultiLevel;
+use App\Models\CoinStacking;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Earning;
@@ -234,6 +235,7 @@ class AffiliateController extends Controller
     public function addDistributor(Request $request)
     {
         $upline = CoinMultiLevel::find($request->upline_id);
+        $coinStaking = CoinStacking::where('user_id', $request->user_id)->where('status', 'OnGoingPeriod')->first();
 
         $hierarchyList = $upline->hierarchy_list . $upline->id . "-";
 
@@ -243,6 +245,8 @@ class AffiliateController extends Controller
             'upline_id' => $upline->id,
             'hierarchy_list' => $hierarchyList,
             'position' => $request->position,
+            'coin_stacking_id' => $coinStaking->id,
+            'coin_stacking_amount' => $coinStaking->stacking_price,
         ]);
 
         return redirect()->back()->with('title', 'Add Distributor')->with('success', 'Distributor has been successfully added!');
@@ -445,6 +449,60 @@ class AffiliateController extends Controller
         $settingRank = SettingRank::find($settingRankId);
 
         return $settingRank ? $settingRank->name : null;
+    }
+
+    public function getAvailableBinaryAffiliate(Request $request)
+    {
+        $user = Auth::user();
+        $existed_users_ids = CoinMultiLevel::get()->pluck('user_id');
+        $childrenIds = $user->getChildrenIds();
+
+        $users = User::with(['coinStaking' => function ($query) {
+            $query->select('id', 'user_id', 'stacking_unit', 'stacking_price', 'auto_assign_at', 'created_at')
+                ->where('auto_assign_at', '>=', now());
+        }])
+            ->whereIn('id', $childrenIds)
+            ->where('role', 'user')
+            ->whereNotIn('id', $existed_users_ids)
+            ->when($request->filled('query'), function ($query) use ($request) {
+                $search = $request->input('query');
+                $query->where(function ($innerQuery) use ($search) {
+                    $innerQuery->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->select('id', 'name', 'email')
+            ->latest()
+            ->paginate(5);
+
+        $users->each(function ($users) {
+            $users->profile_photo = $users->getFirstMediaUrl('profile_photo');
+        });
+
+        return response()->json($users);
+    }
+
+    public function getLastChild(Request $request)
+    {
+        $user = Auth::user();
+        $position = $request->position;
+        $binaryAuthUser = CoinMultiLevel::where('user_id', $user->id)->first();
+
+        $last_child = $binaryAuthUser->getLastChild($position);
+        if ($last_child) {
+            $last_child->profile_photo = $last_child->user->getFirstMediaUrl('profile_photo');
+        }
+
+        return response()->json($last_child);
+    }
+
+    public function getPendingPlacementCount()
+    {
+        return CoinStacking::where('auto_assign_at', '<', now())
+            ->whereDoesntHave('binaryTree', function ($query) {
+                $query->whereNotNull('coin_stacking_id');
+            })
+            ->count();
     }
 
 }

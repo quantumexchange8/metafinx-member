@@ -26,7 +26,7 @@ class CoinStacking extends Model
         'expired_date',
         'terminated_date',
         'max_capped_price',
-        'reinvest_number',
+        'auto_assign_at',
     ];
 
     protected $casts = [
@@ -43,5 +43,10 @@ class CoinStacking extends Model
     public function investment_plan(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(InvestmentPlan::class, 'investment_plan_id', 'id');
+    }
+
+    public function binaryTree(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(CoinMultiLevel::class, 'coin_stacking_id', 'id');
     }
 }

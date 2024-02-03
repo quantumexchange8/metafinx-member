@@ -1,13 +1,26 @@
 <script setup>
-import {ref, onMounted, watchEffect} from 'vue';
+import {onMounted, onUnmounted, ref, watch, watchEffect} from 'vue';
 import panzoom from '@panzoom/panzoom';
 import Tooltip from "@/Components/Tooltip.vue";
-import {ZoomInIcon, ZoomOutIcon, Target02Icon, LVL3Icon} from "@/Components/Icons/outline.jsx";
+import {LVL3Icon, Target02Icon, ZoomInIcon, ZoomOutIcon} from "@/Components/Icons/outline.jsx";
 import Button from "@/Components/Button.vue";
 import GenealogyChild from "@/Pages/Affiliate/GenealogyTree/GenealogyChild.vue";
-import {usePage} from "@inertiajs/vue3";
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
-import { ChevronUpIcon } from '@heroicons/vue/outline'
+import {useForm, usePage} from "@inertiajs/vue3";
+import {
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    RadioGroup,
+    RadioGroupDescription,
+    RadioGroupLabel,
+    RadioGroupOption
+} from '@headlessui/vue'
+import {ArrowLeftIcon, ArrowRightIcon, ChevronDownIcon} from '@heroicons/vue/outline'
+import axios from "axios";
+import {TailwindPagination} from "laravel-vue-pagination";
+import {transactionFormat} from "@/Composables/index.js";
+import Modal from "@/Components/Modal.vue";
+import Loading from "@/Components/Loading.vue";
 
 const binaryTree = ref({});
 // Use refs to store functions
@@ -16,6 +29,7 @@ const handleZoomOut = ref(() => {});
 const handleRecenter = ref(() => {});
 const isExpand = ref(false)
 const root = ref({});
+const { formatAmount, formatTime } = transactionFormat();
 
 const props = defineProps({
     downline: Array,
@@ -81,8 +95,172 @@ watchEffect(() => {
 const handleExpand = () => {
     isExpand.value = !isExpand.value
 }
-</script>
+const referralTableData = ref([]);
+const isLoading = ref(false);
+const currentPage = ref(1);
+const search = ref('');
+const getAffiliateResults = async (page = 1, search = '') => {
+    isLoading.value = true;
+    try {
+        let url = `/affiliate/getAvailableBinaryAffiliate?page=${page}`;
 
+        if (search) {
+            url += `&search=${search}`;
+        }
+
+        const response = await axios.get(url);
+        referralTableData.value = response.data;
+    } catch (error) {
+        console.error(error);
+        console.error("Error fetching data:", error.message);
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+getAffiliateResults();
+
+const paginationClass = [
+    'bg-transparent border-0 dark:text-gray-400 dark:enabled:hover:text-white'
+];
+
+const paginationActiveClass = [
+    'border dark:border-gray-600 dark:bg-gray-600 rounded-full text-[#FF9E23] dark:text-white'
+];
+
+const handlePageChange = (newPage) => {
+    if (newPage >= 1) {
+        currentPage.value = newPage;
+        getAffiliateResults(currentPage.value, search.value);
+    }
+};
+
+const timeLeft = ref('');
+const calculateTimeLeft = (datetime) => {
+    const currentTime = new Date(); // Get the current time
+
+    // Create a Date object for today's date with the target time (12 AM)
+    const targetTime = new Date(datetime);
+    targetTime.setHours(0, 0, 0, 0); // Set target time to 12 AM
+
+    // If the target time is earlier than the current time, set it to tomorrow
+    if (targetTime.getTime() <= currentTime.getTime()) {
+        targetTime.setDate(targetTime.getDate() + 1);
+    }
+
+    // Calculate the time difference
+    const timeDiff = targetTime.getTime() - currentTime.getTime();
+
+    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+    timeLeft.value = `${hours}h ${minutes}m ${seconds}s`;
+    return timeLeft.value; // Return the formatted time left
+};
+
+// Update the countdown every second
+onMounted(() => {
+    const interval = setInterval(() => {
+        referralTableData.value.data.forEach(dataItem => {
+            dataItem.coin_staking.forEach(coinStak => {
+                calculateTimeLeft(coinStak.auto_assign_at);
+            });
+        });
+    }, 1000);
+
+    fetchPendingPlacementCount();
+    setInterval(fetchPendingPlacementCount, 5000);
+
+    // Clear the interval when the component is unmounted
+    onUnmounted(() => {
+        clearInterval(interval);
+    });
+});
+
+const positions = [
+    {
+        name: 'Left',
+        value: 'left'
+    },
+    {
+        name: 'Right',
+        value: 'right'
+    }
+]
+
+const placementModal = ref(false);
+const selectedDistributor = ref();
+const selectPosition = ref(positions[0]);
+const lastChild = ref();
+const getPendingPlacementCount = ref();
+
+const openPlacementModal = (distributor) => {
+    placementModal.value = true;
+    selectedDistributor.value = distributor;
+    getLastChild();
+}
+
+const closeModal = () => {
+    placementModal.value = false
+}
+
+watch(selectPosition, () => {
+    getLastChild();
+})
+
+const getLastChild = async () => {
+    try {
+        let url = `/affiliate/getLastChild?position=${selectPosition.value.value}`;
+
+        const response = await axios.get(url);
+        lastChild.value = response.data;
+    } catch (error) {
+        console.error(error);
+        console.error("Error fetching data:", error.message);
+    }
+}
+
+const form = useForm({
+    user_id: '',
+    upline_id: '',
+    position: ''
+})
+
+const submit = () => {
+    form.position = selectPosition.value.value;
+    form.user_id = selectedDistributor.value.id;
+    form.upline_id = lastChild.value.id;
+    form.post(route('affiliate.addDistributor'), {
+        onSuccess: () => {
+            closeModal();
+            form.reset();
+        },
+    });
+};
+
+watchEffect(() => {
+    if (usePage().props.title !== null) {
+        getAffiliateResults();
+    }
+});
+
+const fetchPendingPlacementCount = async () => {
+    try {
+        const response = await fetch('/affiliate/getPendingPlacementCount');
+        if (response.ok) {
+            // Update the count with the fetched data
+            getPendingPlacementCount.value = await response.json();
+        } else {
+            console.error('Failed to fetch data:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error.message);
+    }
+};
+
+
+</script>
 
 <template>
 
@@ -92,54 +270,102 @@ const handleExpand = () => {
                 <DisclosureButton
                 class="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
                 >
-                <span class="text-white text-base">Pending Placement</span>
-                <ChevronUpIcon
+                    <div class="flex items-center gap-2">
+                        <div class="text-white text-base">Pending Placement</div>
+                        <div class="bg-pink-500 w-5 h-5 rounded-full flex justify-center">
+                            {{ getPendingPlacementCount }}
+                        </div>
+                    </div>
+                <ChevronDownIcon
                     :class="open ? 'rotate-180 transform' : ''"
                     class="h-5 w-5 text-purple-500"
                 />
                 </DisclosureButton>
-                <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500">
-                    <table class="w-full">
-                        <thead class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
-                            <tr>
-                                <th scope="col" class="p-3">
-                                    MEMBER
-                                </th>
-                                <th scope="col" class="p-3">
-                                    STAKING (MXT)
-                                </th>
-                                <th scope="col" class="p-3">
-                                    PLACEMENT TIME LEFT
-                                </th>
-                                <th scope="col" class="p-3">
-                                    PLACEMENT
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- <tr>
-                                <th colspan="5" class="py-4 text-lg text-center">
-                                    no history
-                                </th>
-                            </tr> -->
-                            <tr
-                                v-for="donwline in props.downline"
-                            >
-                                <td class="p-3">
-                                    {{ donwline.name }}
-                                </td>
-                                <td class="p-3">
-                                
-                                </td>
-                                <td class="p-3">
-                                
-                                </td>
-                                <td class="p-3">
-                                
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <DisclosurePanel class="px-4 pb-2 text-sm text-gray-500">
+                    <div v-if="isLoading" class="w-full flex justify-center my-8">
+                        <Loading />
+                    </div>
+                    <div v-else class="overflow-x-auto">
+                        <table class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
+                            <thead
+                                class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
+                                <tr>
+                                    <th scope="col" class="p-3 uppercase">
+                                        {{ $t('public.affiliate.members') }}
+                                    </th>
+                                    <th scope="col" class="p-3 uppercase">
+                                        Staking (MXT)
+                                    </th>
+                                    <th scope="col" class="p-3 uppercase">
+                                        Placement Time Left
+                                    </th>
+                                    <th scope="col" class="p-3 uppercase text-center">
+                                        Placement
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <tr>
+                                    <th colspan="5" class="py-4 text-lg text-center">
+                                        no history
+                                    </th>
+                                </tr> -->
+                                <tr
+                                    class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600"
+                                    v-for="referee in referralTableData.data"
+                                >
+                                    <td class="p-3">
+                                        {{ referee.name }}
+                                    </td>
+                                    <td class="p-3">
+                                       <div v-if="referee.coin_staking.length > 0">
+                                           <div v-for="coinStak in referee.coin_staking">
+                                               {{ formatAmount(coinStak.stacking_unit, 4) }} ($ {{ formatAmount(coinStak.stacking_price) }})
+                                           </div>
+                                       </div>
+                                        <div v-else>
+                                            -
+                                        </div>
+                                    </td>
+                                    <td class="p-3">
+                                        <div v-if="referee.coin_staking.length > 0">
+                                            <div v-for="coinStak in referee.coin_staking">
+                                               {{ calculateTimeLeft(coinStak.auto_assign_at) }}
+                                            </div>
+                                        </div>
+                                        <div v-else>
+                                            -
+                                        </div>
+                                    </td>
+                                    <td class="p-3 flex justify-center">
+                                        <Button
+                                            type="button"
+                                            variant="gray"
+                                            size="sm"
+                                            @click="openPlacementModal(referee)"
+                                        >
+                                            Place
+                                        </Button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex justify-center mt-4" v-if="!isLoading">
+                        <TailwindPagination
+                            :item-classes=paginationClass
+                            :active-classes=paginationActiveClass
+                            :data="referralTableData"
+                            :limit=2 @pagination-change-page="handlePageChange"
+                        >
+                            <template #prev-nav>
+                                <span class="flex gap-2"><ArrowLeftIcon class="w-5 h-5" /> <span class="hidden sm:flex">{{$t('public.previous')}}</span></span>
+                            </template>
+                            <template #next-nav>
+                                <span class="flex gap-2"><span class="hidden sm:flex">{{$t('public.next')}}</span> <ArrowRightIcon class="w-5 h-5" /></span>
+                            </template>
+                        </TailwindPagination>
+                    </div>
                 </DisclosurePanel>
             </Disclosure>
         </div>
@@ -222,5 +448,106 @@ const handleExpand = () => {
             </div>
         </div>
     </div>
+
+    <!-- Placement Modal-->
+    <Modal :show="placementModal" title="New Placement" @close="closeModal">
+        <div class="flex flex-col gap-8">
+            <div class="flex flex-col sm:flex-row gap-1 space-y-2 sm:space-y-0 items-start self-stretch">
+                <div class="text-base text-gray-800 dark:text-white w-52">
+                    Distributor
+                </div>
+                <div class="p-5 bg-gray-400 dark:bg-gray-700 rounded-xl w-full">
+                    <div class="flex items-center gap-2">
+                        <img :src="selectedDistributor.profile_photo ? selectedDistributor.profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex gap-2 items-center text-left text-gray-900 dark:text-white">
+                                <div class="text-sm font-semibold">
+                                    {{ selectedDistributor.name }}
+                                </div>
+                            </div>
+                            <div class="text-left text-xs text-gray-600 dark:text-gray-400">
+                                {{ selectedDistributor.email }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-1 space-y-2 sm:space-y-0 items-start self-stretch">
+                <div class="text-base text-gray-800 dark:text-white w-52">
+                    Placement
+                </div>
+                <div class="w-full">
+                    <RadioGroup v-model="selectPosition" class="flex gap-1 md:gap-4 flex-col md:flex-row">
+                        <div class="flex flex-row w-full gap-4">
+                            <RadioGroupOption
+                                as="template"
+                                v-for="plan in positions"
+                                :key="plan.name"
+                                :value="plan"
+                                v-slot="{ active, checked }"
+                                class="w-full"
+                            >
+                                <div
+                                    :class="[
+                                checked ? 'bg-gray-600 dark:text-white border-2 border-white' : 'bg-gray-700',
+                            ]"
+                                    class="relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none"
+                                >
+                                    <div class="flex w-full items-center justify-center">
+                                        <div class="flex items-center">
+                                            <div class="text-sm">
+                                                <RadioGroupLabel
+                                                    as="p"
+                                                    :class="checked ? 'text-white' : 'dark:text-white'"
+                                                    class="font-medium"
+                                                >
+                                                    {{ plan.name }}
+                                                </RadioGroupLabel>
+                                                <RadioGroupDescription
+                                                    as="span"
+                                                    :class="checked ? 'dark:text-white' : 'dark:text-white'"
+                                                    class="inline"
+                                                >
+                                                </RadioGroupDescription>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </RadioGroupOption>
+                        </div>
+                    </RadioGroup>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-1 space-y-2 sm:space-y-0 items-start self-stretch">
+                <div class="text-base text-gray-800 dark:text-white w-52">
+                    Place under
+                </div>
+                <div class="p-5 bg-gray-400 dark:bg-gray-700 rounded-xl w-full">
+                    <div v-if="lastChild" class="flex items-center gap-2">
+                        <img :src="lastChild.profile_photo ? lastChild.profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex gap-2 items-center text-left text-gray-900 dark:text-white">
+                                <div class="text-sm font-semibold">
+                                    {{ lastChild.user.name }}
+                                </div>
+                            </div>
+                            <div class="text-left text-xs text-gray-600 dark:text-gray-400">
+                                {{ lastChild.user.email }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+
+        <div class="pb-5 grid grid-cols-2 gap-4 w-full md:w-1/3 md:float-right">
+            <Button variant="secondary" type="button" class="justify-center" @click.prevent="closeModal">
+                Cancel
+            </Button>
+            <Button class="justify-center" @click="submit" :disabled="form.processing">Confirm</Button>
+        </div>
+    </Modal>
 
 </template>

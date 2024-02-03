@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->date('expired_date')->nullable();
             $table->date('terminated_date')->nullable();
             $table->decimal('max_capped_price')->nullable();
-            $table->integer('reinvest_number')->default(0);
+            $table->dateTime('auto_assign_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
 

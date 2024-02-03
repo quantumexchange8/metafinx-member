@@ -17,6 +17,8 @@ class SettingCoin extends Model
         'open_time',
         'close_time',
         'duration',
+        'accumulate_supply',
+        'accumulate_capped'
     ];
 
     protected $casts = [

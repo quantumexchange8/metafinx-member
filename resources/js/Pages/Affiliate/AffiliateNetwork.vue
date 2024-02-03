@@ -3,16 +3,17 @@ import { ref } from 'vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import ReferralTree from "@/Pages/Affiliate/ReferralTree.vue";
 import GenealogyTree from "@/Pages/Affiliate/GenealogyTree/GenealogyTree.vue";
+import {Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon} from "@/Components/Icons/outline.jsx";
 
 const categories = ref([
     {
         id: 1,
-        name: 'Group Network',
+        name: 'UniLevel Network',
         type: 'affiliate',
     },
     {
         id: 2,
-        name: "MXT Coin Binary Network",
+        name: "Binary Network",
         type: 'binary',
     },
 ]);
@@ -51,7 +52,7 @@ const props = defineProps({
                         <ReferralTree />
                     </TabPanel>
                     <TabPanel>
-                        <GenealogyTree 
+                        <GenealogyTree
                             :downline="downline"
                         />
                     </TabPanel>
