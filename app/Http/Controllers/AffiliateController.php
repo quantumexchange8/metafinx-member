@@ -137,7 +137,9 @@ class AffiliateController extends Controller
             'name' => $user->user->name,
             'profile_photo' => $user->user->getFirstMediaUrl('profile_photo'),
             'position' => $user->position,
-            'sponsor' => $user->sponsor->user->name ?? null,
+            'sponsor_name' => $user->sponsor ? $user->sponsor->user->name : null,
+            'sponsor_email' => $user->sponsor ? $user->sponsor->user->email : null,
+            'sponsor_profile_photo' => $user->sponsor ? $user->sponsor->user->getFirstMediaUrl('profile_photo') : null,
             'email' => $user->user->email,
             'level' => $level,
             'rank' => $user->user->setting_rank_id,
@@ -235,7 +237,7 @@ class AffiliateController extends Controller
     public function addDistributor(Request $request)
     {
         $upline = CoinMultiLevel::find($request->upline_id);
-        $coinStaking = CoinStacking::where('user_id', $request->user_id)->where('status', 'OnGoingPeriod')->first();
+        $coinStakingPrice = CoinStacking::where('user_id', $request->user_id)->where('status', 'OnGoingPeriod')->sum('stacking_price');
 
         $hierarchyList = $upline->hierarchy_list . $upline->id . "-";
 
@@ -245,8 +247,7 @@ class AffiliateController extends Controller
             'upline_id' => $upline->id,
             'hierarchy_list' => $hierarchyList,
             'position' => $request->position,
-            'coin_stacking_id' => $coinStaking->id,
-            'coin_stacking_amount' => $coinStaking->stacking_price,
+            'coin_stacking_amount' => $coinStakingPrice,
         ]);
 
         return redirect()->back()->with('title', 'Add Distributor')->with('success', 'Distributor has been successfully added!');
@@ -455,15 +456,16 @@ class AffiliateController extends Controller
     {
         $user = Auth::user();
         $existed_users_ids = CoinMultiLevel::get()->pluck('user_id');
-        $childrenIds = $user->getChildrenIds();
+        $childrenIds = $user->children()->get()->pluck('id');
 
-        $users = User::with(['coinStaking' => function ($query) {
-            $query->select('id', 'user_id', 'stacking_unit', 'stacking_price', 'auto_assign_at', 'created_at')
-                ->where('auto_assign_at', '>=', now());
-        }])
-            ->whereIn('id', $childrenIds)
-            ->where('role', 'user')
-            ->whereNotIn('id', $existed_users_ids)
+        $users = User::leftJoin('coin_stackings', 'users.id', '=', 'coin_stackings.user_id')
+            ->with(['coinStaking' => function ($query) {
+                $query->select('id', 'user_id', 'stacking_unit', 'stacking_price', 'auto_assign_at', 'created_at')
+                    ->where('auto_assign_at', '>=', now());
+            }])
+            ->whereIn('users.id', $childrenIds)
+            ->where('users.role', 'user')
+            ->whereNotIn('users.id', $existed_users_ids)
             ->when($request->filled('query'), function ($query) use ($request) {
                 $search = $request->input('query');
                 $query->where(function ($innerQuery) use ($search) {
@@ -471,12 +473,13 @@ class AffiliateController extends Controller
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->select('id', 'name', 'email')
-            ->latest()
+            ->select('users.id', 'users.name', 'users.email', 'coin_stackings.created_at')
+            ->orderByRaw('coin_stackings.created_at IS NULL')
+            ->orderBy('users.created_at', 'desc')
             ->paginate(5);
 
-        $users->each(function ($users) {
-            $users->profile_photo = $users->getFirstMediaUrl('profile_photo');
+        $users->each(function ($user) {
+            $user->profile_photo = $user->getFirstMediaUrl('profile_photo');
         });
 
         return response()->json($users);
@@ -498,10 +501,14 @@ class AffiliateController extends Controller
 
     public function getPendingPlacementCount()
     {
-        return CoinStacking::where('auto_assign_at', '<', now())
-            ->whereDoesntHave('binaryTree', function ($query) {
-                $query->whereNotNull('coin_stacking_id');
-            })
+        $user = Auth::user();
+        $childrenIds = $user->children()->get()->pluck('id');
+        $existed_users_ids = CoinMultiLevel::get()->pluck('user_id');
+
+        return CoinStacking::where('auto_assign_at', '>=', now())
+            ->whereDate('created_at', '>=', now()->subDay())
+            ->whereIn('user_id', $childrenIds)
+            ->whereNotIn('user_id', $existed_users_ids)
             ->count();
     }
 

@@ -272,7 +272,7 @@ const fetchPendingPlacementCount = async () => {
                 >
                     <div class="flex items-center gap-2">
                         <div class="text-white text-base">Pending Placement</div>
-                        <div class="bg-pink-500 w-5 h-5 rounded-full flex justify-center">
+                        <div v-if="getPendingPlacementCount > 0" class="bg-pink-500 w-5 h-5 rounded-full flex justify-center">
                             {{ getPendingPlacementCount }}
                         </div>
                     </div>
@@ -305,11 +305,11 @@ const fetchPendingPlacementCount = async () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- <tr>
-                                    <th colspan="5" class="py-4 text-lg text-center">
-                                        no history
-                                    </th>
-                                </tr> -->
+                            <tr v-if="referralTableData.data.length === 0">
+                                <th colspan="4" class="py-4 text-lg text-center">
+                                    {{$t('public.no_data')}}
+                                </th>
+                            </tr>
                                 <tr
                                     class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600"
                                     v-for="referee in referralTableData.data"
@@ -420,22 +420,20 @@ const fetchPendingPlacementCount = async () => {
             <div class="container mx-auto text-center pt-24">
                 <div class="items-center justify-center flex">
                     <div class="text-center">
-                        <div v-if="root.sponsor" class="flex flex-col justify-center items-center">
+                        <div v-if="root.sponsor_name" class="flex flex-col justify-center items-center">
                             <div class="w-60 rounded-lg dark:bg-gray-700 flex gap-2 p-3 items-center z-20">
-                                <img class="rounded-full w-8 h-8" alt="Duc Sun"
-                                     src="https://randomuser.me/api/portraits/men/12.jpg" />
+                                <img :src="root.sponsor_profile_photo ? root.sponsor_profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
                                 <div class="flex flex-col gap-1">
                                     <div class="flex gap-2 items-center text-gray-900 dark:text-white">
                                         <div class="text-sm font-semibold">
-                                            {{ root.sponsor }}
+                                            {{ root.sponsor_name }}
                                         </div>
-                                        <LVL3Icon class="h-4" />
-                                        <div class="text-sm font-semibold">
-                                            Sponsor
+                                        <div class="rounded-xl bg-warning-400 text-gray-800 font-normal text-xs px-2 text-center w-16">
+                                           Sponsor
                                         </div>
                                     </div>
                                     <div class="text-left text-xs text-gray-600 dark:text-gray-400">
-                                        {{ root.email }}
+                                        {{ root.sponsor_email }}
                                     </div>
                                 </div>
                             </div>

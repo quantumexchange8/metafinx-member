@@ -81,7 +81,7 @@ const handleExpand = () => {
     <div v-if="node" class="text-center">
         <div class="flex flex-col justify-center items-center">
             <div v-if="node.id > 1" class="-mt-[194px] border-l-2 border-dashed absolute h-10 border-gray-600"></div>
-            <div class="w-60 mt-5 rounded-lg dark:bg-gray-700 p-3 z-20">
+            <div class="w-60 mt-5 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-800 hover:cursor-pointer p-3 z-20">
                 <div class="flex gap-2 items-center border-b border-dashed border-gray-600 pb-3">
                     <img :src="node.profile_photo ? node.profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
                     <div class="flex flex-col gap-1">
