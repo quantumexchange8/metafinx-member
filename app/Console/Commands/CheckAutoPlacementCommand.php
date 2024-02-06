@@ -49,7 +49,7 @@ class CheckAutoPlacementCommand extends Command
 
                         CoinMultiLevel::create([
                             'user_id' => $user->id,
-                            'sponsor_id' => $upline->sponsor_id,
+                            'sponsor_id' => $upline->id,
                             'upline_id' => $upline->id,
                             'hierarchy_list' => $upline->hierarchy_list . $upline->id . "-",
                             'position' => 'left',
