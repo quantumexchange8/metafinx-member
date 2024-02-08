@@ -15,8 +15,10 @@ class CheckAutoPlacementCommand extends Command
     public function handle()
     {
         // Retrieve data which is 'auto_assign_at' value not yet passed today
-        $coinStackings = CoinStacking::whereDate('auto_assign_at', '<=', now())->get();
+        $coinStackings = CoinStacking::whereDate('auto_assign_at', '=', now())->get();
     
+        $coinStackings = $coinStackings->sortBy('user_id');
+
         foreach ($coinStackings as $coinStacking) {
             $user = $coinStacking->user;
     
@@ -49,7 +51,6 @@ class CheckAutoPlacementCommand extends Command
                             'upline_id' => $upline->id,
                             'hierarchy_list' => $currentHierarchyList,
                             'position' => 'left', // Assuming position is always left for auto-placement
-                            'coin_stacking_id' => $coinStacking->id,
                             'coin_stacking_amount' => $coinStakingPrice,
                         ]);
     
@@ -69,7 +70,6 @@ class CheckAutoPlacementCommand extends Command
                         'upline_id' => $existingEntry->id,  // Set upline ID to the ID of the existing entry
                         'hierarchy_list' => $hierarchyList,
                         'position' => 'left', // Assuming position is always left for auto-placement
-                        'coin_stacking_id' => $coinStacking->id,
                         'coin_stacking_amount' => $coinStakingPrice,
                     ]);
     

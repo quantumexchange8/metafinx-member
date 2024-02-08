@@ -16,8 +16,8 @@ const props = defineProps({
     referredCounts: Number,
     totalReferralEarning: Number,
     downline: Array,
+    uplineStaking: Boolean,
 })
-
 const { formatAmount,formatDate } = transactionFormat();
 const createdDate = usePage().props.auth.user.created_at;
 
@@ -102,6 +102,7 @@ function copyReferralCodeLink() {
 
         <AffiliateNetwork
             :downline="downline"
+            :uplineStaking="uplineStaking"
          />
 
         <div class="flex flex-col space-y-6 pt-8 pb-12 mb-16 md:hidden">

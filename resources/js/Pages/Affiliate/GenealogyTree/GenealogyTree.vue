@@ -258,8 +258,19 @@ const fetchPendingPlacementCount = async () => {
         console.error('Error fetching data:', error.message);
     }
 };
+const coinStackingExists = ref(false);
 
+const checkCoinStackingExistence = async () => {
+    try {
+        const response = await axios.get('/affiliate/checkCoinStackingExistence');
+        coinStackingExists.value = response.data; // Update coin stacking existence based on response
+    } catch (error) {
+        console.error('Error checking coin stacking existence:', error);
+        coinStackingExists.value = false; // Set coin stacking existence to false in case of an error
+    }
+};
 
+checkCoinStackingExistence();
 </script>
 
 <template>
@@ -484,6 +495,7 @@ const fetchPendingPlacementCount = async () => {
                                 :value="plan"
                                 v-slot="{ active, checked }"
                                 class="w-full"
+                                :disabled="plan.value === 'right' && !coinStackingExists"
                             >
                                 <div
                                     :class="[
