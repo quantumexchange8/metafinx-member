@@ -104,7 +104,7 @@ const handleExpand = () => {
                             Personal
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            $&nbsp;{{ formatAmount(node.personal_amount) }}
+                            {{ node.personal_amount ? '$ ' + formatAmount(node.personal_amount) : 'Loading..' }}
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
@@ -112,7 +112,7 @@ const handleExpand = () => {
                             Left
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            $&nbsp;{{ formatAmount(node.left_amount) }}
+                            {{ node.left_amount >= 0 ? '$ ' + formatAmount(node.left_amount) : 'Loading..' }}
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
@@ -120,7 +120,7 @@ const handleExpand = () => {
                             Right
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            $&nbsp;{{ formatAmount(node.right_amount) }}
+                            {{ node.right_amount >= 0 ? '$ ' + formatAmount(node.right_amount) : 'Loading..' }}
                         </div>
                     </div>
                 </div>

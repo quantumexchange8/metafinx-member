@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
             'auth.user.wallets' => fn() => $request->user() ? $request->user()->wallets : null,
             'auth.user.coins' => fn() => $request->user() ? $request->user()->coins : null,
             'auth.user.coins.setting_coin' => fn() => $request->user() ? $request->user()->coins->setting_coin : null,
+            'auth.user.binary' => fn() => $request->user() ? $request->user()->binary : null,
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),

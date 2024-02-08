@@ -499,8 +499,9 @@ checkCoinStackingExistence();
                             >
                                 <div
                                     :class="[
-                                checked ? 'bg-gray-600 dark:text-white border-2 border-white' : 'bg-gray-700',
-                            ]"
+                                        checked ? 'bg-gray-600 dark:text-white border-2 border-white' : 'bg-gray-700',
+                                        plan.value === 'right' && !coinStackingExists ? 'hover:cursor-not-allowed dark:bg-gray-700' : ''
+                                    ]"
                                     class="relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none"
                                 >
                                     <div class="flex w-full items-center justify-center">
@@ -508,7 +509,10 @@ checkCoinStackingExistence();
                                             <div class="text-sm">
                                                 <RadioGroupLabel
                                                     as="p"
-                                                    :class="checked ? 'text-white' : 'dark:text-white'"
+                                                    :class="[
+                                                        checked ? 'text-white' : '',
+                                                        plan.value === 'right' && !coinStackingExists ? 'dark:text-gray-600' : 'text-white'
+                                                    ]"
                                                     class="font-medium"
                                                 >
                                                     {{ plan.name }}

@@ -40,7 +40,7 @@ const props = defineProps({
                             v-show="category.type !== 'binary' || uplineStaking"
                             class="px-4 py-2.5 text-sm font-semibold text-gray-900 border border-gray-200 focus:outline-none w-full sm:w-64"
                             :class="{
-                                'rounded-full': !uplineStaking && category.type === 'affiliate',
+                                'rounded-lg': !uplineStaking && !$page.props.auth.user.binary && category.type === 'affiliate',
                                 'rounded-l-xl': category.type === 'affiliate' && uplineStaking,
                                 'rounded-r-xl': category.type === 'binary' && uplineStaking,
                                 'hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600': true,
@@ -53,7 +53,7 @@ const props = defineProps({
                 </TabList>
                 <TabPanels class="mt-2">
                     <TabPanel>
-                        <!-- <ReferralTree /> -->
+                         <ReferralTree />
                     </TabPanel>
                     <TabPanel>
                         <GenealogyTree

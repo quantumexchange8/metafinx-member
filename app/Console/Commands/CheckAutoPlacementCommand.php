@@ -12,23 +12,23 @@ class CheckAutoPlacementCommand extends Command
 
     protected $description = 'Check auto placement and retrieve information about users without placement, then assign placement for them.';
 
-    public function handle()
+    public function handle(): void
     {
         // Retrieve data which is 'auto_assign_at' value not yet passed today
         $coinStackings = CoinStacking::whereDate('auto_assign_at', '=', now())->get();
-    
+
         $coinStackings = $coinStackings->sortBy('user_id');
 
         foreach ($coinStackings as $coinStacking) {
             $user = $coinStacking->user;
-    
+
             // Check if data does not exist in CoinMultiLevel table for the user
             if (!CoinMultiLevel::where('user_id', $user->id)->exists()) {
                 $auto_assign_at = $coinStacking->auto_assign_at;
-    
+
                 // Find the direct left child
                 $directChild = CoinMultiLevel::where('position', 'left')->first();
-    
+
                 // Check if direct left child exists
                 if ($directChild) {
                     // Find the last left child in the hierarchy list
@@ -36,24 +36,27 @@ class CheckAutoPlacementCommand extends Command
                         ->where('position', 'left')
                         ->orderBy('id', 'desc')
                         ->first();
-    
+
                     // Check if last child exists and is not the same as the current user
                     if ($lastChild && $lastChild->id !== $user->id) {
                         $currentHierarchyList = $lastChild->hierarchy_list . $lastChild->id . '-';
-    
+
                         // Distributor creation logic
                         $upline = $lastChild;
+                        $userUpline = $user->upline;
+                        $binarySponsor = CoinMultiLevel::where('user_id', $userUpline->id)->first();
+
                         $coinStakingPrice = CoinStacking::where('user_id', $user->id)->where('status', 'OnGoingPeriod')->sum('stacking_price');
-    
+
                         CoinMultiLevel::create([
                             'user_id' => $user->id,
-                            'sponsor_id' => $upline->id,
+                            'sponsor_id' => $binarySponsor->id,
                             'upline_id' => $upline->id,
                             'hierarchy_list' => $currentHierarchyList,
                             'position' => 'left', // Assuming position is always left for auto-placement
                             'coin_stacking_amount' => $coinStakingPrice,
                         ]);
-    
+
                         $this->info("User ID: {$user->id}, Name: {$user->name}, will be auto-assigned at: {$auto_assign_at} under Upline ID: {$upline->id}, HierarchyList: {$currentHierarchyList}");
                     } else {
                         $this->info("No valid upline found for User ID: {$user->id}, Name: {$user->name}.");
@@ -72,14 +75,14 @@ class CheckAutoPlacementCommand extends Command
                         'position' => 'left', // Assuming position is always left for auto-placement
                         'coin_stacking_amount' => $coinStakingPrice,
                     ]);
-    
+
                     $this->info("User ID: {$user->id}, Name: {$user->name}, will be auto-assigned at: {$auto_assign_at} under Upline ID: {$existingEntry->id}, HierarchyList: {$hierarchyList}");
                 }
             } else {
                 $this->info("User ID: {$user->id}, Name: {$user->name}, already exists in CoinMultiLevel table.");
             }
         }
-    
+
         $this->info('Auto placement check completed.');
     }
 }

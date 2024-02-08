@@ -171,4 +171,9 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail, JWTSubj
     {
         return $this->hasMany(CoinStacking::class, 'user_id', 'id');
     }
+
+    public function binary(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(CoinMultiLevel::class, 'user_id', 'id');
+    }
 }

@@ -21,9 +21,9 @@ class AffiliateController extends Controller
     {
         $referredCounts = User::where('upline_id', \Auth::id())->count();
         $totalReferralEarning = Earning::where('upline_id', \Auth::id())->where('type', 'ReferralEarnings')->sum('after_amount');
-    
+
         $downline = User::where('upline_id', \Auth::id())->with(['coinStaking'])->get();
-    
+
         // Get the upline's ID
         $uplineId = User::where('id', \Auth::id())->value('upline_id');
         $uplineStaking = true;
@@ -32,7 +32,7 @@ class AffiliateController extends Controller
             // If there is an upline, check if they have a coin stacking record
             $uplineStaking = CoinStacking::where('user_id', $uplineId)->exists();
         }
-            
+
         return Inertia::render('Affiliate/Affiliate', [
             'referredCounts' => $referredCounts,
             'totalReferralEarning' => floatval($totalReferralEarning),
@@ -131,7 +131,7 @@ class AffiliateController extends Controller
 
 
         $users = CoinMultiLevel::whereHas('upline', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
+            $query->where('id', $user->id);
         })->get();
 
 //        if ($searchUser) {
@@ -177,7 +177,7 @@ class AffiliateController extends Controller
             'name' => $user->user->name,
             'profile_photo' => $user->user->getFirstMediaUrl('profile_photo'),
             'position' => $user->position,
-            'sponsor' => $user->sponsor->name ?? null,
+            'sponsor' => $user->sponsor->user->name ?? null,
             'email' => $user->user->email,
             'level' => $level + 1,
             'rank' => $user->user->setting_rank_id,
@@ -247,10 +247,10 @@ class AffiliateController extends Controller
     {
         $upline = CoinMultiLevel::find($request->upline_id);
         $coinStakingPrice = CoinStacking::where('user_id', $request->user_id)->where('status', 'OnGoingPeriod')->sum('stacking_price');
-    
+
         // Ensure the specified position is either 'left' or 'right'
         $position = ($request->position === 'left' || $request->position === 'right') ? $request->position : 'left';
-    
+
         // Update the hierarchy list based on the upline
         if ($upline->id == 1) {
             // If the upline is the root node, the hierarchy list will be the user's ID
@@ -259,7 +259,7 @@ class AffiliateController extends Controller
             // Otherwise, prepend the upline's hierarchy list with a '-' if it's not empty
             $hierarchyList = $upline->hierarchy_list . $upline->id . '-';
         }
-    
+
         // Create the distributor with the provided parameters
         CoinMultiLevel::create([
             'user_id' => $request->user_id,
@@ -269,11 +269,11 @@ class AffiliateController extends Controller
             'position' => $position,
             'coin_stacking_amount' => $coinStakingPrice,
         ]);
-    
+
         // Redirect back with success message
         return redirect()->back()->with('title', 'Add Distributor')->with('success', 'Distributor has been successfully added!');
     }
-        
+
     protected function getSelfDeposit($user)
     {
         return InvestmentSubscription::query()
@@ -478,7 +478,7 @@ class AffiliateController extends Controller
         $user = Auth::user();
         $existedUserIds = CoinMultiLevel::pluck('user_id');
         $childrenIds = $user->children()->pluck('id');
-    
+
         $query = User::with(['coinStaking', 'media'])
             ->whereIn('id', $childrenIds)
             ->where('role', 'user')
@@ -492,7 +492,7 @@ class AffiliateController extends Controller
             })
             ->orderBy('created_at', 'desc')
             ->paginate(5);
-    
+
         // Transform each user to include only the specified attributes
         $transformedUsers = $query->getCollection()->map(function ($user) {
             return [
@@ -505,13 +505,13 @@ class AffiliateController extends Controller
                 'media' => $user->media->toArray(),
             ];
         });
-    
+
         // Replace the items in the paginated results with the transformed users
         $query->setCollection($transformedUsers);
-    
+
         return response()->json($query);
     }
-    
+
     public function getLastChild(Request $request)
     {
         $user = Auth::user();
@@ -529,13 +529,14 @@ class AffiliateController extends Controller
     public function getPendingPlacementCount()
     {
         $user = Auth::user();
-        $childrenIds = $user->children()->get()->pluck('id');
-        $existed_users_ids = CoinMultiLevel::get()->pluck('user_id');
+        $childrenIds = $user->children()->pluck('id')->toArray();
+        $existedUsersIds = CoinMultiLevel::pluck('user_id')->toArray();
 
         return CoinStacking::where('auto_assign_at', '>=', now())
             ->whereDate('created_at', '>=', now()->subDay())
             ->whereIn('user_id', $childrenIds)
-            ->whereNotIn('user_id', $existed_users_ids)
+            ->whereNotIn('user_id', $existedUsersIds)
+            ->distinct('user_id')
             ->count();
     }
 
