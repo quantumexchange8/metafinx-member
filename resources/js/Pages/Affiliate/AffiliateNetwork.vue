@@ -53,7 +53,7 @@ const props = defineProps({
                 </TabList>
                 <TabPanels class="mt-2">
                     <TabPanel>
-                         <ReferralTree />
+                         <!-- <ReferralTree /> -->
                     </TabPanel>
                     <TabPanel>
                         <GenealogyTree

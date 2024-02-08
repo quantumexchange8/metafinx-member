@@ -153,8 +153,8 @@ class AffiliateController extends Controller
             'level' => $level,
             'rank' => $user->user->setting_rank_id,
             'personal_amount' => $user->coin_stacking_amount,
-            'left_amount' => $this->getLeftTotalAmount($user),
-            'right_amount' => $this->getRightTotalAmount($user),
+            'left_amount' => $this->getTotalAmount($user, 'left'),
+            'right_amount' => $this->getTotalAmount($user, 'right'),
             'children' => $users->map(function ($user) {
                 return $this->mapBinaryUser($user, 0);
             })
@@ -312,64 +312,65 @@ class AffiliateController extends Controller
             ->sum('coin_stacking_amount');
     }
 
-    protected function getLeftTotalAmount($child)
+    protected function getTotalAmount($child, $uplinePosition)
     {
-        $ids = $child->getChildrenIds();
-
-        $leftAmount = CoinMultiLevel::query()
-            ->whereIn('id', $ids)
-            ->whereHas('upline', function ($query) {
-                $query->where('position', 'left');
-            })
-            ->sum('coin_stacking_amount');
-
-        $rightAmount = CoinMultiLevel::query()
-            ->whereIn('id', $ids)
-            ->whereHas('upline', function ($query) {
-                $query->where('position', 'left');
-            })
-            ->where('position', 'right')
-            ->sum('coin_stacking_amount');
-
-        $leftPosition = $child->position;
-        if ($leftPosition == 'left') {
+        // Initialize left and right amounts
+        $leftAmount = 0;
+        $rightAmount = 0;
+    
+        // Get the IDs of direct downline based on the $uplinePosition
+        $downlineIds = CoinMultiLevel::query()
+            ->where('upline_id', $child->id)
+            ->where('position', $uplinePosition)
+            ->pluck('id')
+            ->toArray();
+    
+        // Calculate amount for each direct downline
+        foreach ($downlineIds as $downlineId) {
+            $downline = CoinMultiLevel::find($downlineId);
+    
+            if (!$downline) {
+                continue;
+            }
+    
+            // Add the direct downline amount
+            if ($downline->position === 'left') {
+                $leftAmount += $downline->coin_stacking_amount;
+            } elseif ($downline->position === 'right') {
+                $rightAmount += $downline->coin_stacking_amount;
+            }
+    
+            // Get all children IDs under the direct downline
+            $allChildrenIds = CoinMultiLevel::query()
+                ->where('upline_id', $downlineId)
+                ->pluck('id')
+                ->toArray();
+    
+            // Calculate amount for all children under the direct downline
+            foreach ($allChildrenIds as $childId) {
+                $child = CoinMultiLevel::find($childId);
+    
+                if (!$child) {
+                    continue;
+                }
+    
+                // Add the child amount
+                if ($child->position === 'left') {
+                    $leftAmount += $child->coin_stacking_amount;
+                } elseif ($child->position === 'right') {
+                    $rightAmount += $child->coin_stacking_amount;
+                }
+            }
+        }
+    
+        // Return only the appropriate amount based on the upline position
+        if ($uplinePosition === 'left') {
             return $leftAmount;
-        } elseif ($leftPosition == 'right') {
+        } elseif ($uplinePosition === 'right') {
             return $rightAmount;
-        } else {
-            return $leftAmount + $rightAmount;
         }
     }
-    protected function getRightTotalAmount($child)
-    {
-        $ids = $child->getChildrenIds();
-
-        $leftAmount = CoinMultiLevel::query()
-            ->whereIn('id', $ids)
-            ->whereHas('upline', function ($query) {
-                $query->where('position', 'right');
-            })
-            ->where('position', 'left')
-            ->sum('coin_stacking_amount');
-
-        $rightAmount = CoinMultiLevel::query()
-            ->whereIn('id', $ids)
-            ->whereHas('upline', function ($query) {
-                $query->where('position', 'right');
-            })
-            ->sum('coin_stacking_amount');
-
-        $leftPosition = $child->position;
-        if ($leftPosition == 'right') {
-            return $leftAmount;
-        } elseif ($leftPosition == 'left') {
-            return $rightAmount;
-        } else {
-            return $leftAmount + $rightAmount;
-        }
-    }
-
-
+    
     public function group()
     {
         $referredCounts = User::where('upline_id', \Auth::id())->count();
