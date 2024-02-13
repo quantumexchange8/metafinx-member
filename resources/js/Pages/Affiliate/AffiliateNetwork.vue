@@ -34,7 +34,7 @@ const search = ref('');
         <div class="w-full">
             <TabGroup>
                 <TabList class="flex dark:bg-transparent w-full flex-col gap-3 sm:flex-row sm:justify-between">
-                    <div class="w-full">
+                    <div>
                         <Tab
                             v-for="category in categories"
                             as="template"
