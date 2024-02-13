@@ -64,7 +64,7 @@ const closeModal = () => {
 }
 
 const updateTransactionDetails = () => {
-    transactionFee.value = (coinAmount.value * props.gasFee.value / 100).toFixed(2);
+    transactionFee.value = (coinAmount.value * (props.gasFee.value / 100)).toFixed(2);
     transactionAmount.value = (parseFloat(coinAmount.value) - parseFloat(transactionFee.value)).toFixed(2);
 };
 
@@ -79,7 +79,7 @@ const handleButtonClick = () => {
 watch(coinUnit, (newUnit) => {
     if (newUnit !== null && !updatingCoinUnit.value) {
         updatingCoinAmount.value = true;
-        coinAmount.value = Number(newUnit / props.coin_price.price).toFixed(2);
+        coinAmount.value = Number(newUnit * props.coin_price.price).toFixed(2);
         updateTransactionDetails();
     }
     updatingCoinUnit.value = false;
@@ -111,10 +111,10 @@ watch(coinUnit, (newUnit) => {
                     </div>
                 </Label>
                 <div class="flex flex-col w-full">
-                    <BaseListbox 
-                        v-model="form.wallet_id" 
-                        :options="[props.wallet_sel[0]]" 
-                        :error="form.errors.wallet_id" 
+                    <BaseListbox
+                        v-model="form.wallet_id"
+                        :options="[props.wallet_sel[0]]"
+                        :error="form.errors.wallet_id"
                     />
                 </div>
             </div>
