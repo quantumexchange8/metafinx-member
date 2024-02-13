@@ -11,6 +11,7 @@ import {useForm} from "@inertiajs/vue3";
 import Combobox from "@/Components/Combobox.vue";
 import Button from "@/Components/Button.vue";
 import {transactionFormat} from "@/Composables/index.js";
+import Loading from "@/Components/Loading.vue";
 
 const props = defineProps({
     binaryTree: Object
@@ -75,13 +76,41 @@ const handleExpand = () => {
 //         },
 //     });
 // }
+
+const distributorDetailModal = ref(false);
+const distributorDetail = ref();
+const isLoading = ref(false);
+
+const openDistributorDetailModal = (distributor) => {
+    distributorDetailModal.value = true;
+    getDistributorDetail(distributor.id, distributor.level)
+}
+
+const closeDetailModal = () => {
+    distributorDetailModal.value = false;
+}
+
+const getDistributorDetail = async (id, level) => {
+    isLoading.value = true;
+    try {
+        let url = `/affiliate/getDistributorDetail?id=` + id + `&level=${level}`;
+
+        const response = await axios.get(url);
+        distributorDetail.value = response.data;
+
+    } catch (error) {
+        console.error(error);
+    } finally {
+        isLoading.value = false;
+    }
+}
 </script>
 
 <template>
     <div v-if="node" class="text-center">
         <div class="flex flex-col justify-center items-center">
             <div v-if="node.id > 1" class="-mt-[194px] border-l-2 border-dashed absolute h-10 border-gray-600"></div>
-            <div class="w-60 mt-5 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-800 hover:cursor-pointer p-3 z-20">
+            <div class="w-60 mt-5 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-800 hover:cursor-pointer p-3 z-20" @click="openDistributorDetailModal(node)">
                 <div class="flex gap-2 items-center border-b border-dashed border-gray-600 pb-3">
                     <img :src="node.profile_photo ? node.profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
                     <div class="flex flex-col gap-1">
@@ -104,7 +133,7 @@ const handleExpand = () => {
                             Personal
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            {{ node.personal_amount ? '$ ' + formatAmount(node.personal_amount) : 'Loading..' }}
+                            {{ node.personal_amount >= 0 ? '$ ' + formatAmount(node.personal_amount) : 'Loading..' }}
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
@@ -259,5 +288,74 @@ const handleExpand = () => {
 <!--            </div>-->
 <!--        </form>-->
 <!--    </Modal>-->
+
+    <Modal :show="distributorDetailModal" title="Distributor Detail" @close="closeDetailModal">
+        <div v-if="isLoading" class="flex justify-center">
+            <Loading />
+        </div>
+        <div v-if="distributorDetail && !isLoading">
+            <div class="flex items-center p-5 rounded-xl bg-gray-300 dark:bg-gray-700 gap-2 self-stretch w-full mt-3 mb-8">
+                <img :src="distributorDetail.profile_photo ? distributorDetail.profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
+                <div class="flex flex-col items-start gap-1">
+                    <div class="flex items-center gap-2">
+                        <div class="text-gray-700 dark:text-white text-sm font-semibold">
+                            {{ distributorDetail.name }}
+                        </div>
+                        <div class="rounded-xl bg-warning-400 text-gray-800 font-normal text-xs px-2">
+                            Gen {{ distributorDetail.level }}
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-600 dark:text-gray-400">
+                        {{ distributorDetail.email }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-start gap-3 self-stretch">
+                <div class="flex items-center gap-2 self-stretch">
+                    <div class="font-semibold text-sm text-gray-600 dark:text-gray-400 w-1/4">
+                        Sponsor
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <img :src="distributorDetail.sponsor_profile_photo ? distributorDetail.sponsor_profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
+                        <div class="text-base text-gray-800 dark:text-white">
+                            {{ distributorDetail.sponsor_name ?? '-'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 self-stretch">
+                    <div class="font-semibold text-sm text-gray-600 dark:text-gray-400 w-1/4">
+                        Upline
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <img :src="distributorDetail.upline_profile_photo ? distributorDetail.upline_profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
+                        <div class="text-base text-gray-800 dark:text-white">
+                            {{ distributorDetail.upline_name ?? '-'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 self-stretch">
+                    <div class="font-semibold text-sm text-gray-600 dark:text-gray-400 w-1/4">
+                        Current Staking
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="text-base text-gray-800 dark:text-white">
+                            {{ distributorDetail.current_staking }}
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 self-stretch">
+                    <div class="font-semibold text-sm text-gray-600 dark:text-gray-400 w-1/4">
+                        Accrued Staking
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="text-base text-gray-800 dark:text-white">
+                            {{ distributorDetail.accrued_staking }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Modal>
 
 </template>

@@ -21,6 +21,7 @@ import {TailwindPagination} from "laravel-vue-pagination";
 import {transactionFormat} from "@/Composables/index.js";
 import Modal from "@/Components/Modal.vue";
 import Loading from "@/Components/Loading.vue";
+import debounce from "lodash/debounce.js";
 
 const binaryTree = ref({});
 // Use refs to store functions
@@ -32,15 +33,22 @@ const root = ref({});
 const { formatAmount, formatTime } = transactionFormat();
 
 const props = defineProps({
+    search: String,
     downline: Array,
 })
+
+watch(
+    () => props.search,
+    debounce((searchValue) => {
+        getResults(searchValue);
+    }, 300)
+);
 
 const getResults = async (search = '') => {
     try {
         let url = `/affiliate/getBinaryData`;
 
         if (search) {
-            console.log(search)
             url += `?search=${search}`;
         }
 

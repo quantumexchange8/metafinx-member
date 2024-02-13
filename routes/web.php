@@ -99,6 +99,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('getLastChild', [AffiliateController::class, 'getLastChild'])->name('affiliate.getLastChild');
         Route::get('getPendingPlacementCount', [AffiliateController::class, 'getPendingPlacementCount'])->name('affiliate.getPendingPlacementCount');
         Route::get('checkCoinStackingExistence', [AffiliateController::class, 'checkCoinStackingExistence'])->name('affiliate.checkCoinStackingExistence');
+        Route::get('getDistributorDetail', [AffiliateController::class, 'getDistributorDetail'])->name('affiliate.getDistributorDetail');
     });
 
      Route::prefix('report')->group(function () {

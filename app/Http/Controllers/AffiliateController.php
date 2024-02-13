@@ -40,18 +40,27 @@ class AffiliateController extends Controller
             'uplineStaking' => $uplineStaking,
         ]);
     }
-        public function getTreeData(Request $request)
+
+    public function getTreeData(Request $request)
     {
         $searchUser = null;
         $searchTerm = $request->input('search');
+        $childrenIds = Auth::user()->getChildrenIds();
+        $childrenIds[] = Auth::id();
 
         if ($searchTerm) {
+
             $searchUser = User::where('name', 'like', '%' . $searchTerm . '%')
                 ->orWhere('email', 'like', '%' . $searchTerm . '%')
+                ->whereIn('id', $childrenIds)
                 ->first();
 
             if (!$searchUser) {
-                return response()->json(['error' => 'User not found for the given search term.'], 404);
+                return Auth::user();
+            }
+
+            if (!in_array($searchUser->id, $childrenIds)) {
+                return Auth::user();
             }
         }
 
@@ -59,13 +68,7 @@ class AffiliateController extends Controller
 
         $users = User::whereHas('upline', function ($query) use ($user) {
             $query->where('id', $user->id);
-        })->get();
-
-//        if ($searchUser) {
-//            $query->orWhere('id', $searchUser->id);
-//        }
-//
-//        $users = $query->get();
+        })->whereIn('id', $childrenIds)->get();
 
         $level = 0;
         $rootNode = [
@@ -115,24 +118,32 @@ class AffiliateController extends Controller
     {
         $searchUser = null;
         $searchTerm = $request->input('search');
+        $binaryUser = CoinMultiLevel::with(['user:id,name,email,setting_rank_id', 'sponsor.user'])->where('user_id', Auth::id())->first();
+        $binaryChildrenIds = $binaryUser->getChildrenIds();
+        $binaryChildrenIds[] = $binaryUser->id;
 
         if ($searchTerm) {
-            // dd('asdasd');
-            $searchUser = User::where('name', 'like', '%' . $searchTerm . '%')
-                ->orWhere('email', 'like', '%' . $searchTerm . '%')
+            $searchUser = CoinMultiLevel::whereHas('user', function ($query) use ($searchTerm) {
+                $query->where('name', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('email', 'like', '%' . $searchTerm . '%');
+            })
+                ->whereIn('id', $binaryChildrenIds)
                 ->first();
 
             if (!$searchUser) {
-                return response()->json(['error' => 'User not found for the given search term.'], 404);
+                return $binaryUser;
+            }
+
+            if (!in_array($searchUser->id, $binaryChildrenIds)) {
+                return $binaryUser;
             }
         }
 
-        $user = $searchUser ?? CoinMultiLevel::with(['user:id,name,email,setting_rank_id', 'sponsor.user'])->where('user_id', Auth::id())->first();
-
+        $user = $searchUser ?? $binaryUser;
 
         $users = CoinMultiLevel::whereHas('upline', function ($query) use ($user) {
             $query->where('id', $user->id);
-        })->get();
+        })->whereIn('id', $binaryChildrenIds)->get();
 
 //        if ($searchUser) {
 //            $query->orWhere('id', $searchUser->id);
@@ -152,13 +163,22 @@ class AffiliateController extends Controller
             'email' => $user->user->email,
             'level' => $level,
             'rank' => $user->user->setting_rank_id,
-            'personal_amount' => $user->coin_stacking_amount,
-            'left_amount' => $this->getTotalAmount($user, 'left'),
-            'right_amount' => $this->getTotalAmount($user, 'right'),
+            'personal_amount' => $this->getPersonalStakingAmount($user),
+            'left_amount' => $this->getLeftAmount($user),
+            'right_amount' => $this->getRightAmount($user),
             'children' => $users->map(function ($user) {
                 return $this->mapBinaryUser($user, 0);
             })
         ];
+
+        // Ensure 'children' array contains two elements (left and right)
+        if (count($binaryData['children']) == 1) {
+            if ($binaryData['children'][0]['position'] == 'left') {
+                $binaryData['children'] = [(object)$binaryData['children'][0], (object)null];
+            } elseif ($binaryData['children'][0]['position'] == 'right') {
+                $binaryData['children'] = [(object)null, (object)$binaryData['children'][0]];
+            }
+        }
 
         return response()->json($binaryData);
     }
@@ -181,7 +201,7 @@ class AffiliateController extends Controller
             'email' => $user->user->email,
             'level' => $level + 1,
             'rank' => $user->user->setting_rank_id,
-            'personal_amount' => $user->coin_stacking_amount,
+            'personal_amount' => $this->getPersonalStakingAmount($user),
             'left_amount' => $this->getLeftAmount($user),
             'right_amount' => $this->getRightAmount($user),
         ];
@@ -218,7 +238,6 @@ class AffiliateController extends Controller
         return $mappedUser;
     }
 
-
     public function getAvailableDistributor(Request $request)
     {
         $existed_users_ids = CoinMultiLevel::get()->pluck('user_id');
@@ -246,6 +265,7 @@ class AffiliateController extends Controller
     public function addDistributor(Request $request)
     {
         $upline = CoinMultiLevel::find($request->upline_id);
+        $sponsor = CoinMultiLevel::where('user_id', Auth::id())->first();
         $coinStakingPrice = CoinStacking::where('user_id', $request->user_id)->where('status', 'OnGoingPeriod')->sum('stacking_price');
 
         // Ensure the specified position is either 'left' or 'right'
@@ -263,7 +283,7 @@ class AffiliateController extends Controller
         // Create the distributor with the provided parameters
         CoinMultiLevel::create([
             'user_id' => $request->user_id,
-            'sponsor_id' => Auth::id(),
+            'sponsor_id' => $sponsor->id,
             'upline_id' => $upline->id,
             'hierarchy_list' => $hierarchyList,
             'position' => $position,
@@ -292,85 +312,43 @@ class AffiliateController extends Controller
             ->sum('amount');
     }
 
+    protected function getPersonalStakingAmount($child)
+    {
+        return CoinStacking::where('user_id', $child->user_id)
+            ->where('status', 'OnGoingPeriod')
+            ->sum('stacking_price');
+    }
+
     protected function getLeftAmount($child)
     {
         $ids = $child->getChildrenIds();
 
-        return CoinMultiLevel::query()
+        $binary_user_id = CoinMultiLevel::query()
             ->whereIn('id', $ids)
             ->where('position', 'left')
-            ->sum('coin_stacking_amount');
+            ->pluck('user_id')
+            ->toArray();
+
+        return CoinStacking::whereIn('user_id', $binary_user_id)
+            ->where('status', 'OnGoingPeriod')
+            ->sum('stacking_price');
     }
 
     protected function getRightAmount($child)
     {
         $ids = $child->getChildrenIds();
 
-        return CoinMultiLevel::query()
+        $binary_user_id = CoinMultiLevel::query()
             ->whereIn('id', $ids)
             ->where('position', 'right')
-            ->sum('coin_stacking_amount');
+            ->pluck('user_id')
+            ->toArray();
+
+        return CoinStacking::whereIn('user_id', $binary_user_id)
+            ->where('status', 'OnGoingPeriod')
+            ->sum('stacking_price');
     }
 
-    protected function getTotalAmount($child, $uplinePosition)
-    {
-        // Initialize left and right amounts
-        $leftAmount = 0;
-        $rightAmount = 0;
-    
-        // Get the IDs of direct downline based on the $uplinePosition
-        $downlineIds = CoinMultiLevel::query()
-            ->where('upline_id', $child->id)
-            ->where('position', $uplinePosition)
-            ->pluck('id')
-            ->toArray();
-    
-        // Calculate amount for each direct downline
-        foreach ($downlineIds as $downlineId) {
-            $downline = CoinMultiLevel::find($downlineId);
-    
-            if (!$downline) {
-                continue;
-            }
-    
-            // Add the direct downline amount
-            if ($downline->position === 'left') {
-                $leftAmount += $downline->coin_stacking_amount;
-            } elseif ($downline->position === 'right') {
-                $rightAmount += $downline->coin_stacking_amount;
-            }
-    
-            // Get all children IDs under the direct downline
-            $allChildrenIds = CoinMultiLevel::query()
-                ->where('upline_id', $downlineId)
-                ->pluck('id')
-                ->toArray();
-    
-            // Calculate amount for all children under the direct downline
-            foreach ($allChildrenIds as $childId) {
-                $child = CoinMultiLevel::find($childId);
-    
-                if (!$child) {
-                    continue;
-                }
-    
-                // Add the child amount
-                if ($child->position === 'left') {
-                    $leftAmount += $child->coin_stacking_amount;
-                } elseif ($child->position === 'right') {
-                    $rightAmount += $child->coin_stacking_amount;
-                }
-            }
-        }
-    
-        // Return only the appropriate amount based on the upline position
-        if ($uplinePosition === 'left') {
-            return $leftAmount;
-        } elseif ($uplinePosition === 'right') {
-            return $rightAmount;
-        }
-    }
-    
     public function group()
     {
         $referredCounts = User::where('upline_id', \Auth::id())->count();
@@ -549,6 +527,44 @@ class AffiliateController extends Controller
         $exists = CoinStacking::where('user_id', $userId)->exists();
 
         return response()->json($exists);
+    }
+
+    public function getDistributorDetail(Request $request)
+    {
+        $binaryDetail = CoinMultiLevel::find($request->id);
+        $currentStakingUnit = CoinStacking::where('user_id', $binaryDetail->user_id)
+            ->where('status', 'OnGoingPeriod')
+            ->sum('stacking_unit');
+
+        $accruedStakingUnit = CoinStacking::where('user_id', $binaryDetail->user_id)
+            ->where('status', 'MaturityPeriod')
+            ->sum('stacking_unit');
+
+        $currentStakingPrice = CoinStacking::where('user_id', $binaryDetail->user_id)
+            ->where('status', 'OnGoingPeriod')
+            ->sum('stacking_price');
+
+        $accruedStakingPrice = CoinStacking::where('user_id', $binaryDetail->user_id)
+            ->where('status', 'MaturityPeriod')
+            ->sum('stacking_price');
+
+        $detail = [
+            'name' => $binaryDetail->user->name,
+            'email' => $binaryDetail->user->email,
+            'profile_photo' => $binaryDetail->user->getFirstMediaUrl('profile_photo') ?? null,
+            'sponsor_name' => $binaryDetail->sponsor ? $binaryDetail->sponsor->user->name : null,
+            'sponsor_email' => $binaryDetail->sponsor ? $binaryDetail->sponsor->user->email : null,
+            'sponsor_profile_photo' => $binaryDetail->sponsor ? $binaryDetail->sponsor->user->getFirstMediaUrl('profile_photo') : null,
+            'upline_name' => $binaryDetail->upline ? $binaryDetail->upline->user->name : null,
+            'upline_email' => $binaryDetail->upline ? $binaryDetail->upline->user->email : null,
+            'upline_profile_photo' => $binaryDetail->upline ? $binaryDetail->upline->user->getFirstMediaUrl('profile_photo') : null,
+            'email' => $binaryDetail->user->email,
+            'level' => $request->level,
+            'current_staking' => number_format($currentStakingUnit, 4) . ' MXT ($ ' . number_format($currentStakingPrice, 2) . ')',
+            'accrued_staking' => number_format($accruedStakingUnit, 4) . ' MXT ($ ' . number_format($accruedStakingPrice, 2) . ')'
+        ];
+
+        return response()->json($detail);
     }
 
 }

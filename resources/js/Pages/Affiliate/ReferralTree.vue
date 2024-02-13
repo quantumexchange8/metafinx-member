@@ -18,20 +18,26 @@ import {
 } from "@/Components/Icons/outline.jsx";
 import Button from "@/Components/Button.vue";
 
+const props = defineProps({
+    search: String
+})
+
 const referralTree = ref(null);
 // Use refs to store functions
 const handleZoomIn = ref(() => {});
 const handleZoomOut = ref(() => {});
 const handleRecenter = ref(() => {});
 
-let search = ref(null);
+const search = ref(props.search);
 let root = ref({});
 const isLoading = ref(false);
 
-watch(search, debounce(function() {
-    isLoading.value = true;
-    getResults(search.value);
-}, 300));
+watch(
+    () => props.search,
+    debounce((searchValue) => {
+        getResults(searchValue);
+    }, 300)
+);
 
 const getResults = async (search = '') => {
     isLoading.value = true;
@@ -39,7 +45,6 @@ const getResults = async (search = '') => {
         let url = `/affiliate/getTreeData`;
 
         if (search) {
-            console.log(search)
             url += `?search=${search}`;
         }
 
@@ -115,21 +120,6 @@ onMounted(() => {
             </div>
         </div>
     </div>
-    <div>
-        <InputIconWrapper>
-            <template #icon>
-                <SearchIcon aria-hidden="true" class="w-5 h-5" />
-            </template>
-            <Input
-                withIcon
-                id="search"
-                type="text"
-                class="block border-transparent w-full md:w-1/3"
-                :placeholder="$t('public.affiliate.search_placeholder')"
-                v-model="search"
-            />
-        </InputIconWrapper>
-    </div>
 
 <!--    <div class="flex items-center self-stretch justify-end my-3">-->
 <!--        <div class="flex gap-3">-->
@@ -184,6 +174,6 @@ onMounted(() => {
     <ReferralChild
         :node="root"
         :isLoading="isLoading"
-        class="pt-8 overflow-x-auto"
+        class="pt-5 overflow-x-auto"
     />
 </template>
