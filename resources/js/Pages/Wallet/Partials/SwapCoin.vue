@@ -9,6 +9,7 @@ import { ref, watch } from "vue";
 import { transactionFormat } from "@/Composables/index.js";
 import BaseListbox from "@/Components/BaseListbox.vue";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
+import MXTLogo from "@/Components/MXTLogo.vue";
 
 const props = defineProps({
     coin: Object,
@@ -89,8 +90,7 @@ watch(coinUnit, (newUnit) => {
 
 <template>
     <div class="flex flex-col gap-8 mt-3">
-        <div class="flex justify-between p-5 rounded-xl shadow-md"
-            style="background: linear-gradient(251deg, #00095E 2.14%, #0359E8 97.82%);">
+        <div class="flex justify-between p-5 rounded-xl shadow-md" style="background: linear-gradient(146deg, #E85B7A 14.85%, #DC5277 16.26%, #D14F79 18.38%, #C84C7B 21.92%, #D24C7B 44.54%, #E34D7A 54.43%, #EF5572 66.45%, #F05B6C 85.53%)">
             <div class="space-y-2">
                 <div class="text-base font-semibold dark:text-white">
                     {{ coin.setting_coin.name }}
@@ -101,6 +101,9 @@ watch(coinUnit, (newUnit) => {
                 <div class="text-sm font-normal dark:text-white">
                     ≈ $&nbsp;{{ formatAmount(coin.unit * props.coin_price.price) }}
                 </div>
+            </div>
+            <div class="absolute right-5 top-[93px]">
+                <MXTLogo class="w-[180px] h-[129px]" />
             </div>
         </div>
         <div class="flex flex-col gap-5">

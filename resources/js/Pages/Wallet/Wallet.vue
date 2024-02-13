@@ -8,11 +8,11 @@ import {DuplicateIcon} from "@heroicons/vue/outline";
 import Tooltip from "@/Components/Tooltip.vue";
 import Input from "@/Components/Input.vue";
 import Action from "@/Pages/Wallet/Partials/Action.vue";
-import {XLCoinLogo} from "@/Components/Icons/outline.jsx";
 import {transactionFormat} from "@/Composables/index.js";
 import TransactionHistory from "@/Pages/Wallet/Transaction/TransactionHistory.vue";
 import Button from "@/Components/Button.vue";
 import InternalTransfer from "@/Pages/Wallet/Partials/InternalTransfer.vue";
+import MXTLogo from "@/Components/MXTLogo.vue";
 
 const props = defineProps({
     wallets: Object,
@@ -38,7 +38,7 @@ function copyTestingCode () {
     let walletAddressCopy = document.querySelector('#MXTCoinAddress');
     walletAddressCopy.setAttribute('type', 'text');
     walletAddressCopy.select();
-    
+
     try {
         var successful = document.execCommand('copy');
         if (successful) {
@@ -114,7 +114,7 @@ function copyTestingCode () {
                 v-for="coin in coins"
                 class="flex flex-col overflow-hidden rounded-[20px] w-80 border border-gray-400 dark:border-gray-600"
             >
-                <div class="flex justify-between pt-5 pb-2.5 px-4 shadow-md" style="background: linear-gradient(251deg, #00095E 2.14%, #0359E8 97.82%);">
+                <div class="flex justify-between pt-5 pb-2.5 px-4 shadow-md" style="background: linear-gradient(146deg, #E85B7A 14.85%, #DC5277 16.26%, #D14F79 18.38%, #C84C7B 21.92%, #D24C7B 44.54%, #E34D7A 54.43%, #EF5572 66.45%, #F05B6C 85.53%)">
                     <div class="space-y-2">
                         <div class="text-base font-semibold dark:text-white">
                             {{ coin.setting_coin.name }}
@@ -125,6 +125,9 @@ function copyTestingCode () {
                         <div class="text-sm font-normal dark:text-white">
                             ≈ $ {{ formatAmount(coin.unit * props.coin_price.price) }}
                         </div>
+                    </div>
+                    <div class="absolute right-24">
+                        <MXTLogo />
                     </div>
                 </div>
                 <div class="inline-flex justify-between items-center gap-3 self-stretch bg-gray-700 pt-3 pb-2 px-4">
@@ -168,7 +171,7 @@ function copyTestingCode () {
                     v-for="coin in coins"
                     class="flex flex-col overflow-hidden rounded-[20px] border border-gray-400 dark:border-gray-600"
                 >
-                    <div class="flex justify-between pt-5 pb-2.5 px-4 shadow-md" style="background: linear-gradient(251deg, #00095E 2.14%, #0359E8 97.82%);">
+                    <div class="flex justify-between pt-5 pb-2.5 px-4 shadow-md" style="background: linear-gradient(146deg, #E85B7A 14.85%, #DC5277 16.26%, #D14F79 18.38%, #C84C7B 21.92%, #D24C7B 44.54%, #E34D7A 54.43%, #EF5572 66.45%, #F05B6C 85.53%)">
                         <div class="space-y-2">
                             <div class="text-base font-semibold dark:text-white">
                                 {{ coin.setting_coin.name }} Coin
@@ -179,6 +182,9 @@ function copyTestingCode () {
                             <div class="text-sm font-normal dark:text-white">
                                 ≈ $&nbsp;{{ formatAmount(coin.unit / props.coin_price.price) }}
                             </div>
+                        </div>
+                        <div class="absolute right-6">
+                            <MXTLogo />
                         </div>
                     </div>
                     <div class="inline-flex justify-between items-center gap-3 self-stretch bg-gray-700 pt-3 pb-2 px-4">

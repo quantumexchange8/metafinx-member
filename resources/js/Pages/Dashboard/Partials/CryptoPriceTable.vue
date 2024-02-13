@@ -2,6 +2,7 @@
 import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 import {transactionFormat} from "@/Composables/index.js";
 import {XLCoinLogo} from "@/Components/Icons/outline.jsx";
+import {MXTIcon} from "@/Components/Icons/brands.jsx";
 
 const props = defineProps({
     setting_coin: Object,
@@ -148,8 +149,8 @@ onMounted(() => {
             </tr>
             <tr class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600">
                 <td class="py-3 inline-flex items-center gap-3">
-                    <div class="bg-white rounded-full grow-0 shrink-0">
-                        <XLCoinLogo class="w-6 h-6" />
+                    <div class="rounded-full w-6 h-6 flex justify-center items-center grow-0 shrink-0" style="background: linear-gradient(146deg, #E85B7A 14.85%, #DC5277 16.26%, #D14F79 18.38%, #C84C7B 21.92%, #D24C7B 44.54%, #E34D7A 54.43%, #EF5572 66.45%, #F05B6C 85.53%)">
+                        <MXTIcon class="w-5 h-5" />
                     </div>
                     <div>
                         <span class="dark:text-white text-sm">{{ setting_coin.symbol }}</span> <span class="dark:text-gray-400">{{ setting_coin.name }}</span>
