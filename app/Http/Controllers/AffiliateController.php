@@ -455,13 +455,17 @@ class AffiliateController extends Controller
     public function getAvailableBinaryAffiliate(Request $request)
     {
         $user = Auth::user();
-        $existedUserIds = CoinMultiLevel::pluck('user_id');
-        $childrenIds = $user->children()->pluck('id');
+        $existed_users_ids = CoinMultiLevel::get()->pluck('user_id');
+        $childrenIds = $user->children()->get()->pluck('id');
 
-        $query = User::with(['coinStaking', 'media'])
-            ->whereIn('id', $childrenIds)
-            ->where('role', 'user')
-            ->whereNotIn('id', $existedUserIds)
+        $users = User::leftJoin('coin_stackings', 'users.id', '=', 'coin_stackings.user_id')
+            ->with(['coinStaking' => function ($query) {
+                $query->select('id', 'user_id', 'stacking_unit', 'stacking_price', 'auto_assign_at', 'created_at')
+                    ->where('auto_assign_at', '>=', now());
+            }])
+            ->whereIn('users.id', $childrenIds)
+            ->where('users.role', 'user')
+            ->whereNotIn('users.id', $existed_users_ids)
             ->when($request->filled('query'), function ($query) use ($request) {
                 $search = $request->input('query');
                 $query->where(function ($innerQuery) use ($search) {
@@ -469,26 +473,16 @@ class AffiliateController extends Controller
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->orderBy('created_at', 'desc')
+            ->select('users.id', 'users.name', 'users.email', 'coin_stackings.created_at')
+            ->orderByRaw('coin_stackings.created_at IS NULL')
+            ->orderBy('users.created_at', 'desc')
             ->paginate(5);
 
-        // Transform each user to include only the specified attributes
-        $transformedUsers = $query->getCollection()->map(function ($user) {
-            return [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'created_at' => $user->created_at,
-                'profile_photo' => $user->getFirstMediaUrl('profile_photo'),
-                'coin_staking' => $user->coinStaking,
-                'media' => $user->media->toArray(),
-            ];
+        $users->each(function ($user) {
+            $user->profile_photo = $user->getFirstMediaUrl('profile_photo');
         });
 
-        // Replace the items in the paginated results with the transformed users
-        $query->setCollection($transformedUsers);
-
-        return response()->json($query);
+        return response()->json($users);
     }
 
     public function getLastChild(Request $request)

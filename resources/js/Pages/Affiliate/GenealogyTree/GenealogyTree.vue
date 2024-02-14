@@ -334,7 +334,18 @@ checkCoinStackingExistence();
                                     v-for="referee in referralTableData.data"
                                 >
                                     <td class="p-3">
-                                        {{ referee.name }}
+                                        <div class="flex items-center gap-2">
+                                            <img :src="referee.profile_photo ? referee.profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-6 h-6 rounded-full" alt="">
+                                            <div class="flex flex-col">
+                                                <div class="text-xs font-medium">
+                                                    {{ referee.name }}
+                                                </div>
+                                                <div class="text-left text-xs text-gray-600 dark:text-gray-400">
+                                                    {{ referee.email }}
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </td>
                                     <td class="p-3">
                                        <div v-if="referee.coin_staking.length > 0">

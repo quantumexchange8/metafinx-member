@@ -140,7 +140,7 @@ class WalletController extends Controller
             'datasets' => [],
         ];
 
-        $backgroundColors = ['internal_wallet' => '#FF2D55', 'musd_wallet' => '#F79009', 'MXT' => '#007AFF'];
+        $backgroundColors = ['internal_wallet' => '#FF2D55', 'musd_wallet' => '#F79009', 'MXT' => '#EF5572'];
         $balances = [];
         $backgroundColor = [];
 
@@ -328,14 +328,14 @@ class WalletController extends Controller
         )
         ->groupBy('date')
         ->get();
-            
+
         $labels = [];
         $data = [];
-    
+
         foreach ($coinPrices as $priceData) {
             // Format date as 'j M'
             $formattedDate = Carbon::parse($priceData->date)->format('j M');
-    
+
             $labels[] = $formattedDate;
             $data[] = $priceData->price;
         }
@@ -363,7 +363,7 @@ class WalletController extends Controller
                 ],
             ],
         ];
-    
+
         return response()->json($chartData);
     }
 

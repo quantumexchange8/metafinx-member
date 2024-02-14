@@ -26,16 +26,13 @@ class CheckAutoPlacementCommand extends Command
             if (!CoinMultiLevel::where('user_id', $user->id)->exists()) {
                 $auto_assign_at = $coinStacking->auto_assign_at;
 
-                // Find the direct left child
-                $directChild = CoinMultiLevel::where('position', 'left')->first();
+                // Find the direct left child of his upline
+                $directChild = CoinMultiLevel::where('user_id', $user->upline_id)->first();
 
                 // Check if direct left child exists
                 if ($directChild) {
                     // Find the last left child in the hierarchy list
-                    $lastChild = CoinMultiLevel::where('hierarchy_list', 'LIKE', '%' . $directChild->hierarchy_list . '%')
-                        ->where('position', 'left')
-                        ->orderBy('id', 'desc')
-                        ->first();
+                    $lastChild = $directChild->getLastChild('left');
 
                     // Check if last child exists and is not the same as the current user
                     if ($lastChild && $lastChild->id !== $user->id) {
@@ -57,7 +54,7 @@ class CheckAutoPlacementCommand extends Command
                             'coin_stacking_amount' => $coinStakingPrice,
                         ]);
 
-                        $this->info("User ID: {$user->id}, Name: {$user->name}, will be auto-assigned at: {$auto_assign_at} under Upline ID: {$upline->id}, HierarchyList: {$currentHierarchyList}");
+                        $this->info("User ID: {$user->id}, Name: {$user->name}, will be auto-assigned at: {$auto_assign_at} under Upline ID: {$upline->id}, HierarchyList: {$currentHierarchyList}, Sponsor ID: {$binarySponsor->id}");
                     } else {
                         $this->info("No valid upline found for User ID: {$user->id}, Name: {$user->name}.");
                     }
@@ -76,7 +73,7 @@ class CheckAutoPlacementCommand extends Command
                         'coin_stacking_amount' => $coinStakingPrice,
                     ]);
 
-                    $this->info("User ID: {$user->id}, Name: {$user->name}, will be auto-assigned at: {$auto_assign_at} under Upline ID: {$existingEntry->id}, HierarchyList: {$hierarchyList}");
+                    $this->info("User ID: {$user->id}, Name: {$user->name}, will be auto-assigned at: {$auto_assign_at} under Upline ID: {$existingEntry->id}, HierarchyList: {$hierarchyList} where there is no direct LEFT child");
                 }
             } else {
                 $this->info("User ID: {$user->id}, Name: {$user->name}, already exists in CoinMultiLevel table.");
