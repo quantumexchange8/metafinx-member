@@ -33,20 +33,19 @@ const reportType = ref('Return (Personal)');
 const exportStatus = ref(false);
 const { formatAmount } = transactionFormat();
 
-const returnFilter = computed(() => {
-    // Use map to generate an array based on the investmentPlans prop
-    return props.investmentPlans.map((investmentPlan) => ({
-        value: investmentPlan.id.toString(),
-        label: investmentPlan.name,
-    }));
-});
+const returnFilter = [
+    {value: '', label:"All"},
+    {value: 'StandardRewards', label:"Standard Rewards"},
+    {value: 'StakingRewards', label:"Staking Rewards"},
+    {value: 'DividendEarnings', label:"Dividend Earnings"},
+];
 
 const earnFilter = [
     {value: '', label:"All"},
     {value: 'ReferralEarnings', label:"Referral Earning"},
     {value: 'AffiliateEarnings', label:"Affiliate Earnings"},
     {value: 'DividendEarnings', label:"Dividend Earnings"},
-    {value: 'AffiliateDividendEarnings', label:"Affiliate Dividend Earnings"},
+    {value: 'PairingEarnings', label:"Pairing Earnings"},
 ];
 
 const investFilter = [
@@ -168,32 +167,32 @@ const clearFilter = () => {
                 {{ $t('public.report.standard_plan_overview') }}
             </h3>
 
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                 <div class="space-y-1">
                     <div class="text-xs font-medium dark:text-gray-400">{{ $t('public.standard_rewards') }}</div>
                     <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.standardRewards) }}</div>
                 </div>
             </div>
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                 <div class="space-y-1">
                     <div class="text-xs font-medium dark:text-gray-400">{{ $t('public.referral_earnings') }}</div>
                     <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.standardReferralEarnings) }}
                     </div>
                 </div>
             </div>
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                 <div class="space-y-1">
                     <div class="text-xs font-medium dark:text-gray-400">{{ $t('public.affiliate_earnings') }}</div>
                     <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.affiliateEarnings) }}</div>
                 </div>
             </div>
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                 <div class="space-y-1">
                     <div class="text-xs font-medium dark:text-gray-400">{{ $t('public.dividend_earnings') }}</div>
                     <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.dividendEarnings) }}</div>
                 </div>
             </div>
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                 <div class="space-y-1">
                     <div class="text-xs font-medium dark:text-gray-400">{{ $t('public.affiliate_dividend_earnings') }}</div>
                     <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.affiliateDividendEarnings) }}</div>
@@ -204,20 +203,20 @@ const clearFilter = () => {
                 {{ $t('public.report.coin_staking_overview') }}
             </h3>
 
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                 <div class="space-y-1">
                     <div class="text-xs font-medium dark:text-gray-400">{{ $t('public.staking_rewards') }}</div>
                     <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.stakingRewards) }}</div>
                 </div>
             </div>
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                 <div class="space-y-1">
                     <div class="text-xs font-medium dark:text-gray-400">{{ $t('public.referral_earnings') }}</div>
                     <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.stakingReferralEarnings) }}
                     </div>
                 </div>
             </div>
-            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+            <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                 <div class="space-y-1">
                     <div class="text-xs font-medium dark:text-gray-400">{{ $t('public.pairing_earnings') }}</div>
                     <div class="text-2xl font-semibold dark:text-white">{{ formatAmount(props.pairingEarnings) }}</div>
@@ -226,36 +225,36 @@ const clearFilter = () => {
         </div>
 
         <template #asideRight>
-            <div class="hidden sm:flex inset-y-0 p-6 flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-l dark:border-gray-700 w-96 fixed right-0">                
+            <div class="hidden sm:flex inset-y-0 p-6 flex-col space-y-6 bg-white shadow-lg dark:bg-gray-800 border-l dark:border-gray-700 w-96 fixed right-0">
                 <h3 class="text-xl font-semibold leading-tight">
                     {{$t('public.report.standard_plan_overview')}}
                 </h3>
 
-                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                     <div class="space-y-1">
                         <div class="text-xs font-medium dark:text-gray-400">{{$t('public.standard_rewards')}}</div>
                         <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.standardRewards) }}</div>
                     </div>
                 </div>
-                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                     <div class="space-y-1">
                         <div class="text-xs font-medium dark:text-gray-400">{{$t('public.referral_earnings')}}</div>
                         <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.standardReferralEarnings) }}</div>
                     </div>
                 </div>
-                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                     <div class="space-y-1">
                         <div class="text-xs font-medium dark:text-gray-400">{{$t('public.affiliate_earnings')}}</div>
                         <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.affiliateEarnings) }}</div>
                     </div>
                 </div>
-                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                     <div class="space-y-1">
                         <div class="text-xs font-medium dark:text-gray-400">{{$t('public.dividend_earnings')}}</div>
                         <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.dividendEarnings) }}</div>
                     </div>
                 </div>
-                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                     <div class="space-y-1">
                         <div class="text-xs font-medium dark:text-gray-400">{{$t('public.affiliate_dividend_earnings')}}</div>
                         <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.affiliateDividendEarnings) }}</div>
@@ -266,19 +265,19 @@ const clearFilter = () => {
                     {{$t('public.report.coin_staking_overview')}}
                 </h3>
 
-                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                     <div class="space-y-1">
                         <div class="text-xs font-medium dark:text-gray-400">{{$t('public.staking_rewards')}}</div>
                         <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.stakingRewards) }}</div>
                     </div>
                 </div>
-                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                     <div class="space-y-1">
                         <div class="text-xs font-medium dark:text-gray-400">{{$t('public.referral_earnings')}}</div>
                         <div class="text-2xl font-semibold dark:text-white">$&nbsp;{{ formatAmount(props.stakingReferralEarnings) }}</div>
                     </div>
                 </div>
-                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-[20px] dark:bg-gray-700">
+                <div class="p-5 flex justify-between items-center overflow-hidden bg-white rounded-xl dark:bg-gray-700">
                     <div class="space-y-1">
                         <div class="text-xs font-medium dark:text-gray-400">{{$t('public.pairing_earnings')}}</div>
                         <div class="text-2xl font-semibold dark:text-white">{{ formatAmount(props.pairingEarnings) }}</div>

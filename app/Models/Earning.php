@@ -13,6 +13,7 @@ class Earning extends Model
         'upline_id',
         'upline_rank_id',
         'upline_wallet_id',
+        'upline_coin_id',
         'downline_id',
         'downline_rank_id',
         'investment_subscription_id',
@@ -40,5 +41,10 @@ class Earning extends Model
     public function subscriptionPlan(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(InvestmentSubscription::class, 'investment_subscription_id', 'id');
+    }
+
+    public function coin(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Coin::class, 'upline_coin_id', 'id');
     }
 }

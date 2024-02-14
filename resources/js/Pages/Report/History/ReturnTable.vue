@@ -6,6 +6,8 @@ import debounce from "lodash/debounce.js";
 import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/outline";
 import {transactionFormat} from "@/Composables/index.js";
 import {usePage} from "@inertiajs/vue3";
+import {InternalMUSDWalletIcon, InternalUSDWalletIcon} from "@/Components/Icons/outline.jsx";
+import {MXTIcon} from "@/Components/Icons/brands.jsx";
 
 const props = defineProps({
     search: String,
@@ -123,16 +125,19 @@ const currentLocale = ref(usePage().props.locale);
             <table class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
                 <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
                 <tr>
-                    <th scope="col" class="py-3 w-1/4">
+                    <th scope="col" class="py-3 w-1/5">
                         {{$t('public.report.date')}}
                     </th>
-                    <th scope="col" class="py-3 w-1/4 text-center">
+                    <th scope="col" class="py-3 w-1/5">
                         {{$t('public.report.plan')}}
                     </th>
-                    <th scope="col" class="py-3 w-1/4 text-center">
+                    <th scope="col" class="py-3 w-1/5">
                         {{$t('public.report.category')}}
                     </th>
-                    <th scope="col" class="py-3 w-1/4 text-center">
+                    <th scope="col" class="py-3 w-1/5">
+                        {{$t('public.wallet.wallet')}}
+                    </th>
+                    <th scope="col" class="py-3 w-1/5">
                         {{$t('public.report.amount')}}
                     </th>
                 </tr>
@@ -145,13 +150,30 @@ const currentLocale = ref(usePage().props.locale);
                     <td class="py-3">
                         {{ formatDateTime(earn.roi_release_date) }}
                     </td>
-                    <td class="py-3 text-center">
+                    <td class="py-3">
                         {{ earn.subscription_plan.investment_plan.name[currentLocale] }} - <span class="text-gray-600 dark:text-gray-400">{{ earn.subscription_plan.subscription_id }}</span>
                     </td>
-                    <td class="py-3 text-center">
+                    <td class="py-3">
                         {{ formatType(earn.type) }}
                     </td>
-                    <td class="py-3 text-center">
+                    <td class="py-3 flex items-center gap-2">
+                        <div v-if="earn.category === 'standard' && earn.wallet.type === 'internal_wallet'" class="flex items-center justify-center bg-gradient-to-b from-pink-400 to-pink-500 dark:shadow-pink-500 rounded-full w-5 h-5 shrink-0 grow-0">
+                            <InternalUSDWalletIcon class="w-4 h-4" />
+                        </div>
+                        <div v-if="earn.category === 'standard' && earn.wallet.type === 'musd_wallet'" class="flex items-center justify-center bg-gradient-to-b from-warning-300 to-warning-500 dark:shadow-pink-500 rounded-full w-5 h-5 shrink-0 grow-0">
+                            <InternalMUSDWalletIcon class="w-4 h-4" />
+                        </div>
+                        <div v-if="earn.category === 'staking'" class="rounded-full w-5 h-5 flex justify-center items-center grow-0 shrink-0" style="background: linear-gradient(146deg, #E85B7A 14.85%, #DC5277 16.26%, #D14F79 18.38%, #C84C7B 21.92%, #D24C7B 44.54%, #E34D7A 54.43%, #EF5572 66.45%, #F05B6C 85.53%)">
+                            <MXTIcon class="w-4 h-4 text-white" />
+                        </div>
+                        <div v-if="earn.category === 'standard'">
+                            {{ earn.wallet.name }}
+                        </div>
+                        <div v-if="earn.category === 'staking'">
+                            {{ earn.coin.setting_coin.name }}
+                        </div>
+                    </td>
+                    <td class="py-3">
                         $&nbsp;{{ formatAmount(earn.after_amount) }}
                     </td>
                 </tr>

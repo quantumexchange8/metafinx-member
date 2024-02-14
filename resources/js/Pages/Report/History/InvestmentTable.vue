@@ -144,25 +144,30 @@ const paginationActiveClass = [
                     class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600  dark:hover:bg-gray-600"
                 >
                     <td class="py-3">
-                        {{ formatDateTime(investment.created_at) }}
+                        {{ formatDateTime(investment.subscription_date) }}
                     </td>
                     <td class="py-3">
-                        {{ investment.expired_date }}
+                        {{ investment.subscription_expired_date }}
                     </td>
                     <td class="py-3">
                         {{ investment.subscription_id }}
                     </td>
                     <td class="py-3">
-                        {{ investment.investment_plan.name['en'] }}
+                        {{ investment.plan_name }}
                     </td>
                     <td class="py-3">
-                        $&nbsp;{{ formatAmount(investment.amount) }}
+                        <div v-if="investment.plan_type === 'standard'">
+                            $ {{ formatAmount(investment.subscription_amount) }}
+                        </div>
+                        <div v-if="investment.plan_type === 'staking'">
+                            {{ formatAmount(investment.subscription_unit, 4) }} MXT ($ {{ formatAmount(investment.subscription_amount) }})
+                        </div>
                     </td>
                     <td class="py-3 uppercase">
-                        <span class="uppercase dark:text-error-500 font-semibold" v-if="investment.status === 'Terminated'">{{ formatType(investment.status) }}</span>
-                        <span class="uppercase dark:text-blue-500 font-semibold" v-if="investment.status === 'CoolingPeriod'">{{ formatType(investment.status) }}</span>
-                        <span class="uppercase dark:text-warning-500 font-semibold" v-if="investment.status === 'OnGoingPeriod'">{{ formatType(investment.status) }}</span>
-                        <span class="uppercase dark:text-success-500 font-semibold" v-if="investment.status === 'MaturityPeriod'">{{ formatType(investment.status) }}</span>
+                        <span class="uppercase dark:text-error-500 font-semibold" v-if="investment.subscription_status === 'Terminated'">{{ formatType(investment.subscription_status) }}</span>
+                        <span class="uppercase dark:text-blue-500 font-semibold" v-if="investment.subscription_status === 'CoolingPeriod'">{{ formatType(investment.subscription_status) }}</span>
+                        <span class="uppercase dark:text-warning-500 font-semibold" v-if="investment.subscription_status === 'OnGoingPeriod'">{{ formatType(investment.subscription_status) }}</span>
+                        <span class="uppercase dark:text-success-500 font-semibold" v-if="investment.subscription_status === 'MaturityPeriod'">{{ formatType(investment.subscription_status) }}</span>
                     </td>
                 </tr>
                 </tbody>
