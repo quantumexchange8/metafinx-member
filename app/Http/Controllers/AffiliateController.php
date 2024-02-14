@@ -286,7 +286,7 @@ class AffiliateController extends Controller
             'sponsor_id' => $sponsor->id,
             'upline_id' => $upline->id,
             'hierarchy_list' => $hierarchyList,
-            'position' => $position,
+            'position' => 'left',
             'coin_stacking_amount' => $coinStakingPrice,
         ]);
 
@@ -490,8 +490,9 @@ class AffiliateController extends Controller
         $user = Auth::user();
         $position = $request->position;
         $binaryAuthUser = CoinMultiLevel::where('user_id', $user->id)->first();
+        $directChild = $binaryAuthUser->direct_child($position)->first();
 
-        $last_child = $binaryAuthUser->getLastChild($position);
+        $last_child = $directChild->getLastChild('left');
         if ($last_child) {
             $last_child->profile_photo = $last_child->user->getFirstMediaUrl('profile_photo');
         }
