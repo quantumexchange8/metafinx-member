@@ -11,15 +11,20 @@ import ReferralTree from "@/Pages/Affiliate/ReferralTree.vue";
 import {transactionFormat} from "@/Composables/index.js";
 import AffiliateNetwork from "@/Pages/Affiliate/AffiliateNetwork.vue";
 import {usePage} from "@inertiajs/vue3";
+import InvestmentTable from "@/Pages/Report/History/InvestmentTable.vue";
 
 const props = defineProps({
     referredCounts: Number,
     totalReferralEarning: Number,
+    totalAffiliateEarning: Number,
+    totalBinaryReferralEarning: Number,
+    totalPairingEarning: Number,
     downline: Array,
     uplineStaking: Boolean,
 })
 const { formatAmount,formatDate } = transactionFormat();
 const createdDate = usePage().props.auth.user.created_at;
+const affiliateType = ref('affiliate');
 
 const tooltipContent = ref('Copy');
 function copyReferralCode () {
@@ -103,13 +108,14 @@ function copyReferralCodeLink() {
         <AffiliateNetwork
             :downline="downline"
             :uplineStaking="uplineStaking"
+            @update:affiliateType="affiliateType = $event"
          />
 
         <div class="flex flex-col space-y-6 pt-8 pb-12 mb-16 md:hidden">
             <h3 class="text-xl font-semibold leading-tight">
                 {{$t('public.affiliate.affiliate_program')}}
             </h3>
-            <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+            <div v-if="affiliateType === 'affiliate'" class="p-5 dark:bg-gray-700 rounded-xl flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
                     {{$t('public.affiliate.total_referral_earning')}} {{ formatDate(createdDate) }}
                 </div>
@@ -117,15 +123,31 @@ function copyReferralCodeLink() {
                     $&nbsp;{{ formatAmount(totalReferralEarning) }}
                 </div>
             </div>
-            <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+            <div v-if="affiliateType === 'affiliate'" class="p-5 dark:bg-gray-700 rounded-xl flex flex-col gap-2">
                 <div class="font-medium text-xs dark:text-gray-400">
                     {{$t('public.affiliate.total_affiliate_earning')}} {{ formatDate(createdDate) }}
                 </div>
                 <div class="font-semibold text-2xl dark:text-white">
-                    $&nbsp;0.00
+                    $ {{ totalAffiliateEarning ? formatAmount(totalAffiliateEarning, 2) : '0.00' }}
                 </div>
             </div>
-            <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col items-center justify-center gap-8 pb-12">
+            <div v-if="affiliateType === 'binary'" class="p-5 dark:bg-gray-700 rounded-xl flex flex-col gap-2">
+                <div class="font-medium text-xs dark:text-gray-400">
+                    {{$t('public.affiliate.total_referral_earning')}} {{ formatDate(createdDate) }}
+                </div>
+                <div class="font-semibold text-2xl dark:text-white">
+                    $ {{ totalBinaryReferralEarning ? formatAmount(totalBinaryReferralEarning, 2) : '0.00' }}
+                </div>
+            </div>
+            <div v-if="affiliateType === 'binary'" class="p-5 dark:bg-gray-700 rounded-xl flex flex-col gap-2">
+                <div class="font-medium text-xs dark:text-gray-400">
+                    {{$t('public.affiliate.total_pairing_earning')}} {{ formatDate(createdDate) }}
+                </div>
+                <div class="font-semibold text-2xl dark:text-white">
+                    $ {{ totalPairingEarning ? formatAmount(totalPairingEarning, 2) : '0.00' }}
+                </div>
+            </div>
+            <div class="p-5 dark:bg-gray-700 rounded-xl flex flex-col items-center justify-center gap-8 pb-12">
                 <div class="grid gap-2 font-medium text-base dark:text-gray-400 text-center">
                     {{$t('public.affiliate.referred')}}
                     <div>
@@ -170,7 +192,7 @@ function copyReferralCodeLink() {
                 <h3 class="text-xl font-semibold leading-tight">
                     {{$t('public.affiliate.affiliate_program')}}
                 </h3>
-                <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+                <div v-if="affiliateType === 'affiliate'" class="p-5 dark:bg-gray-700 rounded-xl flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
                         {{$t('public.affiliate.total_referral_earning')}} {{ formatDate(createdDate) }}
                     </div>
@@ -178,15 +200,31 @@ function copyReferralCodeLink() {
                         $&nbsp;{{ formatAmount(totalReferralEarning) }}
                     </div>
                 </div>
-                <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
+                <div v-if="affiliateType === 'affiliate'" class="p-5 dark:bg-gray-700 rounded-xl flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
                         {{$t('public.affiliate.total_affiliate_earning')}} {{ formatDate(createdDate) }}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
-                        $&nbsp;0.00
+                        $ {{ totalAffiliateEarning ? formatAmount(totalAffiliateEarning, 2) : '0.00' }}
                     </div>
                 </div>
-                <div class="p-5 dark:bg-gray-700 rounded-[10px] flex flex-col items-center justify-center gap-8">
+                <div v-if="affiliateType === 'binary'" class="p-5 dark:bg-gray-700 rounded-xl flex flex-col gap-2">
+                    <div class="font-medium text-xs dark:text-gray-400">
+                        {{$t('public.affiliate.total_referral_earning')}} {{ formatDate(createdDate) }}
+                    </div>
+                    <div class="font-semibold text-2xl dark:text-white">
+                        $ {{ totalBinaryReferralEarning ? formatAmount(totalBinaryReferralEarning, 2) : '0.00' }}
+                    </div>
+                </div>
+                <div v-if="affiliateType === 'binary'" class="p-5 dark:bg-gray-700 rounded-xl flex flex-col gap-2">
+                    <div class="font-medium text-xs dark:text-gray-400">
+                        {{$t('public.affiliate.total_pairing_earning')}} {{ formatDate(createdDate) }}
+                    </div>
+                    <div class="font-semibold text-2xl dark:text-white">
+                        $ {{ totalPairingEarning ? formatAmount(totalPairingEarning, 2) : '0.00' }}
+                    </div>
+                </div>
+                <div class="p-5 dark:bg-gray-700 rounded-xl flex flex-col items-center justify-center gap-8">
                     <div class="grid gap-2 font-medium text-base dark:text-gray-400 text-center">
                         {{$t('public.affiliate.referred')}}
                         <div>

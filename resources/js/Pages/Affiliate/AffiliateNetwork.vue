@@ -27,6 +27,12 @@ const props = defineProps({
 })
 
 const search = ref('');
+
+const emit = defineEmits(['update:affiliateType']);
+
+const updateAffiliateType = (type) => {
+    emit('update:affiliateType', type);
+}
 </script>
 
 <template>
@@ -45,12 +51,13 @@ const search = ref('');
                                 v-show="category.type !== 'binary' || uplineStaking"
                                 class="px-4 py-2.5 text-sm font-semibold text-gray-900 border border-gray-200 focus:outline-none max-w-md"
                                 :class="{
-                                'rounded-lg': !uplineStaking && !$page.props.auth.user.binary && category.type === 'affiliate',
-                                'rounded-l-xl': category.type === 'affiliate' && uplineStaking,
-                                'rounded-r-xl': category.type === 'binary' && uplineStaking,
-                                'hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600': true,
-                                'bg-transparent dark:bg-[#38425080] dark:text-white': selected
-                            }"
+                                    'rounded-lg': !uplineStaking && !$page.props.auth.user.binary && category.type === 'affiliate',
+                                    'rounded-l-xl': category.type === 'affiliate' && uplineStaking,
+                                    'rounded-r-xl': category.type === 'binary' && uplineStaking,
+                                    'hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600': true,
+                                    'bg-transparent dark:bg-[#38425080] dark:text-white': selected
+                                }"
+                                @click="updateAffiliateType(category.type)"
                             >
                                 {{ category.name }}
                             </button>

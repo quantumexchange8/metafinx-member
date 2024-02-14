@@ -84,7 +84,7 @@ class WalletController extends Controller
             'coin_price' => $coin_price,
             'conversion_rate' => $conversion_rate,
             'coin_market_time' => $coin_market_time,
-            'totalBalance' => number_format($totalBalance->sum('balance') + ($coinTotalPrice->sum('unit') / $coin_price->price), 2),
+            'totalBalance' => number_format($totalBalance->sum('balance') + ($coinTotalPrice->sum('unit') * $coin_price->price), 2),
             'wallet_sel' => $wallet_sel,
             // 'depositWalletSel' => $depositWalletSel,
             'random_address' => $wallet_address,
@@ -444,7 +444,7 @@ class WalletController extends Controller
             'transaction_amount' => $request->transaction_amount,
             'status' => 'Success',
             'new_wallet_amount' => $wallet->balance,
-            'new_coin_amount' => $coin->unit,
+            'new_coin_amount' => $total_unit,
         ]);
 
         $coin->update([

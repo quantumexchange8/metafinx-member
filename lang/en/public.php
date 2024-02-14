@@ -208,6 +208,7 @@ return [
         "affiliate_program" => "Affiliate Program",
         "total_referral_earning" => "Total Referral Earning since",
         "total_affiliate_earning" => "Total Affiliate Earning since",
+        "total_pairing_earning" => "Total Pairing Earning since",
         "referred" => "You’ve successfully referred",
         "members" => "members",
         "invite_friend" => "Invite a friend",

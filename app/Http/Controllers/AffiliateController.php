@@ -20,7 +20,25 @@ class AffiliateController extends Controller
     public function referral_view()
     {
         $referredCounts = User::where('upline_id', \Auth::id())->count();
-        $totalReferralEarning = Earning::where('upline_id', \Auth::id())->where('type', 'ReferralEarnings')->sum('after_amount');
+        $totalReferralEarning = Earning::where('upline_id', \Auth::id())
+            ->where('type', 'ReferralEarnings')
+            ->where('category', 'standard')
+            ->sum('after_amount');
+
+        $totalAffiliateEarning = Earning::where('upline_id', \Auth::id())
+            ->where('type', 'AffiliateEarnings')
+            ->where('category', 'standard')
+            ->sum('after_amount');
+
+        $totalBinaryReferralEarning = Earning::where('upline_id', \Auth::id())
+            ->where('type', 'ReferralEarnings')
+            ->where('category', 'staking')
+            ->sum('after_coin_price');
+
+        $totalPairingEarning = Earning::where('upline_id', \Auth::id())
+            ->where('type', 'PairingEarnings')
+            ->where('category', 'staking')
+            ->sum('after_coin_price');
 
         $downline = User::where('upline_id', \Auth::id())->with(['coinStaking'])->get();
 
@@ -36,6 +54,9 @@ class AffiliateController extends Controller
         return Inertia::render('Affiliate/Affiliate', [
             'referredCounts' => $referredCounts,
             'totalReferralEarning' => floatval($totalReferralEarning),
+            'totalAffiliateEarning' => floatval($totalAffiliateEarning),
+            'totalBinaryReferralEarning' => floatval($totalBinaryReferralEarning),
+            'totalPairingEarning' => floatval($totalPairingEarning),
             'downline' => $downline,
             'uplineStaking' => $uplineStaking,
         ]);
