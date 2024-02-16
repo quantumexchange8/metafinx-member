@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Coin;
 use App\Models\User;
+use Illuminate\Database\Query\Builder;
 use Inertia\Inertia;
 use App\Models\Wallet;
 use App\Models\Earning;
@@ -260,6 +261,20 @@ class WalletController extends Controller
                 'earnings.roi_release_date as transaction_date'
             )
             ->leftJoin('earnings', 'users.id', '=', 'earnings.upline_id')
+            ->when($request->search, function (Builder $query, string $search) {
+                $query->where('earnings.type', 'like','%' . $search . '%');
+            })
+            ->when($request->date, function (Builder $query, $date) {
+                $dateRange = explode(' - ', $date);
+                $start_date = Carbon::createFromFormat('Y-m-d', $dateRange[0])->startOfDay();
+                $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
+
+                // Apply date range condition to each query
+                $query->whereBetween('earnings.roi_release_date', [$start_date, $end_date]);
+            })
+            ->when($request->type, function (Builder $query, string $type) {
+                $query->where('earnings.type', $type);
+            })
             ->where('users.id', $user->id)
             ->where('earnings.upline_wallet_id', $wallet_id);
 
@@ -274,6 +289,20 @@ class WalletController extends Controller
                 'transactions.created_at as transaction_date'
             )
             ->leftJoin('transactions', 'users.id', '=', 'transactions.user_id')
+            ->when($request->search, function (Builder $query, string $search) {
+                $query->where('transactions.transaction_number', 'like','%' . $search . '%');
+            })
+            ->when($request->date, function (Builder $query, $date) {
+                $dateRange = explode(' - ', $date);
+                $start_date = Carbon::createFromFormat('Y-m-d', $dateRange[0])->startOfDay();
+                $end_date = Carbon::createFromFormat('Y-m-d', $dateRange[1])->endOfDay();
+
+                // Apply date range condition to each query
+                $query->whereBetween('transactions.created_at', [$start_date, $end_date]);
+            })
+            ->when($request->type, function (Builder $query, string $type) {
+                $query->where('transactions.transaction_type', $type);
+            })
             ->where('users.id', $user->id)
             ->where('transactions.to_wallet_id', $wallet_id)
             ->orWhere('transactions.from_wallet_id', $wallet_id);
