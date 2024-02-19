@@ -1,7 +1,7 @@
 <script setup>
 import Button from "@/Components/Button.vue";
 import {InternalUSDWalletIcon, InternalMUSDWalletIcon, SwitchHorizontalIcon, ArrowRight} from "@/Components/Icons/outline.jsx";
-import {ref, watch} from "vue";
+import {ref, watch, onMounted} from "vue";
 import Modal from "@/Components/Modal.vue";
 import Label from "@/Components/Label.vue";
 import Input from "@/Components/Input.vue";
@@ -16,7 +16,6 @@ import {
 } from '@headlessui/vue'
 
 const props = defineProps({
-    wallets: Object,
     setting_coin: Object,
 })
 const depositModal = ref(false);
@@ -30,15 +29,34 @@ const closeModal = () => {
     depositModal.value = false
 }
 
-const plans = props.wallets.map((wallet, index) => ({
-    label: `${wallet.name} to ${props.wallets[1 - index].name}`,
-    value: index === 0 ? 'InternalWalletToMUSDWallet' : 'MUSDWalletToInternalWallet',
-    wallet: wallet.id,
-    name: wallet.name,
-    balance: wallet.balance,
-}));
+const plans = ref([]);
 
-const selected = ref(plans[0])
+const selected = ref(null);
+
+const fetchWallets = async () => {
+    try {
+        const response = await fetch(route('wallet.fetchWallets'));
+        if (!response.ok) {
+            throw new Error('Failed to fetch wallets');
+        }
+        const data = await response.json();
+        // Update plans and selected
+        plans.value = data.map((wallet, index) => ({
+            label: `${wallet.name} to ${data[1 - index].name}`,
+            value: index === 0 ? 'InternalWalletToMUSDWallet' : 'MUSDWalletToInternalWallet',
+            wallet: wallet.id,
+            name: wallet.name,
+            balance: wallet.balance,
+        }));
+        selected.value = plans.value[0];
+        form.setting_coin_id = data[0].setting_coin_id;
+    } catch (error) {
+        console.error('Error fetching wallets:', error);
+    }
+};
+
+onMounted(fetchWallets);
+
 const form = useForm({
     from_wallet_id: '',
     to_wallet_id: '',
@@ -57,7 +75,7 @@ watch(selected, (newVal) => {
 const submit = () => {
     form.from_wallet_id = selected.value.wallet;
     // Find the other wallet based on the selected plan
-    const otherWallet = plans.find(plan => plan.value !== selected.value.value);
+    const otherWallet = plans.value.find(plan => plan.value !== selected.value.value);
 
     if (otherWallet) {
         form.to_wallet_id = otherWallet.wallet;
@@ -72,20 +90,19 @@ const submit = () => {
         onSuccess: () => {
             closeModal();
             form.reset();
+            fetchWallets();
         },
     });
 };
 
 const fullAmount = () => {
-    const selectedWallet = props.wallets.find(wallets => wallets.id === selected.value.wallet);
     if (!selected.value.wallet) {
         form.errors.wallet_id = "Please select a wallet before pressing Full Amount";
         return;
     }
-    if (selected.value.wallet) {
-        form.errors.wallet_id = '';
-        form.amount = selectedWallet.balance || 0;
-    }
+    const selectedWallet = selected.value;
+    form.errors.wallet_id = '';
+    form.amount = selectedWallet.balance || 0;
 }
 
 </script>

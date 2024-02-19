@@ -69,6 +69,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('wallet')->group(function () {
         Route::get('/details', [WalletController::class, 'details'])->name('wallet.details');
+        Route::get('/fetchWallets', [WalletController::class, 'fetchWallets'])->name('wallet.fetchWallets');
         Route::get('/getWalletBalance', [WalletController::class, 'getWalletBalance'])->name('wallet.getWalletBalance');
         Route::get('/getWalletHistory/{id}', [WalletController::class, 'getWalletHistory'])->name('wallet.getWalletHistory');
         Route::get('/getTransaction/{type}', [WalletController::class, 'getTransaction'])->name('wallet.getTransaction');

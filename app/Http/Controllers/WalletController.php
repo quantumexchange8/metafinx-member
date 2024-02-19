@@ -98,6 +98,13 @@ class WalletController extends Controller
         ]);
     }
 
+    public function fetchWallets()
+    {
+        $wallets = Wallet::where('user_id', \Auth::id())->get();
+        
+        return response()->json($wallets);
+    }
+
     public function getWalletBalance(Request $request)
     {
         $user = \Auth::user();
