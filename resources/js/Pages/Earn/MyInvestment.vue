@@ -13,7 +13,6 @@ const props = defineProps({
     totalEarning: Number,
     coinPrice: Number,
 })
-console.log(props.coinPrice);
 const { formatDate, formatType, formatAmount } = transactionFormat();
 const tncModal = ref(false);
 
