@@ -510,15 +510,20 @@ class AffiliateController extends Controller
     {
         $user = Auth::user();
         $position = $request->position;
-        $binaryAuthUser = CoinMultiLevel::where('user_id', $user->id)->first();
+        $binaryAuthUser = CoinMultiLevel::with('user')->where('user_id', $user->id)->first();
         $directChild = $binaryAuthUser->direct_child($position)->first();
 
-        $last_child = $directChild->getLastChild('left');
-        if ($last_child) {
-            $last_child->profile_photo = $last_child->user->getFirstMediaUrl('profile_photo');
-        }
+        if ($directChild) {
 
-        return response()->json($last_child);
+            $last_child = $directChild->getLastChild('left');
+            if ($last_child) {
+                $last_child->profile_photo = $last_child->user->getFirstMediaUrl('profile_photo');
+            }
+            return response()->json($last_child);
+        } else {
+            $binaryAuthUser->profile_photo = $binaryAuthUser->user->getFirstMediaUrl('profile_photo');
+            return response()->json($binaryAuthUser);
+        }
     }
 
     public function getPendingPlacementCount()
