@@ -27,22 +27,25 @@ class EarnController extends Controller
         $stakingRewards = Earning::query()
             ->where('upline_id', \Auth::id())
             ->where('type', 'StakingRewards')
+            ->where('category', 'staking')
             ->whereYear('created_at', now()->year)
             ->sum('after_amount');
 
         $stakingReferralEarnings = Earning::query()
             ->where('upline_id', \Auth::id())
-            ->where('type', 'BinaryReferralEarnings')
+            ->where('type', 'ReferralEarnings')
+            ->where('category', 'staking')
             ->whereYear('created_at', now()->year)
             ->sum('after_amount');
 
         $pairingEarnings = Earning::query()
             ->where('upline_id', \Auth::id())
             ->where('type', 'pairingEarnings')
+            ->where('category', 'staking')
             ->whereYear('created_at', now()->year)
             ->sum('after_amount');
 
-        $averageProfit = ($stakingRewards + $stakingReferralEarnings + $pairingEarnings)/3;
+        $averageProfit = ($stakingRewards + $stakingReferralEarnings + $pairingEarnings);
 
         $investment_plans = InvestmentPlan::query()
             ->with('descriptions:investment_plan_id,description')

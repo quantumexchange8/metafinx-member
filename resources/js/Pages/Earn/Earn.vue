@@ -140,7 +140,7 @@ const selectCategory = (category) => {
                         {{$t('public.average_profit_yearly')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
-                        $&nbsp;{{formatAmount(props.averageProfit)}}
+                        {{formatAmount(props.averageProfit)}}&nbsp;%
                     </div>
                 </div>
             </div>
@@ -194,7 +194,7 @@ const selectCategory = (category) => {
                             {{$t('public.average_profit_yearly')}}
                         </div>
                         <div class="font-semibold text-2xl dark:text-white">
-                            $&nbsp;{{formatAmount(props.averageProfit)}}
+                            {{formatAmount(props.averageProfit)}}&nbsp;%
                         </div>
                     </div>
                 </div>

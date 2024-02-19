@@ -84,11 +84,11 @@ function copyTestingCode () {
                         $&nbsp;{{ props.totalBalance }}
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
-                    <Deposit
+                <div class="grid grid-cols-1 md:grid-cols-1 space-y-3 w-full">
+                    <!-- <Deposit
                         :wallet_sel="wallet_sel"
                         :random_address="random_address"
-                    />
+                    /> -->
                     <Withdrawal
                         :wallet_sel="wallet_sel"
                         :withdrawalFee="props.withdrawalFee"
@@ -179,7 +179,7 @@ function copyTestingCode () {
                                 {{ coin.unit.toFixed(8) }} {{ coin.setting_coin.name }}
                             </div>
                             <div class="text-sm font-normal dark:text-white">
-                                ≈ $&nbsp;{{ formatAmount(coin.unit / props.coin_price.price) }}
+                                ≈ $&nbsp;{{ formatAmount(coin.unit * props.coin_price.price) }}
                             </div>
                         </div>
                         <div class="absolute right-6">
