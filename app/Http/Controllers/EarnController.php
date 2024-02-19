@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use App\Models\CoinStacking;
 use Illuminate\Http\Request;
 use App\Models\InvestmentPlan;
+use Illuminate\Support\Carbon;
 use App\Models\InvestmentSubscription;
 use App\Services\RunningNumberService;
 use Illuminate\Validation\ValidationException;
@@ -325,12 +326,21 @@ class EarnController extends Controller
             ];
         });
 
+        $today = Carbon::today();
+        $coinPrice = CoinPrice::whereDate('price_date', $today)->value('price');;
+
+        // If today's coin price is null, try fetching yesterday's coin price
+        if (!$coinPrice) {
+            $coinPrice = CoinPrice::latest()->value('price');
+        }
+
         return Inertia::render('Earn/MyInvestment', [
             'investments' => $investmentSubscriptions,
             'coinStackings' => $coinStackings,
             'setting_coin' => SettingCoin::where('symbol', 'MXT/USD')->first(),
             'maxCap' => $maxCap,
-            'totalEarning' => $totalEarning
+            'totalEarning' => $totalEarning,
+            'coinPrice' => $coinPrice,
         ]);
     }
 }

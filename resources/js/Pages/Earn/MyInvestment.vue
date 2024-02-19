@@ -11,8 +11,9 @@ const props = defineProps({
     setting_coin: Object,
     maxCap: Number,
     totalEarning: Number,
+    coinPrice: Number,
 })
-
+console.log(props.coinPrice);
 const { formatDate, formatType, formatAmount } = transactionFormat();
 const tncModal = ref(false);
 
@@ -184,7 +185,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
 
         <div class="flex pb-3 items-start gap-2.5 self-stretch border-b border-gray-300 dark:border-gray-700 my-8">
             <div class="text-base font-semibold">
-                {{ setting_coin.name }} Staking (Max. Earnings Limit: $ {{ formatAmount(props.totalEarning) ? formatAmount(props.totalEarning) : '0.00' }} / $ {{ formatAmount(props.maxCap) }})
+                {{ setting_coin.name }} Staking (Max. Earnings Limit: $ {{ formatAmount(props.totalEarning * props.coinPrice) ? formatAmount(props.totalEarning * props.coinPrice) : '0.00' }} / $ {{ formatAmount(props.maxCap) }})
             </div>
         </div>
         <div v-if="coinStackings.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-28">
@@ -247,7 +248,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                         {{$t('public.earn.total_reward')}}
                     </div>
                     <div class="dark:text-white text-xs">
-                        <span class="uppercase">{{ formatAmount(staking.total_earning, 2) }} {{ setting_coin.name }} ($ {{ formatAmount(staking.total_earning, 2) }}) </span>
+                        <span class="uppercase">{{ formatAmount(staking.total_earning, 4) }} {{ setting_coin.name }} ($ {{ formatAmount(staking.total_earning * props.coinPrice, 2) }}) </span>
                     </div>
                 </div>
                 <div class="flex justify-between mb-1">
@@ -255,7 +256,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                         {{$t('public.earn.max_earning_limit')}}
                     </div>
                     <div class="dark:text-white text-xs">
-                        <span class="uppercase">$ {{ formatAmount(staking.total_earning, 2) }} / $ {{ formatAmount(staking.max_capped_price, 2) }}</span>
+                        <span class="uppercase">$ {{ formatAmount(staking.total_earning * props.coinPrice, 2) }} / $ {{ formatAmount(staking.max_capped_price, 2) }}</span>
                     </div>
                 </div>
                 <div class="mt-4 text-xs">
