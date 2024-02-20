@@ -25,28 +25,15 @@ class EarnController extends Controller
     {
         $wallets = Wallet::where('user_id', \Auth::id());
 
-        $stakingRewards = Earning::query()
-            ->where('upline_id', \Auth::id())
-            ->where('type', 'StakingRewards')
+        $currentMonth = Carbon::now()->month;
+        $monthsElapsed = $currentMonth - 1; // Exclude the current month from calculation
+
+        $totalEarnings = Earning::query()
             ->where('category', 'staking')
             ->whereYear('created_at', now()->year)
-            ->sum('after_amount');
+            ->sum('after_coin_price');
 
-        $stakingReferralEarnings = Earning::query()
-            ->where('upline_id', \Auth::id())
-            ->where('type', 'ReferralEarnings')
-            ->where('category', 'staking')
-            ->whereYear('created_at', now()->year)
-            ->sum('after_amount');
-
-        $pairingEarnings = Earning::query()
-            ->where('upline_id', \Auth::id())
-            ->where('type', 'pairingEarnings')
-            ->where('category', 'staking')
-            ->whereYear('created_at', now()->year)
-            ->sum('after_amount');
-
-        $averageProfit = ($stakingRewards + $stakingReferralEarnings + $pairingEarnings);
+        $averageProfit = (($totalEarnings / $monthsElapsed) / $totalEarnings) * 100;
 
         $investment_plans = InvestmentPlan::query()
             ->with('descriptions:investment_plan_id,description')
