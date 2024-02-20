@@ -48,7 +48,7 @@ class AffiliateController extends Controller
 
         if ($uplineId) {
             // If there is an upline, check if they have a coin stacking record
-            $uplineStaking = CoinStacking::where('user_id', $uplineId)->exists();
+            $uplineStaking = CoinMultiLevel::where('user_id', $uplineId)->exists();
         }
 
         return Inertia::render('Affiliate/Affiliate', [
