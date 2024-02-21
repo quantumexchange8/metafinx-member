@@ -309,10 +309,14 @@ const closeModal = () => {
     <!-- Notification Modal -->
     <Modal :show="notificationModal" :title="$t('public.navbar.details')" @close="closeModal" max-width="xl">
         <div class="text-xs dark:text-gray-400">{{ formatDateTime(notificationContent.data['post_date']) }}</div>
-        <div class="my-5">
-            <img class="rounded-lg w-full" :src="notificationContent.data['image']" alt="announcement image" />
+
+        <div v-if="notificationContent.data['type'] === 'App\\Notifications\\AnnouncementNotification'">
+            <div class="my-5">
+                <img class="rounded-lg w-full" :src="notificationContent.data['image']" alt="announcement image" />
+            </div>
         </div>
+
         <div class="my-5 dark:text-white">{{ notificationContent.data['title'] }}</div>
-        <div class="dark:text-gray-300 text-sm prose leading-3" v-html="notificationContent.data['content']"></div>
+        <div class="dark:text-gray-300 text-sm prose leading-5" v-html="notificationContent.data['content']"></div>
     </Modal>
 </template>
