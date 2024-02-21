@@ -1,12 +1,12 @@
 <script setup>
 import Button from "@/Components/Button.vue";
 import {InternalUSDWalletIcon, InternalMUSDWalletIcon, SwitchHorizontalIcon, ArrowRight} from "@/Components/Icons/outline.jsx";
-import {ref, watch, onMounted} from "vue";
+import {ref, watch, onMounted, watchEffect} from "vue";
 import Modal from "@/Components/Modal.vue";
 import Label from "@/Components/Label.vue";
 import Input from "@/Components/Input.vue";
 import Checkbox from "@/Components/Checkbox.vue";
-import {useForm} from "@inertiajs/vue3";
+import {useForm, usePage} from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import {
     RadioGroup,
@@ -35,11 +35,9 @@ const selected = ref(null);
 
 const fetchWallets = async () => {
     try {
-        const response = await fetch(route('wallet.fetchWallets'));
-        if (!response.ok) {
-            throw new Error('Failed to fetch wallets');
-        }
-        const data = await response.json();
+        const response = await axios.get('/wallet/fetchWallets');
+        const data = response.data;
+
         // Update plans and selected
         plans.value = data.map((wallet, index) => ({
             label: `${wallet.name} to ${data[1 - index].name}`,
@@ -55,7 +53,7 @@ const fetchWallets = async () => {
     }
 };
 
-onMounted(fetchWallets);
+fetchWallets();
 
 const form = useForm({
     from_wallet_id: '',
@@ -104,6 +102,12 @@ const fullAmount = () => {
     form.errors.wallet_id = '';
     form.amount = selectedWallet.balance || 0;
 }
+
+watchEffect(() => {
+    if (usePage().props.title !== null) {
+        fetchWallets();
+    }
+});
 
 </script>
 

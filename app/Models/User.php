@@ -13,7 +13,7 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable implements HasMedia, MustVerifyEmail, JWTSubject
+class User extends Authenticatable implements HasMedia, JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, InteractsWithMedia;
 
@@ -43,6 +43,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail, JWTSubj
         'valid_affiliate_deposit',
         'identity_number',
         'role',
+        'auto_assign_at',
     ];
 
     /**
