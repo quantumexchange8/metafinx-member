@@ -15,7 +15,7 @@ import { Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon } from "@/Components/Icons/o
 
 const props = defineProps({
   referredCounts: Number,
-  validAffiliateDeposit: String,
+  validAffiliateDeposit: [String, Number],
   totalAffiliate: Number,
   totalGeneration: Number,
   exportStatus: Boolean,

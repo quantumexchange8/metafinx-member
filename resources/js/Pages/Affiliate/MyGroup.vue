@@ -15,7 +15,7 @@ import ReferralTable from "@/Pages/Affiliate/ReferralTable.vue";
 
 const props = defineProps({
     referredCounts: Number,
-    validAffiliateDeposit: String,
+    validAffiliateDeposit: [String, Number],
     totalAffiliate: Number,
     totalGeneration: Number,
     exportStatus: Boolean,
