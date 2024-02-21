@@ -109,7 +109,7 @@ const getDistributorDetail = async (id, level) => {
 <template>
     <div v-if="node" class="text-center">
         <div class="flex flex-col justify-center items-center">
-            <div v-if="node.id > 1" class="-mt-[194px] border-l-2 border-dashed absolute h-10 border-gray-600"></div>
+            <div v-if="node.id > 1 && node.level > 0" class="-mt-[194px] border-l-2 border-dashed absolute h-10 border-gray-600"></div>
             <div class="w-60 mt-5 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-800 hover:cursor-pointer p-3 z-20" @click="openDistributorDetailModal(node)">
                 <div class="flex gap-2 items-center border-b border-dashed border-gray-600 pb-3">
                     <img :src="node.profile_photo ? node.profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
@@ -312,7 +312,7 @@ const getDistributorDetail = async (id, level) => {
             </div>
 
             <div class="flex flex-col items-start gap-3 self-stretch">
-                <div class="flex items-center gap-2 self-stretch">
+                <!-- <div class="flex items-center gap-2 self-stretch">
                     <div class="font-semibold text-sm text-gray-600 dark:text-gray-400 w-1/4">
                         Sponsor
                     </div>
@@ -322,10 +322,10 @@ const getDistributorDetail = async (id, level) => {
                             {{ distributorDetail.sponsor_name ?? '-'}}
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="flex items-center gap-2 self-stretch">
                     <div class="font-semibold text-sm text-gray-600 dark:text-gray-400 w-1/4">
-                        Upline
+                        Place Under
                     </div>
                     <div class="flex items-center gap-2">
                         <img :src="distributorDetail.upline_profile_photo ? distributorDetail.upline_profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
