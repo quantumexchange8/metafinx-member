@@ -111,7 +111,7 @@ const closeModal = () => {
 
         <div class="flex flex-nowrap align-self-stretch md:grid md:grid-cols-3 md:grid-flow-row-dense gap-3 overflow-x-auto md:overflow-visible my-8">
             <div class="flex-1 rounded-[10px] md:col-span-1 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
-                <div class="px-5 py-2.5 flex flex-col justify-between">
+                <div class="px-5 py-2.5 flex flex-col justify-between h-full">
                         <div class="text-xs font-medium dark:text-gray-400">
                             {{ $t('public.report.total_earning') }}
                         </div>
@@ -121,7 +121,7 @@ const closeModal = () => {
                     </div>
                 </div>
                 <div class="flex-1 rounded-[10px] md:col-span-1 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
-                    <div class="px-5 py-2.5 flex flex-col justify-between">
+                    <div class="px-5 py-2.5 flex flex-col justify-between h-full">
                         <div class="text-xs font-medium dark:text-gray-400">
                             {{ $t('public.report.total_withdrawal') }}
                         </div>
@@ -131,7 +131,7 @@ const closeModal = () => {
                     </div>
                 </div>
                 <div class="flex-1 rounded-[10px] md:col-span-1 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
-                    <div class="px-5 py-2.5 flex flex-col justify-between">
+                    <div class="px-5 py-2.5 flex flex-col justify-between h-full">
                         <div class="text-xs font-medium dark:text-gray-400">
                             {{ $t('public.report.total_investment') }}
                         </div>
