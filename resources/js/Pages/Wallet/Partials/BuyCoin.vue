@@ -112,9 +112,7 @@ const getAmountPrefix = computed(() => {
     <div class="flex flex-col gap-8 mt-3">
         <div class="flex flex-col items-center gap-2 self-stretch p-3 rounded-lg bg-gray-300 dark:bg-gray-700">
             <div class="flex flex-col items-center gap-0.5">
-                <div class="rounded-full w-10 h-10 flex justify-center items-center grow-0 shrink-0" style="background: linear-gradient(146deg, #E85B7A 14.85%, #DC5277 16.26%, #D14F79 18.38%, #C84C7B 21.92%, #D24C7B 44.54%, #E34D7A 54.43%, #EF5572 66.45%, #F05B6C 85.53%)">
-                    <MXTIcon class="w-7 h-7 text-white" />
-                </div>
+                <MXTIcon class="w-10 h-10 text-white" />
                 <div class="text-sm font-semibold text-gray-900 dark:text-white">
                     {{ setting_coin.name }}
                 </div>
@@ -178,9 +176,7 @@ const getAmountPrefix = computed(() => {
                     <div class="flex items-center gap-1">
                         <div>{{ $t('public.wallet.receive') }}</div>
                         <div class="inline-flex items-center gap-1">
-                            <div class="rounded-full w-5 h-5 flex justify-center items-center grow-0 shrink-0" style="background: linear-gradient(146deg, #E85B7A 14.85%, #DC5277 16.26%, #D14F79 18.38%, #C84C7B 21.92%, #D24C7B 44.54%, #E34D7A 54.43%, #EF5572 66.45%, #F05B6C 85.53%)">
-                                <MXTIcon class="w-4 h-4 text-white" />
-                            </div>
+                            <MXTIcon class="w-5 h-5 text-white" />
                             <span>{{ setting_coin.name }}</span>
                         </div>
                     </div>

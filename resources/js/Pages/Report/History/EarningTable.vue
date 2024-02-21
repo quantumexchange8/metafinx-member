@@ -165,8 +165,8 @@ const paginationActiveClass = [
                             <div v-if="earning.category === 'standard' && earning.wallet.type === 'musd_wallet'" class="flex items-center justify-center bg-gradient-to-b from-warning-300 to-warning-500 dark:shadow-pink-500 rounded-full w-5 h-5 shrink-0 grow-0">
                                 <InternalMUSDWalletIcon class="w-4 h-4" />
                             </div>
-                            <div v-if="earning.category === 'staking'" class="rounded-full w-5 h-5 flex justify-center items-center grow-0 shrink-0" style="background: linear-gradient(146deg, #E85B7A 14.85%, #DC5277 16.26%, #D14F79 18.38%, #C84C7B 21.92%, #D24C7B 44.54%, #E34D7A 54.43%, #EF5572 66.45%, #F05B6C 85.53%)">
-                                <MXTIcon class="w-4 h-4 text-white" />
+                            <div v-if="earning.category === 'staking'">
+                                <MXTIcon class="w-5 h-5 text-white" />
                             </div>
                             <div v-if="earning.category === 'standard'">
                                 {{ earning.wallet.name }}

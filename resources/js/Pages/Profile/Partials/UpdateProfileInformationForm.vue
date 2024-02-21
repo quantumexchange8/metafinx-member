@@ -210,7 +210,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                     </div>
 
                     <div>
-                        <Label class="text-[14px] dark:text-white mb-2" for="country" :value="$t('public.profile.name')" />
+                        <Label class="text-[14px] dark:text-white mb-2" for="country" :value="$t('public.profile.country')" />
 
                         <BaseListbox
                             v-model="selectedCountry"

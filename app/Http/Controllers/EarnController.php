@@ -16,6 +16,7 @@ use App\Models\InvestmentPlan;
 use Illuminate\Support\Carbon;
 use App\Models\InvestmentSubscription;
 use App\Services\RunningNumberService;
+use App\Notifications\StakingNotification;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\InvestmentSubscriptionRequest;
 
@@ -240,6 +241,15 @@ class EarnController extends Controller
                     'auto_assign_at' => $autoAssignDate
                 ]);
 
+                $upline = $user->upline;
+                $downline = $user;
+                
+                if ($upline && $stacking) {
+                    if ($upline->binary) {
+                        \Notification::send([$upline], new StakingNotification($upline, $downline));
+                    }
+                }
+                                        
                 break;
 
             default:

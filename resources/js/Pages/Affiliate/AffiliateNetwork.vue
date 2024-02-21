@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import ReferralTree from "@/Pages/Affiliate/ReferralTree.vue";
 import GenealogyTree from "@/Pages/Affiliate/GenealogyTree/GenealogyTree.vue";
-import {Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon} from "@/Components/Icons/outline.jsx";
+import { Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon } from "@/Components/Icons/outline.jsx";
 import Input from "@/Components/Input.vue";
-import {SearchIcon} from "@heroicons/vue/outline";
+import { SearchIcon } from "@heroicons/vue/outline";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
 
 const categories = ref([
@@ -27,27 +27,42 @@ const props = defineProps({
 })
 
 const search = ref('');
-
+const selectedTab = ref(0);
 const emit = defineEmits(['update:affiliateType']);
 
 const updateAffiliateType = (type) => {
     emit('update:affiliateType', type);
 }
+
+function changeTab(index) {
+    selectedTab.value = index;
+}
+
+onMounted(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const type = queryParams.get('type');
+    if (type === 'binary') {
+        const binaryTab = categories.value.findIndex(cat => cat.type === 'binary');
+        selectedTab.value = binaryTab !== -1 ? binaryTab : 0;
+        updateAffiliateType('binary');
+    }
+});
+
 </script>
 
 <template>
     <div class="flex justify-between">
         <div class="w-full">
-            <TabGroup>
+            <TabGroup :selectedIndex="selectedTab" @change="changeTab">
                 <TabList class="flex dark:bg-transparent w-full flex-col gap-3 sm:flex-row sm:justify-between">
                     <div>
                         <Tab
                             v-for="category in categories"
                             as="template"
-                            :key="category"
                             v-slot="{ selected }"
                         >
                             <button
+                                @click="updateAffiliateType(category.type)"
                                 v-show="category.type !== 'binary' || uplineStaking"
                                 class="px-4 py-2.5 text-sm font-semibold text-gray-900 border border-gray-200 focus:outline-none max-w-md"
                                 :class="{
@@ -57,7 +72,6 @@ const updateAffiliateType = (type) => {
                                     'hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600': true,
                                     'bg-transparent dark:bg-[#38425080] dark:text-white': selected
                                 }"
-                                @click="updateAffiliateType(category.type)"
                             >
                                 {{ category.name }}
                             </button>
