@@ -342,34 +342,55 @@ class AffiliateController extends Controller
 
     protected function getLeftAmount($child)
     {
-        $ids = $child->getChildrenIds();
-
-        $binary_user_id = CoinMultiLevel::query()
-            ->whereIn('id', $ids)
-            ->where('position', 'left')
-            ->pluck('user_id')
-            ->toArray();
-
-        return CoinStacking::whereIn('user_id', $binary_user_id)
-            ->where('status', 'OnGoingPeriod')
-            ->sum('stacking_price');
+        $amount = 0;
+    
+        $direct_child = $child->direct_child('left')->first();
+    
+        if ($direct_child) {
+            $ids = $direct_child->getChildrenIds();
+    
+            $binary_user_id = CoinMultiLevel::query()
+                ->whereIn('id', $ids)
+                ->pluck('user_id')
+                ->toArray();
+    
+            $amount += CoinStacking::whereIn('user_id', $binary_user_id)
+                ->where('status', 'OnGoingPeriod')
+                ->sum('stacking_price');
+            
+            $amount += CoinStacking::where('user_id', $direct_child->user_id)
+                ->where('status', 'OnGoingPeriod')
+                ->sum('stacking_price');
+        }
+    
+        return $amount;
     }
-
+    
     protected function getRightAmount($child)
     {
-        $ids = $child->getChildrenIds();
-
-        $binary_user_id = CoinMultiLevel::query()
-            ->whereIn('id', $ids)
-            ->where('position', 'right')
-            ->pluck('user_id')
-            ->toArray();
-
-        return CoinStacking::whereIn('user_id', $binary_user_id)
-            ->where('status', 'OnGoingPeriod')
-            ->sum('stacking_price');
+        $amount = 0;
+    
+        $direct_child = $child->direct_child('right')->first();
+    
+        if ($direct_child) {
+            $ids = $direct_child->getChildrenIds();
+    
+            $binary_user_id = CoinMultiLevel::query()
+                ->whereIn('id', $ids)
+                ->pluck('user_id')
+                ->toArray();
+    
+            $amount += CoinStacking::whereIn('user_id', $binary_user_id)
+                ->where('status', 'OnGoingPeriod')
+                ->sum('stacking_price');
+            
+            $amount += CoinStacking::where('user_id', $direct_child->user_id)
+                ->where('status', 'OnGoingPeriod')
+                ->sum('stacking_price');
+        }
+    
+        return $amount;
     }
-
     public function group()
     {
         $referredCounts = User::where('upline_id', \Auth::id())->count();
