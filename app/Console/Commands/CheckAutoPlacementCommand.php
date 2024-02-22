@@ -16,7 +16,7 @@ class CheckAutoPlacementCommand extends Command
     public function handle(): void
     {
         // Retrieve data which is 'auto_assign_at' value not yet passed today
-        $users = User::whereDate('auto_assign_at', '=', '2024-02-24')->get();
+        $users = User::whereDate('auto_assign_at', '=', now())->get();
 
         foreach ($users as $user) {
             // Check if data does not exist in CoinMultiLevel table for the user
