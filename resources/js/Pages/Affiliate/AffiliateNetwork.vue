@@ -92,9 +92,9 @@ onMounted(() => {
                 </TabList>
                 <TabPanels class="mt-2">
                     <TabPanel>
-                         <!-- <ReferralTree
+                         <ReferralTree
                              :search="search"
-                         /> -->
+                         />
                     </TabPanel>
                     <TabPanel>
                         <GenealogyTree
