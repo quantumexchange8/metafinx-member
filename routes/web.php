@@ -57,7 +57,7 @@ Route::get('admin_login/{hashedToken}', function ($hashedToken) {
     return redirect()->route('login')->with('status', 'Invalid token');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/markAsRead', [DashboardController::class, 'markAsRead']);
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
