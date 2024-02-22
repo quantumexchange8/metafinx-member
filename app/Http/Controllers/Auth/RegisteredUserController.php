@@ -168,6 +168,18 @@ class RegisteredUserController extends Controller
             ]);
         }
 
+        if ($user->created_at->lt(now()->setTime(17, 0, 0))) {
+            // If created_at is before today at 5 PM
+            $autoAssignDate = now()->addDay()->startOfDay();
+        } else {
+            // If created_at is at or after today at 5 PM
+            $autoAssignDate = now()->addDays(2)->startOfDay();
+        }
+
+        $user->update([
+            'auto_assign_at' => $autoAssignDate
+        ]);
+
         Wallet::create([
             'user_id' => $user->id,
             'name' => 'Internal Wallet',
@@ -184,9 +196,9 @@ class RegisteredUserController extends Controller
             'user_id' => $user->id,
             'setting_coin_id' => 1,
         ]);
-    
+
         $coin->setCoinAddress();
-    
+
         $user->setReferralId();
 
         $this->processImage($request, $user);

@@ -30,7 +30,7 @@ const handleZoomOut = ref(() => {});
 const handleRecenter = ref(() => {});
 const isExpand = ref(false)
 const root = ref({});
-const { formatAmount, formatTime } = transactionFormat();
+const { formatAmount, formatDateTime } = transactionFormat();
 
 const props = defineProps({
     search: String,
@@ -170,11 +170,11 @@ const calculateTimeLeft = (datetime) => {
 // Update the countdown every second
 onMounted(() => {
     const interval = setInterval(() => {
-        referralTableData.value.data.forEach(dataItem => {
-            dataItem.coin_staking.forEach(coinStak => {
-                calculateTimeLeft(coinStak.auto_assign_at);
+        if (referralTableData.value.data.length > 0) {
+            referralTableData.value.data.forEach(dataItem => {
+                calculateTimeLeft(dataItem.auto_assign_at);
             });
-        });
+        }
     }, 1000);
 
     fetchPendingPlacementCount();
@@ -313,7 +313,7 @@ checkCoinStackingExistence();
                                         {{ $t('public.affiliate.members') }}
                                     </th>
                                     <th scope="col" class="p-3 uppercase">
-                                        Staking (MXT)
+                                        Register Date
                                     </th>
                                     <th scope="col" class="p-3 uppercase">
                                         Placement Time Left
@@ -348,24 +348,14 @@ checkCoinStackingExistence();
 
                                     </td>
                                     <td class="p-3">
-                                       <div v-if="referee.coin_staking.length > 0">
-                                           <div v-for="coinStak in referee.coin_staking">
-                                               {{ formatAmount(coinStak.stacking_unit, 4) }} ($ {{ formatAmount(coinStak.stacking_price) }})
-                                           </div>
+                                       <div>
+                                           {{ formatDateTime(referee.created_at) }}
                                        </div>
-                                        <div v-else>
-                                            -
-                                        </div>
                                     </td>
                                     <td class="p-3">
-                                        <div v-if="referee.coin_staking.length > 0">
-                                            <div v-for="coinStak in referee.coin_staking">
-                                               {{ calculateTimeLeft(coinStak.auto_assign_at) }}
-                                            </div>
-                                        </div>
-                                        <div v-else>
-                                            -
-                                        </div>
+                                       <div>
+                                           {{ calculateTimeLeft(referee.auto_assign_at) }}
+                                       </div>
                                     </td>
                                     <td class="p-3 flex justify-center">
                                         <Button

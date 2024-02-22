@@ -343,52 +343,52 @@ class AffiliateController extends Controller
     protected function getLeftAmount($child)
     {
         $amount = 0;
-    
+
         $direct_child = $child->direct_child('left')->first();
-    
+
         if ($direct_child) {
             $ids = $direct_child->getChildrenIds();
-    
+
             $binary_user_id = CoinMultiLevel::query()
                 ->whereIn('id', $ids)
                 ->pluck('user_id')
                 ->toArray();
-    
+
             $amount += CoinStacking::whereIn('user_id', $binary_user_id)
                 ->where('status', 'OnGoingPeriod')
                 ->sum('stacking_price');
-            
+
             $amount += CoinStacking::where('user_id', $direct_child->user_id)
                 ->where('status', 'OnGoingPeriod')
                 ->sum('stacking_price');
         }
-    
+
         return $amount;
     }
-    
+
     protected function getRightAmount($child)
     {
         $amount = 0;
-    
+
         $direct_child = $child->direct_child('right')->first();
-    
+
         if ($direct_child) {
             $ids = $direct_child->getChildrenIds();
-    
+
             $binary_user_id = CoinMultiLevel::query()
                 ->whereIn('id', $ids)
                 ->pluck('user_id')
                 ->toArray();
-    
+
             $amount += CoinStacking::whereIn('user_id', $binary_user_id)
                 ->where('status', 'OnGoingPeriod')
                 ->sum('stacking_price');
-            
+
             $amount += CoinStacking::where('user_id', $direct_child->user_id)
                 ->where('status', 'OnGoingPeriod')
                 ->sum('stacking_price');
         }
-    
+
         return $amount;
     }
     public function group()
@@ -432,7 +432,7 @@ class AffiliateController extends Controller
                     ->orWhere('email', 'like', $search)
                     ->orWhereHas('upline', function ($uplineQuery) use ($search) {
                         $uplineQuery->where('name', 'like', $search)
-                                    ->orWhere('email', 'like', $search);
+                            ->orWhere('email', 'like', $search);
                     });
             });
         }
@@ -466,21 +466,21 @@ class AffiliateController extends Controller
         $children_data->getCollection()->transform(function ($child) use ($user) {
             $upline = $child->upline;
             return [
-                    'id' => $child->id,
-                    'profile_photo' => $child->getFirstMediaUrl('profile_photo') ?? null,
-                    'name' => $child->name,
-                    'email' => $child->email,
-                    'upline_id' => $child->upline->id ?? null,
-                    'upline_profile_photo' => $upline ? $upline->getFirstMediaUrl('profile_photo') ?? null : null,
-                    'upline_name' => $child->upline->name ?? null,
-                    'upline_email' => $child->upline->email ?? null,
-                    'created_at' => $child->created_at,
-                    'setting_rank_id' => $child->setting_rank_id,
-                    'setting_rank_name' => $this->getSettingRankName($child->setting_rank_id),
-                    'level' => $child->id === $user->id ? 0 : ($child->getLevel() - 1),
-                    'total_affiliate' => count($child->getChildrenIds()),
-                    'valid_self_deposit' => $this->getSelfDeposit($child),
-                    'valid_affiliate_deposit' => $this->getValidAffiliateDeposit($child),
+                'id' => $child->id,
+                'profile_photo' => $child->getFirstMediaUrl('profile_photo') ?? null,
+                'name' => $child->name,
+                'email' => $child->email,
+                'upline_id' => $child->upline->id ?? null,
+                'upline_profile_photo' => $upline ? $upline->getFirstMediaUrl('profile_photo') ?? null : null,
+                'upline_name' => $child->upline->name ?? null,
+                'upline_email' => $child->upline->email ?? null,
+                'created_at' => $child->created_at,
+                'setting_rank_id' => $child->setting_rank_id,
+                'setting_rank_name' => $this->getSettingRankName($child->setting_rank_id),
+                'level' => $child->id === $user->id ? 0 : ($child->getLevel() - 1),
+                'total_affiliate' => count($child->getChildrenIds()),
+                'valid_self_deposit' => $this->getSelfDeposit($child),
+                'valid_affiliate_deposit' => $this->getValidAffiliateDeposit($child),
             ];
         });
 
@@ -500,14 +500,12 @@ class AffiliateController extends Controller
         $existed_users_ids = CoinMultiLevel::get()->pluck('user_id');
         $childrenIds = $user->children()->get()->pluck('id');
 
-        $users = User::leftJoin('coin_stackings', 'users.id', '=', 'coin_stackings.user_id')
-            ->with(['coinStaking' => function ($query) {
-                $query->select('id', 'user_id', 'stacking_unit', 'stacking_price', 'auto_assign_at', 'created_at')
-                    ->where('auto_assign_at', '>=', now());
-            }])
-            ->whereIn('users.id', $childrenIds)
-            ->where('users.role', 'user')
-            ->whereNotIn('users.id', $existed_users_ids)
+        $users = User::query()
+            ->where('role', 'user')
+            ->where('auto_assign_at', '>=', now())
+            ->whereDate('created_at', '>=', now()->subDay())
+            ->whereIn('id', $childrenIds)
+            ->whereNotIn('id', $existed_users_ids)
             ->when($request->filled('query'), function ($query) use ($request) {
                 $search = $request->input('query');
                 $query->where(function ($innerQuery) use ($search) {
@@ -515,9 +513,8 @@ class AffiliateController extends Controller
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->select('users.id', 'users.name', 'users.email', 'coin_stackings.created_at')
-            ->orderByRaw('coin_stackings.created_at IS NULL')
-            ->orderBy('users.created_at', 'desc')
+            ->select('id', 'name', 'email', 'created_at', 'auto_assign_at')
+            ->orderBy('created_at', 'desc')
             ->paginate(5);
 
         $users->each(function ($user) {
@@ -534,7 +531,7 @@ class AffiliateController extends Controller
         $binaryAuthUser = CoinMultiLevel::where('user_id', $user->id)->first();
         $directChild = $binaryAuthUser->direct_child($position)->first();
 
-        $last_child = $directChild->getLastChild('left');
+        $last_child = $directChild ? $directChild->getLastChild($directChild, 'left') : $binaryAuthUser;
         if ($last_child) {
             $last_child->profile_photo = $last_child->user->getFirstMediaUrl('profile_photo');
         }
@@ -548,11 +545,10 @@ class AffiliateController extends Controller
         $childrenIds = $user->children()->pluck('id')->toArray();
         $existedUsersIds = CoinMultiLevel::pluck('user_id')->toArray();
 
-        return CoinStacking::where('auto_assign_at', '>=', now())
+        return User::where('auto_assign_at', '>=', now())
             ->whereDate('created_at', '>=', now()->subDay())
-            ->whereIn('user_id', $childrenIds)
-            ->whereNotIn('user_id', $existedUsersIds)
-            ->distinct('user_id')
+            ->whereIn('id', $childrenIds)
+            ->whereNotIn('id', $existedUsersIds)
             ->count();
     }
 
