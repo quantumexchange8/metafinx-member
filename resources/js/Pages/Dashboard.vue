@@ -14,6 +14,7 @@ import ViewMarket from "@/Pages/Wallet/Partials/ViewMarket.vue";
 import Modal from "@/Components/Modal.vue";
 import {ref} from "vue";
 import Action from "@/Pages/Wallet/Partials/Action.vue";
+import {usePage} from "@inertiajs/vue3";
 
 const props = defineProps({
     referralEarnings: [String, Number],
@@ -31,10 +32,11 @@ const props = defineProps({
     totalWithdrawal: Number,
     totalInvestment: Number,
 })
-const { formatDateTime, formatAmount } = transactionFormat();
+const { formatDateTime, formatAmount, formatDate } = transactionFormat();
 
 const coinModal = ref(false);
 const modalComponent = ref(null);
+const createdDate = usePage().props.auth.user.created_at;
 
 const openCoinModal = () => {
     coinModal.value = true;
@@ -61,7 +63,7 @@ const closeModal = () => {
                         @click="openCoinModal"
                     >
                         <CoinIcon aria-hidden="true" class="w-5 h-5" />
-                        <span class="uppercase">Buy {{ coin.setting_coin.name }}</span>
+                        <span class="uppercase">{{$t('public.buy')}} {{ coin.setting_coin.name }}</span>
                     </Button>
                     <!-- <Deposit
                         :wallet_sel="wallet_sel"
@@ -111,36 +113,36 @@ const closeModal = () => {
 
         <div class="flex flex-nowrap align-self-stretch md:grid md:grid-cols-3 md:grid-flow-row-dense gap-3 overflow-x-auto md:overflow-visible my-8">
             <div class="flex-1 rounded-[10px] md:col-span-1 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
-                <div class="px-5 py-2.5 flex flex-col justify-between h-full">
-                        <div class="text-xs font-medium dark:text-gray-400">
-                            {{ $t('public.report.total_earning') }}
-                        </div>
-                        <div class="text-2xl font-semibold dark:text-white">
-                            $&nbsp;{{ formatAmount(totalEarning) }}
-                        </div>
+                <div class="px-5 py-2.5 flex flex-col justify-between w-64 gap-1">
+                    <div class="text-xs font-medium dark:text-gray-400">
+                        {{ $t('public.report.total_earning') }} {{ formatDate(createdDate) }}
                     </div>
-                </div>
-                <div class="flex-1 rounded-[10px] md:col-span-1 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
-                    <div class="px-5 py-2.5 flex flex-col justify-between h-full">
-                        <div class="text-xs font-medium dark:text-gray-400">
-                            {{ $t('public.report.total_withdrawal') }}
-                        </div>
-                        <div class="text-2xl font-semibold dark:text-white">
-                            $&nbsp;{{ formatAmount(totalWithdrawal) }}
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-1 rounded-[10px] md:col-span-1 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
-                    <div class="px-5 py-2.5 flex flex-col justify-between h-full">
-                        <div class="text-xs font-medium dark:text-gray-400">
-                            {{ $t('public.report.total_investment') }}
-                        </div>
-                        <div class="text-2xl font-semibold dark:text-white">
-                            $&nbsp;{{ formatAmount(totalInvestment) }}
-                        </div>
+                    <div class="text-2xl font-semibold dark:text-white">
+                        $&nbsp;{{ formatAmount(totalEarning) }}
                     </div>
                 </div>
             </div>
+            <div class="flex-1 rounded-[10px] md:col-span-1 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+                <div class="px-5 py-2.5 flex flex-col justify-between w-64 gap-1">
+                    <div class="text-xs font-medium dark:text-gray-400">
+                        {{ $t('public.report.total_withdrawal') }} {{ formatDate(createdDate) }}
+                    </div>
+                    <div class="text-2xl font-semibold dark:text-white">
+                        $&nbsp;{{ formatAmount(totalWithdrawal) }}
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 rounded-[10px] md:col-span-1 border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
+                <div class="px-5 py-2.5 flex flex-col justify-between w-64 gap-1">
+                    <div class="text-xs font-medium dark:text-gray-400">
+                        {{ $t('public.report.total_investment') }} {{ formatDate(createdDate) }}
+                    </div>
+                    <div class="text-2xl font-semibold dark:text-white">
+                        $&nbsp;{{ formatAmount(totalInvestment) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="p-5 my-8 mb-28 bg-white overflow-hidden md:overflow-visible rounded-xl border border-gray-200 dark:border-transparent shadow dark:bg-gray-700">
             <CryptoPriceTable
