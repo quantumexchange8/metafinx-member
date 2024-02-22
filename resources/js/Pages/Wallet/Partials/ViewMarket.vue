@@ -35,10 +35,10 @@ const priceDiffPercentage = computed(() => {
 });
 
 const periods = [
-    {value: 1, label: '1M'},
-    {value: 3, label: '3M'},
-    {value: 6, label: '6M'},
-    {value: '', label: 'All Time'},
+    {value: 1, label: 'one_month'},
+    {value: 3, label: 'three_month'},
+    {value: 6, label: 'six_month'},
+    {value: '', label: 'all_time'},
 ]
 const activeComponent = ref(1);
 
@@ -78,7 +78,7 @@ const getButtonVariant = (value) => {
                 class="text-xs"
                 :class="getAmountClass"
             >
-                {{ getAmountPrefix }}{{ formatAmount(priceDiffPercentage) }} % today
+                {{ getAmountPrefix }}{{ formatAmount(priceDiffPercentage) }} % {{ $t('public.wallet.today') }}
             </div>
         </div>
     </div>
@@ -94,7 +94,7 @@ const getButtonVariant = (value) => {
             :class="{ 'bg-transparent': activeComponent !== period.value, 'dark:bg-[#38425080] dark:text-white': activeComponent === period.value }"
             @click="setActiveComponent(period.value)"
         >
-            {{ period.label }}
+        {{ $t('public.' + period.label ) }}
         </button>
     </div>
 </template>

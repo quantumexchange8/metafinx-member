@@ -9,6 +9,7 @@ import SwapCoin from "@/Pages/Wallet/Partials/SwapCoin.vue";
 import CoinChart from "@/Pages/Wallet/Partials/CoinChart.vue";
 import ViewMarket from "@/Pages/Wallet/Partials/ViewMarket.vue";
 import ViewTransaction from "@/Pages/Wallet/Partials/ViewTransaction.vue";
+import { wTrans } from 'laravel-vue-i18n';
 
 const props = defineProps({
     coin: Object,
@@ -25,19 +26,24 @@ const props = defineProps({
 
 const coinModal = ref(false);
 const modalComponent = ref(null);
+const actionType = ref(null);
 
 const openMemberModal = (componentType) => {
     coinModal.value = true;
     if (componentType === 'buy_coin') {
+        actionType.value = 'buy_coin';
         modalComponent.value = 'Buy Coin';
     }
     else if (componentType === 'swap_coin') {
+        actionType.value = 'swap_coin';
         modalComponent.value = 'Swap Coin';
     }
     else if (componentType === 'view_market') {
+        actionType.value = 'view_market';
         modalComponent.value = 'View Market';
     }
     else if (componentType === 'view_transaction') {
+        actionType.value = 'view_transaction';
         modalComponent.value = 'View Transaction';
     }
 }
@@ -51,7 +57,7 @@ const closeModal = () => {
 
 <template>
     <div class="flex gap-3">
-        <Tooltip content="Buy coin" placement="bottom">
+        <Tooltip :content="$t('public.wallet.buy_coin')" placement="bottom">
             <Button
                 type="button"
                 class="flex justify-center w-6 h-6 relative focus:outline-none"
@@ -61,10 +67,10 @@ const closeModal = () => {
                 size="sm"
             >
                 <CoinIcon aria-hidden="true" class="w-4 h-4 absolute" />
-                <span class="sr-only">Buy coin</span>
+                <span class="sr-only">{{ $t('public.wallet.buy_coin') }}</span>
             </Button>
         </Tooltip>
-        <Tooltip content="Swap coin" placement="bottom">
+        <Tooltip :content="$t('public.wallet.swap_coin')" placement="bottom">
             <Button
                 type="button"
                 class="flex justify-center w-6 h-6 relative focus:outline-none"
@@ -74,10 +80,10 @@ const closeModal = () => {
                 size="sm"
             >
                 <SwapCoinIcon aria-hidden="true" class="w-4 h-4 absolute" />
-                <span class="sr-only">Swap coin</span>
+                <span class="sr-only">{{ $t('public.wallet.swap_coin') }}</span>
             </Button>
         </Tooltip>
-        <Tooltip content="View market" placement="bottom">
+        <Tooltip :content="$t('public.wallet.view_market')" placement="bottom">
             <Button
                 type="button"
                 class="flex justify-center w-6 h-6 relative focus:outline-none"
@@ -87,10 +93,10 @@ const closeModal = () => {
                 size="sm"
             >
                 <LineChartIcon aria-hidden="true" class="w-4 h-4 absolute" />
-                <span class="sr-only">View market</span>
+                <span class="sr-only">{{ $t('public.wallet.view_market') }}</span>
             </Button>
         </Tooltip>
-        <Tooltip content="View transactions" placement="bottom">
+        <Tooltip :content="$t('public.wallet.view_transaction')" placement="bottom">
             <Button
                 type="button"
                 class="flex justify-center w-6 h-6 relative focus:outline-none"
@@ -100,13 +106,13 @@ const closeModal = () => {
                 size="sm"
             >
                 <HistoryIcon aria-hidden="true" class="w-4 h-4 absolute" />
-                <span class="sr-only">View transactions</span>
+                <span class="sr-only">{{ $t('public.wallet.view_transaction') }}</span>
             </Button>
         </Tooltip>
     </div>
 
 
-    <Modal :show="coinModal" :title="modalComponent" @close="closeModal" max-width="2xl">
+    <Modal :show="coinModal" :title="$t('public.wallet.' + actionType)" @close="closeModal" max-width="2xl">
         <template v-if="modalComponent === 'Buy Coin'">
             <BuyCoin
                 :coin="coin"

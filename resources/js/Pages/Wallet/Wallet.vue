@@ -31,7 +31,7 @@ const props = defineProps({
     coin_market_time: Object,
 })
 
-const tooltipContent = ref('Copy');
+const tooltipContent = ref('copy');
 const { formatAmount } = transactionFormat();
 
 function copyTestingCode () {
@@ -42,16 +42,16 @@ function copyTestingCode () {
     try {
         var successful = document.execCommand('copy');
         if (successful) {
-            tooltipContent.value = 'Copied!';
+            tooltipContent.value = 'copied';
             setTimeout(() => {
-                tooltipContent.value = 'Copy'; // Reset tooltip content to 'Copy' after 2 seconds
+                tooltipContent.value = 'copy'; // Reset tooltip content to 'Copy' after 2 seconds
             }, 1000);
         } else {
-            tooltipContent.value = 'Try Again Later!';
+            tooltipContent.value = 'try_again_later';
         }
 
     } catch (err) {
-        alert('Oops, unable to copy');
+        alert('copy_error');
     }
 
     /* unselect the range */
@@ -145,7 +145,7 @@ function copyTestingCode () {
                         <div class="inline-flex justify-center w-full items-center gap-2 text-center text-gray-500 dark:text-gray-400 break-all">
                             <span class="text-xs">{{ coin.address }}</span>
                             <input type="hidden" id="XLCoinAddress" :value="coin.address">
-                            <Tooltip :content="tooltipContent" placement="top">
+                            <Tooltip :content="$t('public.' + tooltipContent)" placement="top">
                                 <DuplicateIcon aria-hidden="true" :class="['w-4 h-4 text-gray-500 dark:text-gray-400']" @click.stop.prevent="copyTestingCode" style="cursor: pointer" />
                             </Tooltip>
                         </div>
@@ -173,7 +173,7 @@ function copyTestingCode () {
                     <div class="flex justify-between pt-5 pb-2.5 px-4 shadow-md" style="background: linear-gradient(146deg, #E85B7A 14.85%, #DC5277 16.26%, #D14F79 18.38%, #C84C7B 21.92%, #D24C7B 44.54%, #E34D7A 54.43%, #EF5572 66.45%, #F05B6C 85.53%)">
                         <div class="space-y-2">
                             <div class="text-base font-semibold dark:text-white">
-                                {{ coin.setting_coin.name }} Coin
+                                {{ coin.setting_coin.name }} {{$t('public.coin')}}
                             </div>
                             <div class="text-xl font-semibold dark:text-white">
                                 {{ coin.unit.toFixed(8) }} {{ coin.setting_coin.name }}
@@ -202,7 +202,7 @@ function copyTestingCode () {
                             <div class="inline-flex justify-center w-full items-center gap-2 text-center text-gray-500 dark:text-gray-400 break-all">
                                 <span class="text-xs">{{ coin.address }}</span>
                                 <input type="hidden" id="MXTCoinAddress" :value="coin.address">
-                                <Tooltip :content="tooltipContent" placement="top">
+                                <Tooltip :content="$t('public.' + tooltipContent)" placement="top">
                                     <DuplicateIcon aria-hidden="true" :class="['w-4 h-4 text-gray-500 dark:text-gray-400']" @click.stop.prevent="copyTestingCode" style="cursor: pointer" />
                                 </Tooltip>
                             </div>

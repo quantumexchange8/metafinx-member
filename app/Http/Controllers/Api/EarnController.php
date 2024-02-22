@@ -193,7 +193,8 @@ class EarnController extends Controller
                         return response()->json([
                             'status' => 'fail',
                             'message' => 'Insufficient MUSD Wallet Balance',
-                            'title' => 'Insufficient MUSD Wallet Balance',                                'warning' => 'MUSD wallet does not have enough balance to pay the staking fee. Please increase the wallet balance via internal transfer.',
+                            'title' => 'Insufficient MUSD Wallet Balance',
+                            'warning' => 'MUSD wallet does not have enough balance to pay the staking fee. Please increase the wallet balance via internal transfer.',
                             'alertButton' => 'Internal Wallet',
                         ]);
                     }
@@ -211,7 +212,8 @@ class EarnController extends Controller
                         'category' => 'asset',
                         'user_id' => $user->id,
                         'transaction_type' => 'Staking',
-                        'from_coin_id' => $coin->id,                            'transaction_number' => $transaction_number,
+                        'from_coin_id' => $coin->id,                            
+                        'transaction_number' => $transaction_number,
                         'unit' => $unit,
                         'amount' => $amount,
                         'price_per_unit' => $request->price,
@@ -234,7 +236,8 @@ class EarnController extends Controller
                         'transaction_amount' => $stacking_fee,
                         'status' => 'Success',
                         'remarks' => $unit . $coin->setting_coin->name . ' Unit + $' . $stacking_fee . ' from MUSD Wallet',
-                        'new_wallet_amount' => $wallet->balance,                            'new_coin_amount' => $coin->unit,
+                        'new_wallet_amount' => $wallet->balance,                            
+                        'new_coin_amount' => $coin->unit,
                     ]);
         
                     $staking = CoinStacking::create([
@@ -244,7 +247,8 @@ class EarnController extends Controller
                         'investment_plan_id' => $investment_plan->id,
                         'subscription_number' => $subscription_number,
                         'stacking_unit' => $unit,
-                        'stacking_price' => $amount,                            'stacking_fee' => $stacking_fee,
+                        'stacking_price' => $amount,                            
+                        'stacking_fee' => $stacking_fee,
                         'total_earning' => 0.00,
                     ]);
 

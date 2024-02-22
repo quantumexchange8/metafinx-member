@@ -12,6 +12,7 @@ import InputIconWrapper from "@/Components/InputIconWrapper.vue";
 import BaseListbox from "@/Components/BaseListbox.vue";
 import Button from "@/Components/Button.vue";
 import { Rank1Icon, Rank2Icon, Rank3Icon, Rank4Icon } from "@/Components/Icons/outline.jsx";
+import {usePage} from "@inertiajs/vue3";
 
 const props = defineProps({
   referredCounts: Number,
@@ -31,6 +32,7 @@ const isLoading = ref(false);
 const refresh = ref(false);
 const currentPage = ref(1);
 const levelFilter = ref([{ value: '', label: 'All' }]);
+const createdDate = usePage().props.auth.user.created_at;
 
 const formatter = ref({
   date: 'YYYY-MM-DD',
@@ -42,7 +44,7 @@ function refreshTable() {
   getResults(search.value, date.value, rank.value, level.value, refresh.value);
 }
 
-const { formatDateTime, formatAmount } = transactionFormat();
+const { formatDateTime, formatAmount, formatDate } = transactionFormat();
 
 watch(
   [() => search.value, () => date.value, () => rank.value, () => level.value, () => refresh.value],
@@ -148,7 +150,7 @@ watchEffect(() => {
   <div class="flex flex-nowrap md:grid md:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible my-8">
     <div class="flex-1 rounded-[10px] border border-gray-200 shadow dark:border-transparent dark:bg-gray-700">
       <div class="px-5 py-2.5 flex flex-col justify-between h-full">
-        <p class="flex-grow text-gray-400 text-xs md:text-sm w-32 md:w-full h-full">{{ $t('public.affiliate.total_VAD') }}</p>
+        <p class="flex-grow text-gray-400 text-xs md:text-sm w-32 md:w-full h-full">{{ $t('public.affiliate.total_VAD') }} {{ formatDate(createdDate) }} </p>
         <p class="text-gray-800 dark:text-white text-xl font-semibold">$&nbsp;{{ formatAmount(props.validAffiliateDeposit) }}
         </p>
       </div>
@@ -209,7 +211,7 @@ watchEffect(() => {
       </div>
       <div class="w-full sm:w-auto">
         <Button type="button" variant="secondary" @click="clearFilter" class="w-full justify-center">
-          Clear
+          {{ $t('public.clear') }}
         </Button>
       </div>
     </div>

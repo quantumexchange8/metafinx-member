@@ -8,18 +8,14 @@ import Input from "@/Components/Input.vue";
 import { SearchIcon } from "@heroicons/vue/outline";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
 
-const categories = ref([
-    {
-        id: 1,
-        name: 'UniLevel Network',
-        type: 'affiliate',
-    },
-    {
-        id: 2,
-        name: "Binary Network",
-        type: 'binary',
-    },
-]);
+const networkType = ref(null);
+
+const networkCategory = [
+    {id: 1, name: 'affiliate_network', type: 'affiliate'},
+    {id: 2, name: "binary_network", type: 'binary',},
+]
+
+const categories = ref(networkCategory)
 
 const props = defineProps({
     downline: Array,
@@ -73,7 +69,7 @@ onMounted(() => {
                                     'bg-transparent dark:bg-[#38425080] dark:text-white': selected
                                 }"
                             >
-                                {{ category.name }}
+                                {{ $t('public.' + category.name ) }}
                             </button>
                         </Tab>
                     </div>
@@ -96,9 +92,9 @@ onMounted(() => {
                 </TabList>
                 <TabPanels class="mt-2">
                     <TabPanel>
-                         <ReferralTree
+                         <!-- <ReferralTree
                              :search="search"
-                         />
+                         /> -->
                     </TabPanel>
                     <TabPanel>
                         <GenealogyTree

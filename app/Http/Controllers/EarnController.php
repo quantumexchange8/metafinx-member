@@ -98,11 +98,11 @@ class EarnController extends Controller
             case('standard'):
 
                 if ($amount % 100 !== 0) {
-                    throw ValidationException::withMessages(['amount' => 'Please enter an amount in increments of 100.']);
+                    throw ValidationException::withMessages(['amount' => trans('public.earn.amount_increment_error')]);
                 }
 
                 if ($amount < $investment_plan->investment_min_amount) {
-                    throw ValidationException::withMessages(['amount' => 'Amount minimum is $ ' . $investment_plan->investment_min_amount]);
+                    throw ValidationException::withMessages(['amount' => trans('public.earn.min_amount'). ' $ ' . $investment_plan->investment_min_amount]);
                 }
 
                 if ($wallet->balance < $amount) {
@@ -160,13 +160,13 @@ class EarnController extends Controller
                 $minAmount = $investment_plan->investment_min_amount;
 
                 if ($unit < $minAmount) {
-                    throw ValidationException::withMessages(['unit' => 'Unit minimum amount is ' . $minAmount . ' ' . $coin->setting_coin->name]);
+                    throw ValidationException::withMessages(['unit' => trans('public.earn.min_unit_amount') . $minAmount . ' ' . $coin->setting_coin->name]);
                 }
 
                 if ($wallet->balance < $stacking_fee) {
                     return redirect()->back()
-                        ->with('title', 'Insufficient MUSD Wallet Balance')
-                        ->with('warning', 'MUSD wallet does not have enough balance to pay the staking fee. Please increase the wallet balance via internal transfer.')
+                        ->with('title', trans('public.insufficient_musd'))
+                        ->with('warning', trans('public.insufficient_musd_message'))
                         ->with('alertButton', 'Internal Wallet');
                 }
 
@@ -254,8 +254,8 @@ class EarnController extends Controller
 
             default:
                 return redirect()->back()
-                    ->with('title', 'Invalid Investment Plan')
-                    ->with('warning', 'Something went wrong on the selected plan');
+                    ->with('title', trans('public.invalid_plan'))
+                    ->with('warning', trans('public.invalid_plan_message'));
         }
 
         return redirect()->back()->with('title', trans('public.subscribed'))->with('success', trans('public.subscribed_success'));

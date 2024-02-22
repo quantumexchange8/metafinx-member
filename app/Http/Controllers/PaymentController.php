@@ -153,6 +153,6 @@ class PaymentController extends Controller
             }
         }
 
-        return response()->json(['success' => true, 'message' => 'Deposit Success']);
+        return response()->json(['success' => true, 'message' => trans('public.deposit_success')]);
     }
 }

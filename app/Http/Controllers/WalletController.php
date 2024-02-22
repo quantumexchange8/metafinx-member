@@ -653,7 +653,7 @@ class WalletController extends Controller
         $wallet = Wallet::find($request->wallet_id);
 
         if ($coin->unit < $request->unit) {
-            throw ValidationException::withMessages(['unit' => trans('public.insufficient_unit') . ', AVAILABLE UNIT: ' . $coin->unit . ' ' . $setting_coin->name ]);
+            throw ValidationException::withMessages(['unit' => trans('public.insufficient_unit') . ', ' . trans('public.available_unit') . ': ' . $coin->unit . ' ' . $setting_coin->name ]);
 
         }
 

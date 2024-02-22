@@ -188,11 +188,11 @@ onMounted(() => {
 
 const positions = [
     {
-        name: 'Left',
+        name: 'left',
         value: 'left'
     },
     {
-        name: 'Right',
+        name: 'right',
         value: 'right'
     }
 ]
@@ -290,7 +290,7 @@ checkCoinStackingExistence();
                 class="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
                 >
                     <div class="flex items-center gap-2">
-                        <div class="text-white text-base">Pending Placement</div>
+                        <div class="text-white text-base">{{ $t('public.pending_placement') }}</div>
                         <div v-if="getPendingPlacementCount > 0" class="bg-pink-500 w-5 h-5 rounded-full flex justify-center">
                             {{ getPendingPlacementCount }}
                         </div>
@@ -313,13 +313,13 @@ checkCoinStackingExistence();
                                         {{ $t('public.affiliate.members') }}
                                     </th>
                                     <th scope="col" class="p-3 uppercase">
-                                        Register Date
+                                        {{ $t('public.register_date') }}
                                     </th>
                                     <th scope="col" class="p-3 uppercase">
-                                        Placement Time Left
+                                        {{ $t('public.placement_time_left') }}
                                     </th>
                                     <th scope="col" class="p-3 uppercase text-center">
-                                        Placement
+                                        {{ $t('public.placement') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -364,7 +364,7 @@ checkCoinStackingExistence();
                                             size="sm"
                                             @click="openPlacementModal(referee)"
                                         >
-                                            Place
+                                            {{ $t('public.place') }}
                                         </Button>
                                     </td>
                                 </tr>
@@ -393,10 +393,10 @@ checkCoinStackingExistence();
 
     <div class="flex items-center self-stretch justify-between mb-3">
         <div class="text-base font-normal text-gray-600 dark:text-gray-400">
-            Note: Only add distributor that currently have no associated legs.
+            {{ $t('public.affiliate.note') }}
         </div>
         <div class="flex gap-3">
-            <Tooltip content="Zoom In" placement="bottom">
+            <Tooltip :content="$t('public.zoom_in')" placement="bottom">
                 <Button
                     type="button"
                     class="flex justify-center w-8 h-8 relative focus:outline-none"
@@ -405,10 +405,10 @@ checkCoinStackingExistence();
                     pill
                 >
                     <ZoomInIcon aria-hidden="true" class="w-4 h-4 absolute" />
-                    <span class="sr-only">Zoom In</span>
+                    <span class="sr-only">{{ $t('public.zoom_in') }}</span>
                 </Button>
             </Tooltip>
-            <Tooltip content="Zoom Out" placement="bottom">
+            <Tooltip :content="$t('public.zoom_out')" placement="bottom">
                 <Button
                     type="button"
                     class="flex justify-center w-8 h-8 relative focus:outline-none"
@@ -417,10 +417,10 @@ checkCoinStackingExistence();
                     pill
                 >
                     <ZoomOutIcon aria-hidden="true" class="w-4 h-4 absolute" />
-                    <span class="sr-only">Zoom Out</span>
+                    <span class="sr-only">{{ $t('public.zoom_out') }}</span>
                 </Button>
             </Tooltip>
-            <Tooltip content="Recenter" placement="bottom">
+            <Tooltip :content="$t('public.recenter')" placement="bottom">
                 <Button
                     type="button"
                     class="flex justify-center w-8 h-8 relative focus:outline-none"
@@ -429,7 +429,7 @@ checkCoinStackingExistence();
                     pill
                 >
                     <Target02Icon aria-hidden="true" class="w-4 h-4 absolute" />
-                    <span class="sr-only">Recenter</span>
+                    <span class="sr-only">{{ $t('public.recenter') }}</span>
                 </Button>
             </Tooltip>
         </div>
@@ -440,7 +440,7 @@ checkCoinStackingExistence();
             <div class="container mx-auto text-center pt-24">
                 <div class="items-center justify-center flex">
                     <div class="text-center">
-                        <div v-if="root.sponsor_name" class="flex flex-col justify-center items-center">
+                        <!-- <div v-if="root.sponsor_name" class="flex flex-col justify-center items-center">
                             <div class="w-60 rounded-lg dark:bg-gray-700 flex gap-2 p-3 items-center z-20">
                                 <img :src="root.sponsor_profile_photo ? root.sponsor_profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
                                 <div class="flex flex-col gap-1">
@@ -457,7 +457,7 @@ checkCoinStackingExistence();
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <GenealogyChild
                             :binaryTree="root"
                         />
@@ -468,11 +468,11 @@ checkCoinStackingExistence();
     </div>
 
     <!-- Placement Modal-->
-    <Modal :show="placementModal" title="New Placement" @close="closeModal">
+    <Modal :show="placementModal" :title="$t('public.new_placement')" @close="closeModal">
         <div class="flex flex-col gap-8">
             <div class="flex flex-col sm:flex-row gap-1 space-y-2 sm:space-y-0 items-start self-stretch">
                 <div class="text-base text-gray-800 dark:text-white w-52">
-                    Distributor
+                    {{ $t('public.distributor') }}
                 </div>
                 <div class="p-5 bg-gray-400 dark:bg-gray-700 rounded-xl w-full">
                     <div class="flex items-center gap-2">
@@ -492,7 +492,7 @@ checkCoinStackingExistence();
             </div>
             <div class="flex flex-col sm:flex-row gap-1 space-y-2 sm:space-y-0 items-start self-stretch">
                 <div class="text-base text-gray-800 dark:text-white w-52">
-                    Placement
+                    {{ $t('public.placement') }}
                 </div>
                 <div class="w-full">
                     <RadioGroup v-model="selectPosition" class="flex gap-1 md:gap-4 flex-col md:flex-row">
@@ -524,7 +524,7 @@ checkCoinStackingExistence();
                                                     ]"
                                                     class="font-medium"
                                                 >
-                                                    {{ plan.name }}
+                                                {{ $t('public.' + plan.name ) }}
                                                 </RadioGroupLabel>
                                                 <RadioGroupDescription
                                                     as="span"
@@ -543,7 +543,7 @@ checkCoinStackingExistence();
             </div>
             <div class="flex flex-col sm:flex-row gap-1 space-y-2 sm:space-y-0 items-start self-stretch">
                 <div class="text-base text-gray-800 dark:text-white w-52">
-                    Place under
+                    {{ $t('public.place_under') }}
                 </div>
                 <div class="p-5 bg-gray-400 dark:bg-gray-700 rounded-xl w-full">
                     <div v-if="lastChild" class="flex items-center gap-2">
@@ -567,9 +567,9 @@ checkCoinStackingExistence();
 
         <div class="pb-5 grid grid-cols-2 gap-4 w-full md:w-1/3 md:float-right">
             <Button variant="secondary" type="button" class="justify-center" @click.prevent="closeModal">
-                Cancel
+                {{ $t('public.cancel') }}
             </Button>
-            <Button class="justify-center" @click="submit" :disabled="form.processing">Confirm</Button>
+            <Button class="justify-center" @click="submit" :disabled="form.processing">{{ $t('public.confirm') }}</Button>
         </div>
     </Modal>
 

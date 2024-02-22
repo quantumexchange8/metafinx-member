@@ -91,7 +91,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
 
         <div class="flex pb-3 items-start gap-2.5 self-stretch border-b  border-gray-300 dark:border-gray-700 mb-8">
             <div class="text-base font-semibold">
-                Standard
+                {{$t('public.standard')}}
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 ">
@@ -170,7 +170,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                     </div>
                 </div>
                 <div class="mt-4 text-xs">
-                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">Learn more.</span>
+                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">{{$t('public.learn_more')}}</span>
                 </div>
             </div>
         </div>
@@ -184,7 +184,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
 
         <div class="flex pb-3 items-start gap-2.5 self-stretch border-b border-gray-300 dark:border-gray-700 my-8">
             <div class="text-base font-semibold">
-                {{ setting_coin.name }} Staking (Max. Earnings Limit: $ {{ formatAmount(props.totalEarning * props.coinPrice) ? formatAmount(props.totalEarning * props.coinPrice) : '0.00' }} / $ {{ formatAmount(props.maxCap) }})
+                {{ setting_coin.name }} {{$t('public.staking')}} ({{$t('public.earn.max_earning_limit')}}: $ {{ formatAmount(props.totalEarning * props.coinPrice) ? formatAmount(props.totalEarning * props.coinPrice) : '0.00' }} / $ {{ formatAmount(props.maxCap) }})
             </div>
         </div>
         <div v-if="coinStackings.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-28">
@@ -259,7 +259,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                     </div>
                 </div>
                 <div class="mt-4 text-xs">
-                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">Learn more.</span>
+                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">{{$t('public.learn_more')}}</span>
                 </div>
             </div>
         </div>

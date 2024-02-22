@@ -15,23 +15,13 @@ const props = defineProps({
     exportStatus: Boolean,
 })
 
-const categories = ref({
-    'Return (Personal)': [
-        {
-            name: 'Return'
-        }
-    ],
-    Earning: [
-        {
-            name: 'Earning'
-        }
-    ],
-    Investment: [
-        {
-            name: 'Investment'
-        }
-    ],
-})
+const reportCategory = [
+    {value: 'return', label:"Return (Personal)"},
+    {value: 'earning', label:"Earning"},
+    {value: 'investment', label:"Investment"},
+]
+
+const categories = ref(reportCategory)
 const isLoading = ref(false);
 const refresh = ref(false);
 const reportType = ref('Return');
@@ -52,13 +42,13 @@ const updateTransactionType = (transaction_type) => {
         <TabGroup>
             <TabList class="max-w-xs md:max-w-full flex py-1 ">
                 <Tab
-                    v-for="category in Object.keys(categories)"
+                    v-for="category in categories"
                     as="template"
                     :key="category"
                     v-slot="{ selected }"
                 >
                     <button
-                        @click="updateTransactionType(category)"
+                        @click="updateTransactionType(category.label)"
                         :class="[
                               'w-full md:w-1/6 py-2.5 text-sm font-semibold dark:text-gray-400',
                               'ring-white ring-offset-0 focus:outline-none focus:ring-0',
@@ -67,7 +57,7 @@ const updateTransactionType = (transaction_type) => {
                                 : 'border-b border-gray-400',
                            ]"
                     >
-                        {{ category }}
+                        {{ $t('public.' + category.value ) }}
                     </button>
                 </Tab>
                 <RefreshIcon

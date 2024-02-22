@@ -12,6 +12,7 @@ import {transactionFormat} from "@/Composables/index.js";
 import AffiliateNetwork from "@/Pages/Affiliate/AffiliateNetwork.vue";
 import {usePage} from "@inertiajs/vue3";
 import InvestmentTable from "@/Pages/Report/History/InvestmentTable.vue";
+import { trans } from 'laravel-vue-i18n';
 
 const props = defineProps({
     referredCounts: Number,
@@ -26,7 +27,7 @@ const { formatAmount,formatDate } = transactionFormat();
 const createdDate = usePage().props.auth.user.created_at;
 const affiliateType = ref('affiliate');
 
-const tooltipContent = ref('Copy');
+const tooltipContent = ref('copy');
 function copyReferralCode () {
     const referralCodeCopy = document.querySelector('#referralCode').value;
     const tempInput = document.createElement('input');
@@ -37,16 +38,16 @@ function copyReferralCode () {
     try {
         var successful = document.execCommand('copy');
         if (successful) {
-            tooltipContent.value = 'Copied!';
+            tooltipContent.value = 'copied';
             setTimeout(() => {
-                tooltipContent.value = 'Copy'; // Reset tooltip content to 'Copy' after 2 seconds
+                tooltipContent.value = 'copy'; // Reset tooltip content to 'Copy' after 2 seconds
             }, 1000);
         } else {
-            tooltipContent.value = 'Try Again Later!';
+            tooltipContent.value = 'try_again_later';
         }
 
     } catch (err) {
-        alert('Oops, unable to copy');
+        alert('copy_error');
     }
     document.body.removeChild(tempInput);
     window.getSelection().removeAllRanges()
@@ -64,7 +65,7 @@ function copyReferralCodeLink() {
     document.body.removeChild(tempInput);
 
     toast.add({
-        message: 'Link copied successful!'
+        message: trans('public.link_copied')
     });
 }
 </script>
@@ -156,7 +157,7 @@ function copyReferralCodeLink() {
                 </div>
                 <div class="flex rounded-md shadow-sm">
                     <input type="text" id="referralCode" :value="$page.props.auth.user.referral_code" class="py-2 px-4 block w-full border-transparent shadow-sm rounded-l-lg text-sm focus:z-10 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:bg-gray-600 dark:text-white text-center">
-                    <Tooltip :content="tooltipContent" placement="top">
+                    <Tooltip :content="$t('public.' + tooltipContent)" placement="top">
                         <button
                             type="button"
                             class="py-2 px-4 inline-flex flex-shrink-0 justify-center items-center gap-2 rounded-r-lg border border-transparent font-semibold dark:bg-gray-500 text-white dark:hover:bg-gray-400 focus:z-10 focus:outline-none transition-all text-sm uppercase"
@@ -233,7 +234,7 @@ function copyReferralCodeLink() {
                     </div>
                     <div class="flex rounded-md shadow-sm">
                         <input type="text" id="referralCodeSide" readonly :value="$page.props.auth.user.referral_code" class="py-2 px-4 block w-full border-transparent shadow-sm rounded-l-lg text-sm focus:z-10 focus:border-pink-700 focus:ring focus:ring-pink-500 focus:ring-offset-0 focus:ring-offset-white dark:bg-gray-600 dark:text-white text-center">
-                        <Tooltip :content="tooltipContent" placement="top">
+                        <Tooltip :content="$t('public.' + tooltipContent)" placement="top">
                             <button
                                 type="button"
                                 class="py-2 px-4 inline-flex flex-shrink-0 justify-center items-center gap-2 rounded-r-lg border border-transparent font-semibold dark:bg-gray-500 text-white dark:hover:bg-gray-400 focus:z-10 focus:outline-none transition-all text-sm uppercase"

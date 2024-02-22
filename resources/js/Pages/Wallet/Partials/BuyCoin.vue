@@ -128,7 +128,7 @@ const getAmountPrefix = computed(() => {
                     class="text-xs font-medium"
                     :class="getAmountClass"
                 >
-                    {{ getAmountPrefix }}{{ formatAmount(priceDiffPercentage) }} % today
+                    {{ getAmountPrefix }}{{ formatAmount(priceDiffPercentage) }} % {{ $t('public.wallet.today') }}
                 </div>
             </div>
         </div>
@@ -161,7 +161,7 @@ const getAmountPrefix = computed(() => {
                     />
                     <InputError :message="form.errors.amount" class="mt-2" />
                     <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                        Current balance: $&nbsp;{{ props.wallet_sel[0].balance }}
+                        {{ $t('public.wallet.current_balance')}}: $&nbsp;{{ props.wallet_sel[0].balance }}
                     </div>
                 </div>
             </div>

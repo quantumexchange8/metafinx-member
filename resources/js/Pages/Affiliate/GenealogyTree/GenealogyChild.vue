@@ -119,7 +119,7 @@ const getDistributorDetail = async (id, level) => {
                                 {{ node.name }}
                             </div>
                             <div class="rounded-xl bg-warning-400 text-gray-800 font-normal text-xs px-2 text-center w-16">
-                                Gen {{ node.level }}
+                                {{ $t('public.affiliate.gen') }} {{ node.level }}
                             </div>
                         </div>
                         <div class="text-left text-xs text-gray-600 dark:text-gray-400">
@@ -130,7 +130,7 @@ const getDistributorDetail = async (id, level) => {
                 <div class="mt-3 space-y-2">
                     <div class="flex justify-between items-center">
                         <div class="text-xs font-normal text-gray-600 dark:text-gray-400">
-                            Personal
+                            {{ $t('public.personal') }}
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
                             {{ node.personal_amount >= 0 ? '$ ' + formatAmount(node.personal_amount) : 'Loading..' }}
@@ -138,7 +138,7 @@ const getDistributorDetail = async (id, level) => {
                     </div>
                     <div class="flex justify-between items-center">
                         <div class="text-xs font-normal text-gray-600 dark:text-gray-400">
-                            Left
+                            {{ $t('public.left') }}
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
                             {{ node.left_amount >= 0 ? '$ ' + formatAmount(node.left_amount) : 'Loading..' }}
@@ -146,7 +146,7 @@ const getDistributorDetail = async (id, level) => {
                     </div>
                     <div class="flex justify-between items-center">
                         <div class="text-xs font-normal text-gray-600 dark:text-gray-400">
-                            Right
+                            {{ $t('public.right') }}
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
                             {{ node.right_amount >= 0 ? '$ ' + formatAmount(node.right_amount) : 'Loading..' }}
@@ -289,7 +289,7 @@ const getDistributorDetail = async (id, level) => {
 <!--        </form>-->
 <!--    </Modal>-->
 
-    <Modal :show="distributorDetailModal" title="Distributor Detail" @close="closeDetailModal">
+    <Modal :show="distributorDetailModal" :title="$t('public.affiliate.distributor_detail')" @close="closeDetailModal">
         <div v-if="isLoading" class="flex justify-center">
             <Loading />
         </div>
@@ -302,7 +302,7 @@ const getDistributorDetail = async (id, level) => {
                             {{ distributorDetail.name }}
                         </div>
                         <div class="rounded-xl bg-warning-400 text-gray-800 font-normal text-xs px-2">
-                            Gen {{ distributorDetail.level }}
+                            {{ $t('public.affiliate.gen') }} {{ distributorDetail.level }}
                         </div>
                     </div>
                     <div class="text-xs text-gray-600 dark:text-gray-400">
@@ -325,7 +325,7 @@ const getDistributorDetail = async (id, level) => {
                 </div> -->
                 <div class="flex items-center gap-2 self-stretch">
                     <div class="font-semibold text-sm text-gray-600 dark:text-gray-400 w-1/4">
-                        Place Under
+                        {{ $t('public.place_under') }}
                     </div>
                     <div class="flex items-center gap-2">
                         <img :src="distributorDetail.upline_profile_photo ? distributorDetail.upline_profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
@@ -336,7 +336,7 @@ const getDistributorDetail = async (id, level) => {
                 </div>
                 <div class="flex items-center gap-2 self-stretch">
                     <div class="font-semibold text-sm text-gray-600 dark:text-gray-400 w-1/4">
-                        Current Staking
+                        {{ $t('public.current_staking') }}
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="text-base text-gray-800 dark:text-white">
@@ -346,7 +346,7 @@ const getDistributorDetail = async (id, level) => {
                 </div>
                 <div class="flex items-center gap-2 self-stretch">
                     <div class="font-semibold text-sm text-gray-600 dark:text-gray-400 w-1/4">
-                        Accrued Staking
+                        {{ $t('public.accrued_staking') }}
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="text-base text-gray-800 dark:text-white">

@@ -128,7 +128,7 @@ const clearFilter = () => {
                 @click="clearFilter"
                 class="w-full justify-center"
             >
-                Clear
+                {{$t('public.clear')}}
             </Button>
         </div>
     </div>

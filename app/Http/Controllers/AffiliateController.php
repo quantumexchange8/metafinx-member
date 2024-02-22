@@ -312,7 +312,7 @@ class AffiliateController extends Controller
         ]);
 
         // Redirect back with success message
-        return redirect()->back()->with('title', 'Add Distributor')->with('success', 'Distributor has been successfully added!');
+        return redirect()->back()->with('title', trans('public.affiliate.add_distributor'))->with('success', trans('public.affiliate.add_distributor_message'));
     }
 
     protected function getSelfDeposit($user)
@@ -391,6 +391,7 @@ class AffiliateController extends Controller
 
         return $amount;
     }
+    
     public function group()
     {
         $referredCounts = User::where('upline_id', \Auth::id())->count();

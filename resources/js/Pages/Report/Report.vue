@@ -10,6 +10,8 @@ import {SearchIcon, FilterIcon} from "@heroicons/vue/outline";
 import {CloudDownloadIcon} from "@/Components/Icons/outline.jsx";
 import BaseListbox from "@/Components/BaseListbox.vue";
 import {transactionFormat} from "@/Composables/index.js";
+import { trans } from 'laravel-vue-i18n';
+import { wTrans } from 'laravel-vue-i18n';
 
 const props = defineProps({
     standardRewards: [String, Number],
@@ -34,26 +36,26 @@ const exportStatus = ref(false);
 const { formatAmount } = transactionFormat();
 
 const returnFilter = [
-    {value: '', label:"All"},
-    {value: 'StandardRewards', label:"Standard Rewards"},
-    {value: 'StakingRewards', label:"Staking Rewards"},
-    {value: 'DividendEarnings', label:"Dividend Earnings"},
+    {value: '', label: trans('public.all')},
+    {value: 'StandardRewards', label: trans('public.standard_rewards')},
+    {value: 'StakingRewards', label: trans('public.staking_rewards')},
+    {value: 'DividendEarnings', label: trans('public.dividend_earnings')},
 ];
 
 const earnFilter = [
-    {value: '', label:"All"},
-    {value: 'ReferralEarnings', label:"Referral Earning"},
-    {value: 'AffiliateEarnings', label:"Affiliate Earnings"},
-    {value: 'DividendEarnings', label:"Dividend Earnings"},
-    {value: 'PairingEarnings', label:"Pairing Earnings"},
+    {value: '', label: trans('public.all')},
+    {value: 'ReferralEarnings', label: trans('public.referral_earnings')},
+    {value: 'AffiliateEarnings', label: trans('public.affiliate_earnings')},
+    {value: 'DividendEarnings', label: trans('public.dividend_earnings')},
+    {value: 'PairingEarnings', label: trans('public.pairing_earnings')},
 ];
 
 const investFilter = [
-    {value: '', label:"All"},
-    {value: 'CoolingPeriod', label:"Cooling Period"},
-    {value: 'OngoingPeriod', label:"Ongoing Period"},
-    {value: 'MaturityPeriod', label:"Maturity Period"},
-    {value: 'Terminated', label:"Terminated"},
+    {value: '', label: trans('public.all')},
+    {value: 'CoolingPeriod', label: trans('public.cooling_period')},
+    {value: 'OngoingPeriod', label: trans('public.ongoing_period')},
+    {value: 'MaturityPeriod', label: trans('public.maturity_period')},
+    {value: 'Terminated', label: trans('public.terminated')},
 ];
 
 const historyType = (type) => {
@@ -145,7 +147,7 @@ const clearFilter = () => {
                     @click="clearFilter"
                     class="w-full justify-center"
                 >
-                    Clear
+                    {{ $t('public.clear') }}
                 </Button>
             </div>
         </div>

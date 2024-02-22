@@ -153,7 +153,7 @@ watch(coinUnit, (newUnit) => {
                                     }"
                                     @click="handleButtonClick"
                                 >
-                                {{ !coinUnit ? $t('public.wallet.full_amount') : $t('public.wallet.clear') }}
+                                {{ !coinUnit ? $t('public.wallet.full_amount') : $t('public.clear') }}
                                 </Button>
                             </div>
                         </InputIconWrapper>
