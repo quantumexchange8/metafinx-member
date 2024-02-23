@@ -14,7 +14,7 @@ const props = defineProps({
     profile_photo_url: String
 })
 const { formatAmount, formatWalletAddress } = transactionFormat();
-const tooltipContent = ref('Copy');
+const tooltipContent = ref('copy');
 const copyWalletAddress = ref(null);
 
 const copyAddress = () => {
@@ -26,9 +26,9 @@ const copyAddress = () => {
         document.execCommand('copy');
         document.body.removeChild(textArea);
 
-        tooltipContent.value = 'Copied!';
+        tooltipContent.value = 'copied';
         setTimeout(() => {
-            tooltipContent.value = 'Copy'; // Reset tooltip content to 'Copy' after 2 seconds
+            tooltipContent.value = 'copy'; // Reset tooltip content to 'Copy' after 2 seconds
         }, 1000);
     }
 }
@@ -46,10 +46,10 @@ const submitApproval = (status) => {
 </script>
 
 <template>
-    <GuestLayout title="Deposit Approval">
+    <GuestLayout :title="$t('public.wallet.deposit_approval')">
         <div class="text-center">
-            <h2 class="text-4xl	font-sans font-bold mb-2 text-gray-800 dark:text-white">Deposit Approval</h2>
-            <p class="font-sans text-gray-600 dark:text-gray-400">Approve Deposits for Smooth Transactions</p>
+            <h2 class="text-4xl	font-sans font-bold mb-2 text-gray-800 dark:text-white">{{ $t('public.wallet.deposit_approval') }}</h2>
+            <p class="font-sans text-gray-600 dark:text-gray-400">{{ $t('public.wallet.deposit_approval_message') }}</p>
         </div>
 
         <form>
@@ -71,26 +71,26 @@ const submitApproval = (status) => {
                 </div>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-sm font-semibold dark:text-gray-400">Deposit Amount</span>
+                <span class="text-sm font-semibold dark:text-gray-400">{{ $t('public.wallet.deposit') }} {{ $t('public.wallet.amount') }}</span>
                 <span class="text-black dark:text-white py-2">$ {{ formatAmount(transaction.amount) }}</span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-sm font-semibold dark:text-gray-400">Transaction Fee ({{ transaction_fee.value }}%)</span>
+                <span class="text-sm font-semibold dark:text-gray-400">{{ $t('public.wallet.transaction_fee') }} ({{ transaction_fee.value }}%)</span>
                 <span class="text-black dark:text-white py-2">$ {{ formatAmount(transaction.transaction_charges) }}</span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-sm font-semibold dark:text-gray-400">Receive Amount</span>
+                <span class="text-sm font-semibold dark:text-gray-400">{{ $t('public.wallet.receive') }} {{ $t('public.wallet.amount') }}</span>
                 <span class="text-black dark:text-white py-2">$ {{ formatAmount(transaction.transaction_amount) }}</span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-sm font-semibold dark:text-gray-400">Transaction Number</span>
+                <span class="text-sm font-semibold dark:text-gray-400">{{ $t('public.wallet.transaction_number') }}</span>
                 <span class="text-black dark:text-white py-2">{{ transaction.transaction_number }}</span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-sm font-semibold dark:text-gray-400">To Wallet Address</span>
+                <span class="text-sm font-semibold dark:text-gray-400">{{ $t('public.wallet.to') }} {{ $t('public.wallet.wallet_address') }}</span>
                 <div class="flex items-center gap-1">
                     <div ref="copyWalletAddress" class="text-black dark:text-white py-2">{{ formatWalletAddress(transaction.to_wallet_address) }}</div>
-                    <Tooltip :content="tooltipContent" placement="top">
+                    <Tooltip :content="$t('public.' + tooltipContent)" placement="top">
                         <DuplicateIcon aria-hidden="true" class="cursor-pointer w-6 text-white" @click.stop.prevent="copyAddress" />
                     </Tooltip>
                 </div>
@@ -107,7 +107,7 @@ const submitApproval = (status) => {
                     @click.prevent="submitApproval('Success')"
                     :disabled="form.processing"
                 >
-                    Approve
+                    {{ $t('public.approve') }}
                 </Button>
                 <Button
                     type="button"
@@ -116,7 +116,7 @@ const submitApproval = (status) => {
                     @click.prevent="submitApproval('Rejected')"
                     :disabled="form.processing"
                 >
-                    Reject
+                    {{ $t('public.reject') }}
                 </Button>
             </div>
             <div v-else class="flex justify-center my-5">
@@ -124,7 +124,7 @@ const submitApproval = (status) => {
                      class="py-2 px-4 rounded-md text-white"
                      :class="transaction.status === 'Success' ? 'bg-success-500' : 'bg-error-500'"
                  >
-                     Status - {{ transaction.status }}
+                     {{ $t('public.wallet.status') }} - {{ transaction.status }}
                  </div>
             </div>
         </form>
