@@ -204,6 +204,12 @@ class AffiliateController extends Controller
             } elseif ($binaryData['children'][0]['position'] == 'right') {
                 $binaryData['children'] = [(object)null, (object)$binaryData['children'][0]];
             }
+        } elseif (count($binaryData['children']) == 2) {
+            if ($binaryData['children'][0]['position'] == 'left') {
+                $binaryData['children'] = [(object)$binaryData['children'][0], (object)$binaryData['children'][1]];
+            } else {
+                $binaryData['children'] = [(object)$binaryData['children'][1], (object)$binaryData['children'][0]];
+            }
         }
 
         return response()->json($binaryData);
