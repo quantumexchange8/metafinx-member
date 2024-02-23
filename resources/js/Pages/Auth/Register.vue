@@ -237,6 +237,7 @@ const handleBackRevert = (uniqueId, load, error) => {
                                 v-model="selectedCountry"
                                 :options="props.countries"
                                 :error="form.errors.country"
+                                :placeholder="$t('public.register.country_placeholder')"
                             />
 
                         </div>

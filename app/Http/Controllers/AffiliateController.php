@@ -44,13 +44,18 @@ class AffiliateController extends Controller
 
         // Get the upline's ID
         $uplineId = User::where('id', \Auth::id())->value('upline_id');
-        $uplineStaking = true;
+        $uplineStaking = null;
+        $userExist = CoinMultiLevel::where('user_id', \Auth::id())->exists();
 
-        if ($uplineId) {
-            // If there is an upline, check if they have a coin stacking record
+        if ($uplineId && $userExist) {
+            // If there is an upline and current user exist in table, check if they have a coin stacking record
             $uplineStaking = CoinMultiLevel::where('user_id', $uplineId)->exists();
+        } elseif ($userExist) {
+            $uplineStaking = true;
+        } else{
+            $uplineStaking = false;
         }
-
+        
         return Inertia::render('Affiliate/Affiliate', [
             'referredCounts' => $referredCounts,
             'totalReferralEarning' => floatval($totalReferralEarning),

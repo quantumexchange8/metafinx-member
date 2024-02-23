@@ -24,18 +24,14 @@ const props = defineProps({
 const { formatDateTime, formatAmount } = transactionFormat();
 const exportStatus = ref(false);
 
-const categories = ref([
-    {
-        id: 1,
-        name: 'Group Network',
-        type: 'affiliate',
-    },
-    {
-        id: 2,
-        name: "MXT Coin Binary Network",
-        type: 'binary',
-    },
-])
+const networkType = ref(null);
+
+const networkCategory = [
+    {id: 1, name: 'group_network', type: 'affiliate'},
+    {id: 2, name: "coin_binary_network", type: 'binary',},
+]
+
+const categories = ref(networkCategory)
 
 const exportAffiliateTable = () => {
   exportStatus.value = true;
@@ -88,7 +84,7 @@ const exportAffiliateTable = () => {
                                     'hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600': true,
                                     'bg-transparent dark:bg-[#38425080] dark:text-white': selected
                                 }">
-                                {{ category.name }}
+                                {{ $t('public.' + category.name ) }}
                             </button>
                         </Tab>
                     </TabList>
