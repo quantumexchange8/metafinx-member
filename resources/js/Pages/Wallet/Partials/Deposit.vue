@@ -77,6 +77,11 @@ function copyTestingCode () {
 
 const transactionFee = computed(() => props.depositFee.value);
 
+const calculatedTransactionFee = computed(() => {
+    const calculated = form.amount * (transactionFee.value / 100);
+    return calculated <= 0 ? 0 : calculated
+});
+
 const calculatedBalance = computed(() => {
     const calculated = form.amount * ((100 - transactionFee.value) / 100);
     return calculated <= 0 ? 0 : calculated
@@ -163,7 +168,7 @@ const calculatedBalance = computed(() => {
                 <div class="mt-6 border-t dark:border-gray-700"></div>
                 <div class="flex items-center justify-between mt-5">
                     <span class="text-sm dark:text-gray-400 font-Inter">{{$t('public.wallet.transaction_fee')}}</span>
-                    <span class="text-sm dark:text-white">{{ formatAmount(transactionFee) }} %</span>
+                    <span class="text-sm dark:text-white">$ {{ formatAmount(calculatedTransactionFee) }}</span>
                 </div>
                 <div class="flex items-center justify-between mt-2">
                     <span class="text-sm dark:text-gray-400 font-Inter">{{$t('public.wallet.balance_received')}}</span>
