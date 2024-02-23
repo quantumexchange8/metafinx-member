@@ -45,7 +45,7 @@ class DashboardController extends Controller
 
         $stakingEarning = CoinStacking::where('user_id', \Auth::id())
             ->sum('total_earning');
-        
+
         $totalEarning = $investmentEarning + $stakingEarning;
 
         $totalWithdrawal = Transaction::where('user_id', \Auth::id())
@@ -56,11 +56,11 @@ class DashboardController extends Controller
         $standardInvestment = InvestmentSubscription::where('user_id', \Auth::id())
             ->whereNotIn('status', ['Terminated'])
             ->sum('amount');
-        
+
         $stakingInvestment = CoinStacking::where('user_id', \Auth::id())
             ->whereNotIn('status', ['Terminated'])
             ->sum('stacking_price');
-        
+
         $totalInvestment = $standardInvestment + $stakingInvestment;
 
         $coin = Coin::with('setting_coin')->where('user_id', \Auth::id())->first();
@@ -85,6 +85,7 @@ class DashboardController extends Controller
             'totalEarning' => floatval($totalEarning),
             'totalWithdrawal' => floatval($totalWithdrawal),
             'totalInvestment' => floatval($totalInvestment),
+            'depositFee' => Setting::where('slug', 'deposit-fee')->latest()->first(),
         ]);
     }
 

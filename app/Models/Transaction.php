@@ -29,6 +29,7 @@ class Transaction extends Model
         'price_per_unit',
         'status',
         'remarks',
+        'approval_date',
         'handle_by',
     ];
 

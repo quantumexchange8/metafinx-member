@@ -24,6 +24,7 @@ const props = defineProps({
     depositWalletSel: Array,
     random_address: Object,
     withdrawalFee: Object,
+    depositFee: Object,
     gasFee: Object,
     stackingFee: Object,
     setting_coin: Object,
@@ -84,11 +85,12 @@ function copyTestingCode () {
                         $&nbsp;{{ props.totalBalance }}
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-1 space-y-3 w-full">
-                    <!-- <Deposit
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+                    <Deposit
                         :wallet_sel="wallet_sel"
                         :random_address="random_address"
-                    /> -->
+                        :depositFee="depositFee"
+                    />
                     <Withdrawal
                         :wallet_sel="wallet_sel"
                         :withdrawalFee="props.withdrawalFee"

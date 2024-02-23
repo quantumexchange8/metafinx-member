@@ -155,6 +155,17 @@ export function transactionFormat() {
         return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
     }
 
+    function formatWalletAddress(address) {
+        // Check if the address is valid and has at least 8 characters
+        if (address && address.length >= 8) {
+            const frontPart = address.slice(0, 4);
+            const backPart = address.slice(-4);
+            return `${frontPart}...${backPart}`;
+        } else {
+            return address; // Return the original address if it's invalid or too short
+        }
+    }
+
     return {
         formatDateTime,
         formatDate,
@@ -162,6 +173,7 @@ export function transactionFormat() {
         getStatusClass,
         formatAmount,
         formatType,
-        formatCategory
+        formatCategory,
+        formatWalletAddress,
     };
 }

@@ -247,13 +247,13 @@ class EarnController extends Controller
 
                 $upline = $user->upline;
                 $downline = $user;
-                
+
                 if ($upline && $stacking) {
                     if ($upline->binary) {
                         \Notification::send([$upline], new StakingNotification($upline, $downline));
                     }
                 }
-                                        
+
                 break;
 
             default:

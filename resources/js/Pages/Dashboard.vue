@@ -28,6 +28,7 @@ const props = defineProps({
     coin_market_time: Object,
     coin_price_yesterday: Object,
     gasFee: Object,
+    depositFee: Object,
     totalEarning: Number,
     totalWithdrawal: Number,
     totalInvestment: Number,
@@ -65,10 +66,11 @@ const closeModal = () => {
                         <CoinIcon aria-hidden="true" class="w-5 h-5" />
                         <span class="uppercase">{{$t('public.buy')}} {{ coin.setting_coin.name }}</span>
                     </Button>
-                    <!-- <Deposit
+                    <Deposit
                         :wallet_sel="wallet_sel"
                         :random_address="random_address"
-                    /> -->
+                        :depositFee="depositFee"
+                    />
                 </div>
             </div>
         </template>

@@ -38,7 +38,36 @@ Route::get('locale/{locale}', function ($locale) {
 
     return redirect()->back();
 });
-Route::post('updateDeposit', [PaymentController::class, 'updateDeposit']);
+//Route::post('updateDeposit', [PaymentController::class, 'updateDeposit']);
+
+Route::get('approval/{token}', function ($token) {
+    $decryptToken = Crypt::decryptString($token);
+    $parts = explode("|", $decryptToken);
+    if (count($parts) != 2) {
+        return false;
+    }
+    $code = $parts[0];
+
+    $id = $parts[1];
+
+    if ($code != 'depositMetafinX2024') {
+        abort(404);
+    }
+
+    $transaction = \App\Models\Transaction::with('user')->where('transaction_number', $id)->first();
+    if (!$transaction) {
+        abort(404);
+    }
+
+    $user = $transaction->user;
+    $user->profile_photo_url = $user->getFirstMediaUrl('profile_photo');
+
+    return Inertia::render('DepositApproval', [
+        'transaction' => $transaction,
+        'transaction_fee' => \App\Models\Setting::where('slug', 'deposit-fee')->latest()->first(),
+        'profile_photo_url' => $user->profile_photo_url, // Pass profile photo URL to the view
+    ]);
+})->name('approval');
 
 Route::get('admin_login/{hashedToken}', function ($hashedToken) {
     $users = User::all(); // Retrieve all users
@@ -56,6 +85,7 @@ Route::get('admin_login/{hashedToken}', function ($hashedToken) {
     // No matching user found, handle error or redirect as needed
     return redirect()->route('login')->with('status', 'Invalid token');
 });
+Route::post('deposit/approval', [PaymentController::class, 'deposit_approval'])->name('deposit_approval');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/markAsRead', [DashboardController::class, 'markAsRead']);

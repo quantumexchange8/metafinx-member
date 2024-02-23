@@ -90,6 +90,7 @@ class WalletController extends Controller
             // 'depositWalletSel' => $depositWalletSel,
             'random_address' => $wallet_address,
             'withdrawalFee' => Setting::where('slug', 'withdrawal-fee')->latest()->first(),
+            'depositFee' => Setting::where('slug', 'deposit-fee')->latest()->first(),
             'gasFee' => Setting::where('slug', 'gas-fee')->latest()->first(),
             'stackingFee' => Setting::where('slug', 'stacking-fee')->latest()->first(),
             'setting_coin' => SettingCoin::where('symbol', 'MXT/USD')->first(),
@@ -101,7 +102,7 @@ class WalletController extends Controller
     public function fetchWallets()
     {
         $wallets = Wallet::where('user_id', \Auth::id())->get();
-        
+
         return response()->json($wallets);
     }
 

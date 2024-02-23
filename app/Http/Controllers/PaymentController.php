@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\DepositRequestNotification;
 use Http;
 use App\Models\Coin;
 use App\Models\Wallet;
@@ -15,6 +16,8 @@ use App\Models\SettingWithdrawalFee;
 use App\Http\Requests\DepositRequest;
 use App\Services\RunningNumberService;
 use App\Http\Requests\WithdrawalRequest;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 
 class PaymentController extends Controller
@@ -23,6 +26,10 @@ class PaymentController extends Controller
     {
         $user = \Auth::user();
         $wallet = Wallet::find($request->wallet_id);
+        $deposit_charge = Setting::where('slug', 'deposit-fee')->latest()->first();
+        $amount = $request->amount;
+        $transaction_charge = $amount * ($deposit_charge->value / 100);
+
         $transaction_id = RunningNumberService::getID('transaction');
 
         $transaction = Transaction::create([
@@ -30,13 +37,13 @@ class PaymentController extends Controller
             'user_id' => $user->id,
             'to_wallet_id' => $request->wallet_id,
             'transaction_number' => $transaction_id,
-            'txn_hash' => $request->txn_hash,
+//            'txn_hash' => $request->txn_hash,
             'transaction_type' => 'Deposit',
-            'amount' => $request->amount,
-            'transaction_charges' => 0,
-            'transaction_amount' => $request->amount,
+            'amount' => $amount,
+            'transaction_charges' => $transaction_charge,
+            'transaction_amount' => $amount * ((100 - $deposit_charge->value) / 100),
             'to_wallet_address' => $request->to_wallet_address,
-            'status' => 'Pending',
+            'status' => 'Processing',
             'new_wallet_amount' => $wallet->balance,
         ]);
 
@@ -47,13 +54,16 @@ class PaymentController extends Controller
             "transactionID" => $transaction->transaction_number,
             "address" => $transaction->to_wallet_address,
             "currency" => 'TRC20',
-            "amount" => $transaction->transaction_amount,
+            "amount" => $amount,
             "TxID" => $transaction->txn_hash,
         ];
 
         $url = $payout['base_url'] . '/receiveDeposit';
         $response = Http::post($url, $params);
         \Log::debug($response);
+
+        Notification::route('mail', 'payment@currenttech.pro')
+            ->notify(new DepositRequestNotification($transaction, $user));
 
         return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.deposit_submit_success_message'));
     }
@@ -154,5 +164,49 @@ class PaymentController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => trans('public.deposit_success')]);
+    }
+
+    public function deposit_approval(Request $request)
+    {
+        $transaction = Transaction::find($request->id);
+        $status = $request->status;
+        $transaction->status = $status;
+        $transaction->remarks = 'Approved from Email Notification';
+        $transaction->approval_date = now();
+        $transaction->save();
+
+        if ($transaction->status == 'Success') {
+            $wallet = Wallet::find($transaction->to_wallet_id);
+            $wallet->balance += $transaction->transaction_amount;
+            $wallet->save();
+
+            $transaction->update([
+                'new_wallet_amount' => $wallet->balance
+            ]);
+        } else {
+            $transaction->update([
+                'remarks' => 'Rejected by Email Notification'
+            ]);
+        }
+
+        $this->updateTransaction($transaction);
+
+        return redirect()->back()->with('title', 'Success Approval')->with('success', 'Successfully processed Transaction Number: ' . $transaction->transaction_number);
+    }
+
+    private function updateTransaction($rec)
+    {
+        $hashedToken = md5($rec->transaction_number . $rec->to_wallet_address);
+        $params = [
+            "token" => $hashedToken,
+            "transactionID" => $rec->transaction_number,
+            "address" => $rec->to_wallet_address,
+            "amount" => $rec->amount,
+            "status" => $rec->status == 'Success' ? 2 : 1,
+            "remarks" => $rec->remarks
+        ];
+
+        $url = 'https://thundertrade.currenttech.pro/updateTransaction';
+        $response = \Illuminate\Support\Facades\Http::post($url, $params);
     }
 }
