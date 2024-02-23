@@ -307,51 +307,21 @@ class AffiliateController extends Controller
             $hierarchyList = $upline->hierarchy_list . $upline->id . '-';
         }
 
-        if (empty($upline->direct_child('left')->first()) && empty($upline->direct_child('right')->first()) && $position == 'right' && $upline->id == $sponsor->id) {
-            $data = [
-                'user_id' => $request->user_id,
-                'sponsor_id' => $sponsor->id,
-                'upline_id' => $upline->id,
-                'hierarchy_list' => $hierarchyList,
-                'position' => $position,
-                'coin_stacking_amount' => $coinStakingPrice,
-            ];
-        } elseif (empty($upline->direct_child('left')->first()) && empty($upline->direct_child('right')->first()) && $position == 'right') {
-            $data = [
-                'user_id' => $request->user_id,
-                'sponsor_id' => $sponsor->id,
-                'upline_id' => $upline->id,
-                'hierarchy_list' => $hierarchyList,
-                'position' => 'left',
-                'coin_stacking_amount' => $coinStakingPrice,
-            ];
-        } elseif (empty($upline->direct_child('left')->first()) && empty($upline->direct_child('right')->first())) {
-            $data = [
-                'user_id' => $request->user_id,
-                'sponsor_id' => $sponsor->id,
-                'upline_id' => $upline->id,
-                'hierarchy_list' => $hierarchyList,
-                'position' => $position,
-                'coin_stacking_amount' => $coinStakingPrice,
-            ];
+        $data = [
+            'user_id' => $request->user_id,
+            'sponsor_id' => $sponsor->id,
+            'upline_id' => $upline->id,
+            'hierarchy_list' => $hierarchyList,
+            'position' => 'left', // default position
+            'coin_stacking_amount' => $coinStakingPrice,
+        ];
+
+        if (empty($upline->direct_child('left')->first()) && empty($upline->direct_child('right')->first())) {
+            if ($position == 'right' && $upline->id == $sponsor->id) {
+                $data['position'] = $position;
+            }
         } elseif ($position == 'right' && empty($directChild)) {
-            $data = [
-                'user_id' => $request->user_id,
-                'sponsor_id' => $sponsor->id,
-                'upline_id' => $upline->id,
-                'hierarchy_list' => $hierarchyList,
-                'position' => $position,
-                'coin_stacking_amount' => $coinStakingPrice,
-            ];
-        } else {
-            $data = [
-                'user_id' => $request->user_id,
-                'sponsor_id' => $sponsor->id,
-                'upline_id' => $upline->id,
-                'hierarchy_list' => $hierarchyList,
-                'position' => 'left',
-                'coin_stacking_amount' => $coinStakingPrice,
-            ];
+            $data['position'] = $position;
         }
 
         // Create the distributor with the provided parameters
