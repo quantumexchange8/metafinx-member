@@ -34,7 +34,11 @@ class EarnController extends Controller
             ->whereYear('created_at', now()->year)
             ->sum('after_coin_price');
 
-        $averageProfit = (($totalEarnings / $monthsElapsed) / $totalEarnings) * 100;
+        if ($totalEarnings > 0) {
+            $averageProfit = (($totalEarnings / $monthsElapsed) / $totalEarnings) * 100;
+        } else {
+            $averageProfit = 0;
+        }
 
         $investment_plans = InvestmentPlan::query()
             ->with('descriptions:investment_plan_id,description')
