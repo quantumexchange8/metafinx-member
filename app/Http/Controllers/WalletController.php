@@ -163,7 +163,7 @@ class WalletController extends Controller
         }
 
         foreach ($coinPrices as $coinPrice) {
-            $balances[] = number_format($coinPrice / $price_per_unit->price, 2, '.', '');
+            $balances[] = number_format($coinPrice * $price_per_unit->price, 2, '.', '');
         }
 
         $dataset = [

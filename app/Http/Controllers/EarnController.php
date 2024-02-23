@@ -203,7 +203,7 @@ class EarnController extends Controller
                 $wallet_transaction = Transaction::create([
                     'category' => 'wallet',
                     'user_id' => $user->id,
-                    'transaction_type' => 'StackingFee',
+                    'transaction_type' => 'StakingFee',
                     'from_wallet_id' => $wallet->id,
                     'transaction_number' => RunningNumberService::getID('transaction'),
                     'amount' => $stacking_fee,
