@@ -177,7 +177,6 @@ onMounted(() => {
         }
     }, 1000);
 
-    fetchPendingPlacementCount();
     setInterval(fetchPendingPlacementCount, 5000);
 
     // Clear the interval when the component is unmounted
@@ -255,13 +254,8 @@ watchEffect(() => {
 
 const fetchPendingPlacementCount = async () => {
     try {
-        const response = await fetch('/affiliate/getPendingPlacementCount');
-        if (response.ok) {
-            // Update the count with the fetched data
-            getPendingPlacementCount.value = await response.json();
-        } else {
-            console.error('Failed to fetch data:', response.statusText);
-        }
+        const response = await axios.get('/affiliate/getPendingPlacementCount');
+        getPendingPlacementCount.value = response.data;
     } catch (error) {
         console.error('Error fetching data:', error.message);
     }

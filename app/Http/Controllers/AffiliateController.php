@@ -55,7 +55,7 @@ class AffiliateController extends Controller
         } else{
             $uplineStaking = false;
         }
-        
+
         return Inertia::render('Affiliate/Affiliate', [
             'referredCounts' => $referredCounts,
             'totalReferralEarning' => floatval($totalReferralEarning),
@@ -294,8 +294,9 @@ class AffiliateController extends Controller
         $sponsor = CoinMultiLevel::where('user_id', Auth::id())->first();
         $coinStakingPrice = CoinStacking::where('user_id', $request->user_id)->where('status', 'OnGoingPeriod')->sum('stacking_price');
 
+        $directChild = $upline->direct_child($request->position)->first();
         // Ensure the specified position is either 'left' or 'right'
-        $position = ($request->position === 'left' || $request->position === 'right') ? $request->position : 'left';
+        $position = $request->position;
 
         // Update the hierarchy list based on the upline
         if ($upline->id == 1) {
@@ -306,15 +307,55 @@ class AffiliateController extends Controller
             $hierarchyList = $upline->hierarchy_list . $upline->id . '-';
         }
 
+        if (empty($upline->direct_child('left')->first()) && empty($upline->direct_child('right')->first()) && $position == 'right' && $upline->id == $sponsor->id) {
+            $data = [
+                'user_id' => $request->user_id,
+                'sponsor_id' => $sponsor->id,
+                'upline_id' => $upline->id,
+                'hierarchy_list' => $hierarchyList,
+                'position' => $position,
+                'coin_stacking_amount' => $coinStakingPrice,
+            ];
+        } elseif (empty($upline->direct_child('left')->first()) && empty($upline->direct_child('right')->first()) && $position == 'right') {
+            $data = [
+                'user_id' => $request->user_id,
+                'sponsor_id' => $sponsor->id,
+                'upline_id' => $upline->id,
+                'hierarchy_list' => $hierarchyList,
+                'position' => 'left',
+                'coin_stacking_amount' => $coinStakingPrice,
+            ];
+        } elseif (empty($upline->direct_child('left')->first()) && empty($upline->direct_child('right')->first())) {
+            $data = [
+                'user_id' => $request->user_id,
+                'sponsor_id' => $sponsor->id,
+                'upline_id' => $upline->id,
+                'hierarchy_list' => $hierarchyList,
+                'position' => $position,
+                'coin_stacking_amount' => $coinStakingPrice,
+            ];
+        } elseif ($position == 'right' && empty($directChild)) {
+            $data = [
+                'user_id' => $request->user_id,
+                'sponsor_id' => $sponsor->id,
+                'upline_id' => $upline->id,
+                'hierarchy_list' => $hierarchyList,
+                'position' => $position,
+                'coin_stacking_amount' => $coinStakingPrice,
+            ];
+        } else {
+            $data = [
+                'user_id' => $request->user_id,
+                'sponsor_id' => $sponsor->id,
+                'upline_id' => $upline->id,
+                'hierarchy_list' => $hierarchyList,
+                'position' => 'left',
+                'coin_stacking_amount' => $coinStakingPrice,
+            ];
+        }
+
         // Create the distributor with the provided parameters
-        CoinMultiLevel::create([
-            'user_id' => $request->user_id,
-            'sponsor_id' => $sponsor->id,
-            'upline_id' => $upline->id,
-            'hierarchy_list' => $hierarchyList,
-            'position' => 'left',
-            'coin_stacking_amount' => $coinStakingPrice,
-        ]);
+        CoinMultiLevel::create($data);
 
         // Redirect back with success message
         return redirect()->back()->with('title', trans('public.affiliate.add_distributor'))->with('success', trans('public.affiliate.add_distributor_message'));
@@ -396,7 +437,7 @@ class AffiliateController extends Controller
 
         return $amount;
     }
-    
+
     public function group()
     {
         $referredCounts = User::where('upline_id', \Auth::id())->count();
