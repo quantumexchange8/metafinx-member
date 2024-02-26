@@ -62,6 +62,7 @@ return [
     "current_amount" => "Current amount",
     "staking_pay" => "deducted from MUSD Wallet",
     "staking_fee" => "Staking Fee",
+    "staking_value" => "Staking Value",
     "payable" => "Payable",
     "received" => "Received",
     "current_price" => "Current Price",

@@ -106,9 +106,9 @@ const calculatedBalance = computed(() => {
             </div>
             <div class="flex justify-center">
                 <div class="space-y-2">
-                    <p class="text-base text-center dark:text-gray-400">
-                        {{$t('public.wallet.scan_QR')}}
-                    </p>
+                    <div class="text-base text-center dark:text-gray-400">
+                        {{$t('public.wallet.scan_QR')}} - <span class="font-semibold">Only USDT (TRC20)</span>
+                    </div>
                     <div class="flex justify-center">
                         <qrcode-vue :class="['border-4 border-white']" :value="props.random_address.wallet_address" :size="200"></qrcode-vue>
                     </div>
@@ -121,7 +121,7 @@ const calculatedBalance = computed(() => {
                     </div>
                 </div>
             </div>
-            <form class="pt-2">
+            <form>
                 <div class="flex flex-col sm:flex-row gap-4">
                     <!-- <Label class="text-sm dark:text-white w-full md:w-1/4 pt-0.5" for="amount" :value="$t('public.wallet.select_wallet')" /> -->
                     <div class="flex flex-col w-full">

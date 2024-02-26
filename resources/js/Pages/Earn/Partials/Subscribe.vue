@@ -220,7 +220,7 @@ const handleButtonClick = () => {
                             </div>
                         </InputIconWrapper>
                         <InputError :message="form.errors.unit" class="mt-2" />
-                        <span class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{$t('public.current_amount')}}: {{ formatAmount(coin.unit, 8) }}</span>
+                        <span class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{$t('public.current_amount')}}: {{ formatAmount(coin.unit, 4) }}</span>
                     </div>
                 </div>
 
@@ -235,7 +235,7 @@ const handleButtonClick = () => {
                     </div>
                     <div class="flex justify-between items-start self-stretch">
                         <div class="text-gray-600 dark:text-gray-400 font-normal text-sm">
-                            {{$t('public.linked_price')}}
+                            {{$t('public.staking_value')}}
                         </div>
                         <div class="text-sm text-gray-900 dark:text-white">
                             $&nbsp;{{ linkedPrice ?? '0.00' }}

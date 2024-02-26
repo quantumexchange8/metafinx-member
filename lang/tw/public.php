@@ -61,7 +61,8 @@ return [
     "staking_rewards" => "堆叠奖励",
     "current_amount" => "当前金额",
     "staking_pay" => "从 MUSD 钱包扣除",
-    "staking_fee" => "堆叠费",
+    "staking_fee" => "質押費",
+    "staking_value" => "質押價值",
     "payable" => "应付",
     "received" => "已收到",
     "current_price" => "当前价格",
@@ -303,7 +304,7 @@ return [
         "note" => "注意：只添加当前没有关联腿的经销商。",
         "distributor_detail" => "经销商详情",
         "add_distributor" => "添加分销商",
-        "add_distributor_message" => "成功添加分销商！",    
+        "add_distributor_message" => "成功添加分销商！",
     ],
     "report" => [
         "report" => "报告",

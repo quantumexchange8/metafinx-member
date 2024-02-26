@@ -71,7 +71,7 @@ class PaymentController extends Controller
     public function withdrawal(WithdrawalRequest $request)
     {
         $user = \Auth::user();
-        $amount = floatval($request->amount);
+        $amount = number_format(floatval($request->amount), 2, '.', '');
         $wallet = Wallet::find($request->wallet_id);
         if ($wallet->balance < $amount) {
             throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
