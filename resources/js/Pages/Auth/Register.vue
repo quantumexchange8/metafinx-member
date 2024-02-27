@@ -180,7 +180,7 @@ const handleBackRevert = (uniqueId, load, error) => {
             <div
                 class="flex-col justify-between w-full h-auto hidden lg:flex lg:w-5/12 bg-gray-50 dark:bg-gray-900"
             >
-                <Link href="/">
+                <Link href="https://metafinx.com/">
                     <ApplicationLogo class="w-48" />
                 </Link>
 

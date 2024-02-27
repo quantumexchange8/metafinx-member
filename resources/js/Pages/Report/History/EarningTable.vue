@@ -120,19 +120,19 @@ const paginationActiveClass = [
             <table class="w-[650px] md:w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5">
                 <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-gray-400 border-b dark:border-gray-600">
                 <tr>
-                    <th scope="col" class="py-3">
+                    <th scope="col" class="py-3 w-1/5">
                         {{$t('public.report.date')}}
                     </th>
-                    <th scope="col" class="py-3">
+                    <th scope="col" class="py-3 w-1/5">
                         {{$t('public.report.downline_name')}}
                     </th>
-                    <th scope="col" class="py-3">
+                    <th scope="col" class="py-3 w-1/5">
                         {{$t('public.report.category')}}
                     </th>
-                    <th scope="col" class="py-3">
+                    <th scope="col" class="py-3 w-1/5">
                         {{$t('public.wallet.wallet')}}
                     </th>
-                    <th scope="col" class="py-3">
+                    <th scope="col" class="py-3 w-1/5">
                         {{$t('public.report.amount')}}
                     </th>
                 </tr>
@@ -177,7 +177,14 @@ const paginationActiveClass = [
                         </div>
                     </td>
                     <td class="py-2">
-                        $&nbsp;{{ formatAmount(earning.after_amount) }}
+                        <span>{{ earning.category === 'staking' ? '' : '$' }}</span> 
+                        {{ 
+                            earning.category === 'staking' ? 
+                            (earning.after_amount % 1 === 0 ? formatAmount(earning.after_amount, 0) : formatAmount(earning.after_amount)) :
+                            formatAmount(earning.after_amount)
+                        }} 
+                        <span>{{ earning.category === 'staking' ? ' MXT' : '' }}</span>
+                        <span>{{ earning.category === 'staking' ? ' ($ ' + formatAmount(earning.after_coin_price) + ')' : '' }}</span>
                     </td>
                 </tr>
                 </tbody>

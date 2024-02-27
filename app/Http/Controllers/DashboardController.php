@@ -41,10 +41,12 @@ class DashboardController extends Controller
         });
 
         $investmentEarning = Earning::where('upline_id', \Auth::id())
+            ->whereNot('category', 'staking')
             ->sum('after_amount');
 
-        $stakingEarning = CoinStacking::where('user_id', \Auth::id())
-            ->sum('total_earning');
+        $stakingEarning = Earning::where('upline_id', \Auth::id())
+            ->where('category', 'staking')
+            ->sum('after_coin_price');
 
         $totalEarning = $investmentEarning + $stakingEarning;
 
