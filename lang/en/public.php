@@ -170,7 +170,7 @@ return [
         "valid" => "Valid thru",
         "id_number" => "ID Number",
         "total_earning" => "Total Earning",
-        "max_earning_limit" => "Max. Earnings Limit",
+        "max_earning_limit" => "Max. Pairing Limit",
         "total_reward" => "Total Rewards",
         "t&c_apply" => "*T&Cs apply.",
         "t&c" => "Terms & Conditions",

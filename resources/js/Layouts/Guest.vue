@@ -41,7 +41,7 @@ onUnmounted(() => removeFinishEventListener());
         class="flex flex-col items-center justify-center min-h-screen gap-4 py-6 bg-white dark:bg-gray-800"
     >
         <div class="fixed left-0 top-0 flex-shrink-0 inline-flex items-center gap-3">
-            <Link href="https://metafinx.com/">
+            <Link href="https://metafinx.com/" target="_blank">
                 <ApplicationLogo class="w-48" />
             </Link>
         </div>
