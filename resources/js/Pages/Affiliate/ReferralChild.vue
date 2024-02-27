@@ -185,7 +185,7 @@ export default {
                             <Rank2Icon class="h-5" v-if="selectedAffiliate.rank === 3" />
                             <Rank3Icon class="h-5" v-if="selectedAffiliate.rank === 4" />
                             <Rank4Icon class="h-5" v-if="selectedAffiliate.rank === 5" />
-                            <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">{{$t('public.affiliate.level')}} {{ selectedAffiliate.level }}</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">{{$t('public.affiliate.gen')}} {{ selectedAffiliate.level }}</span>
                         </div>
                         <div class="text-xs font-normal dark:text-gray-400">
                             {{ selectedAffiliate.email }}
