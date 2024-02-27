@@ -243,7 +243,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                         {{$t('public.earn.total_reward')}}
                     </div>
                     <div class="dark:text-white text-xs">
-                        <span class="uppercase">{{ formatAmount(staking.total_earning, 4) }} {{ setting_coin.name }} ($ {{ formatAmount(staking.total_earning * props.coinPrice, 2) }}) </span>
+                        <span class="uppercase">{{ staking.total_earning % 1 === 0 ? formatAmount(staking.total_earning, 0) : formatAmount(staking.total_earning, 4) }} {{ setting_coin.name }} ($ {{ formatAmount(staking.total_earning * props.coinPrice, 2) }}) </span>
                     </div>
                 </div>
                 <div class="flex justify-between mb-1">
