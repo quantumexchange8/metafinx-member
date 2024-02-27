@@ -10,6 +10,7 @@ import { transactionFormat } from "@/Composables/index.js";
 import BaseListbox from "@/Components/BaseListbox.vue";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
 import MXTLogo from "@/Components/MXTLogo.vue";
+import Terms from "@/Components/Terms.vue";
 
 const props = defineProps({
     coin: Object,
@@ -20,6 +21,8 @@ const props = defineProps({
     coin_market_time: Object,
     coin_price_yesterday: Object,
 });
+
+const swapTerm = 'swap';
 
 const { formatAmount } = transactionFormat();
 const emit = defineEmits(['update:coinModal']);
@@ -183,7 +186,7 @@ watch(coinUnit, (newUnit) => {
                     <label>
                         <div class="flex">
                             <Checkbox name="remember" v-model:checked="form.terms" />
-                            <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}</span>
+                            <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}<Terms :type=swapTerm /></span>
                         </div>
                         <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                     </label>

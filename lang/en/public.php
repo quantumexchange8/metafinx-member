@@ -1,5 +1,8 @@
 <?php
 return [
+    "privacy_notice" => "Privacy Notice",
+    "and" => "and",
+    "tnc" => "Terms and Conditions",
     "register_date" => "Register Date",
     "link_copied" => "Link copied successful!",
     "available_unit" => "AVAILABLE UNIT",
@@ -88,7 +91,7 @@ return [
     "email_verification_status" => "verification-link-sent",
     "account_sign_up" => "Account signed up!",
     "account_sign_up_message" => "Your account has been signed up successfully. Please check your email for verification.",
-    "agreement" => "By proceeding, I agree that I have read the supporting documents and agree to the Terms and Conditions and Privacy Notice.",
+    "agreement" => "By proceeding, I agree that I have read the supporting documents and agree to the ",
     "approve" => "Approve",
     "reject" => "Reject",
     "cancel" => "Cancel",

@@ -154,7 +154,7 @@ const closeModal = () => {
             />
         </div>
 
-        <Modal :show="coinModal" title="Buy Coin" @close="closeModal" max-width="2xl">
+        <Modal :show="coinModal" :title="$t('public.wallet.buy_coin')" @close="closeModal" max-width="2xl">
             <BuyCoin
                 :coin="coin"
                 :coin_price="coin_price"
