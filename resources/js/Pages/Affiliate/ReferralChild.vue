@@ -181,10 +181,10 @@ export default {
                     <div class="flex-col ml-3">
                         <div class="flex gap-2 text-sm font-semibold">
                             {{ selectedAffiliate.name }}
-                            <Rank1Icon class="h-5" v-if="selectedAffiliate.rank === 2" />
-                            <Rank2Icon class="h-5" v-if="selectedAffiliate.rank === 3" />
-                            <Rank3Icon class="h-5" v-if="selectedAffiliate.rank === 4" />
-                            <Rank4Icon class="h-5" v-if="selectedAffiliate.rank === 5" />
+                            <Rank1Icon class="w-5 h-5" v-if="selectedAffiliate.rank === 2" />
+                            <Rank2Icon class="w-5 h-5" v-if="selectedAffiliate.rank === 3" />
+                            <Rank3Icon class="w-5 h-5" v-if="selectedAffiliate.rank === 4" />
+                            <Rank4Icon class="w-5 h-5" v-if="selectedAffiliate.rank === 5" />
                             <span class="text-xs px-2 py-0.5 rounded-full dark:bg-warning-400 dark:text-gray-800">{{$t('public.affiliate.gen')}} {{ selectedAffiliate.level }}</span>
                         </div>
                         <div class="text-xs font-normal dark:text-gray-400">
