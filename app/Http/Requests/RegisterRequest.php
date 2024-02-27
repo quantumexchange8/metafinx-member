@@ -17,6 +17,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'referral_code' => ['required', 'exists:users,referral_code'],
+            'terms' => ['accepted']
         ];
     }
 
@@ -32,6 +33,7 @@ class RegisterRequest extends FormRequest
             'email' => trans('public.login.email'),
             'password' => trans('public.login.password'),
             'name'=> trans('public.profile.name'),
+            'terms' => trans('public.earn.t&c')
         ];
     }
 }

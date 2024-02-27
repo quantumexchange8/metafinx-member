@@ -11,7 +11,6 @@ import Label from '@/Components/Label.vue'
 import ValidationErrors from '@/Components/ValidationErrors.vue'
 import InputError from "@/Components/InputError.vue";
 import Caption from "@/Components/Auth/Caption.vue";
-import Terms from "@/Components/Terms.vue";
 
 defineProps({
     canResetPassword: Boolean,
@@ -25,7 +24,6 @@ const form = useForm({
 })
 
 const showPassword = ref(false);
-const signUpTerm = 'sign_up';
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
@@ -123,9 +121,8 @@ const submit = () => {
                 <p class="text-center text-gray-600 dark:text-gray-400">
                     {{$t('public.login.register_message')}}
                     <Link :href="route('register')" class="text-pink-500 hover:underline font-semibold">
-                        {{$t('public.login.sign_up')}} 
+                        {{$t('public.login.sign_up')}}
                     </Link>
-                    <div><Terms :type=signUpTerm /></div>
                 </p>
             </div>
         </form>

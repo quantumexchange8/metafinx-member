@@ -32,6 +32,10 @@ import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import InputError from "@/Components/InputError.vue";
+import Checkbox from "@/Components/Checkbox.vue";
+import Terms from "@/Components/Terms.vue";
+
+const signUpTerm = 'sign_up';
 
 const FilePond = vueFilePond(
     FilePondPluginFilePoster,
@@ -109,7 +113,8 @@ const form = useForm({
     referral_code: props.referral,
     terms: false,
     identity_number: '',
-    passport_number: ''
+    passport_number: '',
+    terms: false,
 })
 
 const showPassword = ref(false);
@@ -489,7 +494,19 @@ const handleBackRevert = (uniqueId, load, error) => {
                                 autocomplete="referral_code" />
                             <InputError :message="form.errors.referral_code" class="mt-2" />
                         </div>
-
+                        <div class="mt-4">
+                            <label>
+                                <div class="flex">
+                                    <Checkbox name="remember" v-model:checked="form.terms" />
+                                    <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}
+                                        <Terms 
+                                        :type=signUpTerm 
+                                        />
+                                    </span>
+                                </div>
+                                <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
+                            </label>
+                        </div>
                     </div>
 
                     <div class="mt-6">

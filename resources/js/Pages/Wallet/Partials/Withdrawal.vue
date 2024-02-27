@@ -148,7 +148,11 @@ const calculatedBalance = computed(() => {
                     <label>
                         <div class="flex">
                             <Checkbox name="remember" v-model:checked="form.terms" />
-                            <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}<Terms :type=withdrawalTerm /></span>
+                            <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}
+                                <Terms 
+                                    :type=withdrawalTerm 
+                                />
+                            </span>
                         </div>
                         <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                     </label>

@@ -162,7 +162,11 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                     </div>
                 </div>
                 <div class="mt-4 text-xs">
-                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal"><Terms :type=standardTerm /></span>
+                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">
+                        <Terms 
+                            :type=standardTerm 
+                        />
+                    </span>
                 </div>
             </div>
         </div>
@@ -251,7 +255,11 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                     </div>
                 </div>
                 <div class="mt-4 text-xs">
-                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal"><Terms :type=stakingTerm /></span>
+                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">
+                        <Terms 
+                            :type=stakingTerm 
+                        />
+                    </span>
                 </div>
             </div>
         </div>
