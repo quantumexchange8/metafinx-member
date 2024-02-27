@@ -4,19 +4,20 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Coin;
+use App\Models\Term;
 use Inertia\Inertia;
 use App\Models\Wallet;
 use App\Models\Earning;
 use App\Models\Setting;
 use App\Models\CoinPrice;
 use App\Models\SettingCoin;
+use App\Models\Transaction;
+use App\Models\CoinStacking;
 use Illuminate\Http\Request;
 use App\Models\CoinMarketTime;
-use App\Models\CoinStacking;
 use App\Models\ConversionRate;
 use App\Models\SettingWalletAddress;
 use App\Models\InvestmentSubscription;
-use App\Models\Transaction;
 
 class DashboardController extends Controller
 {
@@ -104,4 +105,17 @@ class DashboardController extends Controller
 
         return redirect()->back();
     }
+
+    public function getTerms(Request $request)
+    {
+        // Retrieve the type parameter from the request
+        $type = $request->query('type');
+
+        // Fetch terms data based on the type
+        $terms = Term::where('type', $type)->latest()->first();
+
+        // Serialize the data and return as JSON response
+        return response()->json($terms);
+    }
+
 }

@@ -7,6 +7,7 @@ import Label from "@/Components/Label.vue";
 import Input from "@/Components/Input.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import {useForm, usePage} from "@inertiajs/vue3";
+import Terms from "@/Components/Terms.vue";
 import InputError from "@/Components/InputError.vue";
 import {
     RadioGroup,
@@ -18,6 +19,8 @@ import {
 const props = defineProps({
     setting_coin: Object,
 })
+const swapTerm = 'swap';
+
 const depositModal = ref(false);
 const tooltipContent = ref('Copy');
 
@@ -216,7 +219,7 @@ watchEffect(() => {
                 <label>
                     <div class="flex">
                         <Checkbox name="remember" v-model:checked="form.terms" />
-                        <span class="ml-2 text-xs dark:text-gray-400">{{$t('public.agreement')}}</span>
+                        <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}<Terms :type=swapTerm /></span>
                     </div>
                     <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                 </label>

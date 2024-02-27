@@ -12,6 +12,7 @@ import {useForm, usePage} from "@inertiajs/vue3";
 import {transactionFormat} from "@/Composables/index.js";
 import {EyeIcon, EyeOffIcon, KeyIcon} from "@heroicons/vue/outline";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
+import Terms from "@/Components/Terms.vue";
 
 const props = defineProps({
     plan: Object,
@@ -20,6 +21,8 @@ const props = defineProps({
     musd_wallet: Object,
     stackingFee: Object,
 })
+const standardSubscriptionTerm = 'standard_subscription';
+const stakingSubscriptionTerm = 'staking_subscription';
 
 const subscribeModal = ref(false);
 const housingPrice = ref(null);
@@ -256,7 +259,7 @@ const handleButtonClick = () => {
                 <label>
                     <div class="flex">
                         <Checkbox name="remember" v-model:checked="form.terms" />
-                        <span class="ml-2 text-xs dark:text-gray-400">{{$t('public.agreement')}}</span>
+                        <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}<Terms :type="plan.type === 'standard' ? standardSubscriptionTerm : (plan.type === 'staking' ? stakingSubscriptionTerm : '')" /></span>
                     </div>
                     <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                 </label>

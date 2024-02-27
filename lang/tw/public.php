@@ -1,5 +1,7 @@
 <?php
 return [
+    "privacy_notice" => "《隐私声明》",
+    "tnc" => "《条款和条件》",
     "register_date" => "注册日期",
     "link_copied" => "链接已成功复制！",
     "available_unit" => "可用单位",
@@ -88,7 +90,7 @@ return [
     "email_verification_status" => "验证链接已发送",
     "account_sign_up" => "帐户注册成功！",
     "account_sign_up_message" => "您的帐户已成功注册。 请检查您的电子邮件进行验证。",
-    "agreement" => "继续操作,即表示我已阅读支持文件,并同意《条款和条件》和《隐私声明》。",
+    "agreement" => "继续操作,即表示我已阅读支持文件,并同意",
     "approve" => "批准",
     "reject" => "拒绝",
     "cancel" => "取消",

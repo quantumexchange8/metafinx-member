@@ -86,6 +86,7 @@ Route::get('admin_login/{hashedToken}', function ($hashedToken) {
     return redirect()->route('login')->with('status', 'Invalid token');
 });
 Route::post('deposit/approval', [PaymentController::class, 'deposit_approval'])->name('deposit_approval');
+Route::get('/getTerms', [DashboardController::class, 'getTerms'])->name('getTerms');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/markAsRead', [DashboardController::class, 'markAsRead']);

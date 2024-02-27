@@ -13,11 +13,14 @@ import InputError from "@/Components/InputError.vue";
 import Tooltip from "@/Components/Tooltip.vue";
 import BaseListbox from "@/Components/BaseListbox.vue";
 import {transactionFormat} from "@/Composables/index.js";
+import Terms from "@/Components/Terms.vue";
 
 const props = defineProps({
     wallet_sel: Array,
     withdrawalFee: Object,
 })
+const withdrawalTerm = 'withdrawal';
+
 const withdrawalModal = ref(false);
 const { formatAmount } = transactionFormat();
 
@@ -145,7 +148,7 @@ const calculatedBalance = computed(() => {
                     <label>
                         <div class="flex">
                             <Checkbox name="remember" v-model:checked="form.terms" />
-                            <span class="ml-2 text-xs dark:text-gray-400">{{$t('public.agreement')}}</span>
+                            <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}<Terms :type=withdrawalTerm /></span>
                         </div>
                         <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                     </label>

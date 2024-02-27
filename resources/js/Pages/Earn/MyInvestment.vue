@@ -2,8 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import {Link} from "@inertiajs/vue3";
 import {transactionFormat} from "@/Composables/index.js";
-import {ref} from "vue";
-import Modal from "@/Components/Modal.vue";
+import Terms from "@/Components/Terms.vue";
 
 const props = defineProps({
     investments: Object,
@@ -13,16 +12,9 @@ const props = defineProps({
     totalEarning: Number,
     coinPrice: Number,
 })
+const standardTerm = 'standard_learn_more';
+const stakingTerm = 'staking_learn_more';
 const { formatDate, formatType, formatAmount } = transactionFormat();
-const tncModal = ref(false);
-
-const openTncModal = () => {
-    tncModal.value = true;
-}
-
-const closeModal = () => {
-    tncModal.value = false
-}
 
 const calculateWidthPercentage = (created_at, period, isStaking) => {
     const startDate = new Date(created_at);
@@ -170,7 +162,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                     </div>
                 </div>
                 <div class="mt-4 text-xs">
-                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">{{$t('public.learn_more')}}</span>
+                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal"><Terms :type=standardTerm /></span>
                 </div>
             </div>
         </div>
@@ -259,7 +251,7 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                     </div>
                 </div>
                 <div class="mt-4 text-xs">
-                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal">{{$t('public.learn_more')}}</span>
+                    <span class="dark:text-gray-400">{{$t('public.earn.t&c_apply')}}</span><span class="dark:text-white underline cursor-pointer dark:hover:text-gray-300" @click="openTncModal"><Terms :type=stakingTerm /></span>
                 </div>
             </div>
         </div>
@@ -270,61 +262,6 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                 {{$t('public.no_data')}}
             </div>
         </div>
-
-        <Modal :show="tncModal" :title="$t('public.earn.t&c_apply')" @close="closeModal">
-            <div class="text-xs font-medium dark:text-gray-400 my-4">
-                {{$t('public.earn.important')}}
-            </div>
-            <div class="text-xs font-normal dark:text-gray-400 mb-4">
-                {{$t('public.earn.click_confirm')}}
-            </div>
-
-            <ol class="text-[10px] list-decimal list-inside dark:text-gray-400">
-                <li>
-                    {{$t('public.earn.subscription_agreement')}}
-                    <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>{{$t('public.earn.eligibility')}}</li>
-                        <li>{{$t('public.earn.subscription_fee')}}</li>
-                        <li>{{$t('public.earn.subscription_term')}}</li>
-                    </ul>
-                </li>
-                <li>
-                    {{$t('public.earn.investment_services')}}
-                    <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>{{$t('public.earn.investment_strategy')}}</li>
-                        <li>{{$t('public.earn.risk_disclosure')}}</li>
-                        <li>{{$t('public.earn.information_accuracy')}}</li>
-                    </ul>
-                </li>
-                <li>
-                    {{$t('public.earn.confidentiality_privacy')}}
-                    <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>{{$t('public.earn.confidentiality')}}</li>
-                        <li>{{$t('public.earn.data_usage')}}</li>
-                    </ul>
-                </li>
-                <li>
-                    {{$t('public.earn.termination')}}
-                    <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>{{$t('public.earn.termination_by_us')}}</li>
-                    </ul>
-                </li>
-                <li>
-                    {{$t('public.earn.limitation')}}
-                    <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>{{$t('public.earn.no_liability')}}</li>
-                    </ul>
-                </li>
-                <li>
-                    {{$t('public.earn.miscellaneous')}}
-                    <ul class="pl-2 space-y-1 list-disc list-inside">
-                        <li>{{$t('public.earn.amendment')}}</li>
-                        <li>{{$t('public.earn.entire_agreement')}}</li>
-                    </ul>
-                </li>
-            </ol>
-
-        </Modal>
     </AuthenticatedLayout>
 
 </template>
