@@ -429,7 +429,7 @@ checkCoinStackingExistence();
         </div>
     </div>
 
-    <div class="relative overflow-hidden bg-gray-900 bg-[radial-gradient(#333d4b_2px,transparent_1px)] [background-size:52px_52px] min-h-[400px] max-h-[600px] mb-12">
+    <div class="relative overflow-hidden bg-gray-900 bg-[radial-gradient(#333d4b_2px,transparent_1px)] [background-size:52px_52px] min-h-[400px] max-h-screen mb-12">
         <div ref="binaryTree" class="flex flex-col justify-center items-center">
             <div class="container mx-auto text-center pt-24">
                 <div class="items-center justify-center flex">

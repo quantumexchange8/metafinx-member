@@ -35,6 +35,7 @@ return [
     "personal" => "Personal",
     "left" => "Left",
     "right" => "Right",
+    "carry_forward" => "Carry Forward (L/R)",
     "distributor" => "Distributor",
     "zoom_in" => "Zoom In",
     "zoom_out" => "Zoom Out",

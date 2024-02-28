@@ -109,8 +109,8 @@ const getDistributorDetail = async (id, level) => {
 <template>
     <div v-if="node" class="text-center">
         <div class="flex flex-col justify-center items-center">
-            <div v-if="node.id > 1 && node.level > 0" class="-mt-[194px] border-l-2 border-dashed absolute h-10 border-gray-600"></div>
-            <div class="w-60 mt-5 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-800 hover:cursor-pointer p-3 z-20" @click="openDistributorDetailModal(node)">
+            <div v-if="node.id > 1 && node.level > 0" class="-mt-[220px] border-l-2 border-dashed absolute h-10 border-gray-600"></div>
+            <div class="w-80 mt-5 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-800 hover:cursor-pointer p-3 z-20" @click="openDistributorDetailModal(node)">
                 <div class="flex gap-2 items-center border-b border-gray-600 pb-3">
                     <img :src="node.profile_photo ? node.profile_photo : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
                     <div class="flex flex-col gap-1">
@@ -141,12 +141,7 @@ const getDistributorDetail = async (id, level) => {
                             {{ $t('public.left') }}
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            <div v-if="node.left_amount >= 0">
-                                {{ node.left_amount - node.right_amount >= 0 ? '$ ' + formatAmount(node.left_amount - node.right_amount) : '$ 0.00' }}
-                            </div>
-                            <div v-else>
-                                Loading..
-                            </div>
+                            {{ node.left_amount >= 0 ? '$ ' + formatAmount(node.left_amount) : 'Loading..' }}
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
@@ -154,11 +149,22 @@ const getDistributorDetail = async (id, level) => {
                             {{ $t('public.right') }}
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            <div v-if="node.right_amount >= 0">
-                                {{ node.right_amount && node.right_amount - node.left_amount >= 0 ? '$ ' + formatAmount(node.right_amount - node.left_amount) : '$ 0.00' }}
+                            {{ node.right_amount >= 0 ? '$ ' + formatAmount(node.right_amount) : 'Loading..' }}
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="text-xs font-normal text-gray-600 dark:text-gray-400">
+                            {{ $t('public.carry_forward') }}
+                        </div>
+                        <div class="text-sm flex font-semibold text-gray-900 dark:text-white">
+                            <div v-if="node.left_carry_forward >= 0">
+                                {{ node.left_carry_forward <= 0 ? '$ ' + formatAmount(node.left_current) : formatAmount(node.left_carry_forward) }}
                             </div>
                             <div v-else>
                                 Loading..
+                            </div>
+                            <div v-if="node.right_carry_forward >= 0">
+                                /{{ node.right_carry_forward <= 0 ? '$ ' + formatAmount(node.right_current) : formatAmount(node.right_carry_forward) }}
                             </div>
                         </div>
                     </div>
