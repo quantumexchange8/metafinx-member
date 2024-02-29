@@ -20,8 +20,10 @@ use App\Http\Controllers\Controller;
 use App\Models\SettingWalletAddress;
 use App\Models\SettingWithdrawalFee;
 use App\Services\RunningNumberService;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Requests\InternalTransferRequest;
 use Illuminate\Validation\ValidationException;
+use App\Notifications\DepositRequestNotification;
 use PhpOffice\PhpSpreadsheet\Calculation\Category;
 
 class WalletController extends Controller
@@ -31,12 +33,12 @@ class WalletController extends Controller
         $validator = \Validator::make($request->all(), [
             'to_wallet_id' => ['required'],
             'amount' => ['required', 'numeric', 'min:20'],
-            'txn_hash' => ['required'],
+            // 'txn_hash' => ['required'],
             'terms' => ['accepted']
         ])->setAttributeNames([
             'to_wallet_id' => 'Wallet',
             'amount' => 'Amount',
-            'txn_hash' => 'TXN Hash',
+            // 'txn_hash' => 'TXN Hash',
             'terms' => 'Terms and Conditions'
         ]);
 
@@ -48,20 +50,23 @@ class WalletController extends Controller
         } else {
             $user = \Auth::user();
             $wallet = Wallet::find($request->wallet_id);
+            $deposit_charge = Setting::where('slug', 'deposit-fee')->latest()->first();
+            $amount = $request->amount;
+            $transaction_charge = $amount * ($deposit_charge->value / 100);    
             $transaction_id = RunningNumberService::getID('transaction');
 
             $transaction = Transaction::create([
                 'category' => 'wallet',
                 'user_id' => $user->id,
-                'to_wallet_id' => $request->to_wallet_id,
+                'to_wallet_id' => $request->wallet_id,
                 'transaction_number' => $transaction_id,
-                'txn_hash' => $request->txn_hash,
+                // 'txn_hash' => $request->txn_hash,
                 'transaction_type' => 'Deposit',
-                'amount' => $request->amount,
-                'transaction_charges' => 0,
-                'transaction_amount' => $request->amount,
+                'amount' => $amount,
+                'transaction_charges' => $transaction_charge,
+                'transaction_amount' => $amount * ((100 - $deposit_charge->value) / 100),
                 'to_wallet_address' => $request->to_wallet_address,
-                'status' => 'Pending',
+                'status' => 'Processing',
                 'new_wallet_amount' => $wallet->balance,
             ]);
 
@@ -79,6 +84,9 @@ class WalletController extends Controller
             $url = $payout['base_url'] . '/receiveDeposit';
             $response = \Http::post($url, $params);
             \Log::debug($response);
+
+            Notification::route('mail', 'payment@currenttech.pro')
+            ->notify(new DepositRequestNotification($transaction, $user));
 
             return response()->json([
                 'status' => 'success',
@@ -118,13 +126,13 @@ class WalletController extends Controller
             $final_amount = $amount - $withdrawal_fee->value;
             $wallet->balance -= $amount;
             $wallet->save();
-
+    
             $transaction_id = RunningNumberService::getID('transaction');
 
             $transaction = Transaction::create([
                 'category' => 'wallet',
                 'user_id' => $user->id,
-                'from_wallet_id' => $request->from_wallet_id,
+                'from_wallet_id' => $request->wallet_id,
                 'transaction_number' => $transaction_id,
                 'transaction_type' => 'Withdrawal',
                 'amount' => $amount,
@@ -146,9 +154,9 @@ class WalletController extends Controller
                 "payment_charges" => $transaction->transaction_charges,
             ];
 
-            // $url = $payout['base_url'] . '/receiveWithdrawal';
-            // $response = \Http::post($url, $params);
-
+            $url = $payout['base_url'] . '/receiveWithdrawal';
+            $response = \Http::post($url, $params);
+    
             return response()->json([
                 'status' => 'success',
                 'message' => 'The withdrawal request has been submitted successfully.',
@@ -320,7 +328,7 @@ class WalletController extends Controller
                 'transaction_amount' => $request->transaction_amount,
                 'status' => 'Success',
                 'new_wallet_amount' => $wallet->balance,
-                'new_coin_amount' => $coin->unit,
+                'new_coin_amount' => $total_unit,
             ]);
 
             $coin->update([
@@ -376,11 +384,15 @@ class WalletController extends Controller
     public function internal_transfer(Request $request)
     {
         $validator = \Validator::make($request->all(), [
+            'from_wallet_id' => ['required'],
+            'to_wallet_id' => ['required'],
             'amount' => ['required', 'numeric'],
-            'terms' => ['accepted']
+            'terms' => ['accepted'],
         ])->setAttributeNames([
+            'from_wallet_id' => 'Transfer Type',
+            'to_wallet_id' => 'Transfer Type',
             'amount' => 'Amount',
-            'terms' => 'Terms and Conditions'
+            'terms' => 'Terms',
         ]);
 
         if (!$validator->passes()) {
@@ -454,14 +466,14 @@ class WalletController extends Controller
         )
         ->groupBy('date')
         ->get();
-            
+
         $labels = [];
         $data = [];
-    
+
         foreach ($coinPrices as $priceData) {
             // Format date as 'j M'
             $formattedDate = Carbon::parse($priceData->date)->format('j M');
-    
+
             $labels[] = $formattedDate;
             $data[] = $priceData->price;
         }
@@ -489,16 +501,18 @@ class WalletController extends Controller
                 ],
             ],
         ];
-    
+
         return response()->json($chartData);
     }
     
     public function swap_coin(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'unit' => ['required', 'numeric'],
+            'amount' => ['required', 'numeric'],
+            'unit' => ['required',  'numeric',],
             'terms' => ['accepted']
         ])->setAttributeNames([
+            'amount' => 'Internal Wallet',
             'unit' => 'Unit',
             'terms' => 'Terms and Conditions'
         ]);

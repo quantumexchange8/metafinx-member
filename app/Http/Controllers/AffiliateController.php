@@ -716,7 +716,6 @@ class AffiliateController extends Controller
             'upline_name' => $binaryDetail->upline ? $binaryDetail->upline->user->name : null,
             'upline_email' => $binaryDetail->upline ? $binaryDetail->upline->user->email : null,
             'upline_profile_photo' => $binaryDetail->upline ? $binaryDetail->upline->user->getFirstMediaUrl('profile_photo') : null,
-            'email' => $binaryDetail->user->email,
             'level' => $request->level,
             'current_staking' => number_format($currentStakingUnit, 4) . ' MXT ($ ' . number_format($currentStakingPrice, 2) . ')',
             'accrued_staking' => number_format($accruedStakingUnit, 4) . ' MXT ($ ' . number_format($accruedStakingPrice, 2) . ')'
