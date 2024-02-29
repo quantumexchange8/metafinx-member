@@ -52,7 +52,7 @@ class WalletController extends Controller
             $wallet = Wallet::find($request->wallet_id);
             $deposit_charge = Setting::where('slug', 'deposit-fee')->latest()->first();
             $amount = $request->amount;
-            $transaction_charge = $amount * ($deposit_charge->value / 100);    
+            $transaction_charge = $amount * ($deposit_charge->value / 100);
             $transaction_id = RunningNumberService::getID('transaction');
 
             $transaction = Transaction::create([
@@ -71,7 +71,7 @@ class WalletController extends Controller
             ]);
 
             $payout = config('payout-setting');
-            $hashedToken = md5('metafinx@support.com' . $payout['apiKey']);
+            $hashedToken = md5('support@metafinx.com' . $payout['apiKey']);
             $params = [
                 "token" => $hashedToken,
                 "transactionID" => $transaction->transaction_number,
@@ -126,7 +126,7 @@ class WalletController extends Controller
             $final_amount = $amount - $withdrawal_fee->value;
             $wallet->balance -= $amount;
             $wallet->save();
-    
+
             $transaction_id = RunningNumberService::getID('transaction');
 
             $transaction = Transaction::create([
@@ -144,7 +144,7 @@ class WalletController extends Controller
             ]);
 
             $payout = config('payout-setting');
-            $hashedToken = md5('metafinx@support.com' . $payout['apiKey']);
+            $hashedToken = md5('support@metafinx.com' . $payout['apiKey']);
             $params = [
                 "token" => $hashedToken,
                 "transactionID" => $transaction->transaction_number,
@@ -156,7 +156,7 @@ class WalletController extends Controller
 
             $url = $payout['base_url'] . '/receiveWithdrawal';
             $response = \Http::post($url, $params);
-    
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'The withdrawal request has been submitted successfully.',
@@ -442,7 +442,7 @@ class WalletController extends Controller
 
             $transaction->update([
                 'new_wallet_amount' => $to_wallet->balance,
-            ]);    
+            ]);
 
             return response()->json([
                 'status' => 'success',
@@ -504,7 +504,7 @@ class WalletController extends Controller
 
         return response()->json($chartData);
     }
-    
+
     public function swap_coin(Request $request)
     {
         $validator = \Validator::make($request->all(), [
