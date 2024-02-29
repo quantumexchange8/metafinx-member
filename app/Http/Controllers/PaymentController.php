@@ -61,11 +61,11 @@ class PaymentController extends Controller
         $domain = $_SERVER['HTTP_HOST'];
 
         if ($domain === 'login.metafinx.com') {
-            $url = $payout['staging']['base_url'] . '/receiveDeposit';
-        } elseif ($domain === 'metafinx-member.currenttech.pro') {
             $url = $payout['live']['base_url'] . '/receiveDeposit';
+        } elseif ($domain === 'metafinx-member.currenttech.pro') {
+            $url = $payout['staging']['base_url'] . '/receiveDeposit';
         } else {
-            return back();
+            $url = $payout['staging']['base_url'] . '/receiveDeposit';
         }
 
         $response = Http::post($url, $params);
@@ -121,11 +121,11 @@ class PaymentController extends Controller
         $domain = $_SERVER['HTTP_HOST'];
 
         if ($domain === 'login.metafinx.com') {
-            $url = $payout['staging']['base_url'] . '/receiveWithdrawal';
-        } elseif ($domain === 'metafinx-member.currenttech.pro') {
             $url = $payout['live']['base_url'] . '/receiveWithdrawal';
+        } elseif ($domain === 'metafinx-member.currenttech.pro') {
+            $url = $payout['staging']['base_url'] . '/receiveWithdrawal';
         } else {
-            return back();
+            $url = $payout['staging']['base_url'] . '/receiveWithdrawal';
         }
 
         $response = \Http::post($url, $params);
@@ -233,7 +233,7 @@ class PaymentController extends Controller
         } elseif ($domain === 'metafinx-member.currenttech.pro') {
             $url = 'https://thundertrade.currenttech.pro/updateTransaction';
         } else {
-            return back();
+            $url = 'https://thundertrade.currenttech.pro/updateTransaction';
         }
 
         $response = \Illuminate\Support\Facades\Http::post($url, $params);
