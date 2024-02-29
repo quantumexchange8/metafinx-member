@@ -468,15 +468,17 @@ class AffiliateController extends Controller
 
             $earningLatestTime = Earning::where('type', 'PairingEarnings')->latest()->first();
 
-            $amount += CoinStacking::whereIn('user_id', $binary_user_id)
-                ->where('status', 'OnGoingPeriod')
-                ->where('created_at', '>', $earningLatestTime)
-                ->sum('stacking_price');
+            if (!empty($direct_child->coinStaking)) {
+                $amount += CoinStacking::whereIn('user_id', $binary_user_id)
+                    ->where('status', 'OnGoingPeriod')
+                    ->where('created_at', '>', $earningLatestTime)
+                    ->sum('stacking_price');
 
-            $amount += CoinStacking::where('user_id', $direct_child->user_id)
-                ->where('status', 'OnGoingPeriod')
-                ->where('created_at', '>', $earningLatestTime)
-                ->sum('stacking_price');
+                $amount += CoinStacking::where('user_id', $direct_child->user_id)
+                    ->where('status', 'OnGoingPeriod')
+                    ->where('created_at', '>', $earningLatestTime)
+                    ->sum('stacking_price');
+            }
         }
 
         return $amount;
@@ -498,15 +500,17 @@ class AffiliateController extends Controller
 
             $earningLatestTime = Earning::where('type', 'PairingEarnings')->latest()->first();
 
-            $amount += CoinStacking::whereIn('user_id', $binary_user_id)
-                ->where('status', 'OnGoingPeriod')
-                ->where('created_at', '>', $earningLatestTime)
-                ->sum('stacking_price');
+            if (!empty($direct_child->coinStaking)) {
+                $amount += CoinStacking::whereIn('user_id', $binary_user_id)
+                    ->where('status', 'OnGoingPeriod')
+                    ->where('created_at', '>', $earningLatestTime)
+                    ->sum('stacking_price');
 
-            $amount += CoinStacking::where('user_id', $direct_child->user_id)
-                ->where('status', 'OnGoingPeriod')
-                ->where('created_at', '>', $earningLatestTime)
-                ->sum('stacking_price');
+                $amount += CoinStacking::where('user_id', $direct_child->user_id)
+                    ->where('status', 'OnGoingPeriod')
+                    ->where('created_at', '>', $earningLatestTime)
+                    ->sum('stacking_price');
+            }
         }
 
         return $amount;
