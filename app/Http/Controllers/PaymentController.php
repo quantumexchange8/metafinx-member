@@ -47,8 +47,17 @@ class PaymentController extends Controller
             'new_wallet_amount' => $wallet->balance,
         ]);
 
+        $domain = $_SERVER['HTTP_HOST'];
+
         $payout = config('payout-setting');
-        $hashedToken = md5('support@metafinx.com' . $payout['apiKey']);
+        if ($domain === 'login.metafinx.com') {
+          $hashedToken = md5('support@metafinx.com' . $payout['live']['apiKey']);
+        } elseif ($domain === 'metafinx-member.currenttech.pro') {
+           $hashedToken = md5('support@metafinx.com' . $payout['staging']['apiKey']);
+        } else {
+           $hashedToken = md5('support@metafinx.com' . $payout['staging']['apiKey']);
+        }
+
         $params = [
             "token" => $hashedToken,
             "transactionID" => $transaction->transaction_number,
@@ -57,8 +66,6 @@ class PaymentController extends Controller
             "amount" => $amount,
             "TxID" => $transaction->txn_hash,
         ];
-
-        $domain = $_SERVER['HTTP_HOST'];
 
         if ($domain === 'login.metafinx.com') {
             $url = $payout['live']['base_url'] . '/receiveDeposit';
@@ -107,6 +114,17 @@ class PaymentController extends Controller
             'new_wallet_amount' => $wallet->balance,
         ]);
 
+        $domain = $_SERVER['HTTP_HOST'];
+
+        $payout = config('payout-setting');
+        if ($domain === 'login.metafinx.com') {
+            $hashedToken = md5('support@metafinx.com' . $payout['live']['apiKey']);
+        } elseif ($domain === 'metafinx-member.currenttech.pro') {
+            $hashedToken = md5('support@metafinx.com' . $payout['staging']['apiKey']);
+        } else {
+            $hashedToken = md5('support@metafinx.com' . $payout['staging']['apiKey']);
+        }
+
         $payout = config('payout-setting');
         $hashedToken = md5('support@metafinx.com' . $payout['apiKey']);
         $params = [
@@ -117,8 +135,6 @@ class PaymentController extends Controller
             "amount" => $transaction->transaction_amount,
             "payment_charges" => $transaction->transaction_charges,
         ];
-
-        $domain = $_SERVER['HTTP_HOST'];
 
         if ($domain === 'login.metafinx.com') {
             $url = $payout['live']['base_url'] . '/receiveWithdrawal';
