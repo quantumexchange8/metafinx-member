@@ -58,7 +58,16 @@ class PaymentController extends Controller
             "TxID" => $transaction->txn_hash,
         ];
 
-        $url = $payout['base_url'] . '/receiveDeposit';
+        $domain = $_SERVER['HTTP_HOST'];
+
+        if ($domain === 'login.metafinx.com') {
+            $url = $payout['staging']['base_url'] . '/receiveDeposit';
+        } elseif ($domain === 'metafinx-member.currenttech.pro') {
+            $url = $payout['live']['base_url'] . '/receiveDeposit';
+        } else {
+            return back();
+        }
+
         $response = Http::post($url, $params);
         \Log::debug($url);
         \Log::debug($response);
@@ -109,7 +118,16 @@ class PaymentController extends Controller
             "payment_charges" => $transaction->transaction_charges,
         ];
 
-        $url = $payout['base_url'] . '/receiveWithdrawal';
+        $domain = $_SERVER['HTTP_HOST'];
+
+        if ($domain === 'login.metafinx.com') {
+            $url = $payout['staging']['base_url'] . '/receiveWithdrawal';
+        } elseif ($domain === 'metafinx-member.currenttech.pro') {
+            $url = $payout['live']['base_url'] . '/receiveWithdrawal';
+        } else {
+            return back();
+        }
+
         $response = \Http::post($url, $params);
 
         return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.withdrawal_submit_success_message'));
@@ -208,7 +226,16 @@ class PaymentController extends Controller
             "email" => 'support@metafinx.com',
         ];
 
-        $url = 'https://thundertrade.currenttech.pro/updateTransaction';
+        $domain = $_SERVER['HTTP_HOST'];
+
+        if ($domain === 'login.metafinx.com') {
+            $url = 'https://privateadmin.ttpays.io/updateTransaction';
+        } elseif ($domain === 'metafinx-member.currenttech.pro') {
+            $url = 'https://thundertrade.currenttech.pro/updateTransaction';
+        } else {
+            return back();
+        }
+
         $response = \Illuminate\Support\Facades\Http::post($url, $params);
 
         \Log::debug($response);
