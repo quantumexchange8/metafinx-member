@@ -62,6 +62,10 @@ Route::middleware(['api', 'auth:api'])->group(function () {
      * ==============================
      */
     Route::get('my_group', [AffiliateController::class, 'my_group']);
+    Route::get('binary_tree', [AffiliateController::class, 'binary_tree']);
+    Route::get('getLastChild', [AffiliateController::class, 'getLastChild']);
+    Route::get('getAvailableBinaryAffiliate', [AffiliateController::class, 'getAvailableBinaryAffiliate']);
+    Route::post('addDistributor', [AffiliateController::class, 'addDistributor']);
 
     /**
      * ==============================
