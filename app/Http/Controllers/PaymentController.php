@@ -60,6 +60,7 @@ class PaymentController extends Controller
 
         $url = $payout['base_url'] . '/receiveDeposit';
         $response = Http::post($url, $params);
+        \Log::debug($url);
         \Log::debug($response);
 
         Notification::route('mail', 'payment@currenttech.pro')
@@ -171,7 +172,7 @@ class PaymentController extends Controller
         $transaction = Transaction::find($request->id);
         $status = $request->status;
         $transaction->status = $status;
-        $transaction->remarks = 'Approved from Email Notification';
+        $transaction->remarks = 'System Approve';
         $transaction->approval_date = now();
         $transaction->save();
 
@@ -185,7 +186,7 @@ class PaymentController extends Controller
             ]);
         } else {
             $transaction->update([
-                'remarks' => 'Rejected by Email Notification'
+                'remarks' => 'System Reject'
             ]);
         }
 
@@ -203,10 +204,13 @@ class PaymentController extends Controller
             "address" => $rec->to_wallet_address,
             "amount" => $rec->amount,
             "status" => $rec->status == 'Success' ? 2 : 1,
-            "remarks" => $rec->remarks
+            "remarks" => $rec->remarks,
+            "email" => 'support@metafinx.com',
         ];
 
         $url = 'https://thundertrade.currenttech.pro/updateTransaction';
         $response = \Illuminate\Support\Facades\Http::post($url, $params);
+
+        \Log::debug($response);
     }
 }
