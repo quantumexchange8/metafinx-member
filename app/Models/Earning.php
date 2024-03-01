@@ -47,4 +47,9 @@ class Earning extends Model
     {
         return $this->belongsTo(Coin::class, 'upline_coin_id', 'id');
     }
+
+    public function coinStacking(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(CoinStacking::class, 'upline_stacking_id', 'id');
+    }
 }

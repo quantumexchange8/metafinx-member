@@ -151,7 +151,12 @@ const currentLocale = ref(usePage().props.locale);
                         {{ formatDateTime(earn.roi_release_date) }}
                     </td>
                     <td class="py-3">
-                        {{ earn.subscription_plan.investment_plan.name[currentLocale] }} - <span class="text-gray-600 dark:text-gray-400">{{ earn.subscription_plan.subscription_id }}</span>
+                        <div v-if="earn.category === 'standard'">
+                            {{ earn.subscription_plan.investment_plan.name[currentLocale] }} - <span class="text-gray-600 dark:text-gray-400">{{ earn.subscription_plan.subscription_id }}</span>
+                        </div>
+                        <div v-if="earn.category === 'staking'">
+                            {{ earn.coin_stacking.investment_plan.name[currentLocale] }} - <span class="text-gray-600 dark:text-gray-400">{{ earn.coin_stacking.subscription_number }}</span>
+                        </div>    
                     </td>
                     <td class="py-3">
                         {{ formatType(earn.type) }}
@@ -174,7 +179,12 @@ const currentLocale = ref(usePage().props.locale);
                         </div>
                     </td>
                     <td class="py-3">
-                        $&nbsp;{{ formatAmount(earn.after_amount) }}
+                        <div v-if="earn.category === 'standard'">
+                            {{ formatAmount(earn.after_amount) }}
+                        </div>
+                        <div v-if="earn.category === 'staking'">
+                            {{ earn.category === 'staking' ? '$ ' + formatAmount(earn.after_amount) : '' }} ({{earn.category === 'staking' ? formatAmount(earn.after_coin_price) + ' MXT' : '' }})
+                        </div>
                     </td>
                 </tr>
                 </tbody>

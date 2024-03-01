@@ -103,7 +103,7 @@ class ReportController extends Controller
         $user = \Auth::user();
 
         $query = Earning::query()
-            ->with(['subscriptionPlan.investment_plan', 'wallet:id,name,type', 'coin.setting_coin'])
+            ->with(['subscriptionPlan.investment_plan', 'wallet:id,name,type', 'coin.setting_coin', 'coinStacking.investment_plan'])
             ->where('upline_id', $user->id)
             ->whereIn('type', ['StandardRewards', 'StakingRewards', 'DividendEarnings']);
 
