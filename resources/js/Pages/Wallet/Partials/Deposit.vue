@@ -23,7 +23,7 @@ const depositTerm = 'deposit';
 
 const depositModal = ref(false);
 const tooltipContent = ref('Copy');
-const wallet_address = ref([]);
+const wallet_address = ref();
 
 const openDepositModal = () => {
     depositModal.value = true
@@ -39,12 +39,13 @@ const { formatAmount } = transactionFormat();
 const form = useForm({
     wallet_id: walletId.value,
     amount: '',
-    to_wallet_address: wallet_address.wallet_address,
+    to_wallet_address: '',
     // txn_hash: '',
     terms: false
 })
 
 const submit = () => {
+    form.to_wallet_address = wallet_address.value.wallet_address
     form.post(route('wallet.deposit'), {
         onSuccess: () => {
             closeModal();
@@ -206,8 +207,8 @@ onMounted(() => {
                         <div class="flex">
                             <Checkbox name="remember" v-model:checked="form.terms" />
                             <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}
-                                <Terms 
-                                    :type=depositTerm 
+                                <Terms
+                                    :type=depositTerm
                                 />
                             </span>
                         </div>
