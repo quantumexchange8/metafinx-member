@@ -1,7 +1,7 @@
 <script setup>
 import Button from "@/Components/Button.vue";
 import {DepositIcon, InternalUSDWalletIcon} from "@/Components/Icons/outline.jsx";
-import {computed, ref} from "vue";
+import {computed, ref, onMounted, onUnmounted} from "vue";
 import Modal from "@/Components/Modal.vue";
 import QrcodeVue from 'qrcode.vue';
 import {DuplicateIcon} from "@heroicons/vue/outline";
@@ -17,13 +17,13 @@ import Terms from "@/Components/Terms.vue";
 
 const props = defineProps({
     wallet_sel: Array,
-    random_address: Object,
     depositFee: Object,
 })
 const depositTerm = 'deposit';
 
 const depositModal = ref(false);
 const tooltipContent = ref('Copy');
+const wallet_address = ref([]);
 
 const openDepositModal = () => {
     depositModal.value = true
@@ -39,7 +39,7 @@ const { formatAmount } = transactionFormat();
 const form = useForm({
     wallet_id: walletId.value,
     amount: '',
-    to_wallet_address: props.random_address.wallet_address,
+    to_wallet_address: wallet_address.wallet_address,
     // txn_hash: '',
     terms: false
 })
@@ -89,6 +89,30 @@ const calculatedBalance = computed(() => {
     const calculated = form.amount * ((100 - transactionFee.value) / 100);
     return calculated <= 0 ? 0 : calculated
 });
+
+const refreshData = async () => {
+    try {
+        const response = await axios.get('/wallet/getWalletAddress');
+        wallet_address.value = response.data;
+    } catch (error) {
+        console.error('Error refreshing wallet address data:', error);
+    }
+};
+
+
+onMounted(() => {
+    refreshData();
+
+    const interval = setInterval(() => {
+        refreshData();
+    }, 300000); // 5 minutes = 300,000 milliseconds
+
+    // Clear interval when component is unmounted
+    onUnmounted(() => {
+        clearInterval(interval);
+    });
+});
+
 </script>
 
 <template>
@@ -113,11 +137,11 @@ const calculatedBalance = computed(() => {
                         {{$t('public.wallet.scan_QR')}} - <span class="font-semibold">Only USDT (TRC20)</span>
                     </div>
                     <div class="flex justify-center">
-                        <qrcode-vue :class="['border-4 border-white']" :value="props.random_address.wallet_address" :size="200"></qrcode-vue>
+                        <qrcode-vue :class="['border-4 border-white']" :value="wallet_address.wallet_address" :size="200"></qrcode-vue>
                     </div>
                     <div class="inline-flex justify-center w-full items-center gap-2 text-center dark:text-white break-all">
-                        {{ props.random_address.wallet_address }}
-                        <input type="hidden" id="cryptoWalletAddress" :value="props.random_address.wallet_address">
+                        {{ wallet_address.wallet_address }}
+                        <input type="hidden" id="cryptoWalletAddress" :value="wallet_address.wallet_address">
                         <Tooltip :content="tooltipContent" placement="top">
                             <DuplicateIcon aria-hidden="true" :class="['w-6 dark:text-white']" @click.stop.prevent="copyTestingCode" style="cursor: pointer" />
                         </Tooltip>

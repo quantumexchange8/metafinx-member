@@ -60,8 +60,6 @@ class WalletController extends Controller
             ];
         });
 
-        $wallet_address = SettingWalletAddress::inRandomOrder()->first();
-
         $coins = Coin::with('setting_coin')->where('user_id', \Auth::id());
 
         $coinTotalPrice = clone $coins;
@@ -88,7 +86,6 @@ class WalletController extends Controller
             'totalBalance' => number_format($totalBalance->sum('balance') + ($coinTotalPrice->sum('unit') * $coin_price->price), 2),
             'wallet_sel' => $wallet_sel,
             // 'depositWalletSel' => $depositWalletSel,
-            'random_address' => $wallet_address,
             'withdrawalFee' => Setting::where('slug', 'withdrawal-fee')->latest()->first(),
             'depositFee' => Setting::where('slug', 'deposit-fee')->latest()->first(),
             'gasFee' => Setting::where('slug', 'gas-fee')->latest()->first(),
@@ -104,6 +101,11 @@ class WalletController extends Controller
         $wallets = Wallet::where('user_id', \Auth::id())->get();
 
         return response()->json($wallets);
+    }
+
+    public function getWalletAddress()
+    {
+        return SettingWalletAddress::inRandomOrder()->first();
     }
 
     public function getWalletBalance(Request $request)

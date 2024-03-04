@@ -106,6 +106,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/getTransaction/{type}', [WalletController::class, 'getTransaction'])->name('wallet.getTransaction');
         Route::get('/getCoinPaymentHistory', [WalletController::class, 'getCoinPaymentHistory'])->name('wallet.getCoinPaymentHistory');
         Route::get('/getCoinChart', [WalletController::class, 'getCoinChart'])->name('getCoinChart');
+        Route::get('/getWalletAddress', [WalletController::class, 'getWalletAddress'])->name('getWalletAddress');
         Route::post('/deposit', [PaymentController::class, 'deposit'])->name('wallet.deposit');
         Route::post('/withdrawal', [PaymentController::class, 'withdrawal'])->name('wallet.withdrawal');
         Route::post('/internal_transfer', [WalletController::class, 'internalTransfer'])->name('wallet.internalTransfer');

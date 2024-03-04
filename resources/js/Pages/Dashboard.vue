@@ -19,7 +19,6 @@ import {usePage} from "@inertiajs/vue3";
 const props = defineProps({
     referralEarnings: [String, Number],
     wallets: Object,
-    random_address: Object,
     wallet_sel: Array,
     coin: Object,
     setting_coin: Object,
@@ -68,7 +67,6 @@ const closeModal = () => {
                     </Button>
                     <Deposit
                         :wallet_sel="wallet_sel"
-                        :random_address="random_address"
                         :depositFee="depositFee"
                     />
                 </div>

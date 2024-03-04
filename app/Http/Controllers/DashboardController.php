@@ -72,12 +72,9 @@ class DashboardController extends Controller
         $coin_market_time = CoinMarketTime::where('setting_coin_id', $coin->setting_coin_id)->latest()->first();
         $coin_price_yesterday = CoinPrice::whereDate('price_date', '<', today())->latest()->first();
 
-        $wallet_address = SettingWalletAddress::inRandomOrder()->first();
-
         return Inertia::render('Dashboard', [
             'wallets' => $wallets->get(),
             'wallet_sel' => $wallet_sel,
-            'random_address' => $wallet_address,
             'coin' => $coin,
             'coin_price' => $coin_price,
             'setting_coin' => SettingCoin::where('symbol', 'MXT/USD')->first(),
