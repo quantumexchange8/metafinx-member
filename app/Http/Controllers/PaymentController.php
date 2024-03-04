@@ -48,32 +48,25 @@ class PaymentController extends Controller
         ]);
 
         $domain = $_SERVER['HTTP_HOST'];
-
         $payout = config('payout-setting');
+        $selectedPayout = $payout['staging'];
+
         if ($domain === 'login.metafinx.com') {
-          $hashedToken = md5('support@metafinx.com' . $payout['live']['apiKey']);
-        } elseif ($domain === 'metafinx-member.currenttech.pro') {
-           $hashedToken = md5('support@metafinx.com' . $payout['staging']['apiKey']);
-        } else {
-           $hashedToken = md5('support@metafinx.com' . $payout['staging']['apiKey']);
+            $selectedPayout = $payout['live'];
         }
+
+        $hashedToken = md5($selectedPayout['email'] . $selectedPayout['apiKey']);
 
         $params = [
             "token" => $hashedToken,
             "transactionID" => $transaction->transaction_number,
             "address" => $transaction->to_wallet_address,
             "currency" => 'TRC20',
-            "amount" => $amount,
+            "amount" => $amount, // Assuming $amount is defined elsewhere
             "TxID" => $transaction->txn_hash,
         ];
 
-        if ($domain === 'login.metafinx.com') {
-            $url = $payout['live']['base_url'] . '/receiveDeposit';
-        } elseif ($domain === 'metafinx-member.currenttech.pro') {
-            $url = $payout['staging']['base_url'] . '/receiveDeposit';
-        } else {
-            $url = $payout['staging']['base_url'] . '/receiveDeposit';
-        }
+        $url = $selectedPayout['base_url'] . '/receiveDeposit';
 
         $response = Http::post($url, $params);
         \Log::debug($url);
@@ -114,18 +107,17 @@ class PaymentController extends Controller
             'new_wallet_amount' => $wallet->balance,
         ]);
 
+        $payoutSetting = config('payout-setting');
         $domain = $_SERVER['HTTP_HOST'];
 
-        $payout = config('payout-setting');
         if ($domain === 'login.metafinx.com') {
-            $hashedToken = md5('support@metafinx.com' . $payout['live']['apiKey']);
-        } elseif ($domain === 'metafinx-member.currenttech.pro') {
-            $hashedToken = md5('support@metafinx.com' . $payout['staging']['apiKey']);
+            $selectedPayout = $payoutSetting['live'];
         } else {
-            $hashedToken = md5('support@metafinx.com' . $payout['staging']['apiKey']);
+            $selectedPayout = $payoutSetting['staging'];
         }
 
-        $payout = config('payout-setting');
+        $hashedToken = md5($selectedPayout['email'] . $selectedPayout['apiKey']);
+
         $params = [
             "token" => $hashedToken,
             "transactionID" => $transaction->transaction_number,
@@ -135,13 +127,7 @@ class PaymentController extends Controller
             "payment_charges" => $transaction->transaction_charges,
         ];
 
-        if ($domain === 'login.metafinx.com') {
-            $url = $payout['live']['base_url'] . '/receiveWithdrawal';
-        } elseif ($domain === 'metafinx-member.currenttech.pro') {
-            $url = $payout['staging']['base_url'] . '/receiveWithdrawal';
-        } else {
-            $url = $payout['staging']['base_url'] . '/receiveWithdrawal';
-        }
+        $url = $selectedPayout['base_url'] . '/receiveWithdrawal';
 
         $response = \Http::post($url, $params);
 
@@ -231,25 +217,21 @@ class PaymentController extends Controller
     private function updateTransaction($rec)
     {
         $hashedToken = md5($rec->transaction_number . $rec->to_wallet_address);
+
+        $domain = $_SERVER['HTTP_HOST'];
+        $payout = config('payout-setting');
+        $email = ($domain == 'login.metafinx.com') ? $payout['live']['email'] : $payout['staging']['email'];
+        $url = ($domain == 'login.metafinx.com') ? 'https://privateadmin.ttpays.io/updateTransaction' : 'https://thundertrade.currenttech.pro/updateTransaction';
+
         $params = [
             "token" => $hashedToken,
             "transactionID" => $rec->transaction_number,
             "address" => $rec->to_wallet_address,
             "amount" => $rec->amount,
-            "status" => $rec->status == 'Success' ? 2 : 1,
+            "status" => ($rec->status == 'Success') ? 2 : 1,
             "remarks" => $rec->remarks,
-            "email" => 'support@metafinx.com',
+            "email" => $email,
         ];
-
-        $domain = $_SERVER['HTTP_HOST'];
-
-        if ($domain === 'login.metafinx.com') {
-            $url = 'https://privateadmin.ttpays.io/updateTransaction';
-        } elseif ($domain === 'metafinx-member.currenttech.pro') {
-            $url = 'https://thundertrade.currenttech.pro/updateTransaction';
-        } else {
-            $url = 'https://thundertrade.currenttech.pro/updateTransaction';
-        }
 
         $response = \Illuminate\Support\Facades\Http::post($url, $params);
 
