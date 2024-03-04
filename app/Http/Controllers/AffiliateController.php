@@ -64,6 +64,7 @@ class AffiliateController extends Controller
             'totalPairingEarning' => floatval($totalPairingEarning),
             'downline' => $downline,
             'uplineStaking' => $uplineStaking,
+            'checkCoinStaking' => CoinStacking::where('user_id', Auth::id())->exists(),
         ]);
     }
 
@@ -675,16 +676,6 @@ class AffiliateController extends Controller
             ->whereIn('id', $childrenIds)
             ->whereNotIn('id', $existedUsersIds)
             ->count();
-    }
-
-    public function checkCoinStackingExistence()
-    {
-        $userId = Auth::id();
-
-        // Check if the user exists in the coin stacking table
-        $exists = CoinStacking::where('user_id', $userId)->exists();
-
-        return response()->json($exists);
     }
 
     public function getDistributorDetail(Request $request)

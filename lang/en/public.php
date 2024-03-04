@@ -463,4 +463,5 @@ return [
         "verify_link_message" => "A new verification link has been sent to the email address you provided during registration.",
         "resend_verification_email" => "Resend Verification Email",
     ],
+    "binary_placement_position" => "Binary placement position"
 ];

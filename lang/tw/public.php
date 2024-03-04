@@ -461,4 +461,5 @@ return [
         "verify_link_message" => "已向您在註冊時提供的電子郵件地址發送了新的驗證鏈接。",
         "resend_verification_email" => "重新發送驗證郵件",
     ],
+    "binary_placement_position" => "左右位置擺放",
 ];

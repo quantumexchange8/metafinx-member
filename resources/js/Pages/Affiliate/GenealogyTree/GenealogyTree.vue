@@ -35,6 +35,7 @@ const { formatAmount, formatDateTime } = transactionFormat();
 const props = defineProps({
     search: String,
     downline: Array,
+    checkCoinStaking: Boolean,
 })
 
 watch(
@@ -260,19 +261,6 @@ const fetchPendingPlacementCount = async () => {
         console.error('Error fetching data:', error.message);
     }
 };
-const coinStackingExists = ref(false);
-
-const checkCoinStackingExistence = async () => {
-    try {
-        const response = await axios.get('/affiliate/checkCoinStackingExistence');
-        coinStackingExists.value = response.data; // Update coin stacking existence based on response
-    } catch (error) {
-        console.error('Error checking coin stacking existence:', error);
-        coinStackingExists.value = false; // Set coin stacking existence to false in case of an error
-    }
-};
-
-checkCoinStackingExistence();
 </script>
 
 <template>
@@ -498,12 +486,12 @@ checkCoinStackingExistence();
                                 :value="plan"
                                 v-slot="{ active, checked }"
                                 class="w-full"
-                                :disabled="plan.value === 'right' && !coinStackingExists"
+                                :disabled="plan.value === 'right' && !checkCoinStaking"
                             >
                                 <div
                                     :class="[
                                         checked ? 'bg-gray-600 dark:text-white border-2 border-white' : 'bg-gray-700',
-                                        plan.value === 'right' && !coinStackingExists ? 'hover:cursor-not-allowed dark:bg-gray-700' : ''
+                                        plan.value === 'right' && !checkCoinStaking ? 'hover:cursor-not-allowed dark:bg-gray-700' : ''
                                     ]"
                                     class="relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none"
                                 >
@@ -514,7 +502,7 @@ checkCoinStackingExistence();
                                                     as="p"
                                                     :class="[
                                                         checked ? 'text-white' : '',
-                                                        plan.value === 'right' && !coinStackingExists ? 'dark:text-gray-600' : 'text-white'
+                                                        plan.value === 'right' && !checkCoinStaking ? 'dark:text-gray-600' : 'text-white'
                                                     ]"
                                                     class="font-medium"
                                                 >

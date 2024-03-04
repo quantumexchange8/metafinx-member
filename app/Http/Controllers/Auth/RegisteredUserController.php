@@ -29,9 +29,9 @@ class RegisteredUserController extends Controller
     public function create($referral = null)
     {
         $position = request()->query('position'); // Retrieve 'position' from query parameters
-    
+
         $settingCountries = SettingCountry::all();
-        
+
         $formattedCountries = $settingCountries->map(function ($country) {
             return [
                 'value' => $country->name_en,
@@ -39,14 +39,14 @@ class RegisteredUserController extends Controller
                 'phone_code' => $country->phone_code,
             ];
         });
-    
+
         return Inertia::render('Auth/Register', [
             'countries' => $formattedCountries,
             'referral' => $referral,
             'position' => $position,
         ]);
     }
-        
+
     public function firstStep(Request $request)
     {
         $rules = [
@@ -210,8 +210,14 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        // Call addDistributor method and pass the newly created user's ID
-        $this->addDistributor($user->id, $request->position, $request->referral_code);
+        $position = $request->position ?? 'left';
+        $uplineStaking = CoinStacking::where('user_id', $user->upline_id)->exists();
+
+        if (!$uplineStaking) {
+            $position = 'left';
+        }
+
+        $this->addDistributor($user, $position);
 
         return redirect()->route('login')->with('title', trans('public.account_sign_up'))->with('success', trans('public.account_sign_up_message'));
     }
@@ -275,17 +281,18 @@ class RegisteredUserController extends Controller
         }
     }
 
-    public function addDistributor($userId, $position, $referral_code)
+    protected function addDistributor($user, $position)
     {
-        $lastChild = $this->getLastChild($position,$referral_code);
+        $lastChild = $this->getLastChild($position, $user);
+
         $upline = CoinMultiLevel::find($lastChild->id);
-        $sponsor_user_id = User::where('referral_code', $referral_code)->first();
+        $sponsor_user_id = User::find($user->upline_id);
         $sponsor = CoinMultiLevel::where('user_id', $sponsor_user_id->id)->first();
-        $coinStakingPrice = CoinStacking::where('user_id', $userId)->where('status', 'OnGoingPeriod')->sum('stacking_price');
-    
+        $coinStakingPrice = CoinStacking::where('user_id', $user->id)->where('status', 'OnGoingPeriod')->sum('stacking_price');
+
         // Check if the specified position is available in the upline's direct child
         $directChild = $upline->direct_child($position)->first();
-        
+
         // Update the hierarchy list based on the upline
         if ($upline->id == 1) {
             // If the upline is the root node, the hierarchy list will be the user's ID
@@ -297,14 +304,14 @@ class RegisteredUserController extends Controller
 
         // Prepare data for creating the distributor
         $data = [
-            'user_id' => $userId,
+            'user_id' => $user->id,
             'sponsor_id' => $sponsor->id,
             'upline_id' => $upline->id,
             'hierarchy_list' => $hierarchyList,
             'position' => 'left', // default position
             'coin_stacking_amount' => $coinStakingPrice,
         ];
-    
+
         // Check if the position can be updated
         if (empty($upline->direct_child('left')->first()) && empty($upline->direct_child('right')->first())) {
             if ($position == 'right' && $upline->id == $sponsor->id) {
@@ -313,14 +320,14 @@ class RegisteredUserController extends Controller
         } elseif ($position == 'right' && empty($directChild)) {
             $data['position'] = $position;
         }
-    
+
         // Create the distributor with the provided parameters
         CoinMultiLevel::create($data);
     }
 
-    public function getLastChild($position, $referral_code)
+    protected function getLastChild($position, $user)
     {
-        $sponsor_user_id = User::where('referral_code', $referral_code)->first();
+        $sponsor_user_id = User::find($user->upline_id);
         $binaryAuthUser = CoinMultiLevel::where('user_id', $sponsor_user_id->id)->first();
 
         $directChild = $binaryAuthUser->direct_child($position)->first();

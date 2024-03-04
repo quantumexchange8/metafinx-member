@@ -20,6 +20,7 @@ const categories = ref(networkCategory)
 const props = defineProps({
     downline: Array,
     uplineStaking: Boolean,
+    checkCoinStaking: Boolean,
 })
 
 const search = ref('');
@@ -100,6 +101,7 @@ onMounted(() => {
                         <GenealogyTree
                             :downline="downline"
                             :search="search"
+                            :checkCoinStaking="checkCoinStaking"
                         />
                     </TabPanel>
                 </TabPanels>

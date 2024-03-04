@@ -2,7 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import Input from "@/Components/Input.vue";
 import Button from "@/Components/Button.vue";
-import {ShareIcon, DuplicateIcon} from "@heroicons/vue/outline";
+import {ShareIcon, DuplicateIcon, ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/outline";
 import { TableIcon } from '@/Components/Icons/outline'
 import Tooltip from "@/Components/Tooltip.vue";
 import {ref} from "vue";
@@ -22,6 +22,7 @@ const props = defineProps({
     totalPairingEarning: Number,
     downline: Array,
     uplineStaking: Boolean,
+    checkCoinStaking: Boolean,
 })
 const { formatAmount,formatDate } = transactionFormat();
 const createdDate = usePage().props.auth.user.created_at;
@@ -52,20 +53,6 @@ function copyReferralCode () {
     document.body.removeChild(tempInput);
     window.getSelection().removeAllRanges()
 }
-
-const coinStackingExists = ref(false);
-
-const checkCoinStackingExistence = async () => {
-    try {
-        const response = await axios.get('/affiliate/checkCoinStackingExistence');
-        coinStackingExists.value = response.data; // Update coin stacking existence based on response
-    } catch (error) {
-        console.error('Error checking coin stacking existence:', error);
-        coinStackingExists.value = false; // Set coin stacking existence to false in case of an error
-    }
-};
-
-checkCoinStackingExistence();
 
 const copyReferralCodeLink = (position) => {
     const referralCode = document.querySelector('#referralCode').value;
@@ -128,6 +115,7 @@ const copyReferralCodeLink = (position) => {
         <AffiliateNetwork
             :downline="downline"
             :uplineStaking="uplineStaking"
+            :checkCoinStaking="checkCoinStaking"
             @update:affiliateType="affiliateType = $event"
          />
 
@@ -190,34 +178,42 @@ const copyReferralCodeLink = (position) => {
                         </button>
                     </Tooltip>
                 </div>
-                <div class="inline-flex justify-center items-center w-full">
-                        <span class="uppercase font-semibold">{{$t('public.affiliate.invite_friend')}}</span>
-                        <ShareIcon
-                            aria-hidden="true"
-                            class="h-5 ml-2"
-                        />
-                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <div class="flex flex-col items-center">
+                        <div class="inline-flex justify-center items-center w-full">
+                            <div class="uppercase font-semibold">{{$t('public.affiliate.invite_friend')}}</div>
+                            <ShareIcon
+                                aria-hidden="true"
+                                class="h-5 ml-2"
+                            />
+                        </div>
+                        <div>({{ $t('public.binary_placement_position') }})</div>
+                    </div>
 
-                <div class="flex gap-4">
-                    <Button
-                        type="button"
-                        class="items-center gap-2 w-20"
-                        @click="copyReferralCodeLink('left')"
-                    >
-                        <div class="inline-flex justify-center items-center w-full">
-                            <span class="uppercase font-semibold">{{$t('public.left')}}</span>
-                        </div>
-                    </Button>
-                    <Button
-                        type="button"
-                        class="items-center gap-2 w-20"
-                        :disabled="!coinStackingExists"
-                        @click="copyReferralCodeLink('right')"
-                    >
-                        <div class="inline-flex justify-center items-center w-full">
-                            <span class="uppercase font-semibold">{{$t('public.right')}}</span>
-                        </div>
-                    </Button>
+                    <div class="inline-flex justify-center items-center w-full">
+
+                    </div>
+
+                    <div class="flex gap-4 w-full">
+                        <Button
+                            type="button"
+                            class="flex justify-center items-center gap-2 w-full"
+                            @click="copyReferralCodeLink('left')"
+                            v-slot="{ iconSizeClasses }"
+                        >
+                            <ArrowLeftIcon class="w-5 h-5" />
+                            <div>{{$t('public.left')}}</div>
+                        </Button>
+                        <Button
+                            type="button"
+                            class="flex justify-center items-center gap-2 w-full"
+                            :disabled="!checkCoinStaking"
+                            @click="copyReferralCodeLink('right')"
+                        >
+                            <div>{{$t('public.right')}}</div>
+                            <ArrowRightIcon class="w-5 h-5" />
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -282,34 +278,42 @@ const copyReferralCodeLink = (position) => {
                             </button>
                         </Tooltip>
                     </div>
-                    <div class="inline-flex justify-center items-center w-full">
-                            <span class="uppercase font-semibold">{{$t('public.affiliate.invite_friend')}}</span>
-                            <ShareIcon
-                                aria-hidden="true"
-                                class="h-5 ml-2"
-                            />
-                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <div class="flex flex-col items-center">
+                            <div class="inline-flex justify-center items-center w-full">
+                                <div class="uppercase font-semibold">{{$t('public.affiliate.invite_friend')}}</div>
+                                <ShareIcon
+                                    aria-hidden="true"
+                                    class="h-5 ml-2"
+                                />
+                            </div>
+                            <div>({{ $t('public.binary_placement_position') }})</div>
+                        </div>
 
-                    <div class="flex gap-4">
-                        <Button
-                            type="button"
-                            class="items-center gap-2 w-20"
-                            @click="copyReferralCodeLink('left')"
-                        >
-                            <div class="inline-flex justify-center items-center w-full">
-                                <span class="uppercase font-semibold">{{$t('public.left')}}</span>
-                            </div>
-                        </Button>
-                        <Button
-                            type="button"
-                            class="items-center gap-2 w-20"
-                            :disabled="!coinStackingExists"
-                            @click="copyReferralCodeLink('right')"
-                        >
-                            <div class="inline-flex justify-center items-center w-full">
-                                <span class="uppercase font-semibold">{{$t('public.right')}}</span>
-                            </div>
-                        </Button>
+                        <div class="inline-flex justify-center items-center w-full">
+
+                        </div>
+
+                        <div class="flex gap-4 w-full">
+                            <Button
+                                type="button"
+                                class="flex justify-center items-center gap-2 w-full"
+                                @click="copyReferralCodeLink('left')"
+                                v-slot="{ iconSizeClasses }"
+                            >
+                                <ArrowLeftIcon class="w-5 h-5" />
+                               <div>{{$t('public.left')}}</div>
+                            </Button>
+                            <Button
+                                type="button"
+                                class="flex justify-center items-center gap-2 w-full"
+                                :disabled="!checkCoinStaking"
+                                @click="copyReferralCodeLink('right')"
+                            >
+                                <div>{{$t('public.right')}}</div>
+                                <ArrowRightIcon class="w-5 h-5" />
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
