@@ -26,16 +26,17 @@ class EarnController extends Controller
     {
         $wallets = Wallet::where('user_id', \Auth::id());
 
-        $currentMonth = Carbon::now()->month;
-        $monthsElapsed = $currentMonth - 1; // Exclude the current month from calculation
+        $PreviousMonth = Carbon::now()->subMonth()->month;
+        $daysInPreviousMonth = Carbon::now()->subMonth()->daysInMonth;
 
         $totalEarnings = Earning::query()
             ->where('category', 'staking')
             ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', $PreviousMonth)
             ->sum('after_coin_price');
 
         if ($totalEarnings > 0) {
-            $averageProfit = (($totalEarnings / $monthsElapsed) / $totalEarnings) * 100;
+            $averageProfit = (($totalEarnings / $daysInPreviousMonth) / $totalEarnings) * 100;
         } else {
             $averageProfit = 0;
         }
@@ -233,12 +234,15 @@ class EarnController extends Controller
                 if ($stacking->created_at->lt(now()->setTime(17, 0, 0))) {
                     // If created_at is before today at 5 PM
                     $autoAssignDate = now()->addDay()->startOfDay();
+                    $stakingDate = now();
                 } else {
                     // If created_at is at or after today at 5 PM
                     $autoAssignDate = now()->addDays(2)->startOfDay();
+                    $stakingDate = now()->addDay();
                 }
 
                 $stacking->update([
+                    'staking_date' => $stakingDate,
                     'next_roi_date' => $next_roi_date,
                     'expired_date' => $expired_date,
                     'max_capped_price' => $stacking->stacking_price * 3,
@@ -324,6 +328,7 @@ class EarnController extends Controller
                 'expired_date' => $coinStacking->expired_date,
                 'created_at' => $coinStacking->created_at,
                 'max_capped_price' => $coinStacking->max_capped_price,
+                'staking_date' => $coinStacking->staking_date,
             ];
         });
 

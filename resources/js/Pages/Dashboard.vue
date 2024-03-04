@@ -94,8 +94,11 @@ const closeModal = () => {
                             <p class="text-white text-base font-semibold">
                                 {{ wallet.name }}
                             </p>
-                            <p class="text-white text-[28px] font-semibold">
+                            <p v-if="wallet.type === 'internal_wallet'" class="text-white text-[28px] font-semibold">
                                 $&nbsp;{{ formatAmount(wallet.balance) }}
+                            </p>
+                            <p v-if="wallet.type === 'musd_wallet'" class="text-white text-[28px] font-semibold">
+                                {{ formatAmount(wallet.balance) }} MUSD
                             </p>
                         </div>
                         <p class="text-xs text-white font-normal">

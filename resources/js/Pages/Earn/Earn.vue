@@ -137,7 +137,7 @@ const selectCategory = (category) => {
             <div v-if="selectedCategory === 'staking'" >
                 <div class="p-5 mb-3 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                     <div class="font-medium text-xs dark:text-gray-400">
-                        {{$t('public.average_profit_yearly')}}
+                        {{$t('public.average_profit_monthly')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
                         {{formatAmount(props.averageProfit)}}&nbsp;%
@@ -191,7 +191,7 @@ const selectCategory = (category) => {
                 <div v-if="selectedCategory === 'staking'" >
                     <div class="p-5 mb-3 dark:bg-gray-700 rounded-[10px] flex flex-col gap-2">
                         <div class="font-medium text-xs dark:text-gray-400">
-                            {{$t('public.average_profit_yearly')}}
+                            {{$t('public.average_profit_monthly')}}
                         </div>
                         <div class="font-semibold text-2xl dark:text-white">
                             {{formatAmount(props.averageProfit)}}&nbsp;%

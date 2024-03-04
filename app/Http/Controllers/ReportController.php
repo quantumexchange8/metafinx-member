@@ -204,7 +204,8 @@ class ReportController extends Controller
             )
             ->leftJoin('investment_subscriptions', 'users.id', '=', 'investment_subscriptions.user_id')
             ->leftJoin('investment_plans', 'investment_subscriptions.investment_plan_id', '=', 'investment_plans.id')
-            ->where('users.id', $user->id);
+            ->where('users.id', $user->id)
+            ->whereNotNull('investment_subscriptions.id');
 
         $coinStakings = DB::table('users')
             ->select(
@@ -221,7 +222,8 @@ class ReportController extends Controller
             )
             ->leftJoin('coin_stackings', 'users.id', '=', 'coin_stackings.user_id')
             ->leftJoin('investment_plans', 'coin_stackings.investment_plan_id', '=', 'investment_plans.id')
-            ->where('users.id', $user->id);
+            ->where('users.id', $user->id)
+            ->whereNotNull('coin_stackings.id');
 
         // Search condition
         if ($request->filled('search')) {

@@ -123,7 +123,7 @@ const paginationActiveClass = [
                     <th scope="col" class="py-3 w-1/5">
                         {{$t('public.report.date')}}
                     </th>
-                    <th scope="col" class="py-3 w-1/5">
+                    <th scope="col" class="py-3 w-1/4">
                         {{$t('public.report.downline_name')}}
                     </th>
                     <th scope="col" class="py-3 w-1/5">
@@ -142,10 +142,10 @@ const paginationActiveClass = [
                     v-for="earning in earnings.data"
                     class="bg-white dark:bg-transparent text-xs text-gray-900 dark:text-white border-b dark:border-gray-600 dark:hover:bg-gray-600"
                 >
-                    <td class="py-2">
+                    <td class="py-2 px-2">
                         {{ formatDateTime(earning.created_at) }}
                     </td>
-                    <td class="py-2">
+                    <td class="py-2 pr-20">
                         <div class="inline-flex items-center gap-2">
                             <img :src="earning.downline.profile_photo_url ? earning.downline.profile_photo_url : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" class="w-8 h-8 rounded-full" alt="">
                             <div class="grid">

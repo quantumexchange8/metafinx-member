@@ -16,8 +16,8 @@ const standardTerm = 'standard_learn_more';
 const stakingTerm = 'staking_learn_more';
 const { formatDate, formatType, formatAmount } = transactionFormat();
 
-const calculateWidthPercentage = (created_at, period, isStaking) => {
-    const startDate = new Date(created_at);
+const calculateWidthPercentage = (starting_date, period, isStaking) => {
+    const startDate = new Date(starting_date);
     const endDate = new Date(startDate);
 
     // Adjust the calculation based on the unit of the period
@@ -190,13 +190,13 @@ const sortedCoinStakings = coinStakingArray.sort((a, b) => {
                         <span>{{ staking.plan_name.name }} &#x2022; {{ formatAmount(staking.amount, 0) }} {{ setting_coin.name }} ($&nbsp;{{ staking.link_price }})</span>
                     </div>
                     <div class="dark:text-gray-400 text-xs">
-                        <span class="uppercase">{{$t('public.earn.since')}} {{ formatDate(staking.created_at) }}</span>
+                        <span class="uppercase">{{$t('public.earn.since')}} {{ formatDate(staking.staking_date) }}</span>
                     </div>
                 </div>
                 <div class="relative my-3">
                     <div class="mb-1 flex h-2.5 overflow-hidden rounded-full bg-gray-100 text-xs">
                         <div
-                        :style="{ width: `${calculateWidthPercentage(staking.created_at, staking.investment_period, true).widthResult.toFixed(2)}%` }"
+                        :style="{ width: `${calculateWidthPercentage(staking.staking_date, staking.investment_period, true).widthResult.toFixed(2)}%` }"
                             class="rounded-full bg-gradient-to-r from-warning-400 to-pink-500 transition-all duration-500 ease-out"
                         >
                         </div>

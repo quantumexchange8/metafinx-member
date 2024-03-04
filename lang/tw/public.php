@@ -47,7 +47,7 @@ return [
     "learn_more" => "了解更多",
     "standard" => "标准",
     "staking" => "堆叠",
-    "average_profit_yearly" => "平均利润 (年)",
+    "average_profit_monthly" => "平均利润 (月)",
     "welcome_back" => "欢迎回来",
     "dashboard" => '仪表板',
     "latest_updated" => "最新更新于",

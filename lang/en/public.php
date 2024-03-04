@@ -49,7 +49,7 @@ return [
     "learn_more" => "Learn more",
     "standard" => "Standard",
     "staking" => "Staking",
-    "average_profit_yearly" => "Average Profit (yearly)",
+    "average_profit_monthly" => "Average Profit (Monthly)",
     "welcome_back" => "Welcome Back",
     "dashboard" => 'Dashboard',
     "latest_updated" => "Latest updated on",
