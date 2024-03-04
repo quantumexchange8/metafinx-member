@@ -193,10 +193,6 @@ class AffiliateController extends Controller
             'personal_amount' => $this->getPersonalStakingAmount($user),
             'left_amount' => $this->getLeftAmount($user),
             'right_amount' => $this->getRightAmount($user),
-            'left_carry_forward' => $this->getLeftCarryForward($user),
-            'right_carry_forward' => $this->getRightCarryForward($user),
-            'left_current' => $this->getLeftCurrent($user),
-            'right_current' => $this->getRightCurrent($user),
             'children' => $users->map(function ($user) {
                 return $this->mapBinaryUser($user, 0);
             })
@@ -241,10 +237,6 @@ class AffiliateController extends Controller
             'personal_amount' => $this->getPersonalStakingAmount($user),
             'left_amount' => $this->getLeftAmount($user),
             'right_amount' => $this->getRightAmount($user),
-            'left_carry_forward' => $this->getLeftCarryForward($user),
-            'right_carry_forward' => $this->getRightCarryForward($user),
-            'left_current' => $this->getLeftCurrent($user),
-            'right_current' => $this->getRightCurrent($user),
         ];
 
         // Add 'children' only if there are children
@@ -374,6 +366,7 @@ class AffiliateController extends Controller
     protected function getLeftAmount($child)
     {
         $amount = 0;
+        $todayEarning = 0;
 
         $direct_child = $child->direct_child('left')->first();
 
@@ -385,21 +378,50 @@ class AffiliateController extends Controller
                 ->pluck('user_id')
                 ->toArray();
 
+            $yesterdayLastPairing = Earning::where('upline_id', $child->user_id)
+                ->where('type', 'PairingEarnings')
+                ->whereDate('created_at', now()->subDay()->toDateString())
+                ->latest('created_at')
+                ->value('created_at');
+
+//            $endOfEarning = Earning::where('upline_id', $child->user_id)
+//                ->where('type', 'PairingEarnings')
+//                ->latest()
+//                ->first();
+            if ($yesterdayLastPairing === null) {
+                $yesterdayLastPairing = now()->startOfDay()->addHours(9);
+            }
+
+            $todayEarning += Earning::where('type', 'PairingEarnings')
+                ->where('upline_id', $child->user_id)
+                ->whereDate('created_at', today())
+                ->sum('after_coin_price');
+
+            $todayEarning += Earning::where('type', 'PairingEarnings')
+                ->whereIn('upline_id', $binary_user_id)
+                ->whereDate('created_at', today())
+                ->sum('after_coin_price');
+
             $amount += CoinStacking::whereIn('user_id', $binary_user_id)
                 ->where('status', 'OnGoingPeriod')
+                ->where('staking_date', '>', $yesterdayLastPairing)
+                ->where('staking_date', '<', now())
                 ->sum('stacking_price');
 
             $amount += CoinStacking::where('user_id', $direct_child->user_id)
                 ->where('status', 'OnGoingPeriod')
+                ->where('staking_date', '>', $yesterdayLastPairing)
+                ->where('staking_date', '<', now())
                 ->sum('stacking_price');
         }
 
-        return $amount;
+        return $amount - $todayEarning;
     }
 
     protected function getRightAmount($child)
     {
         $amount = 0;
+        $todayEarning = 0;
 
         $direct_child = $child->direct_child('right')->first();
 
@@ -411,16 +433,45 @@ class AffiliateController extends Controller
                 ->pluck('user_id')
                 ->toArray();
 
+            $yesterdayLastPairing = Earning::where('upline_id', $child->user_id)
+                ->where('type', 'PairingEarnings')
+                ->whereDate('created_at', now()->subDay()->toDateString())
+                ->latest('created_at')
+                ->value('created_at');
+
+            if ($yesterdayLastPairing === null) {
+                $yesterdayLastPairing = now()->startOfDay()->addHours(9);
+            }
+
+//            $endOfEarning = Earning::where('upline_id', $child->user_id)
+//                ->where('type', 'PairingEarnings')
+//                ->latest()
+//                ->first();
+
+            $todayEarning += Earning::where('type', 'PairingEarnings')
+                ->where('upline_id', $child->user_id)
+                ->whereDate('created_at', today())
+                ->sum('after_coin_price');
+
+            $todayEarning += Earning::where('type', 'PairingEarnings')
+                ->whereIn('upline_id', $binary_user_id)
+                ->whereDate('created_at', today())
+                ->sum('after_coin_price');
+
             $amount += CoinStacking::whereIn('user_id', $binary_user_id)
                 ->where('status', 'OnGoingPeriod')
+                ->where('staking_date', '>', $yesterdayLastPairing)
+                ->where('staking_date', '<', now())
                 ->sum('stacking_price');
 
             $amount += CoinStacking::where('user_id', $direct_child->user_id)
                 ->where('status', 'OnGoingPeriod')
+                ->where('staking_date', '>', $yesterdayLastPairing)
+                ->where('staking_date', '<', now())
                 ->sum('stacking_price');
         }
 
-        return $amount;
+        return $amount - $todayEarning;
     }
 
     protected function getLeftCarryForward($user)
