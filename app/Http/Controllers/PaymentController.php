@@ -126,7 +126,6 @@ class PaymentController extends Controller
         }
 
         $payout = config('payout-setting');
-        $hashedToken = md5('support@metafinx.com' . $payout['apiKey']);
         $params = [
             "token" => $hashedToken,
             "transactionID" => $transaction->transaction_number,
