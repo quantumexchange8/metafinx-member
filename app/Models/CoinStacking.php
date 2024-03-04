@@ -22,6 +22,7 @@ class CoinStacking extends Model
         'total_earning',
         'status',
         'remarks',
+        'staking_date',
         'next_roi_date',
         'expired_date',
         'terminated_date',
