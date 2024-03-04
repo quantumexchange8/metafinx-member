@@ -2,32 +2,36 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
 use App\Models\Coin;
-use App\Models\SettingCountry;
 use App\Models\User;
-use App\Models\Wallet;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Wallet;
+use App\Models\CoinStacking;
+use Illuminate\Http\Request;
+use App\Models\CoinMultiLevel;
+use App\Models\SettingCountry;
+use Illuminate\Validation\Rules;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\RegisterRequest;
+use Illuminate\Auth\Events\Registered;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
      */
-    public function create($referral = null): Response
+    public function create($referral = null)
     {
+        $position = request()->query('position'); // Retrieve 'position' from query parameters
+    
         $settingCountries = SettingCountry::all();
-
+        
         $formattedCountries = $settingCountries->map(function ($country) {
             return [
                 'value' => $country->name_en,
@@ -35,13 +39,14 @@ class RegisteredUserController extends Controller
                 'phone_code' => $country->phone_code,
             ];
         });
-
+    
         return Inertia::render('Auth/Register', [
             'countries' => $formattedCountries,
             'referral' => $referral,
+            'position' => $position,
         ]);
     }
-
+        
     public function firstStep(Request $request)
     {
         $rules = [
@@ -205,6 +210,9 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        // Call addDistributor method and pass the newly created user's ID
+        $this->addDistributor($user->id, $request->position, $request->referral_code);
+
         return redirect()->route('login')->with('title', trans('public.account_sign_up'))->with('success', trans('public.account_sign_up_message'));
     }
 
@@ -266,4 +274,63 @@ class RegisteredUserController extends Controller
             }
         }
     }
+
+    public function addDistributor($userId, $position, $referral_code)
+    {
+        $lastChild = $this->getLastChild($position,$referral_code);
+        $upline = CoinMultiLevel::find($lastChild->id);
+        $sponsor_user_id = User::where('referral_code', $referral_code)->first();
+        $sponsor = CoinMultiLevel::where('user_id', $sponsor_user_id->id)->first();
+        $coinStakingPrice = CoinStacking::where('user_id', $userId)->where('status', 'OnGoingPeriod')->sum('stacking_price');
+    
+        // Check if the specified position is available in the upline's direct child
+        $directChild = $upline->direct_child($position)->first();
+        
+        // Update the hierarchy list based on the upline
+        if ($upline->id == 1) {
+            // If the upline is the root node, the hierarchy list will be the user's ID
+            $hierarchyList = '-' . $lastChild->id . '-';
+        } else {
+            // Otherwise, prepend the upline's hierarchy list with a '-' if it's not empty
+            $hierarchyList = $upline->hierarchy_list . $upline->id . '-';
+        }
+
+        // Prepare data for creating the distributor
+        $data = [
+            'user_id' => $userId,
+            'sponsor_id' => $sponsor->id,
+            'upline_id' => $upline->id,
+            'hierarchy_list' => $hierarchyList,
+            'position' => 'left', // default position
+            'coin_stacking_amount' => $coinStakingPrice,
+        ];
+    
+        // Check if the position can be updated
+        if (empty($upline->direct_child('left')->first()) && empty($upline->direct_child('right')->first())) {
+            if ($position == 'right' && $upline->id == $sponsor->id) {
+                $data['position'] = $position;
+            }
+        } elseif ($position == 'right' && empty($directChild)) {
+            $data['position'] = $position;
+        }
+    
+        // Create the distributor with the provided parameters
+        CoinMultiLevel::create($data);
+    }
+
+    public function getLastChild($position, $referral_code)
+    {
+        $sponsor_user_id = User::where('referral_code', $referral_code)->first();
+        $binaryAuthUser = CoinMultiLevel::where('user_id', $sponsor_user_id->id)->first();
+
+        $directChild = $binaryAuthUser->direct_child($position)->first();
+
+        $last_child = $directChild ? $directChild->getLastChild($directChild, 'left') : $binaryAuthUser;
+        if ($last_child) {
+            $last_child->profile_photo = $last_child->user->getFirstMediaUrl('profile_photo');
+        }
+
+        return $last_child;
+    }
+
 }

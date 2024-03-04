@@ -49,8 +49,10 @@ const props = defineProps({
         type: String,
         default: null
     },
+    position: {
+        type: String,
+    },
 })
-
 const formStep = ref(1);
 const steps = [1, 2, 3, 4]; // Define the steps based on your form
 
@@ -115,6 +117,7 @@ const form = useForm({
     identity_number: '',
     passport_number: '',
     terms: false,
+    position: props.position,
 })
 
 const showPassword = ref(false);
