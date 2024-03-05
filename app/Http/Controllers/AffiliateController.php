@@ -366,6 +366,7 @@ class AffiliateController extends Controller
     protected function getPairingPrice($child, $position)
     {
         $amount = 0;
+        $totalAmount = 0;
         $totalEarning = 0;
         $todayStaking = 0;
 
@@ -388,16 +389,6 @@ class AffiliateController extends Controller
 
             // Calculate amount and total earnings if lastPairingEarningDateTime is not empty
             if ($lastPairingEarningDateTime) {
-                $amount += CoinStacking::whereIn('user_id', $binaryUserId)
-                    ->where('status', 'OnGoingPeriod')
-                    ->where('staking_date', '<', $today)
-                    ->sum('stacking_price');
-
-                $amount += CoinStacking::where('user_id', $directChild->user_id)
-                    ->where('status', 'OnGoingPeriod')
-                    ->where('staking_date', '<', $today)
-                    ->sum('stacking_price');
-
                 $totalEarning += Earning::where('upline_id', $directChild->user_id)
                     ->where('type', 'PairingEarnings')
                     ->where('created_at', '<', $lastPairingEarningDateTime)
@@ -408,6 +399,16 @@ class AffiliateController extends Controller
                     ->where('created_at', '<', $lastPairingEarningDateTime)
                     ->sum('after_coin_price');
             }
+
+            $amount += CoinStacking::whereIn('user_id', $binaryUserId)
+                ->where('status', 'OnGoingPeriod')
+                ->where('staking_date', '<', $today)
+                ->sum('stacking_price');
+
+            $amount += CoinStacking::where('user_id', $directChild->user_id)
+                ->where('status', 'OnGoingPeriod')
+                ->where('staking_date', '<', $today)
+                ->sum('stacking_price');
 
             // Calculate today's staking
             $todayStaking += CoinStacking::whereIn('user_id', $binaryUserId)
@@ -421,7 +422,7 @@ class AffiliateController extends Controller
                 ->sum('stacking_price');
 
             // Calculate stake pairing based on conditions
-            return $lastPairingEarningDateTime ? $amount - $totalEarning : $amount - $totalEarning + $todayStaking;
+            return $lastPairingEarningDateTime ? $amount - $totalEarning + $todayStaking : $amount - $totalEarning;
         }
 
         return 0; // Return 0 if no direct child is found
