@@ -191,8 +191,8 @@ class AffiliateController extends Controller
             'level' => $level,
             'rank' => $user->user->setting_rank_id,
             'personal_amount' => $this->getPersonalStakingAmount($user),
-            'left_amount' => $this->getLeftAmount($user),
-            'right_amount' => $this->getRightAmount($user),
+            'left_amount' => $this->getPairingPrice($user, 'left'),
+            'right_amount' => $this->getPairingPrice($user, 'right'),
             'children' => $users->map(function ($user) {
                 return $this->mapBinaryUser($user, 0);
             })
@@ -235,8 +235,8 @@ class AffiliateController extends Controller
             'level' => $level + 1,
             'rank' => $user->user->setting_rank_id,
             'personal_amount' => $this->getPersonalStakingAmount($user),
-            'left_amount' => $this->getLeftAmount($user),
-            'right_amount' => $this->getRightAmount($user),
+            'left_amount' => $this->getPairingPrice($user, 'left'),
+            'right_amount' => $this->getPairingPrice($user, 'right'),
         ];
 
         // Add 'children' only if there are children
@@ -363,209 +363,50 @@ class AffiliateController extends Controller
             ->sum('stacking_price');
     }
 
-    protected function getLeftAmount($child)
+    protected function getPairingPrice($child, $position)
     {
         $amount = 0;
-        $todayEarning = 0;
+        $totalEarning = 0;
 
-        $direct_child = $child->direct_child('left')->first();
+        $directChild = $child->direct_child($position)->first();
 
-        if ($direct_child) {
-            $ids = $direct_child->getChildrenIds();
+        if ($directChild) {
+            $ids = $directChild->getChildrenIds();
 
-            $binary_user_id = CoinMultiLevel::query()
+            $binaryUserId = CoinMultiLevel::query()
                 ->whereIn('id', $ids)
                 ->pluck('user_id')
                 ->toArray();
 
-            $yesterdayLastPairing = Earning::where('upline_id', $child->user_id)
+            $lastPairingEarningDateTime = Earning::where('upline_id', $child->id)
                 ->where('type', 'PairingEarnings')
-                ->whereDate('created_at', now()->subDay()->toDateString())
-                ->latest('created_at')
+                ->latest()
                 ->value('created_at');
 
-//            $endOfEarning = Earning::where('upline_id', $child->user_id)
-//                ->where('type', 'PairingEarnings')
-//                ->latest()
-//                ->first();
-            if ($yesterdayLastPairing === null) {
-                $yesterdayLastPairing = now()->startOfDay()->addHours(9);
+            if ($lastPairingEarningDateTime === null) {
+                $lastPairingEarningDateTime = now()->startOfDay()->addHours(9);
             }
 
-            $todayEarning += Earning::where('type', 'PairingEarnings')
-                ->where('upline_id', $child->user_id)
-                ->whereDate('created_at', today())
-                ->sum('after_coin_price');
-
-            $todayEarning += Earning::where('type', 'PairingEarnings')
-                ->whereIn('upline_id', $binary_user_id)
-                ->whereDate('created_at', today())
-                ->sum('after_coin_price');
-
-            $amount += CoinStacking::whereIn('user_id', $binary_user_id)
+            $amount += CoinStacking::whereIn('user_id', $binaryUserId)
                 ->where('status', 'OnGoingPeriod')
-                ->where('staking_date', '>', $yesterdayLastPairing)
-                ->where('staking_date', '<', now())
                 ->sum('stacking_price');
 
-            $amount += CoinStacking::where('user_id', $direct_child->user_id)
+            $amount += CoinStacking::where('user_id', $directChild->user_id)
                 ->where('status', 'OnGoingPeriod')
-                ->where('staking_date', '>', $yesterdayLastPairing)
-                ->where('staking_date', '<', now())
                 ->sum('stacking_price');
-        }
 
-        return $amount - $todayEarning;
-    }
-
-    protected function getRightAmount($child)
-    {
-        $amount = 0;
-        $todayEarning = 0;
-
-        $direct_child = $child->direct_child('right')->first();
-
-        if ($direct_child) {
-            $ids = $direct_child->getChildrenIds();
-
-            $binary_user_id = CoinMultiLevel::query()
-                ->whereIn('id', $ids)
-                ->pluck('user_id')
-                ->toArray();
-
-            $yesterdayLastPairing = Earning::where('upline_id', $child->user_id)
+            $totalEarning += Earning::where('upline_id', $directChild->user_id)
                 ->where('type', 'PairingEarnings')
-                ->whereDate('created_at', now()->subDay()->toDateString())
-                ->latest('created_at')
-                ->value('created_at');
-
-            if ($yesterdayLastPairing === null) {
-                $yesterdayLastPairing = now()->startOfDay()->addHours(9);
-            }
-
-//            $endOfEarning = Earning::where('upline_id', $child->user_id)
-//                ->where('type', 'PairingEarnings')
-//                ->latest()
-//                ->first();
-
-            $todayEarning += Earning::where('type', 'PairingEarnings')
-                ->where('upline_id', $child->user_id)
-                ->whereDate('created_at', today())
+                ->where('created_at', '<', $lastPairingEarningDateTime)
                 ->sum('after_coin_price');
 
-            $todayEarning += Earning::where('type', 'PairingEarnings')
-                ->whereIn('upline_id', $binary_user_id)
-                ->whereDate('created_at', today())
-                ->sum('after_coin_price');
-
-            $amount += CoinStacking::whereIn('user_id', $binary_user_id)
-                ->where('status', 'OnGoingPeriod')
-                ->where('staking_date', '>', $yesterdayLastPairing)
-                ->where('staking_date', '<', now())
-                ->sum('stacking_price');
-
-            $amount += CoinStacking::where('user_id', $direct_child->user_id)
-                ->where('status', 'OnGoingPeriod')
-                ->where('staking_date', '>', $yesterdayLastPairing)
-                ->where('staking_date', '<', now())
-                ->sum('stacking_price');
-        }
-
-        return $amount - $todayEarning;
-    }
-
-    protected function getLeftCarryForward($user)
-    {
-        $amount = 0;
-
-        if ($user->position == 'left') {
-            $amount = Earning::where('upline_id', $user->user_id)
+            $totalEarning += Earning::whereIn('upline_id', $binaryUserId)
                 ->where('type', 'PairingEarnings')
-                ->where('roi_release_date', '>', now()->subDay())
-                ->where('roi_release_date', '<', now())
+                ->where('created_at', '<', $lastPairingEarningDateTime)
                 ->sum('after_coin_price');
         }
 
-        return $amount;
-    }
-
-    protected function getRightCarryForward($user)
-    {
-        $amount = 0;
-
-        if ($user->position == 'right') {
-            $amount = Earning::where('upline_id', $user->user_id)
-                ->where('type', 'PairingEarnings')
-                ->where('roi_release_date', '>', now()->subDay())
-                ->where('roi_release_date', '<', now())
-                ->sum('after_coin_price');
-        }
-
-        return $amount;
-    }
-
-    protected function getLeftCurrent($user)
-    {
-        $amount = 0;
-
-        $direct_child = $user->direct_child('left')->first();
-
-        if ($direct_child) {
-            $ids = $direct_child->getChildrenIds();
-
-            $binary_user_id = CoinMultiLevel::query()
-                ->whereIn('id', $ids)
-                ->pluck('user_id')
-                ->toArray();
-
-            $earningLatestTime = Earning::where('type', 'PairingEarnings')->latest()->first();
-
-            if (!empty($direct_child->coinStaking)) {
-                $amount += CoinStacking::whereIn('user_id', $binary_user_id)
-                    ->where('status', 'OnGoingPeriod')
-                    ->where('created_at', '>', $earningLatestTime)
-                    ->sum('stacking_price');
-
-                $amount += CoinStacking::where('user_id', $direct_child->user_id)
-                    ->where('status', 'OnGoingPeriod')
-                    ->where('created_at', '>', $earningLatestTime)
-                    ->sum('stacking_price');
-            }
-        }
-
-        return $amount;
-    }
-
-    protected function getRightCurrent($user)
-    {
-        $amount = 0;
-
-        $direct_child = $user->direct_child('right')->first();
-
-        if ($direct_child) {
-            $ids = $direct_child->getChildrenIds();
-
-            $binary_user_id = CoinMultiLevel::query()
-                ->whereIn('id', $ids)
-                ->pluck('user_id')
-                ->toArray();
-
-            $earningLatestTime = Earning::where('type', 'PairingEarnings')->latest()->first();
-
-            if (!empty($direct_child->coinStaking)) {
-                $amount += CoinStacking::whereIn('user_id', $binary_user_id)
-                    ->where('status', 'OnGoingPeriod')
-                    ->where('created_at', '>', $earningLatestTime)
-                    ->sum('stacking_price');
-
-                $amount += CoinStacking::where('user_id', $direct_child->user_id)
-                    ->where('status', 'OnGoingPeriod')
-                    ->where('created_at', '>', $earningLatestTime)
-                    ->sum('stacking_price');
-            }
-        }
-
-        return $amount;
+        return $amount - $totalEarning;
     }
 
     public function group()

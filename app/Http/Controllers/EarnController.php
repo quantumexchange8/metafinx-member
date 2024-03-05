@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Coin;
+use App\Models\SettingStakingReward;
 use Inertia\Inertia;
 use App\Models\Wallet;
 use App\Models\Earning;
@@ -35,11 +36,8 @@ class EarnController extends Controller
             ->whereMonth('created_at', $PreviousMonth)
             ->sum('after_coin_price');
 
-        if ($totalEarnings > 0) {
-            $averageProfit = (($totalEarnings / $daysInPreviousMonth) / $totalEarnings) * 100;
-        } else {
-            $averageProfit = 0;
-        }
+        $previouMonth = now()->subMonth()->format('F');
+        $averageProfit = SettingStakingReward::where('month', $previouMonth)->first();
 
         $investment_plans = InvestmentPlan::query()
             ->with('descriptions:investment_plan_id,description')

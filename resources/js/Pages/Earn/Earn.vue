@@ -13,7 +13,7 @@ const props = defineProps({
     internal_wallet: Object,
     musd_wallet: Object,
     stackingFee: Object,
-    averageProfit: [String, Number],
+    averageProfit: Object,
 })
 
 const { formatAmount } = transactionFormat();
@@ -140,7 +140,7 @@ const selectCategory = (category) => {
                         {{$t('public.average_profit_monthly')}}
                     </div>
                     <div class="font-semibold text-2xl dark:text-white">
-                        {{formatAmount(props.averageProfit)}}&nbsp;%
+                        {{formatAmount(averageProfit.percent)}}&nbsp;%
                     </div>
                 </div>
             </div>
@@ -194,7 +194,7 @@ const selectCategory = (category) => {
                             {{$t('public.average_profit_monthly')}}
                         </div>
                         <div class="font-semibold text-2xl dark:text-white">
-                            {{formatAmount(props.averageProfit)}}&nbsp;%
+                            {{formatAmount(averageProfit.percent)}}&nbsp;%
                         </div>
                     </div>
                 </div>
