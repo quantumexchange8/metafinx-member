@@ -210,14 +210,17 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        $position = $request->position ?? 'left';
-        $uplineStaking = CoinStacking::where('user_id', $user->upline_id)->exists();
+        $position = $request->position;
 
-        if (!$uplineStaking) {
-            $position = 'left';
+        if ($position) {
+            $uplineStaking = CoinStacking::where('user_id', $user->upline_id)->exists();
+
+            if (!$uplineStaking) {
+                $position = 'left';
+            }
+
+            $this->addDistributor($user, $position);
         }
-
-        $this->addDistributor($user, $position);
 
         return redirect()->route('login')->with('title', trans('public.account_sign_up'))->with('success', trans('public.account_sign_up_message'));
     }

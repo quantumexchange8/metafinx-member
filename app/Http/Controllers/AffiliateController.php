@@ -420,7 +420,7 @@ class AffiliateController extends Controller
                 ->sum('stacking_price');
 
             // Calculate stake pairing based on conditions
-            return $lastPairingEarningDateTime ? $amount - $totalEarning : $todayStaking;
+            return $lastPairingEarningDateTime ? $amount - $totalEarning + $todayStaking : $amount - $totalEarning;
         }
 
         return 0; // Return 0 if no direct child is found
