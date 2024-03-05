@@ -379,7 +379,7 @@ class AffiliateController extends Controller
                 ->pluck('user_id')
                 ->toArray();
 
-            $lastPairingEarningDateTime = Earning::where('upline_id', $child->id)
+            $lastPairingEarningDateTime = Earning::where('upline_id', $child->user_id)
                 ->where('type', 'PairingEarnings')
                 ->latest()
                 ->value('created_at');
@@ -398,7 +398,7 @@ class AffiliateController extends Controller
                     ->where('staking_date', '<', $today)
                     ->sum('stacking_price');
 
-                $totalEarning = Earning::where('upline_id', $directChild->user_id)
+                $totalEarning += Earning::where('upline_id', $directChild->user_id)
                     ->where('type', 'PairingEarnings')
                     ->where('created_at', '<', $lastPairingEarningDateTime)
                     ->sum('after_coin_price');
