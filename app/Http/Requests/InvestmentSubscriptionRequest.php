@@ -8,14 +8,20 @@ class InvestmentSubscriptionRequest extends FormRequest
 {
     public function rules(): array
     {
-        return [
+        $rules = [
             'wallet_id' => ['sometimes', 'required'],
             'amount' => ['required', 'numeric'],
-            'unit' => ['required', 'numeric'],
             'unit_number' => ['sometimes', 'required'],
             'housing_price' => ['sometimes', 'required', 'numeric', 'integer'],
             'terms' => ['accepted'],
         ];
+
+        // Validate 'unit' only if the plan type is not 'standard'
+        if ($this->investment_plan_type !== 'standard') {
+            $rules['unit'] = ['required', 'numeric'];
+        }
+
+        return $rules;
     }
 
     public function authorize(): bool
