@@ -383,30 +383,47 @@ class AffiliateController extends Controller
                 ->latest()
                 ->value('created_at');
 
-            if ($lastPairingEarningDateTime === null) {
-                $lastPairingEarningDateTime = now()->startOfDay()->addHours(9);
+            $today = today();
+
+            // Calculate amount and total earnings if lastPairingEarningDateTime is not empty
+            if ($lastPairingEarningDateTime) {
+                $amount = CoinStacking::whereIn('user_id', $binaryUserId)
+                    ->where('status', 'OnGoingPeriod')
+                    ->where('staking_date', '<', $today)
+                    ->sum('stacking_price');
+
+                $amount += CoinStacking::where('user_id', $directChild->user_id)
+                    ->where('status', 'OnGoingPeriod')
+                    ->where('staking_date', '<', $today)
+                    ->sum('stacking_price');
+
+                $totalEarning = Earning::where('upline_id', $directChild->user_id)
+                    ->where('type', 'PairingEarnings')
+                    ->where('created_at', '<', $lastPairingEarningDateTime)
+                    ->sum('after_coin_price');
+
+                $totalEarning += Earning::whereIn('upline_id', $binaryUserId)
+                    ->where('type', 'PairingEarnings')
+                    ->where('created_at', '<', $lastPairingEarningDateTime)
+                    ->sum('after_coin_price');
             }
 
-            $amount += CoinStacking::whereIn('user_id', $binaryUserId)
+            // Calculate today's staking
+            $todayStaking = CoinStacking::whereIn('user_id', $binaryUserId)
                 ->where('status', 'OnGoingPeriod')
+                ->whereDate('staking_date', $today)
                 ->sum('stacking_price');
 
-            $amount += CoinStacking::where('user_id', $directChild->user_id)
+            $todayStaking += CoinStacking::where('user_id', $directChild->user_id)
                 ->where('status', 'OnGoingPeriod')
+                ->whereDate('staking_date', $today)
                 ->sum('stacking_price');
 
-            $totalEarning += Earning::where('upline_id', $directChild->user_id)
-                ->where('type', 'PairingEarnings')
-                ->where('created_at', '<', $lastPairingEarningDateTime)
-                ->sum('after_coin_price');
-
-            $totalEarning += Earning::whereIn('upline_id', $binaryUserId)
-                ->where('type', 'PairingEarnings')
-                ->where('created_at', '<', $lastPairingEarningDateTime)
-                ->sum('after_coin_price');
+            // Calculate stake pairing based on conditions
+            return $lastPairingEarningDateTime ? $amount - $totalEarning : $todayStaking;
         }
 
-        return $amount - $totalEarning;
+        return 0; // Return 0 if no direct child is found
     }
 
     public function group()
