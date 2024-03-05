@@ -228,18 +228,18 @@ class EarnController extends Controller
                     'total_earning' => 0.00,
                 ]);
 
-                $next_roi_date = $stacking->stakingDate->addMonth()->startOfMonth();
-                $expired_date = $stacking->stakingDate->copy()->addDays($investment_plan->investment_period);
-
                 if ($stacking->created_at->lt(now()->setTime(17, 0, 0))) {
                     // If created_at is before today at 5 PM
                     $autoAssignDate = now()->addDay()->startOfDay();
-                    $stakingDate = now();
+                    $stakingDate = now()->startOfDay();
                 } else {
                     // If created_at is at or after today at 5 PM
                     $autoAssignDate = now()->addDays(2)->startOfDay();
-                    $stakingDate = now()->addDay();
+                    $stakingDate = now()->startOfDay()->addDay();
                 }
+
+                $next_roi_date = $stakingDate->copy()->addMonth()->startOfMonth();
+                $expired_date = $stakingDate->copy()->addDays($investment_plan->investment_period);
 
                 $stacking->update([
                     'staking_date' => $stakingDate,
