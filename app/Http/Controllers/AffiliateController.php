@@ -367,6 +367,7 @@ class AffiliateController extends Controller
     {
         $amount = 0;
         $totalEarning = 0;
+        $todayStaking = 0;
 
         $directChild = $child->direct_child($position)->first();
 
@@ -387,7 +388,7 @@ class AffiliateController extends Controller
 
             // Calculate amount and total earnings if lastPairingEarningDateTime is not empty
             if ($lastPairingEarningDateTime) {
-                $amount = CoinStacking::whereIn('user_id', $binaryUserId)
+                $amount += CoinStacking::whereIn('user_id', $binaryUserId)
                     ->where('status', 'OnGoingPeriod')
                     ->where('staking_date', '<', $today)
                     ->sum('stacking_price');
@@ -409,7 +410,7 @@ class AffiliateController extends Controller
             }
 
             // Calculate today's staking
-            $todayStaking = CoinStacking::whereIn('user_id', $binaryUserId)
+            $todayStaking += CoinStacking::whereIn('user_id', $binaryUserId)
                 ->where('status', 'OnGoingPeriod')
                 ->whereDate('staking_date', $today)
                 ->sum('stacking_price');
@@ -420,7 +421,7 @@ class AffiliateController extends Controller
                 ->sum('stacking_price');
 
             // Calculate stake pairing based on conditions
-            return $lastPairingEarningDateTime ? $amount - $totalEarning + $todayStaking : $amount - $totalEarning;
+            return $lastPairingEarningDateTime ? $amount - $totalEarning : $amount - $totalEarning + $todayStaking;
         }
 
         return 0; // Return 0 if no direct child is found
