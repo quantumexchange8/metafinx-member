@@ -14,15 +14,18 @@ use App\Models\CoinStacking;
 use Illuminate\Http\Request;
 use App\Models\InvestmentPlan;
 use App\Http\Controllers\Controller;
+use App\Models\SettingStakingReward;
 use App\Models\InvestmentSubscription;
 use App\Services\RunningNumberService;
 use App\Notifications\StakingNotification;
-use Illuminate\Validation\ValidationException;
 
 class EarnController extends Controller
 {
     public function investment_plans()
     {
+        $previouMonth = now()->subMonth()->format('F');
+        $averageProfit = SettingStakingReward::where('month', $previouMonth)->first();
+
         $investment_plans = InvestmentPlan::query()
             ->with('descriptions:investment_plan_id,description')
             ->where('status', 'active')
@@ -56,7 +59,10 @@ class EarnController extends Controller
             ];
         });
 
-        return response()->json($translatedInvestmentPlans);
+        return response()->json([
+            'InvestmentPlans' => $translatedInvestmentPlans,
+            'AverageProfit' => $averageProfit,
+        ]);
     }
 
     public function my_investments()
@@ -139,21 +145,28 @@ class EarnController extends Controller
 
     public function subscribe(Request $request)
     {
-        $validator = \Validator::make($request->all(), [
+        $rules = [
             'wallet_id' => ['sometimes', 'required'],
             'amount' => ['required', 'numeric'],
-            'unit' => ['required', 'numeric'],
             'unit_number' => ['sometimes', 'required'],
             'housing_price' => ['sometimes', 'required', 'numeric', 'integer'],
             'terms' => ['accepted'],
-        ])->setAttributeNames([
+        ];
+
+        $attributes = [
             'wallet_id' => trans('public.wallet.wallet'),
             'amount' => trans('public.wallet.amount'),
             'unit' => trans('public.wallet.unit'),
             'unit_number' => trans('public.earn.unit_number'),
             'housing_price' => trans('public.earn.housing_price'),
             'terms' => trans('public.earn.t&c'),
-        ]);
+        ];
+
+        if ($request->input('investment_plan_type') == 'staking') {
+            $rules['unit'] = ['required', 'numeric'];
+        }
+
+        $validator = \Validator::make($request->all(), $rules)->setAttributeNames($attributes);
 
         if (!$validator->passes()){
             return response()->json([
@@ -172,21 +185,22 @@ class EarnController extends Controller
                     if ($amount % 100 !== 0) {
                         return response()->json([
                             'status' => 'fail',
-                            'message' => 'Please enter an amount in increments of 100.'
+                            'message' => trans('public.earn.amount_increment_error'),
                         ]);
                     }
 
                     if ($amount < $investment_plan->investment_min_amount) {
                         return response()->json([
                             'status' => 'fail',
-                            'message' => 'Amount minimum is $ ' . $investment_plan->investment_min_amount
+                            'message' => trans('public.earn.min_amount'). ' $ ' . $investment_plan->investment_min_amount,
                         ]);
                     }
 
                     if ($wallet->balance < $amount) {
                         return response()->json([
                             'status' => 'fail',
-                            'message' => 'Insufficient Balance'
+                            'title' => trans('public.insufficient_balance'),
+                            'message' => trans('public.insufficient_balance_warning'),
                         ]);
                     } else {
                         $updated_balance = $wallet->balance - $amount;
@@ -243,16 +257,16 @@ class EarnController extends Controller
                     if ($unit < $minAmount) {
                         return response()->json([
                             'status' => 'fail',
-                            'message' => 'Unit minimum amount is ' . $minAmount . ' ' . $coin->setting_coin->name
+                            'message' => trans('public.earn.min_unit_amount') . $minAmount . ' ' . $coin->setting_coin->name,
                         ]);
                     }
         
                     if ($wallet->balance < $stacking_fee) {
                         return response()->json([
                             'status' => 'fail',
-                            'message' => 'Insufficient MUSD Wallet Balance',
-                            'title' => 'Insufficient MUSD Wallet Balance',
-                            'warning' => 'MUSD wallet does not have enough balance to pay the staking fee. Please increase the wallet balance via internal transfer.',
+                            'message' => trans('public.insufficient_musd'),
+                            'title' => trans('public.insufficient_musd'),
+                            'warning' => trans('public.insufficient_musd_message'),
                             'alertButton' => 'Internal Wallet',
                         ]);
                     }
@@ -310,24 +324,27 @@ class EarnController extends Controller
                         'total_earning' => 0.00,
                     ]);
 
-                    $next_roi_date = $staking->created_at->addMonth()->startOfMonth();
-                    $expired_date = $staking->created_at->copy()->addDays($investment_plan->investment_period);
-        
                     if ($staking->created_at->lt(now()->setTime(17, 0, 0))) {
                         // If created_at is before today at 5 PM
                         $autoAssignDate = now()->addDay()->startOfDay();
+                        $stakingDate = now()->startOfDay();
                     } else {
                         // If created_at is at or after today at 5 PM
                         $autoAssignDate = now()->addDays(2)->startOfDay();
+                        $stakingDate = now()->startOfDay()->addDay();
                     }
     
+                    $next_roi_date = $stakingDate->copy()->addMonth()->startOfMonth();
+                    $expired_date = $stakingDate->copy()->addDays($investment_plan->investment_period);
+    
                     $staking->update([
+                        'staking_date' => $stakingDate,
                         'next_roi_date' => $next_roi_date,
                         'expired_date' => $expired_date,
                         'max_capped_price' => $staking->stacking_price * 3,
                         'auto_assign_at' => $autoAssignDate
                     ]);
-
+    
                     $upline = $user->upline;
                     $downline = $user;
     
@@ -425,83 +442,51 @@ class EarnController extends Controller
         ]);
     }
 
-    public function earning_history_details(Request $request)
+    public function earning_history_details()
     {
-        $earningType = $request->earningType ?? 'TotalReturn';
-
         $locale = app()->getLocale(); // Get the current locale
     
         // Define an associative array mapping earning types to their queries
         $earningQueries = [
             'TotalReturn' => function (){
-                $earnings = Earning::query()
+                return Earning::query()
                     ->where('upline_id', \Auth::id())
                     ->whereIn('type', ['StandardRewards', 'StakingRewards'])
-                    ->with('downline:id,name,subscriptionPlan:id,subscription_id')
+                    ->with('downline:id,name','subscriptionPlan:id,subscription_id')
                     ->get();
-                        
-                return $earnings->transform(function ($earning) {
-                    // Replace "Earnings" with an empty string and then concatenate it back
-                    $title = str_replace('Earnings', ' Earnings', $earning->type);
-                                
-                    return [
-                        'created_at' =>  Carbon::parse($earning->created_at)->format('Y-m-d h:m:s'),
-                        'title' => $title,
-                        'amount' => $earning->after_amount,
-                        'investment_id_number' => $earning->subscriptionPlan->subscription_id,
-                        'roi_per_month' => $earning->percentage,
-                    ];
-                });
             },
             'TotalEarning' => function (){
-                $earnings = Earning::query()
+                return Earning::query()
                     ->where('upline_id', \Auth::id())
                     ->whereIn('type', ['ReferralEarnings', 'AffiliateEarnings', 'DividendEarnings', 'AffiliateDividendEarnings', 'ReferralEarnings', 'PairingEarnings'])
                     ->with('downline:id,name')
                     ->get();
-            
-                // Calculate the total sum of after_amount
-                $totalAmount = $earnings->sum('after_amount');
-            
-                return $earnings->transform(function ($earning) use ($totalAmount) {
-                    // Replace "Earnings" with an empty string and then concatenate it back
-                    $title = str_replace('Earnings', ' Earnings', $earning->type);
-                    
-                    // Calculate the earning percentage
-                    $earningPercentage = $totalAmount != 0 ? ($earning->after_amount / $totalAmount) * 100 : null;
-            
-                    return [
-                        'created_at' =>  Carbon::parse($earning->created_at)->format('Y-m-d h:m:s'),
-                        'title' => $title,
-                        'amount' => $earning->after_amount,
-                        'referral' => $earning->downline->name,
-                        'earning_percentage' => $earningPercentage,
-                    ];
-                });
             },
             'TotalInvestment' => function () use ($locale) {
-                $investments = InvestmentSubscription::query()
+                return InvestmentSubscription::query()
                     ->where('user_id', \Auth::id())
                     ->whereNotIn('status', ['Terminated'])
                     ->with('investment_plan:id,name')
                     ->get();
-    
-                return $investments->map(function ($investment) use ($locale) {
-                    return [
-                        'created_at' => $investment->created_at,
-                        'title' => $investment->investment_plan->getTranslation('name', $locale),
-                        'amount' => $investment->amount,
-                    ];
-                });
             },
         ];
     
-        // Fetch detailed information based on the earning type
-        $earnings = $earningQueries[$earningType]();
+        // Initialize an empty collection
+        $combinedEarnings = collect();
     
-        return response()->json($earnings);
+        // Fetch detailed information based on each earning type and merge into a single collection
+        foreach ($earningQueries as $earningType => $query) {
+            $combinedEarnings = $combinedEarnings->merge($query());
+        }
+    
+        // Sort the combined earnings collection by created_at in descending order
+        $combinedEarnings = $combinedEarnings->sortByDesc('created_at')->values();
+    
+        // Transform the combined earnings data if needed
+    
+        return response()->json($combinedEarnings);
     }
-        
+                    
     public function subscription_history()
     {
         $user = \Auth::user();

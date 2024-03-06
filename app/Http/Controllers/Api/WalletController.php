@@ -21,8 +21,6 @@ use App\Models\SettingWalletAddress;
 use App\Models\SettingWithdrawalFee;
 use App\Services\RunningNumberService;
 use Illuminate\Support\Facades\Notification;
-use App\Http\Requests\InternalTransferRequest;
-use Illuminate\Validation\ValidationException;
 use App\Notifications\DepositRequestNotification;
 use PhpOffice\PhpSpreadsheet\Calculation\Category;
 
@@ -70,21 +68,31 @@ class WalletController extends Controller
                 'new_wallet_amount' => $wallet->balance,
             ]);
 
+            $domain = $_SERVER['HTTP_HOST'];
             $payout = config('payout-setting');
-            $hashedToken = md5('support@metafinx.com' . $payout['apiKey']);
+            $selectedPayout = $payout['staging'];
+    
+            if ($domain === 'login.metafinx.com') {
+                $selectedPayout = $payout['live'];
+            }
+    
+            $hashedToken = md5($selectedPayout['email'] . $selectedPayout['apiKey']);
+    
             $params = [
                 "token" => $hashedToken,
                 "transactionID" => $transaction->transaction_number,
                 "address" => $transaction->to_wallet_address,
                 "currency" => 'TRC20',
-                "amount" => $transaction->transaction_amount,
+                "amount" => $amount, // Assuming $amount is defined elsewhere
                 "TxID" => $transaction->txn_hash,
             ];
-
-            $url = $payout['base_url'] . '/receiveDeposit';
-            $response = \Http::post($url, $params);
+    
+            $url = $selectedPayout['base_url'] . '/receiveDeposit';
+    
+            $response = Http::post($url, $params);
+            \Log::debug($url);
             \Log::debug($response);
-
+        
             Notification::route('mail', 'payment@currenttech.pro')
             ->notify(new DepositRequestNotification($transaction, $user));
 
@@ -117,10 +125,13 @@ class WalletController extends Controller
             ]);
         } else {
             $user = \Auth::user();
-            $amount = floatval($request->amount);
+            $amount = number_format(floatval($request->amount), 2, '.', '');
             $wallet = Wallet::find($request->from_wallet_id);
             if ($wallet->balance < $amount) {
-                throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
+                return response()->json([
+                    'status' => 'fail',
+                    'error' => trans('Insufficient balance'),
+                ]);
             }
             $withdrawal_fee = Setting::where('slug', 'withdrawal-fee')->latest()->first();
             $final_amount = $amount - $withdrawal_fee->value;
@@ -137,14 +148,23 @@ class WalletController extends Controller
                 'transaction_type' => 'Withdrawal',
                 'amount' => $amount,
                 'transaction_amount' =>  $final_amount,
-                'transaction_charges' => $request->transaction_charges,
+                'transaction_charges' => $request->payment_charges,
                 'to_wallet_address' => $request->wallet_address,
                 'status' => 'Processing',
                 'new_wallet_amount' => $wallet->balance,
             ]);
 
-            $payout = config('payout-setting');
-            $hashedToken = md5('support@metafinx.com' . $payout['apiKey']);
+            $payoutSetting = config('payout-setting');
+            $domain = $_SERVER['HTTP_HOST'];
+    
+            if ($domain === 'login.metafinx.com') {
+                $selectedPayout = $payoutSetting['live'];
+            } else {
+                $selectedPayout = $payoutSetting['staging'];
+            }
+    
+            $hashedToken = md5($selectedPayout['email'] . $selectedPayout['apiKey']);
+    
             $params = [
                 "token" => $hashedToken,
                 "transactionID" => $transaction->transaction_number,
@@ -153,10 +173,11 @@ class WalletController extends Controller
                 "amount" => $transaction->transaction_amount,
                 "payment_charges" => $transaction->transaction_charges,
             ];
-
-            $url = $payout['base_url'] . '/receiveWithdrawal';
+    
+            $url = $selectedPayout['base_url'] . '/receiveWithdrawal';
+    
             $response = \Http::post($url, $params);
-
+    
             return response()->json([
                 'status' => 'success',
                 'message' => 'The withdrawal request has been submitted successfully.',
@@ -309,7 +330,10 @@ class WalletController extends Controller
             $wallet = Wallet::find($request->wallet_id);
 
             if ($wallet->balance < $request->transaction_amount) {
-                throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance') . ', PAYABLE AMOUNT: $' . $request->transaction_amount]);
+                return response()->json([
+                    'status' => 'fail',
+                    'error' => trans('public.insufficient_balance') . ', PAYABLE AMOUNT: $' . $request->transaction_amount,
+                ]);
             }
 
             $wallet->decrement('balance', $request->transaction_amount);
@@ -407,11 +431,17 @@ class WalletController extends Controller
             $to_wallet = Wallet::find($request->to_wallet_id);
 
             if ($from_wallet->id == $to_wallet->id) {
-                throw ValidationException::withMessages(['from_wallet_id' => 'Wallet cannot be the same']);
+                return response()->json([
+                    'status' => 'fail',
+                    'error' => 'Wallet cannot be the same',
+                ]);
             }
 
             if ($from_wallet->balance < $request->amount) {
-                throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance')]);
+                return response()->json([
+                    'status' => 'fail',
+                    'error' => trans('public.insufficient_balance'),
+                ]);
             }
 
             $transaction_number = RunningNumberService::getID('transaction');
@@ -533,8 +563,10 @@ class WalletController extends Controller
             $wallet = Wallet::find($request->wallet_id);
 
             if ($coin->unit < $request->unit) {
-                throw ValidationException::withMessages(['unit' => trans('public.insufficient_unit') . ', AVAILABLE UNIT: ' . $coin->unit . ' ' . $setting_coin->name ]);
-
+                return response()->json([
+                    'status' => 'fail',
+                    'error' => trans('public.insufficient_unit') . ', AVAILABLE UNIT: ' . $coin->unit . ' ' . $setting_coin->name,
+                ]);
             }
 
             $wallet->increment('balance', $request->transaction_amount);

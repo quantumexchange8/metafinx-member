@@ -27,14 +27,14 @@ class EarnController extends Controller
     {
         $wallets = Wallet::where('user_id', \Auth::id());
 
-        $PreviousMonth = Carbon::now()->subMonth()->month;
-        $daysInPreviousMonth = Carbon::now()->subMonth()->daysInMonth;
+        // $PreviousMonth = Carbon::now()->subMonth()->month;
+        // $daysInPreviousMonth = Carbon::now()->subMonth()->daysInMonth;
 
-        $totalEarnings = Earning::query()
-            ->where('category', 'staking')
-            ->whereYear('created_at', now()->year)
-            ->whereMonth('created_at', $PreviousMonth)
-            ->sum('after_coin_price');
+        // $totalEarnings = Earning::query()
+        //     ->where('category', 'staking')
+        //     ->whereYear('created_at', now()->year)
+        //     ->whereMonth('created_at', $PreviousMonth)
+        //     ->sum('after_coin_price');
 
         $previouMonth = now()->subMonth()->format('F');
         $averageProfit = SettingStakingReward::where('month', $previouMonth)->first();
