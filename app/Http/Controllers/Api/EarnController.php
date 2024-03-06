@@ -462,7 +462,6 @@ class EarnController extends Controller
 
     public function earning_history_details()
     {    
-        // Define an associative array mapping earning types to their queries
         $earnings= Earning::query()
             ->where('upline_id', \Auth::id())
             ->with('downline:id,name')
