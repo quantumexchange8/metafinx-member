@@ -255,6 +255,13 @@ class EarnController extends Controller
                     $stacking_fee = $request->stacking_fee;
         
                     $minAmount = $investment_plan->investment_min_amount;
+                            
+                    if ($unit < $minAmount) {
+                        return response()->json([
+                            'status' => 'fail',
+                            'message' => trans('public.earn.min_unit_amount') . $minAmount . ' ' . $coin->setting_coin->name,
+                        ]);
+                    }
         
                     if ($coin->unit < $unit) {
                         return response()->json([
@@ -265,14 +272,7 @@ class EarnController extends Controller
                             'alertButton' => 'Coin Wallet',
                         ]);
                     }
-                    
-                    if ($unit < $minAmount) {
-                        return response()->json([
-                            'status' => 'fail',
-                            'message' => trans('public.earn.min_unit_amount') . $minAmount . ' ' . $coin->setting_coin->name,
-                        ]);
-                    }
-        
+
                     if ($wallet->balance < $stacking_fee) {
                         return response()->json([
                             'status' => 'fail',
