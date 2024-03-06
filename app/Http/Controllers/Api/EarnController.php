@@ -393,7 +393,7 @@ class EarnController extends Controller
                             ->where('upline_id', \Auth::id())
                             ->where('type', $query['type'])
                             ->where('category', $query['category'])
-                            ->sum('after_amount')
+                            ->sum('after_coin_price')
             ];
         });
         
