@@ -464,7 +464,8 @@ class EarnController extends Controller
     {    
         $earnings= Earning::query()
             ->where('upline_id', \Auth::id())
-            ->with('downline:id,name')
+            ->with('downline:id,name','subscriptionPlan:id,subscription_id','wallet','coin'
+            ,'coinStacking:id,subscription_number')
             ->latest()
             ->get();
     
