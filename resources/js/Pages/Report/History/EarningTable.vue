@@ -177,9 +177,14 @@ const paginationActiveClass = [
                         </div>
                     </td>
                     <td class="py-2">
-                        <span>
-                            {{ earning.category === 'staking' ? formatAmount(earning.after_amount) : '' + ' MXT' }} ({{earning.category === 'staking' ? '$ ' + formatAmount(earning.after_coin_price) : '' }})
-                        </span>
+                        <span>{{ earning.category === 'staking' ? '' : '$' }}</span>
+                        {{
+                            earning.category === 'staking' ?
+                                (earning.after_amount % 1 === 0 ? formatAmount(earning.after_amount, 0) : formatAmount(earning.after_amount, 4)) :
+                                formatAmount(earning.after_amount)
+                        }}
+                        <span>{{ earning.category === 'staking' ? ' MXT' : '' }}</span>
+                        <span>{{ earning.category === 'staking' ? ' ($ ' + formatAmount(earning.after_coin_price) + ')' : '' }}</span>
                     </td>
                 </tr>
                 </tbody>

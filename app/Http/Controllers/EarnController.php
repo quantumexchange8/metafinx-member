@@ -229,7 +229,7 @@ class EarnController extends Controller
                 if ($stacking->created_at->lt(now()->setTime(17, 0, 0))) {
                     // If created_at is before today at 5 PM
                     $autoAssignDate = now()->addDay()->startOfDay();
-                    $stakingDate = now()->startOfDay();
+                    $stakingDate = now();
                 } else {
                     // If created_at is at or after today at 5 PM
                     $autoAssignDate = now()->addDays(2)->startOfDay();
