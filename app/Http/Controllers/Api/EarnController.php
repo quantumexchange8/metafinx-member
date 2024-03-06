@@ -457,7 +457,7 @@ class EarnController extends Controller
     
                 return $earnings->map(function ($earning) use ($locale) {
                     // Replace "Earnings" with an empty string and then concatenate it back
-                    $title = str_replace('Earnings', ' Earnings', $earning->type);
+                    $title = str_replace('Reward', ' Reward', $earning->type);
     
                     return [
                         'created_at' => Carbon::parse($earning->created_at)->format('Y-m-d h:m:s'),
