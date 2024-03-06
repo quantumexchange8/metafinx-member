@@ -269,7 +269,7 @@ class EarnController extends Controller
                             'message' => trans('public.insufficient_unit'),
                             'title' => trans('public.insufficient_unit'),
                             'warning' => trans('public.insufficient_unit_warning'),
-                            'alertButton' => 'Coin Wallet',
+                            'alertButton' => 'Buy Coin',
                         ]);
                     }
 
