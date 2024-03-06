@@ -17,7 +17,7 @@ class InvestmentSubscriptionRequest extends FormRequest
         ];
 
         // Validate 'unit' only if the plan type is not 'standard'
-        if ($this->investment_plan_type == 'staking') {
+        if ($this->investment_plan_type !== 'standard') {
             $rules['unit'] = ['required', 'numeric'];
         }
 

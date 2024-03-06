@@ -164,7 +164,7 @@ class EarnController extends Controller
             'terms' => trans('public.earn.t&c'),
         ];
 
-        if ($request->input('investment_plan_type') == 'staking') {
+        if ($request->input('investment_plan_type') !== 'standard') {
             $rules['unit'] = ['required', 'numeric'];
         }
 
