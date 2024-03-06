@@ -162,6 +162,11 @@ class EarnController extends Controller
 
                 $minAmount = $investment_plan->investment_min_amount;
 
+                if ($coin->unit < $request->unit) {
+                    throw ValidationException::withMessages(['unit' => trans('public.insufficient_unit') . ', ' . trans('public.available_unit') . ': ' . $coin->unit . ' ' . $coin->setting_coin->name]);
+        
+                }        
+
                 if ($unit < $minAmount) {
                     throw ValidationException::withMessages(['unit' => trans('public.earn.min_unit_amount') . $minAmount . ' ' . $coin->setting_coin->name]);
                 }

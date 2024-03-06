@@ -77,6 +77,7 @@ return [
     "handler_warning" => "请稍后重试。",
     "insufficient_balance" => "余额不足",
     "insufficient_unit" => "单位不足",
+    "insufficient_unit_warning" => "硬币钱包没有足够的硬币进行质押。请重试。",
     "insufficient_balance_warning" => "所选钱包余额不足以订阅投资计划。 请重试。",
     "subscribed" => "已订阅！",
     "subscribed_success" => "所选的投资计划已成功订阅。",

@@ -79,6 +79,7 @@ return [
     "handler_warning" => "Please try again later.",
     "insufficient_balance" => "Insufficient Balance",
     "insufficient_unit" => "Insufficient Unit",
+    "insufficient_unit_warning" => "The coin wallet does not have enough coin to do staking. Please try again.",
     "insufficient_balance_warning" => "The selected wallet does not have enough balance to subscribe the investment plan. Please try again.",
     "subscribed" => "Subscribed!",
     "subscribed_success" => "The selected investment plan has been subscribed successfully.",
