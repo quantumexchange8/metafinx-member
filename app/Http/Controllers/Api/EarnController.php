@@ -461,48 +461,15 @@ class EarnController extends Controller
     }
 
     public function earning_history_details()
-    {
-        $locale = app()->getLocale(); // Get the current locale
-    
+    {    
         // Define an associative array mapping earning types to their queries
-        $earningQueries = [
-            'TotalReturn' => function (){
-                return Earning::query()
-                    ->where('upline_id', \Auth::id())
-                    ->whereIn('type', ['StandardRewards', 'StakingRewards'])
-                    ->with('downline:id,name','subscriptionPlan:id,subscription_id')
-                    ->get();
-            },
-            'TotalEarning' => function (){
-                return Earning::query()
-                    ->where('upline_id', \Auth::id())
-                    ->whereIn('type', ['ReferralEarnings', 'AffiliateEarnings', 'DividendEarnings', 'AffiliateDividendEarnings', 'ReferralEarnings', 'PairingEarnings'])
-                    ->with('downline:id,name')
-                    ->get();
-            },
-            'TotalInvestment' => function () use ($locale) {
-                return InvestmentSubscription::query()
-                    ->where('user_id', \Auth::id())
-                    ->whereNotIn('status', ['Terminated'])
-                    ->with('investment_plan:id,name')
-                    ->get();
-            },
-        ];
+        $earnings= Earning::query()
+            ->where('upline_id', \Auth::id())
+            ->with('downline:id,name')
+            ->latest()
+            ->get();
     
-        // Initialize an empty collection
-        $combinedEarnings = collect();
-    
-        // Fetch detailed information based on each earning type and merge into a single collection
-        foreach ($earningQueries as $earningType => $query) {
-            $combinedEarnings = $combinedEarnings->merge($query());
-        }
-    
-        // Sort the combined earnings collection by created_at in descending order
-        $combinedEarnings = $combinedEarnings->sortByDesc('created_at')->values();
-    
-        // Transform the combined earnings data if needed
-    
-        return response()->json($combinedEarnings);
+        return response()->json($earnings);
     }
                     
     public function subscription_history()
