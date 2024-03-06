@@ -170,7 +170,7 @@ class EarnController extends Controller
                     return redirect()->back()
                         ->with('title', trans('public.insufficient_unit'))
                         ->with('warning', trans('public.insufficient_unit_warning'))
-                        ->with('alertButton', 'Coin Wallet');
+                        ->with('alertButton', 'Buy Coin');
                         ;
                 }        
 

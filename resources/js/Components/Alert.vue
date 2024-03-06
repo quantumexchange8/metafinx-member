@@ -35,7 +35,7 @@ const iconComponent = computed(() => {
 })
 
 function dismiss() {
-    if (props.alertButton === 'Internal Wallet') {
+    if (props.alertButton === 'Internal Wallet' || props.alertButton === 'Buy Coin') {
         router.visit('/wallet/details');
     } else if (props.onDismiss) {
         props.onDismiss();
