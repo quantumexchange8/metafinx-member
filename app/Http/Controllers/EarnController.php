@@ -167,8 +167,11 @@ class EarnController extends Controller
                 }
 
                 if ($coin->unit < $unit) {
-                    throw ValidationException::withMessages(['unit' => trans('public.insufficient_unit') . ', ' . trans('public.available_unit') . ': ' . $coin->unit . ' ' . $coin->setting_coin->name]);
-        
+                    return redirect()->back()
+                        ->with('title', trans('public.insufficient_unit'))
+                        ->with('warning', trans('public.insufficient_unit_warning'))
+                        ->with('alertButton', 'Coin Wallet');
+                        ;
                 }        
 
                 if ($wallet->balance < $stacking_fee) {

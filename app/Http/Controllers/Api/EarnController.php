@@ -267,7 +267,7 @@ class EarnController extends Controller
                         return response()->json([
                             'status' => 'fail',
                             'message' => trans('public.insufficient_unit'),
-                            'title' => trans('public.insufficient_unit_warning'),
+                            'title' => trans('public.insufficient_unit'),
                             'warning' => trans('public.insufficient_unit_warning'),
                             'alertButton' => 'Coin Wallet',
                         ]);
