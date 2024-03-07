@@ -245,7 +245,7 @@ class EarnController extends Controller
                 }
 
                 $next_roi_date = $stakingDate->copy()->addMonth()->startOfMonth();
-                $expired_date = $stakingDate->copy()->addDays($investment_plan->investment_period);
+                $expired_date = $stakingDate->copy()->addDays($investment_plan->investment_period)->endOfDay();
 
                 $stacking->update([
                     'staking_date' => $stakingDate,
