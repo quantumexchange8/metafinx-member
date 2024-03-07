@@ -565,7 +565,7 @@ class WalletController extends Controller
             if ($coin->unit < $request->unit) {
                 return response()->json([
                     'status' => 'fail',
-                    'error' => trans('public.insufficient_unit') .. ', ' . trans('public.available_unit') . ': ' . $coin->unit . ' ' . $setting_coin->name,
+                    'error' => trans('public.insufficient_unit') . ', ' . trans('public.available_unit') . ': ' . $coin->unit . ' ' . $setting_coin->name,
                 ]);
             }
 
