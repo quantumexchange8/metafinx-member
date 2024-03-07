@@ -40,7 +40,7 @@ export default {
 
             if (node.children && node.children.length > 0) {
                 for (const child of node.children) {
-                    if (child.name === node.name) {
+                    if (child.id === node.id) {
                         return false;
                     }
                 }
@@ -165,7 +165,7 @@ export default {
         <Tree
             v-if="expanded && !isLoading"
             v-for="child in node.children"
-            :key="child.name"
+            :key="child.id"
             :node="child"
             :depth="depth + 1"
             @onClick="(node) => $emit('onClick', node)"

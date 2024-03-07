@@ -99,6 +99,7 @@ class AffiliateController extends Controller
 
         $level = 0;
         $rootNode = [
+            'id' => $user->id,
             'name' => $user->name,
             'profile_photo' => $user->getFirstMediaUrl('profile_photo'),
             'email' => $user->email,
@@ -123,6 +124,7 @@ class AffiliateController extends Controller
         });
 
         $mappedUser = [
+            'id' => $user->id,
             'name' => $user->name,
             'profile_photo' => $user->getFirstMediaUrl('profile_photo'),
             'email' => $user->email,
