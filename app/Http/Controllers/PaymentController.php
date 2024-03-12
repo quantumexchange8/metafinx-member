@@ -194,25 +194,26 @@ class PaymentController extends Controller
         $transaction->remarks = ($status == 'Success') ? 'System Approve' : 'System Reject';
         $transaction->approval_date = now();
         $transaction->save();
-    
+
         if ($status == 'Success') {
             $wallet = Wallet::find($transaction->to_wallet_id);
             $wallet->balance += $transaction->transaction_amount;
             $wallet->save();
-    
+
             $transaction->update([
                 'new_wallet_amount' => $wallet->balance
             ]);
         }
-    
+
         $this->updateTransaction($transaction);
-    
-        $title = ($status == 'Success') ? 'Success Approval' : 'Transaction Rejected';
-        $message = ($status == 'Success') ? 'Successfully processed Transaction Number: ' : 'The Transaction Number has been rejected';
-    
-        return redirect()->back()->with('title', $title)->with('message', $message . $transaction->transaction_number);
+
+        $title = ($status == 'Success') ? 'Transaction Approved' : 'Transaction Rejected';
+        $message = ($status == 'Success') ? 'Successfully APPROVED Transaction Number: ' : 'Successfully REJECTED Transaction Number: ';
+        $messageStatus = ($status == 'Success') ? 'success' : 'warning';
+
+        return redirect()->back()->with('title', $title)->with($messageStatus, $message . $transaction->transaction_number);
     }
-    
+
     private function updateTransaction($rec)
     {
         $hashedToken = md5($rec->transaction_number . $rec->to_wallet_address);
