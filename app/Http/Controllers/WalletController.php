@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Coin;
 use App\Models\User;
-use Illuminate\Database\Query\Builder;
 use Inertia\Inertia;
 use App\Models\Wallet;
 use App\Models\Earning;
@@ -28,8 +27,10 @@ use App\Models\SettingWithdrawalFee;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\BuyCoinRequest;
 use App\Http\Requests\SwapCoinRequest;
+use App\Http\Requests\TransferRequest;
 use App\Models\InvestmentSubscription;
 use App\Services\RunningNumberService;
+use Illuminate\Database\Query\Builder;
 use function Symfony\Component\Translation\t;
 use App\Http\Requests\InternalTransferRequest;
 use Illuminate\Validation\ValidationException;
@@ -691,6 +692,58 @@ class WalletController extends Controller
         ]);
 
         return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.swap_coin_success_message'));
+    }
+
+    public function Transfer(TransferRequest $request)
+    {
+        $user = \Auth::user();
+        $from_wallet = Wallet::find($request->wallet_id);
+        $to_user_wallet = User::where('email', $request->email)
+            ->with(['wallets' => function ($query) {
+                $query->where('type', 'internal_wallet');
+            }])
+            ->first();
+            
+        if ($from_wallet->balance < $request->amount) {
+            throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance')]);
+        }
+
+        if ($to_user_wallet != null) {
+            $user_internal_wallet = $to_user_wallet->wallets->first();
+        } else {
+            throw ValidationException::withMessages(['email' => trans('public.email_not_found')]);
+        }
+
+        $transaction_number = RunningNumberService::getID('transaction');
+
+        $transaction = Transaction::create([
+            'category' => 'wallet',
+            'user_id' => $user->id,
+            'transaction_type' => 'Transfer',
+            'from_wallet_id' => $from_wallet->id,
+            'to_wallet_id' => $user_internal_wallet->id,
+            'transaction_number' => $transaction_number,
+            'amount' => $request->amount,
+            'transaction_charges' => 0,
+            'transaction_amount' => $request->amount,
+            'status' => 'Success',
+            'new_wallet_amount' => $user_internal_wallet->balance,
+        ]);
+
+        // Update the wallet balance
+        $from_wallet->update([
+            'balance' => $from_wallet->balance - $transaction->transaction_amount,
+        ]);
+
+        $user_internal_wallet->update([
+            'balance' => $user_internal_wallet->balance + $transaction->transaction_amount,
+        ]);
+
+        $transaction->update([
+            'new_wallet_amount' => $user_internal_wallet->balance,
+        ]);
+
+        return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.success_transfer'));
     }
 
 }

@@ -110,6 +110,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/deposit', [PaymentController::class, 'deposit'])->name('wallet.deposit');
         Route::post('/withdrawal', [PaymentController::class, 'withdrawal'])->name('wallet.withdrawal');
         Route::post('/internal_transfer', [WalletController::class, 'internalTransfer'])->name('wallet.internalTransfer');
+        Route::post('/transfer', [WalletController::class, 'Transfer'])->name('wallet.Transfer');
         Route::post('/buy_coin', [WalletController::class, 'buyCoin'])->name('wallet.buy_coin');
         Route::post('/swap_coin', [WalletController::class, 'swapCoin'])->name('wallet.swap_coin');
     });

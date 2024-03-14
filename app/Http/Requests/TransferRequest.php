@@ -4,13 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class InternalTransferRequest extends FormRequest
+class TransferRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'from_wallet_id' => ['required'],
-            'to_wallet_id' => ['required'],
+            'wallet_id' => ['required'],
+            'email' => ['required'],
             'amount' => ['required', 'numeric'],
             // 'terms' => ['accepted'],
         ];
@@ -24,8 +24,8 @@ class InternalTransferRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'from_wallet_id' => 'Transfer Type',
-            'to_wallet_id' => 'Transfer Type',
+            'wallet_id' => 'Internal Wallet',
+            'email' => 'Email',
             'amount' => 'Amount',
             // 'terms' => 'Terms',
         ];

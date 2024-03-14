@@ -215,7 +215,7 @@ watchEffect(() => {
                 </div>
             </div>
 
-            <div class="mt-6 pb-8 border-b dark:border-gray-700">
+            <!-- <div class="mt-6 pb-8 border-b dark:border-gray-700">
                 <label>
                     <div class="flex">
                         <Checkbox name="remember" v-model:checked="form.terms" />
@@ -227,7 +227,7 @@ watchEffect(() => {
                     </div>
                     <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                 </label>
-            </div>
+            </div> -->
 
             <div class="pb-5 grid grid-cols-2 gap-4 w-full md:w-1/3 md:float-right">
                 <Button variant="secondary" type="button" class="justify-center" @click.prevent="closeModal">

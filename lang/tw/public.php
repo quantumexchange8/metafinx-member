@@ -1,5 +1,8 @@
 <?php
 return [
+    'email_not_found' => '未找拥有该电子邮件的用户',
+    'transfer_from' => '转账从',
+    "transfer" => "转账",
     "privacy_notice" => "《隐私声明》",
     "tnc" => "《条款和条件》",
     "register_date" => "注册日期",

@@ -12,6 +12,7 @@ import {transactionFormat} from "@/Composables/index.js";
 import TransactionHistory from "@/Pages/Wallet/Transaction/TransactionHistory.vue";
 import Button from "@/Components/Button.vue";
 import InternalTransfer from "@/Pages/Wallet/Partials/InternalTransfer.vue";
+import Transfer from "@/Pages/Wallet/Partials/Transfer.vue";
 import MXTLogo from "@/Components/MXTLogo.vue";
 
 const props = defineProps({
@@ -93,11 +94,13 @@ function copyTestingCode () {
                         :wallet_sel="wallet_sel"
                         :withdrawalFee="props.withdrawalFee"
                     />
-                    <div class="col-span-2">
-                        <InternalTransfer
-                            :setting_coin="setting_coin"
-                        />
-                    </div>
+                    <InternalTransfer
+                        :setting_coin="setting_coin"
+                    />
+                    <Transfer
+                        :setting_coin="setting_coin"
+                        :wallet_sel="wallet_sel"
+                    />
                 </div>
             </div>
             <div class="w-full flex justify-center mt-4 md:mt-0">

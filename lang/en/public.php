@@ -1,5 +1,8 @@
 <?php
 return [
+    "email_not_found" => "Email not found",
+    "transfer_from" => "Transfer From",
+    "transfer" => "Transfer",
     "privacy_notice" => "Privacy Notice",
     "and" => "and",
     "tnc" => "Terms and Conditions",
@@ -72,6 +75,7 @@ return [
     "current_price" => "Current Price",
     "linked_price" => "Linked Price",
     "gas_fee" => "Gas Fee",
+    "success_transfer" => "Transfer success",
     "success_internal_transfer" => "Internal transfer success",
     "swap_coin_success_message" => "Swap Coin successfully",
     "coin_purchase_success_message"=> "Coin purchased successfully.",
