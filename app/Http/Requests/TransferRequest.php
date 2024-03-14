@@ -10,7 +10,7 @@ class TransferRequest extends FormRequest
     {
         return [
             'wallet_id' => ['required'],
-            'email' => ['required'],
+            'email' => ['required', 'exists:users,email'],
             'amount' => ['required', 'numeric'],
             // 'terms' => ['accepted'],
         ];

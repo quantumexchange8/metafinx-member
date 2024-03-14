@@ -703,7 +703,7 @@ class WalletController extends Controller
                 $query->where('type', 'internal_wallet');
             }])
             ->first();
-            
+
         if ($from_wallet->balance < $request->amount) {
             throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance')]);
         }

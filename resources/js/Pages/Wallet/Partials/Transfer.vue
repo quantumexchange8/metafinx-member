@@ -1,6 +1,6 @@
 <script setup>
 import Button from "@/Components/Button.vue";
-import {InternalUSDWalletIcon, InternalMUSDWalletIcon, SwitchHorizontalIcon, ArrowRight} from "@/Components/Icons/outline.jsx";
+import {CreditCardRefreshIcon} from "@/Components/Icons/outline.jsx";
 import {ref, watch, onMounted, watchEffect} from "vue";
 import Modal from "@/Components/Modal.vue";
 import Label from "@/Components/Label.vue";
@@ -52,7 +52,6 @@ const submit = () => {
         onSuccess: () => {
             closeModal();
             form.reset();
-            fetchWallets();
         },
     });
 };
@@ -70,7 +69,7 @@ const fullAmount = () => {
         variant="secondary-700"
         @click="openDepositModal"
     >
-        <SwitchHorizontalIcon aria-hidden="true" class="w-5 h-5" />
+        <CreditCardRefreshIcon aria-hidden="true" class="w-5 h-5" />
         <span class="uppercase text-sm font-semibold">{{$t('public.transfer')}}</span>
     </Button>
 
@@ -135,8 +134,8 @@ const fullAmount = () => {
                     <div class="flex">
                         <Checkbox name="remember" v-model:checked="form.terms" />
                         <span class="ml-2 text-xs dark:text-gray-400">{{ $t('public.agreement') }}
-                            <Terms 
-                                :type=swapTerm 
+                            <Terms
+                                :type=swapTerm
                             />
                         </span>
                     </div>
