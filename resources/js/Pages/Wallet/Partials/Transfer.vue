@@ -119,7 +119,7 @@ const fullAmount = () => {
                         id="email"
                         type="text"
                         min="0"
-                        placeholder="$ 0.00"
+                        :placeholder="$t('public.email')"
                         class="block w-full"
                         :class="form.errors.email ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
                         v-model="form.email"

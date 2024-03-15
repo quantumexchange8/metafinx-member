@@ -31,6 +31,7 @@ use App\Http\Requests\TransferRequest;
 use App\Models\InvestmentSubscription;
 use App\Services\RunningNumberService;
 use Illuminate\Database\Query\Builder;
+use App\Notifications\TransferNotification;
 use function Symfony\Component\Translation\t;
 use App\Http\Requests\InternalTransferRequest;
 use Illuminate\Validation\ValidationException;
@@ -743,6 +744,11 @@ class WalletController extends Controller
             'new_wallet_amount' => $user_internal_wallet->balance,
         ]);
 
+        $to_user = $to_user_wallet;
+        $senderName = $user->name;
+        $transferredAmount = $request->amount;
+        \Notification::send($to_user, new TransferNotification($senderName, $transferredAmount));
+        
         return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.success_transfer'));
     }
 
