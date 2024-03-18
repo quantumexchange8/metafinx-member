@@ -113,7 +113,7 @@ const handleButtonClick = () => {
         <div class="p-5 bg-white rounded-xl shadow-md dark:bg-gray-700 my-3">
             <div class="grid grid-cols-2 gap gap-5">
                 <div class="flex flex-col gap-2 items-center justify-center text-white">
-                    <img class="w-10 h-10 rounded bg-white" src="/assets/icon.png" alt="Medium avatar">
+                    <img class="w-10 h-10 rounded" :src="plan.media.standard ?? '/assets/icon.png'" alt="Medium avatar">
                     <div class="font-semibold dark:text-white">
                         {{ plan.name }}
                     </div>
