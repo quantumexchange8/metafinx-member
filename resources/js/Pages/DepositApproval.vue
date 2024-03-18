@@ -7,20 +7,39 @@ import {DuplicateIcon} from "@heroicons/vue/outline";
 import {ref} from "vue";
 import Button from "@/Components/Button.vue";
 import {useForm} from "@inertiajs/vue3";
+import Modal from "@/Components/Modal.vue";
 
 const props = defineProps({
     transaction: Object,
     transaction_fee: Object,
-    profile_photo_url: String
+    profile_photo_url: String,
+    payment_slip: String,
 })
 const { formatAmount, formatWalletAddress } = transactionFormat();
 const tooltipContent = ref('copy');
 const copyWalletAddress = ref(null);
+const copyTxID = ref(null);
 
 const copyAddress = () => {
     if (copyWalletAddress.value) {
         const textArea = document.createElement('textarea');
         textArea.value = props.transaction.to_wallet_address;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+
+        tooltipContent.value = 'copied';
+        setTimeout(() => {
+            tooltipContent.value = 'copy'; // Reset tooltip content to 'Copy' after 2 seconds
+        }, 1000);
+    }
+}
+
+const copyTxnHash = () => {
+    if (copyTxID.value) {
+        const textArea = document.createElement('textarea');
+        textArea.value = props.transaction.txn_hash;
         document.body.appendChild(textArea);
         textArea.select();
         document.execCommand('copy');
@@ -42,6 +61,15 @@ const submitApproval = (status) => {
     form.status = status
 
     form.post(route('deposit_approval'))
+}
+
+const receiptModal = ref(false);
+const openReceiptModal = () => {
+    receiptModal.value = true
+}
+
+const closeModal = () => {
+    receiptModal.value = false
 }
 </script>
 
@@ -95,6 +123,20 @@ const submitApproval = (status) => {
                     </Tooltip>
                 </div>
             </div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm font-semibold dark:text-gray-400">{{ $t('public.wallet.txn_hash') }}</span>
+                <div class="flex items-center gap-1">
+                    <div ref="copyTxID" class="text-black dark:text-white py-2">{{ formatWalletAddress(transaction.txn_hash) }}</div>
+                    <Tooltip :content="$t('public.' + tooltipContent)" placement="top">
+                        <DuplicateIcon aria-hidden="true" class="cursor-pointer w-6 text-white" @click.stop.prevent="copyTxnHash" />
+                    </Tooltip>
+                </div>
+            </div>
+            
+            <div v-if="payment_slip" class="flex justify-between items-center">
+                <span class="text-sm font-semibold dark:text-gray-400">Payment Slip</span>
+                <span class="text-black dark:text-white py-2 dark:hover:text-blue-600 cursor-pointer" @click="openReceiptModal">Click to view</span>
+            </div>
 
             <div
                 v-if="transaction.status === 'Processing'"
@@ -128,5 +170,11 @@ const submitApproval = (status) => {
                  </div>
             </div>
         </form>
+
+        <Modal :show="receiptModal" @close="closeModal">
+            <div class="flex justify-center">
+                <img class="rounded" :src="payment_slip" alt="Payment Receipt">
+            </div>
+        </Modal>
     </GuestLayout>
 </template>

@@ -65,6 +65,7 @@ Route::get('approval/{token}', function ($token) {
     return Inertia::render('DepositApproval', [
         'transaction' => $transaction,
         'transaction_fee' => \App\Models\Setting::where('slug', 'deposit-fee')->latest()->first(),
+        'payment_slip' => $transaction->getFirstMediaUrl('deposit_receipt'),
         'profile_photo_url' => $user->profile_photo_url, // Pass profile photo URL to the view
     ]);
 })->name('approval');
