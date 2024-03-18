@@ -11,7 +11,8 @@ class DepositRequest extends FormRequest
         return [
             'wallet_id' => ['required'],
             'amount' => ['required', 'numeric', 'min:20'],
-//            'txn_hash' => ['required'],
+            'txn_hash' => ['nullable'],
+            'receipt' => ['image'],
             'terms' => ['accepted']
         ];
     }
@@ -26,7 +27,8 @@ class DepositRequest extends FormRequest
         return [
             'wallet_id' => trans('public.wallet.wallet'),
             'amount' => trans('public.wallet.amount'),
-//            'txn_hash' => trans('public.wallet.txn_hash'),
+            'txn_hash' => trans('public.wallet.txn_hash'),
+            'receipt' => trans('public.payment_slip'),
             'terms' => trans('public.earn.t&c')
         ];
     }

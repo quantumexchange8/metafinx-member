@@ -468,5 +468,8 @@ return [
         "verify_link_message" => "A new verification link has been sent to the email address you provided during registration.",
         "resend_verification_email" => "Resend Verification Email",
     ],
-    "binary_placement_position" => "Binary placement position"
+    "binary_placement_position" => "Binary placement position",
+    "payment_slip" => "Payment Slip",
+    "browse" => "Browse",
+    "deposit_reminder" => "Before confirmation, copy the wallet address provided or scan the QR code with your cryptocurrency wallet app and complete the transaction.",
 ];

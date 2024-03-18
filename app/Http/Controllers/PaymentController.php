@@ -37,7 +37,7 @@ class PaymentController extends Controller
             'user_id' => $user->id,
             'to_wallet_id' => $request->wallet_id,
             'transaction_number' => $transaction_id,
-//            'txn_hash' => $request->txn_hash,
+            'txn_hash' => $request->txn_hash,
             'transaction_type' => 'Deposit',
             'amount' => $amount,
             'transaction_charges' => $transaction_charge,
@@ -46,6 +46,10 @@ class PaymentController extends Controller
             'status' => 'Processing',
             'new_wallet_amount' => $wallet->balance,
         ]);
+
+        if ($request->hasfile('receipt')){
+            $transaction->addMedia($request->receipt)->toMediaCollection('deposit_receipt');
+        }
 
         $domain = $_SERVER['HTTP_HOST'];
         $payout = config('payout-setting');

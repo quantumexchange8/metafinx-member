@@ -4,7 +4,7 @@ import {DepositIcon, InternalUSDWalletIcon} from "@/Components/Icons/outline.jsx
 import {computed, ref, onMounted, onUnmounted} from "vue";
 import Modal from "@/Components/Modal.vue";
 import QrcodeVue from 'qrcode.vue';
-import {DuplicateIcon} from "@heroicons/vue/outline";
+import {DuplicateIcon, XIcon} from "@heroicons/vue/outline";
 import Label from "@/Components/Label.vue";
 import Input from "@/Components/Input.vue";
 import Checkbox from "@/Components/Checkbox.vue";
@@ -24,6 +24,8 @@ const depositTerm = 'deposit';
 const depositModal = ref(false);
 const tooltipContent = ref('Copy');
 const wallet_address = ref();
+const selectedReceipt = ref(null);
+const selectedReceiptName = ref(null);
 
 const openDepositModal = () => {
     depositModal.value = true
@@ -40,7 +42,8 @@ const form = useForm({
     wallet_id: walletId.value,
     amount: '',
     to_wallet_address: '',
-    // txn_hash: '',
+    txn_hash: '',
+    receipt: null,
     terms: false
 })
 
@@ -114,6 +117,27 @@ onMounted(() => {
     });
 });
 
+const onReceiptChanges = (event) => {
+    const receiptInput = event.target;
+    const file = receiptInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            selectedReceipt.value = reader.result
+        };
+        reader.readAsDataURL(file);
+        selectedReceiptName.value = file.name;
+        form.receipt = event.target.files[0];
+    } else {
+        selectedReceipt.value = null;
+    }
+}
+
+const removeReceipt = () => {
+    selectedReceipt.value = null;
+}
+
 </script>
 
 <template>
@@ -178,29 +202,76 @@ onMounted(() => {
                     </div>
                 </div>
 
-<!--                <div class="flex flex-col sm:flex-row gap-4 mt-5">-->
-<!--                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="txn_hash" :value="$t('public.wallet.txn_hash')" />-->
-<!--                    <div class="flex flex-col w-full">-->
-<!--                        <Input-->
-<!--                            id="txn_hash"-->
-<!--                            type="text"-->
-<!--                            :placeholder="$t('public.wallet.txn_hash_placeholder')"-->
-<!--                            class="block w-full"-->
-<!--                            :class="form.errors.txn_hash ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"-->
-<!--                            v-model="form.txn_hash"-->
-<!--                            autocomplete="off"-->
-<!--                        />-->
-<!--                        <InputError :message="form.errors.txn_hash" class="mt-2" />-->
-<!--                    </div>-->
-<!--                </div>-->
+                <div class="flex flex-col sm:flex-row gap-4 mt-5">
+                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="txn_hash" :value="$t('public.wallet.txn_hash')" />
+                    <div class="flex flex-col w-full">
+                        <Input
+                            id="txn_hash"
+                            type="text"
+                            :placeholder="$t('public.wallet.txn_hash_placeholder')"
+                            class="block w-full"
+                            :class="form.errors.txn_hash ? 'border border-error-500 dark:border-error-500' : 'border border-gray-400 dark:border-gray-600'"
+                            v-model="form.txn_hash"
+                            autocomplete="off"
+                        />
+                        <InputError :message="form.errors.txn_hash" class="mt-2" />
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 mt-5">
+                    <Label for="receipt" class="text-sm dark:text-white w-full md:w-1/4" :value="$t('public.payment_slip')"/>
+                    <div v-if="selectedReceipt == null" class="flex items-center gap-3 w-full">
+                        <input
+                            ref="receiptInput"
+                            id="receipt"
+                            type="file"
+                            class="hidden"
+                            accept="image/*"
+                            @change="onReceiptChanges"
+                        />
+                        <Button
+                            type="button"
+                            variant="primary"
+                            @click="$refs.receiptInput.click()"
+                            class="justify-center gap-2 w-full sm:w-24"
+                        >
+                            <span>{{ $t('public.browse') }}</span>
+                        </Button>
+                        <InputError :message="form.errors.receipt"/>
+                    </div>
+                    <div
+                        v-if="selectedReceipt"
+                        class="relative w-full py-2 pl-4 flex justify-between rounded-lg border focus:ring-1 focus:outline-none"
+
+                    >
+                        <div class="inline-flex items-center gap-3">
+                            <img :src="selectedReceipt" alt="Selected Image" class="max-w-full h-9 object-contain rounded" />
+                            <div class="text-gray-light-900 dark:text-white">
+                                {{ selectedReceiptName }}
+                            </div>
+                        </div>
+                        <Button
+                            type="button"
+                            variant="transparent"
+                            pill
+                            @click="removeReceipt"
+                        >
+                            <XIcon class="w-5 h-5 text-white" />
+                        </Button>
+                    </div>
+                </div>
                 <div class="mt-6 border-t dark:border-gray-700"></div>
                 <div class="flex items-center justify-between mt-5">
-                    <span class="text-sm dark:text-gray-400 font-Inter">{{$t('public.wallet.transaction_fee')}}</span>
+                    <span class="text-sm dark:text-gray-400">{{$t('public.wallet.transaction_fee')}}</span>
                     <span class="text-sm dark:text-white">$ {{ formatAmount(calculatedTransactionFee) }}</span>
                 </div>
                 <div class="flex items-center justify-between mt-2">
-                    <span class="text-sm dark:text-gray-400 font-Inter">{{$t('public.wallet.balance_received')}}</span>
+                    <span class="text-sm dark:text-gray-400">{{$t('public.wallet.balance_received')}}</span>
                     <span class="text-sm dark:text-white">$&nbsp;{{ formatAmount(calculatedBalance) }}</span>
+                </div>
+                <div class="flex gap-1 mt-2">
+                    <span class="text-red-500">*</span>
+                    <span class="text-sm dark:text-gray-400 text-justify">{{$t('public.deposit_reminder')}}</span>
                 </div>
                 <div class="mt-6 pb-6 border-b dark:border-gray-700">
                     <label>
@@ -214,7 +285,6 @@ onMounted(() => {
                         </div>
                         <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                     </label>
-
                 </div>
 
                 <div class="py-5 grid grid-cols-2 gap-4 w-full md:w-1/3 md:float-right">
