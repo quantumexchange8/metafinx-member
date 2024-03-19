@@ -11,7 +11,7 @@ class DepositRequest extends FormRequest
         return [
             'wallet_id' => ['required'],
             'amount' => ['required', 'numeric', 'min:20'],
-            'txn_hash' => ['nullable'],
+            'txn_hash' => ['required'],
             'receipt' => ['nullable'],
             'terms' => ['accepted']
         ];

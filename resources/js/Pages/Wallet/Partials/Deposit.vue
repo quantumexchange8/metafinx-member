@@ -190,7 +190,6 @@ const removeReceipt = () => {
                     <div class="flex gap-1 w-full md:w-1/4">
                         <span class="text-red-500">*</span>
                         <Label class="text-sm dark:text-white" for="amount" :value="$t('public.wallet.amount')  + ' ($)'" />
-
                     </div>
                     <div class="flex flex-col w-full">
                         <Input
@@ -207,7 +206,10 @@ const removeReceipt = () => {
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4 mt-5">
-                    <Label class="text-sm dark:text-white w-full md:w-1/4" for="txn_hash" :value="$t('public.wallet.txn_hash')" />
+                    <div class="flex gap-1 w-full md:w-1/4">
+                        <span class="text-red-500">*</span>
+                        <Label class="text-sm dark:text-white" for="amount" :value="$t('public.wallet.txn_hash')" />
+                    </div>
                     <div class="flex flex-col w-full">
                         <Input
                             id="txn_hash"
