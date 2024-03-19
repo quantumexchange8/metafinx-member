@@ -466,4 +466,8 @@ return [
         "resend_verification_email" => "重新發送驗證郵件",
     ],
     "binary_placement_position" => "左右位置擺放",
+    "payment_slip" => "交易截图",
+    "browse" => "瀏覽",
+    "deposit_reminder" => "確認前，請複製提供的錢包位址或使用您的加密貨幣錢包應用程式掃描二維碼並完成交易",
+    "click_to_view" => "点击查看",
 ];

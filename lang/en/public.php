@@ -472,4 +472,5 @@ return [
     "payment_slip" => "Payment Slip",
     "browse" => "Browse",
     "deposit_reminder" => "Before confirmation, copy the wallet address provided or scan the QR code with your cryptocurrency wallet app and complete the transaction.",
+    "click_to_view" => "Click to view",
 ];

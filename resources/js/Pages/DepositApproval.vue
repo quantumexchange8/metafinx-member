@@ -132,10 +132,10 @@ const closeModal = () => {
                     </Tooltip>
                 </div>
             </div>
-            
+
             <div v-if="payment_slip" class="flex justify-between items-center">
-                <span class="text-sm font-semibold dark:text-gray-400">Payment Slip</span>
-                <span class="text-black dark:text-white py-2 dark:hover:text-blue-600 cursor-pointer" @click="openReceiptModal">Click to view</span>
+                <span class="text-sm font-semibold dark:text-gray-400">{{ $t('public.payment_slip') }}</span>
+                <span class="text-black dark:text-white py-2 dark:hover:text-blue-600 cursor-pointer" @click="openReceiptModal">{{ $t('public.click_to_view') }}</span>
             </div>
 
             <div
