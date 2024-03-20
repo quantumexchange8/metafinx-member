@@ -96,11 +96,11 @@ const selectCategory = (category) => {
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                             <div v-for="plan in investmentTypes.plans" class="p-5 bg-white rounded-xl shadow-md dark:bg-gray-700">
                                 <div class="flex flex-col items-center justify-center gap-2 border-b dark:border-gray-600 pb-5">
-                                    <img v-if="plan.type === 'standard'" class="w-14 h-14 rounded-xl" :src="plan.media.standard ?? '/assets/icon.png'" alt="Medium avatar">
-                                    <img v-if="plan.type === 'staking'" class="w-14 h-14 rounded-xl" :src="plan.media.stacking ?? '/assets/stacking_default.png'" alt="Medium avatar">
-                                    <div class="font-semibold">
+                                    <img v-if="plan.type === 'standard'" class="w-16 h-16 rounded-xl" :src="plan.media.standard ?? '/assets/icon.png'" alt="Medium avatar">
+                                    <img v-if="plan.type === 'staking'" class="w-16 h-16 rounded-xl" :src="plan.media.stacking ?? '/assets/stacking_default.png'" alt="Medium avatar">
+                                    <!-- <div class="font-semibold">
                                         {{ plan.name }}
-                                    </div>
+                                    </div> -->
                                     <div v-if="plan.type === 'staking'" class="font-semibold text-[32px] text-center">
                                         {{ plan.commision_multiplier * 100 }}% <span class="flex text-base">{{$t('public.staking_rewards')}}</span>
                                     </div>
