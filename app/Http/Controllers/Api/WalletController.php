@@ -31,12 +31,14 @@ class WalletController extends Controller
         $validator = \Validator::make($request->all(), [
             'to_wallet_id' => ['required'],
             'amount' => ['required', 'numeric', 'min:20'],
-            // 'txn_hash' => ['required'],
+            'txn_hash' => ['required'],
+            'payment_slip' => ['nullable', 'image'],
             'terms' => ['accepted']
         ])->setAttributeNames([
             'to_wallet_id' => 'Wallet',
             'amount' => 'Amount',
-            // 'txn_hash' => 'TXN Hash',
+            'txn_hash' => 'TXN Hash',
+            'payment_slip' => trans('public.payment_slip'),
             'terms' => 'Terms and Conditions'
         ]);
 
@@ -47,7 +49,7 @@ class WalletController extends Controller
             ]);
         } else {
             $user = \Auth::user();
-            $wallet = Wallet::find($request->wallet_id);
+            $wallet = Wallet::find($request->to_wallet_id);
             $deposit_charge = Setting::where('slug', 'deposit-fee')->latest()->first();
             $amount = $request->amount;
             $transaction_charge = $amount * ($deposit_charge->value / 100);
@@ -56,9 +58,9 @@ class WalletController extends Controller
             $transaction = Transaction::create([
                 'category' => 'wallet',
                 'user_id' => $user->id,
-                'to_wallet_id' => $request->wallet_id,
+                'to_wallet_id' => $request->to_wallet_id,
                 'transaction_number' => $transaction_id,
-                // 'txn_hash' => $request->txn_hash,
+                'txn_hash' => $request->txn_hash,
                 'transaction_type' => 'Deposit',
                 'amount' => $amount,
                 'transaction_charges' => $transaction_charge,
@@ -68,6 +70,10 @@ class WalletController extends Controller
                 'new_wallet_amount' => $wallet->balance,
             ]);
 
+            if ($request->hasfile('payment_slip')){
+                $transaction->addMedia($request->payment_slip)->toMediaCollection('deposit_receipt');
+            }
+    
             $domain = $_SERVER['HTTP_HOST'];
             $payout = config('payout-setting');
             $selectedPayout = $payout['staging'];
@@ -143,7 +149,7 @@ class WalletController extends Controller
             $transaction = Transaction::create([
                 'category' => 'wallet',
                 'user_id' => $user->id,
-                'from_wallet_id' => $request->wallet_id,
+                'from_wallet_id' => $request->from_wallet_id,
                 'transaction_number' => $transaction_id,
                 'transaction_type' => 'Withdrawal',
                 'amount' => $amount,
