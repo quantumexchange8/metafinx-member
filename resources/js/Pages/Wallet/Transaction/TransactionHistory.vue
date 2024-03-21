@@ -69,6 +69,7 @@ const typeFilter = [
     {value: 'BuyCoin', label:"Buy Coin"},
     {value: 'Deposit', label:"Deposit"},
     {value: 'Withdrawal', label:"Withdrawal"},
+    {value: 'Transfer', label:"Transfer"},
     {value: 'Investment', label:"Investment"},
     {value: 'StandardRewards', label:"Standard Rewards"},
     {value: 'ReferralEarnings', label:"Referral Earnings"},

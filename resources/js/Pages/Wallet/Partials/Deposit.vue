@@ -243,7 +243,6 @@ const removeReceipt = () => {
                         >
                             <span>{{ $t('public.browse') }}</span>
                         </Button>
-                        <InputError :message="form.errors.receipt"/>
                     </div>
                     <div
                         v-if="selectedReceipt"
@@ -265,6 +264,7 @@ const removeReceipt = () => {
                             <XIcon class="w-5 h-5 text-white" />
                         </Button>
                     </div>
+                    <InputError :message="form.errors.receipt"/>
                 </div>
                 <div class="mt-6 border-t dark:border-gray-700"></div>
                 <div class="flex items-center justify-between mt-5">

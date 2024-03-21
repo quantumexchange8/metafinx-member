@@ -270,7 +270,10 @@ class WalletController extends Controller
                 'earnings.percentage as transaction_id',
                 'earnings.status as transaction_status',
                 'earnings.remarks as transaction_remark',
-                'earnings.roi_release_date as transaction_date'
+                'earnings.roi_release_date as transaction_date',
+                \DB::raw('NULL as transaction_from_user'), // Set to null
+                \DB::raw('NULL as transaction_to_user'), // Set to null
+
             )
             ->leftJoin('earnings', 'users.id', '=', 'earnings.upline_id')
             ->when($request->search, function (Builder $query, string $search) {
@@ -298,9 +301,15 @@ class WalletController extends Controller
                 'transactions.transaction_number as transaction_id',
                 'transactions.status as transaction_status',
                 'transactions.remarks as transaction_remark',
-                'transactions.created_at as transaction_date'
-            )
+                'transactions.created_at as transaction_date',
+                'from_user.email as transaction_from_user',
+                'to_user.email as transaction_to_user',
+                )
             ->leftJoin('transactions', 'users.id', '=', 'transactions.user_id')
+            ->leftJoin('wallets as from_wallet', 'transactions.from_wallet_id', '=', 'from_wallet.id')
+            ->leftJoin('wallets as to_wallet', 'transactions.to_wallet_id', '=', 'to_wallet.id')
+            ->leftJoin('users as from_user', 'from_wallet.user_id', '=', 'from_user.id')
+            ->leftJoin('users as to_user', 'to_wallet.user_id', '=', 'to_user.id')
             ->when($request->search, function (Builder $query, string $search) {
                 $query->where('transactions.transaction_number', 'like','%' . $search . '%');
             })
@@ -316,8 +325,7 @@ class WalletController extends Controller
                 $query->where('transactions.transaction_type', $type);
             })
             ->where('users.id', $user->id)
-            ->where('transactions.to_wallet_id', $wallet_id)
-            ->orWhere('transactions.from_wallet_id', $wallet_id);
+            ;
 
         // Search condition
         if ($request->filled('search')) {
@@ -704,52 +712,73 @@ class WalletController extends Controller
                 $query->where('type', 'internal_wallet');
             }])
             ->first();
-
+    
         if ($from_wallet->balance < $request->amount) {
             throw ValidationException::withMessages(['amount' => trans('public.insufficient_balance')]);
         }
-
-        if ($to_user_wallet != null) {
-            $user_internal_wallet = $to_user_wallet->wallets->first();
-        } else {
+    
+        if ($to_user_wallet == null) {
             throw ValidationException::withMessages(['email' => trans('public.email_not_found')]);
         }
+    
+        // Check if the transfer request is to the current user's email
+        if ($user->email == $request->email) {
+            throw ValidationException::withMessages(['email' => trans('public.cannot_transfer_to_self')]);
+        }
 
-        $transaction_number = RunningNumberService::getID('transaction');
-
-        $transaction = Transaction::create([
+        $user_internal_wallet = $to_user_wallet->wallets->first();
+    
+        $transaction_number_sender = RunningNumberService::getID('transaction');
+        $transaction_number_receiver = RunningNumberService::getID('transaction');
+    
+        // Transaction for sender
+        $sender_transaction = Transaction::create([
             'category' => 'wallet',
             'user_id' => $user->id,
             'transaction_type' => 'Transfer',
             'from_wallet_id' => $from_wallet->id,
             'to_wallet_id' => $user_internal_wallet->id,
-            'transaction_number' => $transaction_number,
+            'transaction_number' => $transaction_number_sender,
             'amount' => $request->amount,
             'transaction_charges' => 0,
             'transaction_amount' => $request->amount,
             'status' => 'Success',
-            'new_wallet_amount' => $user_internal_wallet->balance,
+            'new_wallet_amount' => $from_wallet->balance - $request->amount,
         ]);
-
-        // Update the wallet balance
+    
+        // Transaction for receiver
+        $receiver_transaction = Transaction::create([
+            'category' => 'wallet',
+            'user_id' => $to_user_wallet->id,
+            'transaction_type' => 'Transfer',
+            'from_wallet_id' => $from_wallet->id,
+            'to_wallet_id' => null,
+            'transaction_number' => $transaction_number_receiver,
+            'amount' => $request->amount,
+            'transaction_charges' => 0,
+            'transaction_amount' => $request->amount,
+            'status' => 'Success',
+            'new_wallet_amount' => $user_internal_wallet->balance + $request->amount,
+        ]);
+    
+        // Update the wallet balances
         $from_wallet->update([
-            'balance' => $from_wallet->balance - $transaction->transaction_amount,
+            'balance' => $from_wallet->balance - $request->amount,
         ]);
-
+    
         $user_internal_wallet->update([
-            'balance' => $user_internal_wallet->balance + $transaction->transaction_amount,
+            'balance' => $user_internal_wallet->balance + $request->amount,
         ]);
-
-        $transaction->update([
+    
+        $receiver_transaction->update([
             'new_wallet_amount' => $user_internal_wallet->balance,
         ]);
-
+    
         $to_user = $to_user_wallet;
-        $senderName = $user->name;
         $transferredAmount = $request->amount;
-        \Notification::send($to_user, new TransferNotification($senderName, $transferredAmount));
+        \Notification::send($to_user, new TransferNotification($user, $transferredAmount));
         
         return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.success_transfer'));
     }
-
+    
 }

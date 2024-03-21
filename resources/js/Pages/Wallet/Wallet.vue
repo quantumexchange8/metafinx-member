@@ -14,6 +14,7 @@ import Button from "@/Components/Button.vue";
 import InternalTransfer from "@/Pages/Wallet/Partials/InternalTransfer.vue";
 import Transfer from "@/Pages/Wallet/Partials/Transfer.vue";
 import MXTLogo from "@/Components/MXTLogo.vue";
+import {usePage} from "@inertiajs/vue3";
 
 const props = defineProps({
     wallets: Object,
@@ -32,6 +33,8 @@ const props = defineProps({
     coin_market_time: Object,
 })
 
+const role = usePage().props.auth.user.role;
+const kycStatus = usePage().props.auth.user.kyc_approval;
 const tooltipContent = ref('copy');
 const { formatAmount } = transactionFormat();
 
@@ -91,10 +94,12 @@ function copyTestingCode () {
                         :depositFee="depositFee"
                     />
                     <Withdrawal
+                        v-if="role == 'admin' || kycStatus == 'verified'"
                         :wallet_sel="wallet_sel"
                         :withdrawalFee="props.withdrawalFee"
                     />
                     <InternalTransfer
+                        v-if="role == 'admin' || kycStatus == 'verified'"
                         :setting_coin="setting_coin"
                     />
                     <Transfer

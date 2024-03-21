@@ -11,12 +11,12 @@ class TransferNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $senderName;
+    protected $user;
     protected $amount;
 
-    public function __construct($senderName, $amount)
+    public function __construct($user, $amount)
     {
-        $this->senderName = $senderName;
+        $this->user = $user;
         $this->amount = $amount;
     }
 
@@ -29,8 +29,8 @@ class TransferNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('Transfer Notification')
-            ->greeting('Hello ' . $notifiable->name . ',')
-            ->line('You have received a transfer of $' . $this->amount . ' from ' . $this->senderName . '.')
+            ->greeting('Hello ' . $notifiable->email . ',')
+            ->line('You have received a transfer of $' . $this->amount . ' from ' . $this->user->email . '.')
             ->line('Thank you for using our service.');
     }
     
@@ -38,7 +38,7 @@ class TransferNotification extends Notification implements ShouldQueue
     {
         return [
             'title' => 'Transfer Notification',
-            'content' => 'You have received a transfer of $' . $this->amount . ' from ' . $this->senderName . '.',
+            'content' => 'You have received a transfer of $' . $this->amount . ' from ' . $this->user->email . '.',
             'post_date' => now()->toDateTimeString(),
         ];
     }
@@ -47,7 +47,7 @@ class TransferNotification extends Notification implements ShouldQueue
     {
         return [
             'title' => 'Transfer Notification',
-            'content' => 'You have received a transfer of $' . $this->amount . ' from ' . $this->senderName . '.',
+            'content' => 'You have received a transfer of $' . $this->amount . ' from ' . $this->user->email . '.',
             'post_date' => now()->toDateTimeString(),
         ];
     }

@@ -1,7 +1,10 @@
 <?php
 return [
-    'email_not_found' => '未找拥有该电子邮件的用户',
-    'transfer_from' => '转账从',
+    "cannot_transfer_to_self" => "无法转账给自己",
+    "email_not_found" => "未找拥有该电子邮件的用户",
+    "transfer_from" => "转账从",
+    'receive_from' => '接收自',
+    "transfer_to" => "转移到",
     "transfer" => "转账",
     "privacy_notice" => "《隐私声明》",
     "tnc" => "《条款和条件》",

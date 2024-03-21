@@ -62,7 +62,6 @@ const getResults = async (page = 1, search = '', type = '', date = '') => {
 
         const response = await axios.get(url);
         transactions.value = response.data;
-
     } catch (error) {
         console.error(error);
     } finally {
@@ -160,8 +159,8 @@ watchEffect(() => {
             </td>
                 <td class="p-3">
                     <div :class="[
-                            {'text-success-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'Deposit' || transaction.transaction_type === 'Withdrawal' || transaction.transaction_type === 'StandardRewards' || transaction.transaction_type === 'ReferralEarnings' || transaction.transaction_type === 'AffiliateEarnings' || transaction.transaction_type === 'DividendEarnings' || transaction.transaction_type === 'AffiliateDividendEarnings'},
-                            {'text-error-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'BuyCoin' || transaction.transaction_type === 'Investment' || transaction.transaction_type === 'StakingFee' },
+                            {'text-success-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'Deposit' || transaction.transaction_type === 'Withdrawal' || transaction.transaction_type === 'StandardRewards' || transaction.transaction_type === 'ReferralEarnings' || transaction.transaction_type === 'AffiliateEarnings' || transaction.transaction_type === 'DividendEarnings' || transaction.transaction_type === 'AffiliateDividendEarnings' || (transaction.transaction_type === 'Transfer' && !transaction.transaction_to_user)},
+                            {'text-error-500': transaction.transaction_status === 'Success' && transaction.transaction_type === 'BuyCoin' || transaction.transaction_type === 'Investment' || transaction.transaction_type === 'StakingFee' || (transaction.transaction_type === 'Transfer' && transaction.transaction_to_user)},
                             {'text-gray-900 dark:text-white': transaction.transaction_status === 'Rejected' && transaction.transaction_type === 'Deposit' ||transaction.transaction_type === 'Withdrawal' },
                         ]"
                     >
@@ -209,6 +208,18 @@ watchEffect(() => {
             <div class="grid grid-cols-5 items-center">
                 <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.date_time')}}</span>
                 <span class="text-black col-span-3 dark:text-white py-2">{{ formatDateTime(selectedTransaction.transaction_date) }}</span>
+            </div>
+            <div class="grid grid-cols-5 items-center" v-if="selectedTransaction.transaction_type == 'Transfer' && !selectedTransaction.transaction_to_user">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.receive_from')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ selectedTransaction.transaction_from_user }}</span>
+            </div>
+            <div class="grid grid-cols-5 items-center" v-if="selectedTransaction.transaction_type == 'Transfer' && selectedTransaction.transaction_to_user">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.transfer_from')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ selectedTransaction.transaction_from_user }}</span>
+            </div>
+            <div class="grid grid-cols-5 items-center" v-if="selectedTransaction.transaction_type == 'Transfer' && selectedTransaction.transaction_to_user">
+                <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.transfer_to')}}</span>
+                <span class="text-black col-span-3 dark:text-white py-2">{{ selectedTransaction.transaction_to_user }}</span>
             </div>
             <div class="grid grid-cols-5 items-center">
                 <span class="col-span-2 text-sm font-semibold dark:text-gray-400">{{$t('public.wallet.amount')}}</span>

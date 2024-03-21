@@ -1,7 +1,10 @@
 <?php
 return [
+    "cannot_transfer_to_self" => "Transfer to self is not available",
     "email_not_found" => "Email not found",
     "transfer_from" => "Transfer From",
+    "receive_from" => "Receive From",
+    "transfer_to" => "Transfer To",
     "transfer" => "Transfer",
     "privacy_notice" => "Privacy Notice",
     "and" => "and",
