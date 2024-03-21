@@ -365,89 +365,18 @@ class AffiliateController extends Controller
             ->sum('stacking_price');
     }
 
-    protected function getBinaryTotalPrice($child, $position)
-    {
-        $lastPairingEarning = Earning::where('upline_id', $child->user_id)
-            ->where('type', 'PairingEarnings')
-            ->latest()
-            ->first();
-
-        $directChild = $child->direct_child($position)->first();
-
-        if ($directChild) {
-            $ids = $directChild->getChildrenIds();
-
-            $binaryUserId = CoinMultiLevel::query()
-                ->whereIn('id', $ids)
-                ->pluck('user_id')
-                ->toArray();
-
-            $amount = 0; // Initialize $amount to 0
-
-            if ($lastPairingEarning) {
-                $amount += CoinStacking::whereIn('user_id', $binaryUserId)
-                    ->where('status', 'OnGoingPeriod')
-                    ->where('staking_date', '<', $lastPairingEarning->created_at)
-                    ->sum('stacking_price');
-
-                $amount += CoinStacking::where('user_id', $directChild->user_id)
-                    ->where('status', 'OnGoingPeriod')
-                    ->where('staking_date', '<', $lastPairingEarning->created_at)
-                    ->sum('stacking_price');
-            } else {
-                $amount += CoinStacking::whereIn('user_id', $binaryUserId)
-                    ->where('status', 'OnGoingPeriod')
-                    ->sum('stacking_price');
-
-                $amount += CoinStacking::where('user_id', $directChild->user_id)
-                    ->where('status', 'OnGoingPeriod')
-                    ->sum('stacking_price');
-            }
-
-            return $amount;
-        }
-
-        return 0;
-    }
-
     protected function carryForward($user, $position)
     {
-        $lastPairingEarning = Earning::where('upline_id', $user->user_id)
+        $carry_forward =  Earning::where('upline_id', $user->user_id)
             ->where('type', 'PairingEarnings')
             ->latest()
             ->first();
 
-        if ($lastPairingEarning && $lastPairingEarning->created_at->format('Y-m-d') == today()->format('Y-m-d')) {
-            $directChild = $user->direct_child($position)->first();
-
-            if ($directChild) {
-                $ids = $directChild->getChildrenIds();
-
-                $binaryUserId = CoinMultiLevel::query()
-                    ->whereIn('id', $ids)
-                    ->pluck('user_id')
-                    ->toArray();
-
-                $todayStaking = CoinStacking::whereIn('user_id', $binaryUserId)
-                    ->where('staking_date', '>', $lastPairingEarning->created_at)
-                    ->sum('stacking_price');
-
-                $todayStaking += CoinStacking::where('user_id', $directChild->user_id)
-                    ->where('staking_date', '>', $lastPairingEarning->created_at)
-                    ->sum('stacking_price');
-
-                $leftAmount = $this->getBinaryTotalPrice($user, 'left');
-                $rightAmount = $this->getBinaryTotalPrice($user, 'right');
-
-                $difference = ($position == 'left') ? ($leftAmount - $rightAmount) : ($rightAmount - $leftAmount);
-                $carryForward = max($difference, 0);
-
-                return $carryForward + $todayStaking;
-            }
+        if ($position == 'left') {
+            return $carry_forward->left_carry_forward ?? 0;
+        } else {
+            return $carry_forward->right_carry_forward ?? 0;
         }
-
-        // If no direct child or last pairing earning is not from today, return the total price for the specified position
-        return $this->getBinaryTotalPrice($user, $position);
     }
 
     public function group()
