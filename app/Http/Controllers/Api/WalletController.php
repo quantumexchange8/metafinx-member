@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Http;
 use Carbon\Carbon;
 use App\Models\Coin;
 use App\Models\Wallet;
@@ -73,17 +74,17 @@ class WalletController extends Controller
             if ($request->hasfile('payment_slip')){
                 $transaction->addMedia($request->payment_slip)->toMediaCollection('deposit_receipt');
             }
-    
+
             $domain = $_SERVER['HTTP_HOST'];
             $payout = config('payout-setting');
             $selectedPayout = $payout['staging'];
-    
+
             if ($domain === 'login.metafinx.com') {
                 $selectedPayout = $payout['live'];
             }
-    
+
             $hashedToken = md5($selectedPayout['email'] . $selectedPayout['apiKey']);
-    
+
             $params = [
                 "token" => $hashedToken,
                 "transactionID" => $transaction->transaction_number,
@@ -92,13 +93,13 @@ class WalletController extends Controller
                 "amount" => $amount, // Assuming $amount is defined elsewhere
                 "TxID" => $transaction->txn_hash,
             ];
-    
+
             $url = $selectedPayout['base_url'] . '/receiveDeposit';
-    
+
             $response = Http::post($url, $params);
             \Log::debug($url);
             \Log::debug($response);
-        
+
             Notification::route('mail', 'payment@currenttech.pro')
             ->notify(new DepositRequestNotification($transaction, $user));
 
@@ -162,15 +163,15 @@ class WalletController extends Controller
 
             $payoutSetting = config('payout-setting');
             $domain = $_SERVER['HTTP_HOST'];
-    
+
             if ($domain === 'login.metafinx.com') {
                 $selectedPayout = $payoutSetting['live'];
             } else {
                 $selectedPayout = $payoutSetting['staging'];
             }
-    
+
             $hashedToken = md5($selectedPayout['email'] . $selectedPayout['apiKey']);
-    
+
             $params = [
                 "token" => $hashedToken,
                 "transactionID" => $transaction->transaction_number,
@@ -179,11 +180,11 @@ class WalletController extends Controller
                 "amount" => $transaction->transaction_amount,
                 "payment_charges" => $transaction->transaction_charges,
             ];
-    
+
             $url = $selectedPayout['base_url'] . '/receiveWithdrawal';
-    
+
             $response = \Http::post($url, $params);
-    
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'The withdrawal request has been submitted successfully.',
