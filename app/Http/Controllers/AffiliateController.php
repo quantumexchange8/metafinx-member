@@ -193,8 +193,8 @@ class AffiliateController extends Controller
             'level' => $level,
             'rank' => $user->user->setting_rank_id,
             'personal_amount' => $this->getPersonalStakingAmount($user),
-            'left_amount' => $this->carryForward($user, 'left'),
-            'right_amount' => $this->carryForward($user, 'right'),
+            'left_amount' => $this->carryForward($user, 'left') == 'no_pairings' ? $this->getLeftAmount($user) : $this->carryForward($user, 'left'),
+            'right_amount' => $this->carryForward($user, 'right') == 'no_pairings' ? $this->getRightAmount($user) : $this->carryForward($user, 'right'),
             'children' => $users->map(function ($user) {
                 return $this->mapBinaryUser($user, 0);
             })
@@ -237,8 +237,8 @@ class AffiliateController extends Controller
             'level' => $level + 1,
             'rank' => $user->user->setting_rank_id,
             'personal_amount' => $this->getPersonalStakingAmount($user),
-            'left_amount' => $this->carryForward($user, 'left'),
-            'right_amount' => $this->carryForward($user, 'right'),
+            'left_amount' => $this->carryForward($user, 'left') == 'no_pairings' ? $this->getLeftAmount($user) : $this->carryForward($user, 'left'),
+            'right_amount' => $this->carryForward($user, 'right') == 'no_pairings' ? $this->getRightAmount($user) : $this->carryForward($user, 'right'),
         ];
 
         // Add 'children' only if there are children
@@ -365,6 +365,38 @@ class AffiliateController extends Controller
             ->sum('stacking_price');
     }
 
+    protected function getLeftAmount($child)
+    {
+        $direct_child = $child->direct_child('left')->first();
+        $amount = 0;
+
+        if ($direct_child) {
+            $ids = $child->getChildrenIds();
+
+            $amount += CoinStacking::whereIn('user_id', $ids)
+                ->where('status', 'OnGoingPeriod')
+                ->sum('stacking_price');
+        }
+
+        return $amount;
+    }
+
+    protected function getRightAmount($child)
+    {
+        $direct_child = $child->direct_child('right')->first();
+        $amount = 0;
+
+        if ($direct_child) {
+            $ids = $child->getChildrenIds();
+
+            $amount += CoinStacking::whereIn('user_id', $ids)
+                ->where('status', 'OnGoingPeriod')
+                ->sum('stacking_price');
+        }
+
+        return $amount;
+    }
+
     protected function carryForward($user, $position)
     {
         $carry_forward =  Earning::where('upline_id', $user->user_id)
@@ -372,10 +404,12 @@ class AffiliateController extends Controller
             ->latest()
             ->first();
 
-        if ($position == 'left') {
-            return $carry_forward->left_carry_forward ?? 0;
+        if ($carry_forward && $position == 'left') {
+            return $carry_forward->left_carry_forward;
+        } elseif ($carry_forward && $position == 'right') {
+            return $carry_forward->right_carry_forward;
         } else {
-            return $carry_forward->right_carry_forward ?? 0;
+            return 'no_pairings';
         }
     }
 
