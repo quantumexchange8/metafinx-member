@@ -99,10 +99,10 @@ function copyTestingCode () {
                         :withdrawalFee="props.withdrawalFee"
                     />
                     <InternalTransfer
-                        v-if="role == 'admin' || kycStatus == 'verified'"
                         :setting_coin="setting_coin"
                     />
                     <Transfer
+                        v-if="role == 'admin' || kycStatus == 'verified'"
                         :setting_coin="setting_coin"
                         :wallet_sel="wallet_sel"
                     />
