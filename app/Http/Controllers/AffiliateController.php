@@ -193,8 +193,8 @@ class AffiliateController extends Controller
             'level' => $level,
             'rank' => $user->user->setting_rank_id,
             'personal_amount' => $this->getPersonalStakingAmount($user),
-            'left_amount' => $this->carryForward($user, 'left') == 'no_pairings' ? $this->getLeftAmount($user) : $this->carryForward($user, 'left'),
-            'right_amount' => $this->carryForward($user, 'right') == 'no_pairings' ? $this->getRightAmount($user) : $this->carryForward($user, 'right'),
+            'left_amount' => $user->left_carry_forward,
+            'right_amount' => $user->right_carry_forward,
             'children' => $users->map(function ($user) {
                 return $this->mapBinaryUser($user, 0);
             })
@@ -237,8 +237,8 @@ class AffiliateController extends Controller
             'level' => $level + 1,
             'rank' => $user->user->setting_rank_id,
             'personal_amount' => $this->getPersonalStakingAmount($user),
-            'left_amount' => $this->carryForward($user, 'left') == 'no_pairings' ? $this->getLeftAmount($user) : $this->carryForward($user, 'left'),
-            'right_amount' => $this->carryForward($user, 'right') == 'no_pairings' ? $this->getRightAmount($user) : $this->carryForward($user, 'right'),
+            'left_amount' => $user->left_carry_forward,
+            'right_amount' => $user->right_carry_forward,
         ];
 
         // Add 'children' only if there are children
@@ -344,6 +344,7 @@ class AffiliateController extends Controller
     {
         return InvestmentSubscription::query()
             ->where('user_id', $user->id)
+            ->whereNotIn('status', ['Terminated', 'MaturityPeriod'])
             ->whereDate('expired_date', '>', now())
             ->sum('amount');
     }
@@ -354,6 +355,7 @@ class AffiliateController extends Controller
 
         return InvestmentSubscription::query()
             ->whereIn('user_id', $ids)
+            ->where('status', ['Terminated', 'MaturityPeriod'])
             ->whereDate('expired_date', '>', now())
             ->sum('amount');
     }
@@ -363,54 +365,6 @@ class AffiliateController extends Controller
         return CoinStacking::where('user_id', $child->user_id)
             ->where('status', 'OnGoingPeriod')
             ->sum('stacking_price');
-    }
-
-    protected function getLeftAmount($child)
-    {
-        $direct_child = $child->direct_child('left')->first();
-        $amount = 0;
-
-        if ($direct_child) {
-            $ids = $child->getChildrenIds();
-
-            $amount += CoinStacking::whereIn('user_id', $ids)
-                ->where('status', 'OnGoingPeriod')
-                ->sum('stacking_price');
-        }
-
-        return $amount;
-    }
-
-    protected function getRightAmount($child)
-    {
-        $direct_child = $child->direct_child('right')->first();
-        $amount = 0;
-
-        if ($direct_child) {
-            $ids = $child->getChildrenIds();
-
-            $amount += CoinStacking::whereIn('user_id', $ids)
-                ->where('status', 'OnGoingPeriod')
-                ->sum('stacking_price');
-        }
-
-        return $amount;
-    }
-
-    protected function carryForward($user, $position)
-    {
-        $carry_forward =  Earning::where('upline_id', $user->user_id)
-            ->where('type', 'PairingEarnings')
-            ->latest()
-            ->first();
-
-        if ($carry_forward && $position == 'left') {
-            return $carry_forward->left_carry_forward;
-        } elseif ($carry_forward && $position == 'right') {
-            return $carry_forward->right_carry_forward;
-        } else {
-            return 'no_pairings';
-        }
     }
 
     public function group()

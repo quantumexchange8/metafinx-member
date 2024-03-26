@@ -141,7 +141,7 @@ const getDistributorDetail = async (id, level) => {
                             {{ $t('public.left') }}
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            {{ node.left_amount >= 0 ? '$ ' + formatAmount(node.left_amount) : 'Loading..' }}
+                            {{ node.left_amount >= 0 ? '$ ' + formatAmount(node.left_amount ? node.left_amount : 0) : 'Loading..' }}
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
@@ -149,7 +149,7 @@ const getDistributorDetail = async (id, level) => {
                             {{ $t('public.right') }}
                         </div>
                         <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                            {{ node.right_amount >= 0 ? '$ ' + formatAmount(node.right_amount) : 'Loading..' }}
+                            {{ node.right_amount >= 0 ? '$ ' + formatAmount(node.right_amount ? node.right_amount : 0) : 'Loading..' }}
                         </div>
                     </div>
                 </div>
