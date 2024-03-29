@@ -193,8 +193,8 @@ class AffiliateController extends Controller
             'level' => $level,
             'rank' => $user->user->setting_rank_id,
             'personal_amount' => $this->getPersonalStakingAmount($user),
-            'left_amount' => $user->left_carry_forward + $this->getStakingAmount($user, 'left'),
-            'right_amount' => $user->right_carry_forward + $this->getStakingAmount($user, 'right'),
+            'left_amount' => $user->left_carry_forward,
+            'right_amount' => $user->right_carry_forward,
             'children' => $users->map(function ($user) {
                 return $this->mapBinaryUser($user, 0);
             })
@@ -237,8 +237,8 @@ class AffiliateController extends Controller
             'level' => $level + 1,
             'rank' => $user->user->setting_rank_id,
             'personal_amount' => $this->getPersonalStakingAmount($user),
-            'left_amount' => $user->left_carry_forward + $this->getStakingAmount($user, 'left'),
-            'right_amount' => $user->right_carry_forward + $this->getStakingAmount($user, 'right'),
+            'left_amount' => $user->left_carry_forward,
+            'right_amount' => $user->right_carry_forward,
         ];
 
         // Add 'children' only if there are children
@@ -365,34 +365,6 @@ class AffiliateController extends Controller
         return CoinStacking::where('user_id', $child->user_id)
             ->where('status', 'OnGoingPeriod')
             ->sum('stacking_price');
-    }
-
-    protected function getStakingAmount($child, $position)
-    {
-        $lastPairingEarning = Earning::where('upline_id', $child->id)
-            ->where('type', 'PairingEarnings')
-            ->latest()
-            ->first();
-
-        $direct_child = $child->direct_child($position)->first();
-        $amount = 0;
-
-        if ($direct_child && $lastPairingEarning) {
-            $ids = $child->getChildrenIds();
-
-            $amount += CoinStacking::whereIn('user_id', $ids)
-                ->where('status', 'OnGoingPeriod')
-                ->where('created_at', '>', $lastPairingEarning->created_at)
-                ->sum('stacking_price');
-        } elseif ($direct_child) {
-            $ids = $child->getChildrenIds();
-
-            $amount += CoinStacking::whereIn('user_id', $ids)
-                ->where('status', 'OnGoingPeriod')
-                ->sum('stacking_price');
-        }
-
-        return $amount;
     }
 
     public function group()
