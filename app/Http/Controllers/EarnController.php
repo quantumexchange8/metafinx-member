@@ -36,12 +36,12 @@ class EarnController extends Controller
         //     ->whereMonth('created_at', $PreviousMonth)
         //     ->sum('after_coin_price');
 
-        $previouMonth = now()->subMonth()->format('F');
-        $averageProfit = SettingStakingReward::where('month', $previouMonth)->first();
+        $currentMonth = now()->month;
+        $averageProfit = SettingStakingReward::whereMonth('start_of_month', '<', $currentMonth)->where('percent', '>', 0);
 
         if ($averageProfit) {
-            $percent = $averageProfit->percent;
-            $averageProfit = $percent / 12;
+            $percent = $averageProfit->sum('percent');
+            $averageProfit = $percent / $averageProfit->count();
         }
         $investment_plans = InvestmentPlan::query()
             ->with('descriptions:investment_plan_id,description')
@@ -176,7 +176,7 @@ class EarnController extends Controller
                         ->with('warning', trans('public.insufficient_unit_warning'))
                         ->with('alertButton', 'Buy Coin');
                         ;
-                }        
+                }
 
                 if ($wallet->balance < $stacking_fee) {
                     return redirect()->back()

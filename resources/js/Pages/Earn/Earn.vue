@@ -13,7 +13,7 @@ const props = defineProps({
     internal_wallet: Object,
     musd_wallet: Object,
     stackingFee: Object,
-    averageProfit: Object,
+    averageProfit: Number,
 })
 
 const { formatAmount } = transactionFormat();
