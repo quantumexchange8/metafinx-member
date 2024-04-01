@@ -39,6 +39,10 @@ class EarnController extends Controller
         $previouMonth = now()->subMonth()->format('F');
         $averageProfit = SettingStakingReward::where('month', $previouMonth)->first();
 
+        if ($averageProfit) {
+            $percent = $averageProfit->percent;
+            $averageProfit = $percent / 12;
+        }
         $investment_plans = InvestmentPlan::query()
             ->with('descriptions:investment_plan_id,description')
             ->where('status', 'active')

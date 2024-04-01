@@ -183,7 +183,7 @@ const currentLocale = ref(usePage().props.locale);
                             {{ formatAmount(earn.after_amount) }}
                         </div>
                         <div v-if="earn.category === 'staking'">
-                            {{ earn.category === 'staking' ? '$ ' + formatAmount(earn.after_amount) : '' }} ({{earn.category === 'staking' ? formatAmount(earn.after_coin_price) + ' MXT' : '' }})
+                            {{ earn.category === 'staking' ? formatAmount(earn.after_amount) + ' ' + earn.coin.setting_coin.name : '' }} ({{earn.category === 'staking' ? '$ ' + formatAmount(earn.after_coin_price)  : '' }})
                         </div>
                     </td>
                 </tr>
