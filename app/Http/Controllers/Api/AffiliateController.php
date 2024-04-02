@@ -64,26 +64,26 @@ class AffiliateController extends Controller
     {
         $user = \Auth::user();
         $binaryUser = CoinMultiLevel::with(['user:id,name,email,setting_rank_id', 'sponsor.user', 'children'])->where('user_id', $user->id)->first();
-        
+
         $binaryData = $this->mapBinaryUser($binaryUser, 0);
-        
+
         return response()->json($binaryData);
     }
-    
+
     protected function mapBinaryUser($user, $level)
     {
         $children = $user->children;
-    
+
         $mappedChildren = $children->map(function ($child) use ($level) {
             $mappedChild = $this->mapBinaryUser($child, $level + 1);
-            $mappedChild['position'] = $child->position; 
+            $mappedChild['position'] = $child->position;
             return $mappedChild;
         });
-    
+
         $current_staking = $this->getCurrentStaking($user);
         $accrued_staking = $this->getAccuredStaking($user);
-        $leftAmount = $this->getPairingPrice($user, 'left');
-        $rightAmount = $this->getPairingPrice($user, 'right');
+        $leftAmount = $user->left_carry_forward;
+        $rightAmount = $user->right_carry_forward;
 
         // Separate children into 'left' and 'right' arrays based on their positions
         $leftChildren = null;
@@ -98,7 +98,7 @@ class AffiliateController extends Controller
             }
         }
 
-        $mappedUser = [
+        return [
             'id' => $user->id,
             'profile_image' => $user->user->getFirstMediaUrl('profile_photo'),
             'name' => $user->user->name,
@@ -111,93 +111,22 @@ class AffiliateController extends Controller
             'left' => $leftChildren,
             'right' => $rightChildren,
         ];
-    
-        return $mappedUser;
-    }                        
-    
-    protected function getPairingPrice($child, $position)
-    {
-        $amount = 0;
-        $totalAmount = 0;
-        $totalEarning = 0;
-        $todayStaking = 0;
-
-        $directChild = $child->direct_child($position)->first();
-
-        if ($directChild) {
-            $ids = $directChild->getChildrenIds();
-
-            $binaryUserId = CoinMultiLevel::query()
-                ->whereIn('id', $ids)
-                ->pluck('user_id')
-                ->toArray();
-
-            $lastPairingEarningDateTime = Earning::where('upline_id', $child->user_id)
-                ->where('type', 'PairingEarnings')
-                ->latest()
-                ->value('created_at');
-
-            $today = today();
-
-            // Calculate amount and total earnings if lastPairingEarningDateTime is not empty
-            if ($lastPairingEarningDateTime) {
-                $totalEarning += Earning::where('upline_id', $directChild->user_id)
-                    ->where('type', 'PairingEarnings')
-                    ->where('created_at', '<', $lastPairingEarningDateTime)
-                    ->sum('after_amount');
-
-                $totalEarning += Earning::whereIn('upline_id', $binaryUserId)
-                    ->where('type', 'PairingEarnings')
-                    ->where('created_at', '<', $lastPairingEarningDateTime)
-                    ->sum('after_amount');
-            }
-
-            $amount += CoinStacking::whereIn('user_id', $binaryUserId)
-                ->where('status', 'OnGoingPeriod')
-                ->where('staking_date', '<', $today)
-                ->sum('stacking_unit');
-
-            $amount += CoinStacking::where('user_id', $directChild->user_id)
-                ->where('status', 'OnGoingPeriod')
-                ->where('staking_date', '<', $today)
-                ->sum('stacking_unit');
-
-            // Calculate today's staking
-            $todayStaking += CoinStacking::whereIn('user_id', $binaryUserId)
-                ->where('status', 'OnGoingPeriod')
-                ->whereDate('staking_date', $today)
-                ->sum('stacking_unit');
-
-            $todayStaking += CoinStacking::where('user_id', $directChild->user_id)
-                ->where('status', 'OnGoingPeriod')
-                ->whereDate('staking_date', $today)
-                ->sum('stacking_unit');
-
-            // Calculate stake pairing based on conditions
-            return $lastPairingEarningDateTime ? $amount - $totalEarning + $todayStaking : $amount - $totalEarning;
-        }
-
-        return 0; // Return 0 if no direct child is found
     }
 
     protected function getCurrentStaking($child)
     {
         // Calculate current staking
-        $currentStakingUnit = CoinStacking::where('user_id', $child->user_id)
+        return CoinStacking::where('user_id', $child->user_id)
             ->where('status', 'OnGoingPeriod')
             ->sum('stacking_unit');
-        
-        return $currentStakingUnit;
     }
 
     protected function getAccuredStaking($child)
     {
         // Calculate accrued staking
-        $accruedStakingUnit = CoinStacking::where('user_id', $child->user_id)
+        return CoinStacking::where('user_id', $child->user_id)
             ->where('status', 'MaturityPeriod')
             ->sum('stacking_unit');
-        
-        return $accruedStakingUnit;
     }
 
     public function getAvailableBinaryAffiliate(Request $request)
@@ -209,18 +138,18 @@ class AffiliateController extends Controller
 
         $binaryAuthUser = CoinMultiLevel::where('user_id', $user->id)->first();
         $directChild = $binaryAuthUser->direct_child($position)->first();
-    
+
         $last_child = $directChild ? $directChild->getLastChild($directChild, 'left') : $binaryAuthUser;
         if ($last_child) {
             $binaryData = $this->binary_tree()->getContent();
             $binaryData = json_decode($binaryData, true);
-    
+
             $userIdToFind = $last_child->id;
 
             $foundUser = $this->findUserById($binaryData, $userIdToFind);
-    
+
             $last_child_user = $last_child->user;
-        
+
             // Transform $last_child directly
             $last_child_user->profile_picture = $last_child_user->getFirstMediaUrl('profile_photo');
 
@@ -232,7 +161,7 @@ class AffiliateController extends Controller
                 'gen' => $foundUser['gen'],
             ];
         }
-                
+
         $users = User::query()
             ->where('role', 'user')
             ->where('auto_assign_at', '>=', now())
@@ -281,15 +210,15 @@ class AffiliateController extends Controller
     {
         $user = Auth::user();
         $position = $request->position ?? 'left';
-            
+
         $binaryAuthUser = CoinMultiLevel::where('user_id', $user->id)->first();
         $directChild = $binaryAuthUser->direct_child($position)->first();
-    
+
         $last_child = $directChild ? $directChild->getLastChild($directChild, 'left') : $binaryAuthUser;
         if ($last_child) {
             $last_child->profile_photo = $last_child->user->getFirstMediaUrl('profile_photo');
         }
-    
+
         return response()->json($last_child);
     }
 
@@ -356,4 +285,4 @@ class AffiliateController extends Controller
         }
     }
 
-}    
+}
