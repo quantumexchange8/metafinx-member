@@ -133,7 +133,7 @@ class ProfileController extends Controller
         }
     }
 
-    protected function processImage(Request $request): void
+    protected function processImage($request): void
     {
         $user = $request->user();
         if ($image = $request->get('proof_front')) {
