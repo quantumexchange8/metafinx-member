@@ -1,5 +1,6 @@
 <?php
 return [
+    "max_image_size" => "The image size limit is 2MB",
     "cannot_transfer_to_self" => "Transfer to self is not available",
     "email_not_found" => "Email not found",
     "transfer_from" => "Transfer From",

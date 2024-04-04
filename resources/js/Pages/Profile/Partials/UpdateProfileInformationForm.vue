@@ -24,15 +24,17 @@ import FilePondPluginFilePoster from 'filepond-plugin-file-poster';
 // Import the plugin styles
 import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
 
-// Import image preview and file type validation plugins
+// Import image preview, file type validation and file size validation plugins
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 
 
 const FilePond = vueFilePond(
     FilePondPluginFilePoster,
     FilePondPluginImagePreview,
     FilePondPluginFileValidateType,
+    FilePondPluginFileValidateSize,
 )
 
 const props = defineProps({
@@ -329,6 +331,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                             :filePosterMaxHeight="150"
                             v-bind:allow-multiple="false"
                             accepted-file-types="image/png, image/jpeg, image/jpg"
+                            max-file-size="2MB"
                             v-bind:server="{
                             url: '',
                             timeout: 7000,
@@ -347,11 +350,11 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                             v-bind:files="proofFront"
                             v-on:init="handleFrontInit"
                         />
+                        <span class="text-gray-400 text-sm">{{ $t('public.max_image_size') }}</span>
                         <InputError :message="form.errors.proof_front" class="mt-2" />
                     </div>
                     <div>
                         <Label class="text-[14px] dark:text-white mb-2" for="proof_back" :value="$t('public.profile.proof_of_identity(b)')" />
-
                         <file-pond
                                 name="proof_back"
                                 ref="pond"
@@ -360,6 +363,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                                 :filePosterMaxHeight="150"
                                 v-bind:allow-multiple="false"
                                 accepted-file-types="image/png, image/jpeg, image/jpg"
+                                max-file-size="2MB"
                                 v-bind:server="{
                                 url: '',
                                 timeout: 7000,
@@ -378,11 +382,11 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                                 v-bind:files="proofBack"
                                 v-on:init="handleBackInit"
                             />
+                            <span class="text-gray-400 text-sm">{{ $t('public.max_image_size') }}</span>
                             <InputError :message="form.errors.proof_back" class="mt-2" />
                     </div>
                     <div>
                         <Label class="text-[14px] dark:text-white mb-2" for="profile_photo" :value="$t('public.profile.profile_photo')" />
-
                         <file-pond
                                     name="profile_photo"
                                     ref="pond"
@@ -390,6 +394,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                                     :filePosterMaxHeight="150"
                                     v-bind:allow-multiple="false"
                                     accepted-file-types="image/png, image/jpeg, image/jpg"
+                                    max-file-size="2MB"
                                     v-bind:server="{
                                     url: '',
                                     timeout: 7000,
@@ -408,6 +413,7 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                                     v-bind:files="profilePic"
                                     v-on:init="handleAvatarInit"
                                 />
+                                <span class="text-gray-400 text-sm">{{ $t('public.max_image_size') }}</span>
                                 <InputError :message="form.errors.profile_photo" class="mt-2" />
                     </div>
                 </div>

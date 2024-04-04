@@ -1,5 +1,6 @@
 <?php
 return [
+    "max_image_size" => "圖片大小限制為2MB",
     "cannot_transfer_to_self" => "无法转账给自己",
     "email_not_found" => "未找拥有该电子邮件的用户",
     "transfer_from" => "转账从",
