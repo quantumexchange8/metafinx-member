@@ -193,6 +193,11 @@ class PaymentController extends Controller
     public function deposit_approval(Request $request)
     {
         $transaction = Transaction::find($request->id);
+
+        if ($transaction->status != 'Processing') {
+            return redirect()->back()->with('title', 'Approval Done')->with('warning', 'It appears you have already completed approval action. Please confirm your action.');
+        }
+
         $status = $request->status;
         $transaction->status = $status;
         $transaction->remarks = ($status == 'Success') ? 'System Approve' : 'System Reject';
