@@ -65,10 +65,10 @@ const closeModal = () => {
                         <CoinIcon aria-hidden="true" class="w-5 h-5" />
                         <span class="uppercase">{{$t('public.buy')}} {{ coin.setting_coin.name }}</span>
                     </Button>
-                    <Deposit
+                    <!-- <Deposit
                         :wallet_sel="wallet_sel"
                         :depositFee="depositFee"
-                    />
+                    /> -->
                 </div>
             </div>
         </template>

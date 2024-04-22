@@ -89,7 +89,7 @@ function copyTestingCode () {
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
-                    <Deposit
+                    <!-- <Deposit
                         :wallet_sel="wallet_sel"
                         :depositFee="depositFee"
                     />
@@ -97,7 +97,7 @@ function copyTestingCode () {
                         v-if="role == 'admin' || kycStatus == 'verified'"
                         :wallet_sel="wallet_sel"
                         :withdrawalFee="props.withdrawalFee"
-                    />
+                    /> -->
                     <InternalTransfer
                         :setting_coin="setting_coin"
                     />
