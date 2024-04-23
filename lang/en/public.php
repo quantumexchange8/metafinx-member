@@ -408,6 +408,7 @@ return [
         "success_updated_payment_account" => "Success! Payment Account Updated",
         "successfully_updated_payment_account_message" => "The payment account has been successfully updated.",
         "payment_account_error" => "Payment account not found",
+        "no_payment_account" => "No Payment Accounts",
     ],
     "confirm_password" => [
         "confirm_password" => "Confirm Password",

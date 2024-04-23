@@ -115,7 +115,7 @@ const truncatedAccountNumber = (accountNumber) => {
 
             <div class="space-y-5">
                 <div v-if="paymentAccounts.length === 0" class="flex justify-center">
-                    No Payment Accounts
+                    {{ $t('public.profile.no_payment_account') }}
                 </div>
 
                 <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-5">

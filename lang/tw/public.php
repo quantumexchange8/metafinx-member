@@ -405,6 +405,7 @@ return [
         "success_updated_payment_account" => "成功！支付账户已更新",
         "successfully_updated_payment_account_message" => "支付账户已成功更新。",
         "payment_account_error" => "未找到支付账户",
+        "no_payment_account" => "没有支付账户"
     ],
     "confirm_password" => [
         "confirm_password" => "確認密碼",
