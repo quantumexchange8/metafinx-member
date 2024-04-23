@@ -40,7 +40,7 @@ class ProfileController extends Controller
             'frontIdentityImg' => Auth::user()->getFirstMediaUrl('front_identity'),
             'backIdentityImg' => Auth::user()->getFirstMediaUrl('back_identity'),
             'profileImg' => Auth::user()->getFirstMediaUrl('profile_photo'),
-            'paymentAccounts' => PaymentAccount::where('user_id', Auth::id())->latest()->get(),
+            'paymentAccounts' => PaymentAccount::where('user_id', Auth::id())->get(),
         ]);
     }
 
