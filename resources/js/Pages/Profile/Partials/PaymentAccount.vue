@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import InputIconWrapper from '@/Components/InputIconWrapper.vue'
 import Label from '@/Components/Label.vue'
@@ -76,6 +76,28 @@ const copyAccountNumber = (accountNumber) => {
     });
 }
 
+const screenWidth = ref(window.innerWidth);
+
+onMounted(() => {
+    window.addEventListener('resize', () => {
+        screenWidth.value = window.innerWidth;
+    });
+});
+
+const truncatedAccountNumber = (accountNumber) => {
+    let maxLength = 20; // Default max length for mobile screens
+
+    // Adjust maxLength based on screen width
+    if (screenWidth.value > 768) {
+        maxLength = 35; // Adjust max length for wider screens
+    }
+
+    if (accountNumber.length > maxLength) {
+        return accountNumber.slice(0, maxLength) + "...";
+    } else {
+        return accountNumber;
+    }
+}
 
 </script>
 
@@ -97,7 +119,7 @@ const copyAccountNumber = (accountNumber) => {
                 </div>
 
                 <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                    <div v-for="paymentAccount in paymentAccounts" class="flex flex-col overflow-hidden rounded-[20px] w-96 border border-gray-00 dark:border-gray-800">
+                    <div v-for="paymentAccount in paymentAccounts" class="flex flex-col overflow-hidden rounded-[20px] w-full border border-gray-00 dark:border-gray-800">
                         <div
                             class="flex justify-between h-32 bg-gradient-to-bl from-gray-300 to-gray-500"
                         >
@@ -107,7 +129,7 @@ const copyAccountNumber = (accountNumber) => {
                                         {{ paymentAccount.payment_account_name }}
                                     </div>
                                     <div class="text-xl font-semibold text-gray-100 dark:text-white flex items-center">
-                                        <span>{{ paymentAccount.account_no }}</span>
+                                        <span>{{ truncatedAccountNumber(paymentAccount.account_no) }}</span>
                                         <div @click.prevent="copyAccountNumber(paymentAccount.account_no)" class="ml-2">
                                             <DuplicateIcon class="w-5 hover:cursor-pointer" />
                                         </div>
