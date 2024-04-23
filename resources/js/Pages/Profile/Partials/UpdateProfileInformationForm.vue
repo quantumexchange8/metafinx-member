@@ -423,8 +423,6 @@ const handleProfilePhotoRevert = (uniqueId, load, error) => {
                 <Button :disabled="form.processing">{{$t('public.profile.save_changes')}}</Button>
             </div>
 
-            <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
-
         </form>
     </section>
 </template>

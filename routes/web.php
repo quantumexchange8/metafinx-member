@@ -98,6 +98,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/profile/upload/tmp_img', [ProfileController::class, 'upload']);
     Route::post('/profile/upload/image-revert', [ProfileController::class, 'image_revert']);
+    Route::post('/addPaymentAccount', [ProfileController::class, 'addPaymentAccount']);
+    Route::post('/updatePaymentAccount', [ProfileController::class, 'updatePaymentAccount'])->name('updatePaymentAccount');
 
     Route::prefix('wallet')->group(function () {
         Route::get('/details', [WalletController::class, 'details'])->name('wallet.details');

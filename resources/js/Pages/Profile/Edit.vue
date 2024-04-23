@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue'
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue'
 import DeleteUserForm from './Partials/DeleteUserForm.vue'
+import PaymentAccount from './Partials/PaymentAccount.vue'
 
 defineProps({
     mustVerifyEmail: Boolean,
@@ -11,6 +12,7 @@ defineProps({
     frontIdentityImg: String,
     backIdentityImg: String,
     profileImg: String,
+    paymentAccounts: Object,
 })
 </script>
 
@@ -38,6 +40,14 @@ defineProps({
                     :frontIdentityImg="frontIdentityImg"
                     :backIdentityImg="backIdentityImg"
                     :profileImg="profileImg"
+                />
+            </div>
+
+            <div
+                class="bg-white dark:bg-gray-800 sm:rounded-lg mt-6"
+            >
+                <PaymentAccount 
+                    :paymentAccounts="paymentAccounts"
                 />
             </div>
 

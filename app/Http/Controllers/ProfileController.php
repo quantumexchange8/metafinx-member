@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\SettingCountry;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Http\Request;
+use App\Models\PaymentAccount;
+use App\Models\SettingCountry;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\PaymentAccountRequest;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class ProfileController extends Controller
 {
@@ -38,6 +40,7 @@ class ProfileController extends Controller
             'frontIdentityImg' => Auth::user()->getFirstMediaUrl('front_identity'),
             'backIdentityImg' => Auth::user()->getFirstMediaUrl('back_identity'),
             'profileImg' => Auth::user()->getFirstMediaUrl('profile_photo'),
+            'paymentAccounts' => PaymentAccount::where('user_id', Auth::id())->latest()->get(),
         ]);
     }
 
@@ -166,4 +169,40 @@ class ProfileController extends Controller
             }
         }
     }
+
+    public function addPaymentAccount(PaymentAccountRequest $request)
+    {
+        $user = Auth::user();
+
+        $data = [
+            'user_id' => $user->id,
+            'payment_account_name' => $request->payment_account_name,
+            'payment_platform_name' => $request->payment_platform_name,
+            'account_no' => $request->account_no,
+            'currency' => 'USDT',
+        ];
+
+        PaymentAccount::create($data);
+
+        return back()->with('title', trans('public.profile.add_payment_account'))->with('success', trans('public.profile.add_payment_account_message'));
+    }
+
+    public function updatePaymentAccount(PaymentAccountRequest $request)
+    {
+        $paymentAccount = PaymentAccount::find($request->id);
+    
+        if ($paymentAccount) {
+            $paymentAccount->update([
+                'payment_account_name' => $request->payment_account_name,
+                'payment_platform_name' => $request->payment_platform_name,
+                'account_no' => $request->account_no,
+                'status' => $request->status,
+            ]);
+    
+            return back()->with('title', trans('public.profile.success_updated_payment_account'))->with('success', trans('public.profile.successfully_updated_payment_account_message'));
+        }
+    
+        return back()->withErrors(['message' => trans('public.profile.payment_account_error')]);
+    }    
+
 }
