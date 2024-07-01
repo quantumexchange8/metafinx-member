@@ -47,6 +47,16 @@ const form = useForm({
     terms: false
 })
 
+// const submit = () => {
+//     form.to_wallet_address = wallet_address.value.wallet_address
+//     form.post(route('wallet.deposit'), {
+//         onSuccess: () => {
+//             closeModal();
+//             form.reset();
+//         },
+//     });
+// };
+
 const submit = () => {
     form.to_wallet_address = wallet_address.value.wallet_address
     form.post(route('wallet.deposit'), {
@@ -205,7 +215,7 @@ const removeReceipt = () => {
                     </div>
                 </div>
 
-                <div class="flex flex-col sm:flex-row gap-4 mt-5">
+                <!-- <div class="flex flex-col sm:flex-row gap-4 mt-5">
                     <div class="flex gap-1 w-full md:w-1/4">
                         <span class="text-red-500">*</span>
                         <Label class="text-sm dark:text-white" for="amount" :value="$t('public.wallet.txn_hash')" />
@@ -222,9 +232,9 @@ const removeReceipt = () => {
                         />
                         <InputError :message="form.errors.txn_hash" class="mt-2" />
                     </div>
-                </div>
+                </div> -->
 
-                <div class="flex flex-col sm:flex-row gap-4 mt-5">
+                <!-- <div class="flex flex-col sm:flex-row gap-4 mt-5">
                     <Label for="receipt" class="text-sm dark:text-white w-full md:w-1/4" :value="$t('public.payment_slip')"/>
                     <div v-if="selectedReceipt == null" class="flex items-center gap-3 w-full">
                         <input
@@ -291,7 +301,7 @@ const removeReceipt = () => {
                         </div>
                         <InputError v-if="form.errors.terms" :message="form.errors.terms" class="mt-2" />
                     </label>
-                </div>
+                </div> -->
 
                 <div class="py-5 grid grid-cols-2 gap-4 w-full md:w-1/3 md:float-right">
                     <Button variant="secondary" type="button" class="justify-center" @click.prevent="closeModal">

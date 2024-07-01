@@ -10,6 +10,7 @@ use App\Models\Payment;
 use App\Models\Setting;
 use App\Models\SettingCoin;
 use App\Models\Transaction;
+use App\Models\Token;
 use Illuminate\Http\Request;
 use App\Models\PaymentStatus;
 use App\Models\SettingWithdrawalFee;
@@ -17,69 +18,75 @@ use App\Http\Requests\DepositRequest;
 use App\Services\RunningNumberService;
 use App\Http\Requests\WithdrawalRequest;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class PaymentController extends Controller
 {
-    public function deposit(DepositRequest $request)
+    public function deposit(Request $request)
     {
-        $user = \Auth::user();
+        $data = $request->all();
+        $user = Auth::user();
         $wallet = Wallet::find($request->wallet_id);
         $deposit_charge = Setting::where('slug', 'deposit-fee')->latest()->first();
         $amount = $request->amount;
         $transaction_charge = $amount * ($deposit_charge->value / 100);
-
+        
         $transaction_id = RunningNumberService::getID('transaction');
+        
+        // $transaction = Transaction::create([
+        //     'category' => 'wallet',
+        //     'user_id' => $user->id,
+        //     'to_wallet_id' => $request->wallet_id,
+        //     'transaction_number' => $transaction_id,
+        //     'txn_hash' => $request->txn_hash,
+        //     'transaction_type' => 'Deposit',
+        //     'amount' => $amount,
+        //     'transaction_charges' => $transaction_charge,
+        //     'transaction_amount' => $amount * ((100 - $deposit_charge->value) / 100),
+        //     'to_wallet_address' => $request->to_wallet_address,
+        //     'status' => 'Processing',
+        //     'new_wallet_amount' => $wallet->balance,
+        // ]);
 
-        $transaction = Transaction::create([
-            'category' => 'wallet',
-            'user_id' => $user->id,
-            'to_wallet_id' => $request->wallet_id,
-            'transaction_number' => $transaction_id,
-            'txn_hash' => $request->txn_hash,
-            'transaction_type' => 'Deposit',
-            'amount' => $amount,
-            'transaction_charges' => $transaction_charge,
-            'transaction_amount' => $amount * ((100 - $deposit_charge->value) / 100),
-            'to_wallet_address' => $request->to_wallet_address,
-            'status' => 'Processing',
-            'new_wallet_amount' => $wallet->balance,
-        ]);
-
-        if ($request->hasfile('receipt')){
-            $transaction->addMedia($request->receipt)->toMediaCollection('deposit_receipt');
-        }
-
+        $payoutSetting = config('payment-gateway');
         $domain = $_SERVER['HTTP_HOST'];
-        $payout = config('payout-setting');
-        $selectedPayout = $payout['staging'];
+        $paymentGateway = config('payment-gateway');
+        $intAmount = intval($amount * 1000000);
 
         if ($domain === 'login.metafinx.com') {
-            $selectedPayout = $payout['live'];
+            $selectedPayout = $payoutSetting['live'];
+        } else {
+            $selectedPayout = $payoutSetting['staging'];
         }
 
-        $hashedToken = md5($selectedPayout['email'] . $selectedPayout['apiKey']);
+        $vCode = md5($intAmount . $selectedPayout['appId'] . $transaction_id . $selectedPayout['merchantId']);
 
         $params = [
-            "token" => $hashedToken,
-            "transactionID" => $transaction->transaction_number,
-            "address" => $transaction->to_wallet_address,
-            "currency" => 'TRC20',
-            "amount" => $amount, // Assuming $amount is defined elsewhere
-            "TxID" => $transaction->txn_hash,
+            'amount' => $intAmount,
+            'orderNumber' => $transaction_id,
+            'userId' => $user->id,
+            'merchantId' => $selectedPayout['merchantId'],
+            'vCode' => $vCode,
         ];
 
-        $url = $selectedPayout['base_url'] . '/receiveDeposit';
+        // Send response
+        $url = $selectedPayout['paymentUrl'] . 'payment';
+        $redirectUrl = $url . "?" . http_build_query($params);
 
-        $response = Http::post($url, $params);
-        \Log::debug($url);
-        \Log::debug($response);
+        return Inertia::location($redirectUrl);
 
-        Notification::route('mail', 'payment@currenttech.pro')
-            ->notify(new DepositRequestNotification($transaction, $user));
-
-        return redirect()->back()->with('title', trans('public.submit_success'))->with('success', trans('public.deposit_submit_success_message'));
+        // return redirect()->route('testing_payment.tesing_for_payment_gateway', [
+        //     'user' => $user,
+        //     'wallet' => $wallet,
+        //     'amount' => $amount,
+        //     'to_wallet_address' => $request->to_wallet_address,
+        //     'token' => $token,
+        //     'transaction_number' => $transaction_id,
+        // ]);
     }
 
     public function withdrawal(WithdrawalRequest $request)
