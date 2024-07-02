@@ -36,6 +36,7 @@ class PaymentController extends Controller
         $transaction_charge = $amount * ($deposit_charge->value / 100);
         
         $transaction_id = RunningNumberService::getID('transaction');
+        $token = Str::random(40);
         
         // $transaction = Transaction::create([
         //     'category' => 'wallet',
@@ -71,6 +72,7 @@ class PaymentController extends Controller
             'userId' => $user->id,
             'merchantId' => $selectedPayout['merchantId'],
             'vCode' => $vCode,
+            'token' => $token,
         ];
 
         // Send response
