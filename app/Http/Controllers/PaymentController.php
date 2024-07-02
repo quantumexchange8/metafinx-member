@@ -74,7 +74,7 @@ class PaymentController extends Controller
         ];
 
         // Send response
-        $url = $selectedPayout['paymentUrl'] . 'payment';
+        $url = $selectedPayout['paymentUrl'] . '/payment';
         $redirectUrl = $url . "?" . http_build_query($params);
 
         return Inertia::location($redirectUrl);
