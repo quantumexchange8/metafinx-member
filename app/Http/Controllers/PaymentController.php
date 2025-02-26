@@ -64,10 +64,10 @@ class PaymentController extends Controller
             $selectedPayout = $payoutSetting['staging'];
         }
 
-        $vCode = md5($selectedPayout['appId'] . $transaction_id . $selectedPayout['merchantId'] . $selectedPayout['ttKey']);
+        $vCode = md5($amount . $selectedPayout['appId'] . $transaction_id . $selectedPayout['merchantId'] . $selectedPayout['ttKey']);
 
         $params = [
-            'amount' => $intAmount,
+            'amount' => $amount,
             'orderNumber' => $transaction_id,
             'userId' => $user->id,
             'merchantId' => $selectedPayout['merchantId'],

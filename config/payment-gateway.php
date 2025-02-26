@@ -2,9 +2,9 @@
 
 return [
     'staging' => [
-        'paymentUrl' => 'http://127.0.0.1:8050',
+        'paymentUrl' => 'http://ttpayment-gateway.currenttech.pro',
         'appId' => 'metafinx',
-        'merchantId' => '1',
+        'merchantId' => '19',
         'ttKey' => 'b3bSnbASIUso9fsFDjs5Dd',
     ],
     'live' => [
